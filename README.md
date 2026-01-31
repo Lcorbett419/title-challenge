@@ -3,7 +3,7 @@
 A text-based football manager game where you manage your team, buy and sell players, and compete to win the league!
 
 ## Play Now
-Visit: https://yourusername.github.io/title-challenge
+Visit: https://lcorbett419.github.io/title-challenge
 
 ## Features
 - Team management
