@@ -1,1035 +1,1050 @@
-import React, { useState, useEffect } from 'react';
-import { Trophy, Users, TrendingUp, Calendar, Home, Play, Edit, Save, X, Plus, Trash2, ArrowLeftRight } from 'lucide-react';
-
-// Sample teams and players database
-const initialTeams = [
-  {
-    id: 1,
-    name: "Manchester United",
-    budget: 50000000,
-    players: [
-      { id: 1, name: "David Martinez", position: "GK", dob: "1995-03-15", rating: 16, value: 8000000 },
-      { id: 2, name: "James Wilson", position: "DEF", dob: "1998-07-22", rating: 15, value: 6000000 },
-      { id: 3, name: "Marcus Cole", position: "DEF", dob: "1997-11-30", rating: 17, value: 10000000 },
-      { id: 4, name: "Robert Chen", position: "DEF", dob: "1996-05-18", rating: 16, value: 8000000 },
-      { id: 5, name: "Luke Anderson", position: "DEF", dob: "1999-01-25", rating: 14, value: 5000000 },
-      { id: 6, name: "Michael Torres", position: "MID", dob: "1997-09-12", rating: 17, value: 12000000 },
-      { id: 7, name: "Daniel Park", position: "MID", dob: "1998-04-08", rating: 16, value: 9000000 },
-      { id: 8, name: "Alex Thompson", position: "MID", dob: "1996-12-03", rating: 15, value: 7000000 },
-      { id: 9, name: "Chris Baker", position: "FWD", dob: "1999-08-17", rating: 18, value: 15000000 },
-      { id: 10, name: "Ryan Foster", position: "FWD", dob: "1997-06-21", rating: 17, value: 12000000 },
-      { id: 11, name: "Jack Murphy", position: "FWD", dob: "1998-10-14", rating: 16, value: 9000000 }
-    ]
-  },
-  {
-    id: 2,
-    name: "Liverpool",
-    budget: 50000000,
-    players: [
-      { id: 12, name: "Tom Harrison", position: "GK", dob: "1996-02-20", rating: 17, value: 10000000 },
-      { id: 13, name: "Ben Davies", position: "DEF", dob: "1997-08-15", rating: 16, value: 8000000 },
-      { id: 14, name: "Sam Wright", position: "DEF", dob: "1998-03-27", rating: 17, value: 10000000 },
-      { id: 15, name: "Oliver Scott", position: "DEF", dob: "1996-11-09", rating: 15, value: 6000000 },
-      { id: 16, name: "Harry Mitchell", position: "DEF", dob: "1999-05-13", rating: 14, value: 5000000 },
-      { id: 17, name: "George Lewis", position: "MID", dob: "1997-01-18", rating: 18, value: 15000000 },
-      { id: 18, name: "William Cooper", position: "MID", dob: "1998-07-24", rating: 17, value: 12000000 },
-      { id: 19, name: "Joseph King", position: "MID", dob: "1996-09-30", rating: 16, value: 9000000 },
-      { id: 20, name: "Charlie Evans", position: "FWD", dob: "1999-02-11", rating: 18, value: 15000000 },
-      { id: 21, name: "Joshua Turner", position: "FWD", dob: "1997-04-05", rating: 17, value: 12000000 },
-      { id: 22, name: "Andrew Hill", position: "FWD", dob: "1998-12-19", rating: 16, value: 9000000 }
-    ]
-  },
-  {
-    id: 3,
-    name: "Arsenal",
-    budget: 50000000,
-    players: [
-      { id: 23, name: "Noah Garcia", position: "GK", dob: "1995-06-12", rating: 16, value: 8000000 },
-      { id: 24, name: "Liam Rodriguez", position: "DEF", dob: "1998-01-08", rating: 17, value: 10000000 },
-      { id: 25, name: "Mason Lee", position: "DEF", dob: "1997-09-23", rating: 16, value: 8000000 },
-      { id: 26, name: "Ethan Walker", position: "DEF", dob: "1996-03-16", rating: 15, value: 6000000 },
-      { id: 27, name: "Lucas Hall", position: "DEF", dob: "1999-07-29", rating: 14, value: 5000000 },
-      { id: 28, name: "Aiden Allen", position: "MID", dob: "1997-11-02", rating: 17, value: 12000000 },
-      { id: 29, name: "Logan Young", position: "MID", dob: "1998-05-14", rating: 16, value: 9000000 },
-      { id: 30, name: "Jackson Hernandez", position: "MID", dob: "1996-08-20", rating: 16, value: 9000000 },
-      { id: 31, name: "Sebastian Martin", position: "FWD", dob: "1999-04-07", rating: 18, value: 15000000 },
-      { id: 32, name: "Carter Robinson", position: "FWD", dob: "1997-12-11", rating: 17, value: 12000000 },
-      { id: 33, name: "Dylan Clark", position: "FWD", dob: "1998-02-25", rating: 16, value: 9000000 }
-    ]
-  },
-  {
-    id: 4,
-    name: "Chelsea",
-    budget: 50000000,
-    players: [
-      { id: 34, name: "Gabriel White", position: "GK", dob: "1996-09-18", rating: 17, value: 10000000 },
-      { id: 35, name: "Julian Lopez", position: "DEF", dob: "1997-05-03", rating: 16, value: 8000000 },
-      { id: 36, name: "Mateo Gonzalez", position: "DEF", dob: "1998-11-14", rating: 17, value: 10000000 },
-      { id: 37, name: "Leo Martinez", position: "DEF", dob: "1996-01-28", rating: 15, value: 6000000 },
-      { id: 38, name: "Anthony Perez", position: "DEF", dob: "1999-06-09", rating: 14, value: 5000000 },
-      { id: 39, name: "Elijah Wilson", position: "MID", dob: "1997-03-21", rating: 18, value: 15000000 },
-      { id: 40, name: "Isaiah Anderson", position: "MID", dob: "1998-08-06", rating: 17, value: 12000000 },
-      { id: 41, name: "Owen Thomas", position: "MID", dob: "1996-12-30", rating: 16, value: 9000000 },
-      { id: 42, name: "Lincoln Taylor", position: "FWD", dob: "1999-10-15", rating: 18, value: 15000000 },
-      { id: 43, name: "Jayden Moore", position: "FWD", dob: "1997-02-19", rating: 17, value: 12000000 },
-      { id: 44, name: "Grayson Jackson", position: "FWD", dob: "1998-06-23", rating: 16, value: 9000000 }
-    ]
-  }
-];
-
-const App = () => {
-  const [gameState, setGameState] = useState('main-menu');
-  const [selectedTeam, setSelectedTeam] = useState(null);
-  const [teams, setTeams] = useState(initialTeams);
-  const [currentMatch, setCurrentMatch] = useState(null);
-  const [matchCommentary, setMatchCommentary] = useState([]);
-  const [league, setLeague] = useState([]);
-  const [matchesPlayed, setMatchesPlayed] = useState(0);
-  const [editingTeam, setEditingTeam] = useState(null);
-  const [editingPlayer, setEditingPlayer] = useState(null);
-  const [transferMode, setTransferMode] = useState(false);
-  const [selectedPlayerForTransfer, setSelectedPlayerForTransfer] = useState(null);
-
-  useEffect(() => {
-    loadGame();
-  }, []);
-
-  useEffect(() => {
-    if (selectedTeam && gameState !== 'main-menu' && gameState !== 'edit-database') {
-      saveGame();
-    }
-  }, [selectedTeam, teams, league, matchesPlayed, gameState]);
-
-  const saveGame = () => {
-    const gameData = {
-      selectedTeam,
-      teams,
-      league,
-      matchesPlayed,
-      gameState
-    };
-    const data = { gameData };
-    localStorage.setItem('footballManagerSave', JSON.stringify(data));
-  };
-
-  const loadGame = () => {
-    const saved = localStorage.getItem('footballManagerSave');
-    if (saved) {
-      try {
-        const data = JSON.parse(saved);
-        if (data.gameData) {
-          // Game data exists, user can resume
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title Challenge - Football Manager</title>
+    <meta name="description" content="Text-based football manager game. Manage your team, buy players, and win the league!">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
-      } catch (e) {
-        console.error('Error loading game:', e);
-      }
-    }
-  };
-
-  const newGame = () => {
-    setSelectedTeam(null);
-    setTeams(JSON.parse(JSON.stringify(initialTeams)));
-    setLeague([]);
-    setMatchesPlayed(0);
-    localStorage.removeItem('footballManagerSave');
-    setGameState('team-select');
-  };
-
-  const resumeGame = () => {
-    const saved = localStorage.getItem('footballManagerSave');
-    if (saved) {
-      try {
-        const data = JSON.parse(saved);
-        if (data.gameData) {
-          setSelectedTeam(data.gameData.selectedTeam);
-          setTeams(data.gameData.teams);
-          setLeague(data.gameData.league);
-          setMatchesPlayed(data.gameData.matchesPlayed);
-          setGameState(data.gameData.gameState === 'main-menu' ? 'squad' : data.gameData.gameState);
-        }
-      } catch (e) {
-        console.error('Error loading game:', e);
-        alert('Error loading saved game');
-      }
-    }
-  };
-
-  const hasSavedGame = () => {
-    const saved = localStorage.getItem('footballManagerSave');
-    if (saved) {
-      try {
-        const data = JSON.parse(saved);
-        return data.gameData && data.gameData.selectedTeam;
-      } catch (e) {
-        return false;
-      }
-    }
-    return false;
-  };
-
-  const initializeLeague = () => {
-    const leagueTable = teams.map(team => ({
-      teamId: team.id,
-      name: team.name,
-      played: 0,
-      won: 0,
-      drawn: 0,
-      lost: 0,
-      goalsFor: 0,
-      goalsAgainst: 0,
-      points: 0
-    }));
-    setLeague(leagueTable);
-  };
-
-  const selectTeam = (team) => {
-    setSelectedTeam(team);
-    initializeLeague();
-    setGameState('squad');
-  };
-
-  const getTeamRating = (team) => {
-    if (!team || !team.players) return 0;
-    const total = team.players.reduce((sum, player) => sum + player.rating, 0);
-    return Math.round(total / team.players.length);
-  };
-
-  const simulateMatch = (homeTeam, awayTeam) => {
-    const commentary = [];
-    const homeRating = getTeamRating(homeTeam);
-    const awayRating = getTeamRating(awayTeam);
+    </style>
+</head>
+<body>
+    <div id="root"></div>
     
-    let homeScore = 0;
-    let awayScore = 0;
-    
-    commentary.push(`${homeTeam.name} vs ${awayTeam.name}`);
-    commentary.push("Kick off!");
-    commentary.push("");
-    
-    const moments = 8 + Math.floor(Math.random() * 5);
-    
-    for (let i = 0; i < moments; i++) {
-      const minute = Math.floor(Math.random() * 90) + 1;
-      const homeChance = (homeRating + Math.random() * 10) / (homeRating + awayRating + Math.random() * 20);
-      
-      if (Math.random() < 0.3) {
-        if (Math.random() < homeChance) {
-          const scorer = homeTeam.players.find(p => p.position === 'FWD' || p.position === 'MID');
-          if (Math.random() < 0.4) {
-            homeScore++;
-            commentary.push(`${minute}' GOAL! ${scorer.name} scores for ${homeTeam.name}! ${homeScore}-${awayScore}`);
-          } else {
-            commentary.push(`${minute}' ${scorer.name} with a shot, but it's saved!`);
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // Lucide Icons as components
+        const Trophy = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>;
+        const Users = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>;
+        const TrendingUp = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>;
+        const Calendar = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>;
+        const Home = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>;
+        const Play = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>;
+        const Edit = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>;
+        const Save = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>;
+        const X = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>;
+        const Plus = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>;
+        const Trash2 = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>;
+        const ArrowLeftRight = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></svg>;
+
+        const initialTeams = [
+          {
+            id: 1,
+            name: "Manchester United",
+            budget: 50000000,
+            players: [
+              { id: 1, name: "David Martinez", position: "GK", dob: "1995-03-15", rating: 16, value: 8000000 },
+              { id: 2, name: "James Wilson", position: "DEF", dob: "1998-07-22", rating: 15, value: 6000000 },
+              { id: 3, name: "Marcus Cole", position: "DEF", dob: "1997-11-30", rating: 17, value: 10000000 },
+              { id: 4, name: "Robert Chen", position: "DEF", dob: "1996-05-18", rating: 16, value: 8000000 },
+              { id: 5, name: "Luke Anderson", position: "DEF", dob: "1999-01-25", rating: 14, value: 5000000 },
+              { id: 6, name: "Michael Torres", position: "MID", dob: "1997-09-12", rating: 17, value: 12000000 },
+              { id: 7, name: "Daniel Park", position: "MID", dob: "1998-04-08", rating: 16, value: 9000000 },
+              { id: 8, name: "Alex Thompson", position: "MID", dob: "1996-12-03", rating: 15, value: 7000000 },
+              { id: 9, name: "Chris Baker", position: "FWD", dob: "1999-08-17", rating: 18, value: 15000000 },
+              { id: 10, name: "Ryan Foster", position: "FWD", dob: "1997-06-21", rating: 17, value: 12000000 },
+              { id: 11, name: "Jack Murphy", position: "FWD", dob: "1998-10-14", rating: 16, value: 9000000 }
+            ]
+          },
+          {
+            id: 2,
+            name: "Liverpool",
+            budget: 50000000,
+            players: [
+              { id: 12, name: "Tom Harrison", position: "GK", dob: "1996-02-20", rating: 17, value: 10000000 },
+              { id: 13, name: "Ben Davies", position: "DEF", dob: "1997-08-15", rating: 16, value: 8000000 },
+              { id: 14, name: "Sam Wright", position: "DEF", dob: "1998-03-27", rating: 17, value: 10000000 },
+              { id: 15, name: "Oliver Scott", position: "DEF", dob: "1996-11-09", rating: 15, value: 6000000 },
+              { id: 16, name: "Harry Mitchell", position: "DEF", dob: "1999-05-13", rating: 14, value: 5000000 },
+              { id: 17, name: "George Lewis", position: "MID", dob: "1997-01-18", rating: 18, value: 15000000 },
+              { id: 18, name: "William Cooper", position: "MID", dob: "1998-07-24", rating: 17, value: 12000000 },
+              { id: 19, name: "Joseph King", position: "MID", dob: "1996-09-30", rating: 16, value: 9000000 },
+              { id: 20, name: "Charlie Evans", position: "FWD", dob: "1999-02-11", rating: 18, value: 15000000 },
+              { id: 21, name: "Joshua Turner", position: "FWD", dob: "1997-04-05", rating: 17, value: 12000000 },
+              { id: 22, name: "Andrew Hill", position: "FWD", dob: "1998-12-19", rating: 16, value: 9000000 }
+            ]
+          },
+          {
+            id: 3,
+            name: "Arsenal",
+            budget: 50000000,
+            players: [
+              { id: 23, name: "Noah Garcia", position: "GK", dob: "1995-06-12", rating: 16, value: 8000000 },
+              { id: 24, name: "Liam Rodriguez", position: "DEF", dob: "1998-01-08", rating: 17, value: 10000000 },
+              { id: 25, name: "Mason Lee", position: "DEF", dob: "1997-09-23", rating: 16, value: 8000000 },
+              { id: 26, name: "Ethan Walker", position: "DEF", dob: "1996-03-16", rating: 15, value: 6000000 },
+              { id: 27, name: "Lucas Hall", position: "DEF", dob: "1999-07-29", rating: 14, value: 5000000 },
+              { id: 28, name: "Aiden Allen", position: "MID", dob: "1997-11-02", rating: 17, value: 12000000 },
+              { id: 29, name: "Logan Young", position: "MID", dob: "1998-05-14", rating: 16, value: 9000000 },
+              { id: 30, name: "Jackson Hernandez", position: "MID", dob: "1996-08-20", rating: 16, value: 9000000 },
+              { id: 31, name: "Sebastian Martin", position: "FWD", dob: "1999-04-07", rating: 18, value: 15000000 },
+              { id: 32, name: "Carter Robinson", position: "FWD", dob: "1997-12-11", rating: 17, value: 12000000 },
+              { id: 33, name: "Dylan Clark", position: "FWD", dob: "1998-02-25", rating: 16, value: 9000000 }
+            ]
+          },
+          {
+            id: 4,
+            name: "Chelsea",
+            budget: 50000000,
+            players: [
+              { id: 34, name: "Gabriel White", position: "GK", dob: "1996-09-18", rating: 17, value: 10000000 },
+              { id: 35, name: "Julian Lopez", position: "DEF", dob: "1997-05-03", rating: 16, value: 8000000 },
+              { id: 36, name: "Mateo Gonzalez", position: "DEF", dob: "1998-11-14", rating: 17, value: 10000000 },
+              { id: 37, name: "Leo Martinez", position: "DEF", dob: "1996-01-28", rating: 15, value: 6000000 },
+              { id: 38, name: "Anthony Perez", position: "DEF", dob: "1999-06-09", rating: 14, value: 5000000 },
+              { id: 39, name: "Elijah Wilson", position: "MID", dob: "1997-03-21", rating: 18, value: 15000000 },
+              { id: 40, name: "Isaiah Anderson", position: "MID", dob: "1998-08-06", rating: 17, value: 12000000 },
+              { id: 41, name: "Owen Thomas", position: "MID", dob: "1996-12-30", rating: 16, value: 9000000 },
+              { id: 42, name: "Lincoln Taylor", position: "FWD", dob: "1999-10-15", rating: 18, value: 15000000 },
+              { id: 43, name: "Jayden Moore", position: "FWD", dob: "1997-02-19", rating: 17, value: 12000000 },
+              { id: 44, name: "Grayson Jackson", position: "FWD", dob: "1998-06-23", rating: 16, value: 9000000 }
+            ]
           }
-        } else {
-          const scorer = awayTeam.players.find(p => p.position === 'FWD' || p.position === 'MID');
-          if (Math.random() < 0.4) {
-            awayScore++;
-            commentary.push(`${minute}' GOAL! ${scorer.name} scores for ${awayTeam.name}! ${homeScore}-${awayScore}`);
-          } else {
-            commentary.push(`${minute}' ${scorer.name} shoots wide of the target!`);
-          }
-        }
-      } else {
-        const events = [
-          "Good passing move in midfield",
-          "Strong tackle breaks up the attack",
-          "Corner kick awarded",
-          "Free kick in a dangerous position",
-          "Counter attack developing",
-          "Possession being retained well"
         ];
-        const team = Math.random() < homeChance ? homeTeam.name : awayTeam.name;
-        commentary.push(`${minute}' ${events[Math.floor(Math.random() * events.length)]} - ${team}`);
-      }
-    }
-    
-    commentary.push("");
-    commentary.push(`FULL TIME: ${homeTeam.name} ${homeScore} - ${awayScore} ${awayTeam.name}`);
-    
-    return { homeScore, awayScore, commentary };
-  };
 
-  const playNextMatch = () => {
-    const otherTeams = teams.filter(t => t.id !== selectedTeam.id);
-    const opponent = otherTeams[Math.floor(Math.random() * otherTeams.length)];
-    
-    const isHome = Math.random() < 0.5;
-    const result = isHome 
-      ? simulateMatch(selectedTeam, opponent)
-      : simulateMatch(opponent, selectedTeam);
-    
-    const playerScore = isHome ? result.homeScore : result.awayScore;
-    const opponentScore = isHome ? result.awayScore : result.homeScore;
-    
-    setCurrentMatch({
-      opponent: opponent.name,
-      playerScore,
-      opponentScore,
-      isHome
-    });
-    
-    setMatchCommentary(result.commentary);
-    updateLeague(selectedTeam.id, opponent.id, playerScore, opponentScore);
-    setMatchesPlayed(matchesPlayed + 1);
-    setGameState('match-result');
-  };
+        const App = () => {
+          const [gameState, setGameState] = useState('main-menu');
+          const [selectedTeam, setSelectedTeam] = useState(null);
+          const [teams, setTeams] = useState(initialTeams);
+          const [currentMatch, setCurrentMatch] = useState(null);
+          const [matchCommentary, setMatchCommentary] = useState([]);
+          const [league, setLeague] = useState([]);
+          const [matchesPlayed, setMatchesPlayed] = useState(0);
+          const [selectedPlayerForTransfer, setSelectedPlayerForTransfer] = useState(null);
 
-  const updateLeague = (teamId, opponentId, teamScore, opponentScore) => {
-    const updatedLeague = [...league];
-    const teamIndex = updatedLeague.findIndex(t => t.teamId === teamId);
-    const oppIndex = updatedLeague.findIndex(t => t.teamId === opponentId);
-    
-    if (teamIndex !== -1 && oppIndex !== -1) {
-      updatedLeague[teamIndex].played++;
-      updatedLeague[teamIndex].goalsFor += teamScore;
-      updatedLeague[teamIndex].goalsAgainst += opponentScore;
-      
-      updatedLeague[oppIndex].played++;
-      updatedLeague[oppIndex].goalsFor += opponentScore;
-      updatedLeague[oppIndex].goalsAgainst += teamScore;
-      
-      if (teamScore > opponentScore) {
-        updatedLeague[teamIndex].won++;
-        updatedLeague[teamIndex].points += 3;
-        updatedLeague[oppIndex].lost++;
-      } else if (teamScore < opponentScore) {
-        updatedLeague[teamIndex].lost++;
-        updatedLeague[oppIndex].won++;
-        updatedLeague[oppIndex].points += 3;
-      } else {
-        updatedLeague[teamIndex].drawn++;
-        updatedLeague[oppIndex].drawn++;
-        updatedLeague[teamIndex].points++;
-        updatedLeague[oppIndex].points++;
-      }
-    }
-    
-    updatedLeague.sort((a, b) => {
-      if (b.points !== a.points) return b.points - a.points;
-      const aGD = a.goalsFor - a.goalsAgainst;
-      const bGD = b.goalsFor - b.goalsAgainst;
-      return bGD - aGD;
-    });
-    
-    setLeague(updatedLeague);
-  };
+          useEffect(() => {
+            loadGame();
+          }, []);
 
-  const calculateAge = (dob) => {
-    const birthDate = new Date(dob);
-    const today = new Date();
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
-    return age;
-  };
-
-  const formatCurrency = (amount) => {
-    return '£' + (amount / 1000000).toFixed(1) + 'M';
-  };
-
-  const initiateTransfer = (player) => {
-    setSelectedPlayerForTransfer(player);
-  };
-
-  const completeTransfer = (targetTeamId) => {
-    const player = selectedPlayerForTransfer;
-    const playerTeam = teams.find(t => t.players.some(p => p.id === player.id));
-    const targetTeam = teams.find(t => t.id === targetTeamId);
-    
-    if (targetTeam.budget < player.value) {
-      alert(`${targetTeam.name} doesn't have enough budget for this transfer!`);
-      return;
-    }
-    
-    const updatedTeams = teams.map(team => {
-      if (team.id === playerTeam.id) {
-        return {
-          ...team,
-          budget: team.budget + player.value,
-          players: team.players.filter(p => p.id !== player.id)
-        };
-      }
-      if (team.id === targetTeamId) {
-        return {
-          ...team,
-          budget: team.budget - player.value,
-          players: [...team.players, player]
-        };
-      }
-      return team;
-    });
-    
-    setTeams(updatedTeams);
-    
-    if (selectedTeam && selectedTeam.id === playerTeam.id) {
-      setSelectedTeam(updatedTeams.find(t => t.id === playerTeam.id));
-    } else if (selectedTeam && selectedTeam.id === targetTeamId) {
-      setSelectedTeam(updatedTeams.find(t => t.id === targetTeamId));
-    }
-    
-    setSelectedPlayerForTransfer(null);
-    setTransferMode(false);
-    alert(`${player.name} has been transferred to ${targetTeam.name}!`);
-  };
-
-  const saveDatabase = () => {
-    const dbData = { database: teams };
-    localStorage.setItem('footballManagerDatabase', JSON.stringify(dbData));
-    alert('Database saved successfully!');
-  };
-
-  const loadDatabase = () => {
-    const saved = localStorage.getItem('footballManagerDatabase');
-    if (saved) {
-      try {
-        const data = JSON.parse(saved);
-        if (data.database) {
-          setTeams(data.database);
-          alert('Database loaded successfully!');
-        }
-      } catch (e) {
-        console.error('Error loading database:', e);
-        alert('Error loading database');
-      }
-    } else {
-      alert('No saved database found');
-    }
-  };
-
-  const resetDatabase = () => {
-    if (confirm('Are you sure you want to reset the database to default?')) {
-      setTeams(JSON.parse(JSON.stringify(initialTeams)));
-      localStorage.removeItem('footballManagerDatabase');
-      alert('Database reset to default');
-    }
-  };
-
-  const addNewTeam = () => {
-    const newTeam = {
-      id: Math.max(...teams.map(t => t.id)) + 1,
-      name: "New Team",
-      budget: 50000000,
-      players: []
-    };
-    setTeams([...teams, newTeam]);
-    setEditingTeam(newTeam);
-  };
-
-  const deleteTeam = (teamId) => {
-    if (confirm('Are you sure you want to delete this team?')) {
-      setTeams(teams.filter(t => t.id !== teamId));
-      if (editingTeam && editingTeam.id === teamId) {
-        setEditingTeam(null);
-      }
-    }
-  };
-
-  const updateTeam = (teamId, field, value) => {
-    setTeams(teams.map(t => t.id === teamId ? { ...t, [field]: value } : t));
-    if (editingTeam && editingTeam.id === teamId) {
-      setEditingTeam({ ...editingTeam, [field]: value });
-    }
-  };
-
-  const addNewPlayer = (teamId) => {
-    const team = teams.find(t => t.id === teamId);
-    const newPlayer = {
-      id: Math.max(...teams.flatMap(t => t.players).map(p => p.id), 0) + 1,
-      name: "New Player",
-      position: "MID",
-      dob: "2000-01-01",
-      rating: 10,
-      value: 5000000
-    };
-    
-    setTeams(teams.map(t => {
-      if (t.id === teamId) {
-        return { ...t, players: [...t.players, newPlayer] };
-      }
-      return t;
-    }));
-  };
-
-  const deletePlayer = (teamId, playerId) => {
-    if (confirm('Are you sure you want to delete this player?')) {
-      setTeams(teams.map(t => {
-        if (t.id === teamId) {
-          return { ...t, players: t.players.filter(p => p.id !== playerId) };
-        }
-        return t;
-      }));
-      if (editingPlayer && editingPlayer.id === playerId) {
-        setEditingPlayer(null);
-      }
-    }
-  };
-
-  const updatePlayer = (teamId, playerId, field, value) => {
-    setTeams(teams.map(t => {
-      if (t.id === teamId) {
-        return {
-          ...t,
-          players: t.players.map(p => {
-            if (p.id === playerId) {
-              return { ...p, [field]: field === 'rating' || field === 'value' ? Number(value) : value };
+          useEffect(() => {
+            if (selectedTeam && gameState !== 'main-menu' && gameState !== 'edit-database') {
+              saveGame();
             }
-            return p;
-          })
-        };
-      }
-      return t;
-    }));
-  };
+          }, [selectedTeam, teams, league, matchesPlayed, gameState]);
 
-  // Main Menu
-  if (gameState === 'main-menu') {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-green-900 p-4 flex items-center justify-center">
-        <div className="max-w-md w-full">
-          <div className="text-center mb-12">
-            <Trophy className="w-24 h-24 mx-auto mb-6 text-yellow-400" />
-            <h1 className="text-5xl font-bold text-white mb-3">Title Challenge</h1>
-            <p className="text-green-200 text-lg">Football Manager</p>
-          </div>
-          
-          <div className="space-y-4">
-            <button
-              onClick={newGame}
-              className="w-full bg-yellow-400 text-green-900 py-6 rounded-lg font-bold text-xl hover:bg-yellow-300 transition-all flex items-center justify-center gap-3"
-            >
-              <Play className="w-6 h-6" />
-              New Game
-            </button>
+          const saveGame = () => {
+            const gameData = { selectedTeam, teams, league, matchesPlayed, gameState };
+            localStorage.setItem('footballManagerSave', JSON.stringify({ gameData }));
+          };
+
+          const loadGame = () => {
+            const saved = localStorage.getItem('footballManagerSave');
+            if (saved) {
+              try {
+                JSON.parse(saved);
+              } catch (e) {
+                console.error('Error loading game:', e);
+              }
+            }
+          };
+
+          const newGame = () => {
+            setSelectedTeam(null);
+            setTeams(JSON.parse(JSON.stringify(initialTeams)));
+            setLeague([]);
+            setMatchesPlayed(0);
+            localStorage.removeItem('footballManagerSave');
+            setGameState('team-select');
+          };
+
+          const resumeGame = () => {
+            const saved = localStorage.getItem('footballManagerSave');
+            if (saved) {
+              try {
+                const data = JSON.parse(saved);
+                if (data.gameData) {
+                  setSelectedTeam(data.gameData.selectedTeam);
+                  setTeams(data.gameData.teams);
+                  setLeague(data.gameData.league);
+                  setMatchesPlayed(data.gameData.matchesPlayed);
+                  setGameState(data.gameData.gameState === 'main-menu' ? 'squad' : data.gameData.gameState);
+                }
+              } catch (e) {
+                alert('Error loading saved game');
+              }
+            }
+          };
+
+          const hasSavedGame = () => {
+            const saved = localStorage.getItem('footballManagerSave');
+            if (saved) {
+              try {
+                const data = JSON.parse(saved);
+                return data.gameData && data.gameData.selectedTeam;
+              } catch (e) {
+                return false;
+              }
+            }
+            return false;
+          };
+
+          const initializeLeague = () => {
+            const leagueTable = teams.map(team => ({
+              teamId: team.id,
+              name: team.name,
+              played: 0,
+              won: 0,
+              drawn: 0,
+              lost: 0,
+              goalsFor: 0,
+              goalsAgainst: 0,
+              points: 0
+            }));
+            setLeague(leagueTable);
+          };
+
+          const selectTeam = (team) => {
+            setSelectedTeam(team);
+            initializeLeague();
+            setGameState('squad');
+          };
+
+          const getTeamRating = (team) => {
+            if (!team || !team.players) return 0;
+            const total = team.players.reduce((sum, player) => sum + player.rating, 0);
+            return Math.round(total / team.players.length);
+          };
+
+          const simulateMatch = (homeTeam, awayTeam) => {
+            const commentary = [];
+            const homeRating = getTeamRating(homeTeam);
+            const awayRating = getTeamRating(awayTeam);
             
-            <button
-              onClick={resumeGame}
-              disabled={!hasSavedGame()}
-              className={`w-full py-6 rounded-lg font-bold text-xl transition-all flex items-center justify-center gap-3 ${
-                hasSavedGame()
-                  ? 'bg-white/20 text-white hover:bg-white/30'
-                  : 'bg-white/5 text-gray-500 cursor-not-allowed'
-              }`}
-            >
-              <Save className="w-6 h-6" />
-              Resume Game
-            </button>
+            let homeScore = 0;
+            let awayScore = 0;
             
-            <button
-              onClick={() => setGameState('edit-database')}
-              className="w-full bg-white/20 text-white py-6 rounded-lg font-bold text-xl hover:bg-white/30 transition-all flex items-center justify-center gap-3"
-            >
-              <Edit className="w-6 h-6" />
-              Edit Database
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+            commentary.push(`${homeTeam.name} vs ${awayTeam.name}`);
+            commentary.push("Kick off!");
+            commentary.push("");
+            
+            const moments = 8 + Math.floor(Math.random() * 5);
+            
+            for (let i = 0; i < moments; i++) {
+              const minute = Math.floor(Math.random() * 90) + 1;
+              const homeChance = (homeRating + Math.random() * 10) / (homeRating + awayRating + Math.random() * 20);
+              
+              if (Math.random() < 0.3) {
+                if (Math.random() < homeChance) {
+                  const scorer = homeTeam.players.find(p => p.position === 'FWD' || p.position === 'MID');
+                  if (scorer && Math.random() < 0.4) {
+                    homeScore++;
+                    commentary.push(`${minute}' GOAL! ${scorer.name} scores for ${homeTeam.name}! ${homeScore}-${awayScore}`);
+                  } else if (scorer) {
+                    commentary.push(`${minute}' ${scorer.name} with a shot, but it's saved!`);
+                  }
+                } else {
+                  const scorer = awayTeam.players.find(p => p.position === 'FWD' || p.position === 'MID');
+                  if (scorer && Math.random() < 0.4) {
+                    awayScore++;
+                    commentary.push(`${minute}' GOAL! ${scorer.name} scores for ${awayTeam.name}! ${homeScore}-${awayScore}`);
+                  } else if (scorer) {
+                    commentary.push(`${minute}' ${scorer.name} shoots wide of the target!`);
+                  }
+                }
+              } else {
+                const events = [
+                  "Good passing move in midfield",
+                  "Strong tackle breaks up the attack",
+                  "Corner kick awarded",
+                  "Free kick in a dangerous position",
+                  "Counter attack developing",
+                  "Possession being retained well"
+                ];
+                const team = Math.random() < homeChance ? homeTeam.name : awayTeam.name;
+                commentary.push(`${minute}' ${events[Math.floor(Math.random() * events.length)]} - ${team}`);
+              }
+            }
+            
+            commentary.push("");
+            commentary.push(`FULL TIME: ${homeTeam.name} ${homeScore} - ${awayScore} ${awayTeam.name}`);
+            
+            return { homeScore, awayScore, commentary };
+          };
 
-  // Edit Database
-  if (gameState === 'edit-database') {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-green-900 p-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-4">
-            <div className="flex justify-between items-center">
-              <h1 className="text-3xl font-bold text-white">Database Editor</h1>
-              <button
-                onClick={() => setGameState('main-menu')}
-                className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all flex items-center gap-2"
-              >
-                <X className="w-5 h-5" />
-                Close
-              </button>
-            </div>
-          </div>
+          const playNextMatch = () => {
+            const otherTeams = teams.filter(t => t.id !== selectedTeam.id);
+            const opponent = otherTeams[Math.floor(Math.random() * otherTeams.length)];
+            
+            const isHome = Math.random() < 0.5;
+            const result = isHome 
+              ? simulateMatch(selectedTeam, opponent)
+              : simulateMatch(opponent, selectedTeam);
+            
+            const playerScore = isHome ? result.homeScore : result.awayScore;
+            const opponentScore = isHome ? result.awayScore : result.homeScore;
+            
+            setCurrentMatch({
+              opponent: opponent.name,
+              playerScore,
+              opponentScore,
+              isHome
+            });
+            
+            setMatchCommentary(result.commentary);
+            updateLeague(selectedTeam.id, opponent.id, playerScore, opponentScore);
+            setMatchesPlayed(matchesPlayed + 1);
+            setGameState('match-result');
+          };
 
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-4">
-            <div className="flex gap-2 mb-4">
-              <button
-                onClick={saveDatabase}
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all flex items-center gap-2"
-              >
-                <Save className="w-5 h-5" />
-                Save Database
-              </button>
-              <button
-                onClick={loadDatabase}
-                className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-all"
-              >
-                Load Database
-              </button>
-              <button
-                onClick={resetDatabase}
-                className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-all"
-              >
-                Reset to Default
-              </button>
-              <button
-                onClick={addNewTeam}
-                className="bg-yellow-400 text-green-900 px-4 py-2 rounded-lg hover:bg-yellow-300 transition-all flex items-center gap-2 ml-auto"
-              >
-                <Plus className="w-5 h-5" />
-                Add Team
-              </button>
-            </div>
-          </div>
+          const updateLeague = (teamId, opponentId, teamScore, opponentScore) => {
+            const updatedLeague = [...league];
+            const teamIndex = updatedLeague.findIndex(t => t.teamId === teamId);
+            const oppIndex = updatedLeague.findIndex(t => t.teamId === opponentId);
+            
+            if (teamIndex !== -1 && oppIndex !== -1) {
+              updatedLeague[teamIndex].played++;
+              updatedLeague[teamIndex].goalsFor += teamScore;
+              updatedLeague[teamIndex].goalsAgainst += opponentScore;
+              
+              updatedLeague[oppIndex].played++;
+              updatedLeague[oppIndex].goalsFor += opponentScore;
+              updatedLeague[oppIndex].goalsAgainst += teamScore;
+              
+              if (teamScore > opponentScore) {
+                updatedLeague[teamIndex].won++;
+                updatedLeague[teamIndex].points += 3;
+                updatedLeague[oppIndex].lost++;
+              } else if (teamScore < opponentScore) {
+                updatedLeague[teamIndex].lost++;
+                updatedLeague[oppIndex].won++;
+                updatedLeague[oppIndex].points += 3;
+              } else {
+                updatedLeague[teamIndex].drawn++;
+                updatedLeague[oppIndex].drawn++;
+                updatedLeague[teamIndex].points++;
+                updatedLeague[oppIndex].points++;
+              }
+            }
+            
+            updatedLeague.sort((a, b) => {
+              if (b.points !== a.points) return b.points - a.points;
+              const aGD = a.goalsFor - a.goalsAgainst;
+              const bGD = b.goalsFor - b.goalsAgainst;
+              return bGD - aGD;
+            });
+            
+            setLeague(updatedLeague);
+          };
 
-          {teams.map(team => (
-            <div key={team.id} className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-4">
-              <div className="flex justify-between items-start mb-4">
-                <div className="flex-1">
-                  <input
-                    type="text"
-                    value={team.name}
-                    onChange={(e) => updateTeam(team.id, 'name', e.target.value)}
-                    className="text-2xl font-bold bg-white/10 text-white px-3 py-1 rounded border border-white/20 mb-2 w-full"
-                  />
-                  <div className="text-green-200">
-                    Budget: 
-                    <input
-                      type="number"
-                      value={team.budget}
-                      onChange={(e) => updateTeam(team.id, 'budget', Number(e.target.value))}
-                      className="bg-white/10 text-white px-2 py-1 rounded border border-white/20 ml-2 w-32"
-                    />
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => addNewPlayer(team.id)}
-                    className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 flex items-center gap-1"
-                  >
-                    <Plus className="w-4 h-4" />
-                    Player
-                  </button>
-                  <button
-                    onClick={() => deleteTeam(team.id)}
-                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
+          const calculateAge = (dob) => {
+            const birthDate = new Date(dob);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+              age--;
+            }
+            return age;
+          };
 
-              <div className="space-y-2">
-                {team.players.map(player => (
-                  <div key={player.id} className="bg-white/5 rounded p-3 grid grid-cols-6 gap-2 items-center">
-                    <input
-                      type="text"
-                      value={player.name}
-                      onChange={(e) => updatePlayer(team.id, player.id, 'name', e.target.value)}
-                      className="bg-white/10 text-white px-2 py-1 rounded border border-white/20 text-sm"
-                    />
-                    <select
-                      value={player.position}
-                      onChange={(e) => updatePlayer(team.id, player.id, 'position', e.target.value)}
-                      className="bg-white/10 text-white px-2 py-1 rounded border border-white/20 text-sm"
-                    >
-                      <option value="GK">GK</option>
-                      <option value="DEF">DEF</option>
-                      <option value="MID">MID</option>
-                      <option value="FWD">FWD</option>
-                    </select>
-                    <input
-                      type="date"
-                      value={player.dob}
-                      onChange={(e) => updatePlayer(team.id, player.id, 'dob', e.target.value)}
-                      className="bg-white/10 text-white px-2 py-1 rounded border border-white/20 text-sm"
-                    />
-                    <input
-                      type="number"
-                      value={player.rating}
-                      min="1"
-                      max="20"
-                      onChange={(e) => updatePlayer(team.id, player.id, 'rating', e.target.value)}
-                      className="bg-white/10 text-white px-2 py-1 rounded border border-white/20 text-sm"
-                    />
-                    <input
-                      type="number"
-                      value={player.value}
-                      onChange={(e) => updatePlayer(team.id, player.id, 'value', e.target.value)}
-                      className="bg-white/10 text-white px-2 py-1 rounded border border-white/20 text-sm"
-                    />
-                    <button
-                      onClick={() => deletePlayer(team.id, player.id)}
-                      className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-sm"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
+          const formatCurrency = (amount) => {
+            return '£' + (amount / 1000000).toFixed(1) + 'M';
+          };
 
-  // Team Selection
-  if (gameState === 'team-select') {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-green-900 p-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-8 pt-8">
-            <Trophy className="w-16 h-16 mx-auto mb-4 text-yellow-400" />
-            <h1 className="text-4xl font-bold text-white mb-2">Title Challenge</h1>
-            <p className="text-green-200">Choose your team and begin your journey</p>
-          </div>
-          
-          <div className="grid gap-4">
-            {teams.map(team => (
-              <div
-                key={team.id}
-                onClick={() => selectTeam(team)}
-                className="bg-white/10 backdrop-blur-sm rounded-lg p-6 cursor-pointer hover:bg-white/20 transition-all border-2 border-white/20 hover:border-yellow-400"
-              >
-                <div className="flex justify-between items-center">
-                  <div>
-                    <h2 className="text-2xl font-bold text-white mb-2">{team.name}</h2>
-                    <p className="text-green-200">Squad size: {team.players.length} players</p>
-                    <p className="text-green-200">Budget: {formatCurrency(team.budget)}</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-yellow-400">{getTeamRating(team)}</div>
-                    <div className="text-sm text-green-200">Team Rating</div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          const saveDatabase = () => {
+            localStorage.setItem('footballManagerDatabase', JSON.stringify({ database: teams }));
+            alert('Database saved successfully!');
+          };
 
-          <button
-            onClick={() => setGameState('main-menu')}
-            className="w-full mt-4 bg-white/20 text-white py-3 rounded-lg font-semibold hover:bg-white/30 transition-all"
-          >
-            Back to Menu
-          </button>
-        </div>
-      </div>
-    );
-  }
+          const loadDatabase = () => {
+            const saved = localStorage.getItem('footballManagerDatabase');
+            if (saved) {
+              try {
+                const data = JSON.parse(saved);
+                if (data.database) {
+                  setTeams(data.database);
+                  alert('Database loaded successfully!');
+                }
+              } catch (e) {
+                alert('Error loading database');
+              }
+            } else {
+              alert('No saved database found');
+            }
+          };
 
-  // Squad/League/Transfers view
-  if (gameState === 'squad' || gameState === 'league-table' || gameState === 'transfers') {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-green-900 p-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-4">
-            <div className="flex justify-between items-center">
-              <div>
-                <h1 className="text-3xl font-bold text-white mb-2">{selectedTeam.name}</h1>
-                <p className="text-green-200">Matches: {matchesPlayed} | Budget: {formatCurrency(selectedTeam.budget)}</p>
-              </div>
-              <button
-                onClick={() => setGameState('main-menu')}
-                className="bg-white/20 text-white px-4 py-2 rounded-lg hover:bg-white/30 transition-all flex items-center gap-2"
-              >
-                <Home className="w-5 h-5" />
-                Menu
-              </button>
-            </div>
-          </div>
+          const resetDatabase = () => {
+            if (confirm('Are you sure you want to reset the database to default?')) {
+              setTeams(JSON.parse(JSON.stringify(initialTeams)));
+              localStorage.removeItem('footballManagerDatabase');
+              alert('Database reset to default');
+            }
+          };
 
-          <div className="flex gap-2 mb-4">
-            <button
-              onClick={() => setGameState('squad')}
-              className={`px-6 py-3 rounded-lg font-semibold transition-all ${
-                gameState === 'squad'
-                  ? 'bg-yellow-400 text-green-900'
-                  : 'bg-white/10 text-white hover:bg-white/20'
-              }`}
-            >
-              <Users className="w-5 h-5 inline mr-2" />
-              Squad
-            </button>
-            <button
-              onClick={() => setGameState('transfers')}
-              className={`px-6 py-3 rounded-lg font-semibold transition-all ${
-                gameState === 'transfers'
-                  ? 'bg-yellow-400 text-green-900'
-                  : 'bg-white/10 text-white hover:bg-white/20'
-              }`}
-            >
-              <ArrowLeftRight className="w-5 h-5 inline mr-2" />
-              Transfers
-            </button>
-            <button
-              onClick={() => setGameState('league-table')}
-              className={`px-6 py-3 rounded-lg font-semibold transition-all ${
-                gameState === 'league-table'
-                  ? 'bg-yellow-400 text-green-900'
-                  : 'bg-white/10 text-white hover:bg-white/20'
-              }`}
-            >
-              <TrendingUp className="w-5 h-5 inline mr-2" />
-              League
-            </button>
-          </div>
+          const addNewTeam = () => {
+            const newTeam = {
+              id: Math.max(...teams.map(t => t.id)) + 1,
+              name: "New Team",
+              budget: 50000000,
+              players: []
+            };
+            setTeams([...teams, newTeam]);
+          };
 
-          {gameState === 'squad' && (
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-4">
-              <h2 className="text-2xl font-bold text-white mb-4">Your Squad</h2>
-              <div className="space-y-2">
-                {['GK', 'DEF', 'MID', 'FWD'].map(position => {
-                  const posPlayers = selectedTeam.players.filter(p => p.position === position);
-                  return (
-                    <div key={position}>
-                      <h3 className="text-lg font-semibold text-yellow-400 mb-2 mt-4">
-                        {position === 'GK' ? 'Goalkeeper' : position === 'DEF' ? 'Defenders' : position === 'MID' ? 'Midfielders' : 'Forwards'}
-                      </h3>
-                      {posPlayers.map(player => (
-                        <div key={player.id} className="bg-white/5 rounded p-3 flex justify-between items-center">
-                          <div>
-                            <span className="text-white font-semibold">{player.name}</span>
-                            <span className="text-green-200 ml-4">Age: {calculateAge(player.dob)}</span>
-                            <span className="text-green-200 ml-4">Value: {formatCurrency(player.value)}</span>
-                          </div>
-                          <div className="text-yellow-400 font-bold text-xl">{player.rating}/20</div>
-                        </div>
-                      ))}
+          const deleteTeam = (teamId) => {
+            if (confirm('Are you sure you want to delete this team?')) {
+              setTeams(teams.filter(t => t.id !== teamId));
+            }
+          };
+
+          const updateTeam = (teamId, field, value) => {
+            setTeams(teams.map(t => t.id === teamId ? { ...t, [field]: value } : t));
+          };
+
+          const addNewPlayer = (teamId) => {
+            const newPlayer = {
+              id: Math.max(...teams.flatMap(t => t.players).map(p => p.id), 0) + 1,
+              name: "New Player",
+              position: "MID",
+              dob: "2000-01-01",
+              rating: 10,
+              value: 5000000
+            };
+            
+            setTeams(teams.map(t => {
+              if (t.id === teamId) {
+                return { ...t, players: [...t.players, newPlayer] };
+              }
+              return t;
+            }));
+          };
+
+          const deletePlayer = (teamId, playerId) => {
+            if (confirm('Are you sure you want to delete this player?')) {
+              setTeams(teams.map(t => {
+                if (t.id === teamId) {
+                  return { ...t, players: t.players.filter(p => p.id !== playerId) };
+                }
+                return t;
+              }));
+            }
+          };
+
+          const updatePlayer = (teamId, playerId, field, value) => {
+            setTeams(teams.map(t => {
+              if (t.id === teamId) {
+                return {
+                  ...t,
+                  players: t.players.map(p => {
+                    if (p.id === playerId) {
+                      return { ...p, [field]: field === 'rating' || field === 'value' ? Number(value) : value };
+                    }
+                    return p;
+                  })
+                };
+              }
+              return t;
+            }));
+          };
+
+          // Main Menu
+          if (gameState === 'main-menu') {
+            return (
+              <div className="min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-green-900 p-4 flex items-center justify-center">
+                <div className="max-w-md w-full">
+                  <div className="text-center mb-12">
+                    <div className="w-24 h-24 mx-auto mb-6 text-yellow-400 flex items-center justify-center">
+                      <Trophy />
                     </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {gameState === 'transfers' && (
-            <div className="space-y-4">
-              {selectedPlayerForTransfer ? (
-                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6">
-                  <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-2xl font-bold text-white">Transfer {selectedPlayerForTransfer.name}</h2>
+                    <h1 className="text-5xl font-bold text-white mb-3">Title Challenge</h1>
+                    <p className="text-green-200 text-lg">Football Manager</p>
+                  </div>
+                  
+                  <div className="space-y-4">
                     <button
-                      onClick={() => setSelectedPlayerForTransfer(null)}
-                      className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                      onClick={newGame}
+                      className="w-full bg-yellow-400 text-green-900 py-6 rounded-lg font-bold text-xl hover:bg-yellow-300 transition-all flex items-center justify-center gap-3"
                     >
-                      Cancel
+                      <Play />
+                      New Game
+                    </button>
+                    
+                    <button
+                      onClick={resumeGame}
+                      disabled={!hasSavedGame()}
+                      className={`w-full py-6 rounded-lg font-bold text-xl transition-all flex items-center justify-center gap-3 ${
+                        hasSavedGame()
+                          ? 'bg-white/20 text-white hover:bg-white/30'
+                          : 'bg-white/5 text-gray-500 cursor-not-allowed'
+                      }`}
+                    >
+                      <Save />
+                      Resume Game
+                    </button>
+                    
+                    <button
+                      onClick={() => setGameState('edit-database')}
+                      className="w-full bg-white/20 text-white py-6 rounded-lg font-bold text-xl hover:bg-white/30 transition-all flex items-center justify-center gap-3"
+                    >
+                      <Edit />
+                      Edit Database
                     </button>
                   </div>
-                  <p className="text-green-200 mb-4">Value: {formatCurrency(selectedPlayerForTransfer.value)}</p>
-                  <h3 className="text-xl font-bold text-white mb-3">Select destination team:</h3>
-                  <div className="space-y-2">
-                    {teams.filter(t => t.id !== selectedTeam.id).map(team => (
+                </div>
+              </div>
+            );
+          }
+
+          // Edit Database
+          if (gameState === 'edit-database') {
+            return (
+              <div className="min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-green-900 p-4">
+                <div className="max-w-6xl mx-auto">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-4">
+                    <div className="flex justify-between items-center">
+                      <h1 className="text-3xl font-bold text-white">Database Editor</h1>
+                      <button
+                        onClick={() => setGameState('main-menu')}
+                        className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all flex items-center gap-2"
+                      >
+                        <X />
+                        Close
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-4">
+                    <div className="flex gap-2 mb-4 flex-wrap">
+                      <button
+                        onClick={saveDatabase}
+                        className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all flex items-center gap-2"
+                      >
+                        <Save />
+                        Save Database
+                      </button>
+                      <button
+                        onClick={loadDatabase}
+                        className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-all"
+                      >
+                        Load Database
+                      </button>
+                      <button
+                        onClick={resetDatabase}
+                        className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-all"
+                      >
+                        Reset to Default
+                      </button>
+                      <button
+                        onClick={addNewTeam}
+                        className="bg-yellow-400 text-green-900 px-4 py-2 rounded-lg hover:bg-yellow-300 transition-all flex items-center gap-2 ml-auto"
+                      >
+                        <Plus />
+                        Add Team
+                      </button>
+                    </div>
+                  </div>
+
+                  {teams.map(team => (
+                    <div key={team.id} className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-4">
+                      <div className="flex justify-between items-start mb-4 flex-wrap gap-2">
+                        <div className="flex-1 min-w-[200px]">
+                          <input
+                            type="text"
+                            value={team.name}
+                            onChange={(e) => updateTeam(team.id, 'name', e.target.value)}
+                            className="text-2xl font-bold bg-white/10 text-white px-3 py-1 rounded border border-white/20 mb-2 w-full"
+                          />
+                          <div className="text-green-200">
+                            Budget: 
+                            <input
+                              type="number"
+                              value={team.budget}
+                              onChange={(e) => updateTeam(team.id, 'budget', Number(e.target.value))}
+                              className="bg-white/10 text-white px-2 py-1 rounded border border-white/20 ml-2 w-32"
+                            />
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => addNewPlayer(team.id)}
+                            className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 flex items-center gap-1"
+                          >
+                            <Plus />
+                            Player
+                          </button>
+                          <button
+                            onClick={() => deleteTeam(team.id)}
+                            className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                          >
+                            <Trash2 />
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        {team.players.map(player => (
+                          <div key={player.id} className="bg-white/5 rounded p-3 grid grid-cols-2 sm:grid-cols-6 gap-2 items-center">
+                            <input
+                              type="text"
+                              value={player.name}
+                              onChange={(e) => updatePlayer(team.id, player.id, 'name', e.target.value)}
+                              className="bg-white/10 text-white px-2 py-1 rounded border border-white/20 text-sm"
+                            />
+                            <select
+                              value={player.position}
+                              onChange={(e) => updatePlayer(team.id, player.id, 'position', e.target.value)}
+                              className="bg-white/10 text-white px-2 py-1 rounded border border-white/20 text-sm"
+                            >
+                              <option value="GK">GK</option>
+                              <option value="DEF">DEF</option>
+                              <option value="MID">MID</option>
+                              <option value="FWD">FWD</option>
+                            </select>
+                            <input
+                              type="date"
+                              value={player.dob}
+                              onChange={(e) => updatePlayer(team.id, player.id, 'dob', e.target.value)}
+                              className="bg-white/10 text-white px-2 py-1 rounded border border-white/20 text-sm"
+                            />
+                            <input
+                              type="number"
+                              value={player.rating}
+                              min="1"
+                              max="20"
+                              onChange={(e) => updatePlayer(team.id, player.id, 'rating', e.target.value)}
+                              className="bg-white/10 text-white px-2 py-1 rounded border border-white/20 text-sm"
+                            />
+                            <input
+                              type="number"
+                              value={player.value}
+                              onChange={(e) => updatePlayer(team.id, player.id, 'value', e.target.value)}
+                              className="bg-white/10 text-white px-2 py-1 rounded border border-white/20 text-sm"
+                            />
+                            <button
+                              onClick={() => deletePlayer(team.id, player.id)}
+                              className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-sm flex items-center justify-center"
+                            >
+                              <Trash2 />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          }
+
+          // Team Selection
+          if (gameState === 'team-select') {
+            return (
+              <div className="min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-green-900 p-4">
+                <div className="max-w-4xl mx-auto">
+                  <div className="text-center mb-8 pt-8">
+                    <div className="w-16 h-16 mx-auto mb-4 text-yellow-400 flex items-center justify-center">
+                      <Trophy />
+                    </div>
+                    <h1 className="text-4xl font-bold text-white mb-2">Title Challenge</h1>
+                    <p className="text-green-200">Choose your team and begin your journey</p>
+                  </div>
+                  
+                  <div className="grid gap-4">
+                    {teams.map(team => (
                       <div
                         key={team.id}
-                        onClick={() => completeTransfer(team.id)}
-                        className="bg-white/5 rounded p-4 cursor-pointer hover:bg-white/10 transition-all flex justify-between items-center"
+                        onClick={() => selectTeam(team)}
+                        className="bg-white/10 backdrop-blur-sm rounded-lg p-6 cursor-pointer hover:bg-white/20 transition-all border-2 border-white/20 hover:border-yellow-400"
                       >
-                        <div>
-                          <div className="text-white font-semibold">{team.name}</div>
-                          <div className="text-green-200">Budget: {formatCurrency(team.budget)}</div>
+                        <div className="flex justify-between items-center flex-wrap gap-4">
+                          <div>
+                            <h2 className="text-2xl font-bold text-white mb-2">{team.name}</h2>
+                            <p className="text-green-200">Squad size: {team.players.length} players</p>
+                            <p className="text-green-200">Budget: {formatCurrency(team.budget)}</p>
+                          </div>
+                          <div className="text-center">
+                            <div className="text-3xl font-bold text-yellow-400">{getTeamRating(team)}</div>
+                            <div className="text-sm text-green-200">Team Rating</div>
+                          </div>
                         </div>
-                        {team.budget < selectedPlayerForTransfer.value && (
-                          <span className="text-red-400 text-sm">Insufficient funds</span>
-                        )}
                       </div>
                     ))}
                   </div>
+
+                  <button
+                    onClick={() => setGameState('main-menu')}
+                    className="w-full mt-4 bg-white/20 text-white py-3 rounded-lg font-semibold hover:bg-white/30 transition-all"
+                  >
+                    Back to Menu
+                  </button>
                 </div>
-              ) : (
-                <>
-                  <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6">
-                    <h2 className="text-2xl font-bold text-white mb-4">Your Squad</h2>
-                    <p className="text-green-200 mb-4">Click on a player to transfer them</p>
-                    <div className="space-y-2">
-                      {selectedTeam.players.map(player => (
-                        <div
-                          key={player.id}
-                          onClick={() => initiateTransfer(player)}
-                          className="bg-white/5 rounded p-3 flex justify-between items-center cursor-pointer hover:bg-white/10 transition-all"
-                        >
-                          <div>
-                            <span className="text-white font-semibold">{player.name}</span>
-                            <span className="text-green-200 ml-4">{player.position}</span>
-                            <span className="text-green-200 ml-4">Age: {calculateAge(player.dob)}</span>
-                          </div>
-                          <div className="flex items-center gap-4">
-                            <span className="text-yellow-400 font-bold">{player.rating}/20</span>
-                            <span className="text-green-400">{formatCurrency(player.value)}</span>
-                          </div>
-                        </div>
-                      ))}
+              </div>
+            );
+          }
+
+          // Squad/League/Transfers view
+          if (gameState === 'squad' || gameState === 'league-table' || gameState === 'transfers') {
+            return (
+              <div className="min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-green-900 p-4">
+                <div className="max-w-6xl mx-auto">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-4">
+                    <div className="flex justify-between items-center flex-wrap gap-4">
+                      <div>
+                        <h1 className="text-3xl font-bold text-white mb-2">{selectedTeam.name}</h1>
+                        <p className="text-green-200">Matches: {matchesPlayed} | Budget: {formatCurrency(selectedTeam.budget)}</p>
+                      </div>
+                      <button
+                        onClick={() => setGameState('main-menu')}
+                        className="bg-white/20 text-white px-4 py-2 rounded-lg hover:bg-white/30 transition-all flex items-center gap-2"
+                      >
+                        <Home />
+                        Menu
+                      </button>
                     </div>
                   </div>
 
-                  <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6">
-                    <h2 className="text-2xl font-bold text-white mb-4">Available Players</h2>
-                    {teams.filter(t => t.id !== selectedTeam.id).map(team => (
-                      <div key={team.id} className="mb-6">
-                        <h3 className="text-xl font-semibold text-yellow-400 mb-3">{team.name}</h3>
-                        <div className="space-y-2">
-                          {team.players.map(player => (
-                            <div
-                              key={player.id}
-                              onClick={() => {
-                                if (selectedTeam.budget >= player.value) {
-                                  if (confirm(`Sign ${player.name} for ${formatCurrency(player.value)}?`)) {
-                                    const updatedTeams = teams.map(t => {
-                                      if (t.id === team.id) {
-                                        return {
-                                          ...t,
-                                          budget: t.budget + player.value,
-                                          players: t.players.filter(p => p.id !== player.id)
-                                        };
-                                      }
-                                      if (t.id === selectedTeam.id) {
-                                        return {
-                                          ...t,
-                                          budget: t.budget - player.value,
-                                          players: [...t.players, player]
-                                        };
-                                      }
-                                      return t;
-                                    });
-                                    setTeams(updatedTeams);
-                                    setSelectedTeam(updatedTeams.find(t => t.id === selectedTeam.id));
-                                    alert(`${player.name} has been signed!`);
-                                  }
-                                } else {
-                                  alert('Insufficient budget for this transfer!');
-                                }
-                              }}
-                              className={`bg-white/5 rounded p-3 flex justify-between items-center transition-all ${
-                                selectedTeam.budget >= player.value
-                                  ? 'cursor-pointer hover:bg-white/10'
-                                  : 'opacity-50 cursor-not-allowed'
-                              }`}
-                            >
-                              <div>
-                                <span className="text-white font-semibold">{player.name}</span>
-                                <span className="text-green-200 ml-4">{player.position}</span>
-                                <span className="text-green-200 ml-4">Age: {calculateAge(player.dob)}</span>
-                              </div>
-                              <div className="flex items-center gap-4">
-                                <span className="text-yellow-400 font-bold">{player.rating}/20</span>
-                                <span className={selectedTeam.budget >= player.value ? 'text-green-400' : 'text-red-400'}>
-                                  {formatCurrency(player.value)}
-                                </span>
-                              </div>
+                  <div className="flex gap-2 mb-4 flex-wrap">
+                    <button
+                      onClick={() => setGameState('squad')}
+                      className={`px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 ${
+                        gameState === 'squad'
+                          ? 'bg-yellow-400 text-green-900'
+                          : 'bg-white/10 text-white hover:bg-white/20'
+                      }`}
+                    >
+                      <Users />
+                      Squad
+                    </button>
+                    <button
+                      onClick={() => setGameState('transfers')}
+                      className={`px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 ${
+                        gameState === 'transfers'
+                          ? 'bg-yellow-400 text-green-900'
+                          : 'bg-white/10 text-white hover:bg-white/20'
+                      }`}
+                    >
+                      <ArrowLeftRight />
+                      Transfers
+                    </button>
+                    <button
+                      onClick={() => setGameState('league-table')}
+                      className={`px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 ${
+                        gameState === 'league-table'
+                          ? 'bg-yellow-400 text-green-900'
+                          : 'bg-white/10 text-white hover:bg-white/20'
+                      }`}
+                    >
+                      <TrendingUp />
+                      League
+                    </button>
+                  </div>
+
+                  {gameState === 'squad' && (
+                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-4">
+                      <h2 className="text-2xl font-bold text-white mb-4">Your Squad</h2>
+                      <div className="space-y-2">
+                        {['GK', 'DEF', 'MID', 'FWD'].map(position => {
+                          const posPlayers = selectedTeam.players.filter(p => p.position === position);
+                          return (
+                            <div key={position}>
+                              <h3 className="text-lg font-semibold text-yellow-400 mb-2 mt-4">
+                                {position === 'GK' ? 'Goalkeeper' : position === 'DEF' ? 'Defenders' : position === 'MID' ? 'Midfielders' : 'Forwards'}
+                              </h3>
+                              {posPlayers.map(player => (
+                                <div key={player.id} className="bg-white/5 rounded p-3 flex justify-between items-center flex-wrap gap-2">
+                                  <div>
+                                    <span className="text-white font-semibold">{player.name}</span>
+                                    <span className="text-green-200 ml-4">Age: {calculateAge(player.dob)}</span>
+                                    <span className="text-green-200 ml-4">Value: {formatCurrency(player.value)}</span>
+                                  </div>
+                                  <div className="text-yellow-400 font-bold text-xl">{player.rating}/20</div>
+                                </div>
+                              ))}
                             </div>
-                          ))}
-                        </div>
+                          );
+                        })}
                       </div>
+                    </div>
+                  )}
+
+                  {gameState === 'transfers' && (
+                    <div className="space-y-4">
+                      {selectedPlayerForTransfer ? (
+                        <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6">
+                          <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-2xl font-bold text-white">Transfer {selectedPlayerForTransfer.name}</h2>
+                            <button
+                              onClick={() => setSelectedPlayerForTransfer(null)}
+                              className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                          <p className="text-green-200 mb-4">Value: {formatCurrency(selectedPlayerForTransfer.value)}</p>
+                          <h3 className="text-xl font-bold text-white mb-3">Select destination team:</h3>
+                          <div className="space-y-2">
+                            {teams.filter(t => t.id !== selectedTeam.id).map(team => {
+                              const canAfford = team.budget >= selectedPlayerForTransfer.value;
+                              return (
+                                <div
+                                  key={team.id}
+                                  onClick={() => {
+                                    if (canAfford) {
+                                      const updatedTeams = teams.map(t => {
+                                        if (t.id === selectedTeam.id) {
+                                          return {
+                                            ...t,
+                                            budget: t.budget + selectedPlayerForTransfer.value,
+                                            players: t.players.filter(p => p.id !== selectedPlayerForTransfer.id)
+                                          };
+                                        }
+                                        if (t.id === team.id) {
+                                          return {
+                                            ...t,
+                                            budget: t.budget - selectedPlayerForTransfer.value,
+                                            players: [...t.players, selectedPlayerForTransfer]
+                                          };
+                                        }
+                                        return t;
+                                      });
+                                      setTeams(updatedTeams);
+                                      setSelectedTeam(updatedTeams.find(t => t.id === selectedTeam.id));
+                                      setSelectedPlayerForTransfer(null);
+                                      alert(`${selectedPlayerForTransfer.name} has been transferred to ${team.name}!`);
+                                    }
+                                  }}
+                                  className={`bg-white/5 rounded p-4 transition-all flex justify-between items-center ${
+                                    canAfford ? 'cursor-pointer hover:bg-white/10' : 'opacity-50 cursor-not-allowed'
+                                  }`}
+                                >
+                                  <div>
+                                    <div className="text-white font-semibold">{team.name}</div>
+                                    <div className="text-green-200">Budget: {formatCurrency(team.budget)}</div>
+                                  </div>
+                                  {!canAfford && (
+                                    <span className="text-red-400 text-sm">Insufficient funds</span>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6">
+                            <h2 className="text-2xl font-bold text-white mb-4">Your Squad</h2>
+                            <p className="text-green-200 mb-4">Click on a player to transfer them</p>
+                            <div className="space-y-2">
+                              {selectedTeam.players.map(player => (
+                                <div
+                                  key={player.id}
+                                  onClick={() => setSelectedPlayerForTransfer(player)}
+                                  className="bg-white/5 rounded p-3 flex justify-between items-center cursor-pointer hover:bg-white/10 transition-all flex-wrap gap-2"
+                                >
+                                  <div>
+                                    <span className="text-white font-semibold">{player.name}</span>
+                                    <span className="text-green-200 ml-4">{player.position}</span>
+                                    <span className="text-green-200 ml-4">Age: {calculateAge(player.dob)}</span>
+                                  </div>
+                                  <div className="flex items-center gap-4">
+                                    <span className="text-yellow-400 font-bold">{player.rating}/20</span>
+                                    <span className="text-green-400">{formatCurrency(player.value)}</span>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6">
+                            <h2 className="text-2xl font-bold text-white mb-4">Available Players</h2>
+                            {teams.filter(t => t.id !== selectedTeam.id).map(team => (
+                              <div key={team.id} className="mb-6">
+                                <h3 className="text-xl font-semibold text-yellow-400 mb-3">{team.name}</h3>
+                                <div className="space-y-2">
+                                  {team.players.map(player => {
+                                    const canAfford = selectedTeam.budget >= player.value;
+                                    return (
+                                      <div
+                                        key={player.id}
+                                        onClick={() => {
+                                          if (canAfford) {
+                                            if (confirm(`Sign ${player.name} for ${formatCurrency(player.value)}?`)) {
+                                              const updatedTeams = teams.map(t => {
+                                                if (t.id === team.id) {
+                                                  return {
+                                                    ...t,
+                                                    budget: t.budget + player.value,
+                                                    players: t.players.filter(p => p.id !== player.id)
+                                                  };
+                                                }
+                                                if (t.id === selectedTeam.id) {
+                                                  return {
+                                                    ...t,
+                                                    budget: t.budget - player.value,
+                                                    players: [...t.players, player]
+                                                  };
+                                                }
+                                                return t;
+                                              });
+                                              setTeams(updatedTeams);
+                                              setSelectedTeam(updatedTeams.find(t => t.id === selectedTeam.id));
+                                              alert(`${player.name} has been signed!`);
+                                            }
+                                          } else {
+                                            alert('Insufficient budget for this transfer!');
+                                          }
+                                        }}
+                                        className={`bg-white/5 rounded p-3 flex justify-between items-center transition-all flex-wrap gap-2 ${
+                                          canAfford
+                                            ? 'cursor-pointer hover:bg-white/10'
+                                            : 'opacity-50 cursor-not-allowed'
+                                        }`}
+                                      >
+                                        <div>
+                                          <span className="text-white font-semibold">{player.name}</span>
+                                          <span className="text-green-200 ml-4">{player.position}</span>
+                                          <span className="text-green-200 ml-4">Age: {calculateAge(player.dob)}</span>
+                                        </div>
+                                        <div className="flex items-center gap-4">
+                                          <span className="text-yellow-400 font-bold">{player.rating}/20</span>
+                                          <span className={canAfford ? 'text-green-400' : 'text-red-400'}>
+                                            {formatCurrency(player.value)}
+                                          </span>
+                                        </div>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  )}
+
+                  {gameState === 'league-table' && (
+                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-4">
+                      <h2 className="text-2xl font-bold text-white mb-4">League Table</h2>
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-white">
+                          <thead>
+                            <tr className="border-b border-white/20">
+                              <th className="text-left p-2">Pos</th>
+                              <th className="text-left p-2">Team</th>
+                              <th className="text-center p-2">P</th>
+                              <th className="text-center p-2">W</th>
+                              <th className="text-center p-2">D</th>
+                              <th className="text-center p-2">L</th>
+                              <th className="text-center p-2">GF</th>
+                              <th className="text-center p-2">GA</th>
+                              <th className="text-center p-2">GD</th>
+                              <th className="text-center p-2">Pts</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {league.map((team, index) => (
+                              <tr
+                                key={team.teamId}
+                                className={`border-b border-white/10 ${
+                                  team.teamId === selectedTeam.id ? 'bg-yellow-400/20' : ''
+                                }`}
+                              >
+                                <td className="p-2 font-bold">{index + 1}</td>
+                                <td className="p-2">{team.name}</td>
+                                <td className="text-center p-2">{team.played}</td>
+                                <td className="text-center p-2">{team.won}</td>
+                                <td className="text-center p-2">{team.drawn}</td>
+                                <td className="text-center p-2">{team.lost}</td>
+                                <td className="text-center p-2">{team.goalsFor}</td>
+                                <td className="text-center p-2">{team.goalsAgainst}</td>
+                                <td className="text-center p-2">{team.goalsFor - team.goalsAgainst}</td>
+                                <td className="text-center p-2 font-bold">{team.points}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  )}
+
+                  <button
+                    onClick={playNextMatch}
+                    className="w-full bg-yellow-400 text-green-900 py-4 rounded-lg font-bold text-xl hover:bg-yellow-300 transition-all flex items-center justify-center gap-2"
+                  >
+                    <Calendar />
+                    Play Next Match
+                  </button>
+                </div>
+              </div>
+            );
+          }
+
+          // Match Result
+          if (gameState === 'match-result') {
+            const resultText = 
+              currentMatch.playerScore > currentMatch.opponentScore ? 'VICTORY!' :
+              currentMatch.playerScore < currentMatch.opponentScore ? 'DEFEAT' :
+              'DRAW';
+            
+            const resultColor = 
+              currentMatch.playerScore > currentMatch.opponentScore ? 'text-green-400' :
+              currentMatch.playerScore < currentMatch.opponentScore ? 'text-red-400' :
+              'text-yellow-400';
+
+            return (
+              <div className="min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-green-900 p-4">
+                <div className="max-w-4xl mx-auto">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-4">
+                    <h1 className={`text-4xl font-bold text-center mb-4 ${resultColor}`}>{resultText}</h1>
+                    <div className="text-center text-white text-3xl font-bold mb-2">
+                      {currentMatch.isHome ? selectedTeam.name : currentMatch.opponent} {currentMatch.playerScore} - {currentMatch.opponentScore} {currentMatch.isHome ? currentMatch.opponent : selectedTeam.name}
+                    </div>
+                  </div>
+
+                  <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-4 max-h-96 overflow-y-auto">
+                    <h2 className="text-2xl font-bold text-white mb-4">Match Commentary</h2>
+                    {matchCommentary.map((comment, index) => (
+                      <p key={index} className="text-green-100 mb-2 font-mono text-sm">
+                        {comment}
+                      </p>
                     ))}
                   </div>
-                </>
-              )}
-            </div>
-          )}
 
-          {gameState === 'league-table' && (
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-4">
-              <h2 className="text-2xl font-bold text-white mb-4">League Table</h2>
-              <div className="overflow-x-auto">
-                <table className="w-full text-white">
-                  <thead>
-                    <tr className="border-b border-white/20">
-                      <th className="text-left p-2">Pos</th>
-                      <th className="text-left p-2">Team</th>
-                      <th className="text-center p-2">P</th>
-                      <th className="text-center p-2">W</th>
-                      <th className="text-center p-2">D</th>
-                      <th className="text-center p-2">L</th>
-                      <th className="text-center p-2">GF</th>
-                      <th className="text-center p-2">GA</th>
-                      <th className="text-center p-2">GD</th>
-                      <th className="text-center p-2">Pts</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {league.map((team, index) => (
-                      <tr
-                        key={team.teamId}
-                        className={`border-b border-white/10 ${
-                          team.teamId === selectedTeam.id ? 'bg-yellow-400/20' : ''
-                        }`}
-                      >
-                        <td className="p-2 font-bold">{index + 1}</td>
-                        <td className="p-2">{team.name}</td>
-                        <td className="text-center p-2">{team.played}</td>
-                        <td className="text-center p-2">{team.won}</td>
-                        <td className="text-center p-2">{team.drawn}</td>
-                        <td className="text-center p-2">{team.lost}</td>
-                        <td className="text-center p-2">{team.goalsFor}</td>
-                        <td className="text-center p-2">{team.goalsAgainst}</td>
-                        <td className="text-center p-2">{team.goalsFor - team.goalsAgainst}</td>
-                        <td className="text-center p-2 font-bold">{team.points}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                  <div className="flex gap-4 flex-wrap">
+                    <button
+                      onClick={() => setGameState('league-table')}
+                      className="flex-1 min-w-[200px] bg-white/20 text-white py-4 rounded-lg font-bold hover:bg-white/30 transition-all"
+                    >
+                      View League Table
+                    </button>
+                    <button
+                      onClick={playNextMatch}
+                      className="flex-1 min-w-[200px] bg-yellow-400 text-green-900 py-4 rounded-lg font-bold hover:bg-yellow-300 transition-all"
+                    >
+                      Next Match
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
-          )}
+            );
+          }
 
-          <button
-            onClick={playNextMatch}
-            className="w-full bg-yellow-400 text-green-900 py-4 rounded-lg font-bold text-xl hover:bg-yellow-300 transition-all"
-          >
-            <Calendar className="w-6 h-6 inline mr-2" />
-            Play Next Match
-          </button>
-        </div>
-      </div>
-    );
-  }
+          return null;
+        };
 
-  // Match Result
-  if (gameState === 'match-result') {
-    const resultText = 
-      currentMatch.playerScore > currentMatch.opponentScore ? 'VICTORY!' :
-      currentMatch.playerScore < currentMatch.opponentScore ? 'DEFEAT' :
-      'DRAW';
-    
-    const resultColor = 
-      currentMatch.playerScore > currentMatch.opponentScore ? 'text-green-400' :
-      currentMatch.playerScore < currentMatch.opponentScore ? 'text-red-400' :
-      'text-yellow-400';
-
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-green-900 p-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-4">
-            <h1 className={`text-4xl font-bold text-center mb-4 ${resultColor}`}>{resultText}</h1>
-            <div className="text-center text-white text-3xl font-bold mb-2">
-              {currentMatch.isHome ? selectedTeam.name : currentMatch.opponent} {currentMatch.playerScore} - {currentMatch.opponentScore} {currentMatch.isHome ? currentMatch.opponent : selectedTeam.name}
-            </div>
-          </div>
-
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-4 max-h-96 overflow-y-auto">
-            <h2 className="text-2xl font-bold text-white mb-4">Match Commentary</h2>
-            {matchCommentary.map((comment, index) => (
-              <p key={index} className="text-green-100 mb-2 font-mono text-sm">
-                {comment}
-              </p>
-            ))}
-          </div>
-
-          <div className="flex gap-4">
-            <button
-              onClick={() => setGameState('league-table')}
-              className="flex-1 bg-white/20 text-white py-4 rounded-lg font-bold hover:bg-white/30 transition-all"
-            >
-              View League Table
-            </button>
-            <button
-              onClick={playNextMatch}
-              className="flex-1 bg-yellow-400 text-green-900 py-4 rounded-lg font-bold hover:bg-yellow-300 transition-all"
-            >
-              Next Match
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-};
-
-export default App;
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
