@@ -1,0 +1,392 @@
+{
+  "england": {
+    "name": "Premier League",
+    "country": "England",
+    "teams": [
+      {
+        "id": 1,
+        "name": "Arsenal",
+        "budget": 50000000,
+        "players": [
+          { "id": 1, "name": "David Raya", "position": "GK", "dob": "1995-03-15", "rating": 16, "value": 8000000 },
+          { "id": 2, "name": "James Wilson", "position": "DEF", "dob": "1998-07-22", "rating": 15, "value": 6000000 },
+          { "id": 3, "name": "Marcus Cole", "position": "DEF", "dob": "1997-11-30", "rating": 17, "value": 10000000 },
+          { "id": 4, "name": "Robert Chen", "position": "DEF", "dob": "1996-05-18", "rating": 16, "value": 8000000 },
+          { "id": 5, "name": "Luke Anderson", "position": "DEF", "dob": "1999-01-25", "rating": 14, "value": 5000000 },
+          { "id": 6, "name": "Michael Torres", "position": "MID", "dob": "1997-09-12", "rating": 17, "value": 12000000 },
+          { "id": 7, "name": "Daniel Park", "position": "MID", "dob": "1998-04-08", "rating": 16, "value": 9000000 },
+          { "id": 8, "name": "Alex Thompson", "position": "MID", "dob": "1996-12-03", "rating": 15, "value": 7000000 },
+          { "id": 9, "name": "Chris Baker", "position": "FWD", "dob": "1999-08-17", "rating": 18, "value": 15000000 },
+          { "id": 10, "name": "Ryan Foster", "position": "FWD", "dob": "1997-06-21", "rating": 17, "value": 12000000 },
+          { "id": 11, "name": "Jack Murphy", "position": "FWD", "dob": "1998-10-14", "rating": 16, "value": 9000000 }
+        ]
+      },
+      {
+        "id": 2,
+        "name": "Aston Villa",
+        "budget": 50000000,
+        "players": [
+          { "id": 12, "name": "Tom Harrison", "position": "GK", "dob": "1996-02-20", "rating": 17, "value": 10000000 },
+          { "id": 13, "name": "Ben Davies", "position": "DEF", "dob": "1997-08-15", "rating": 16, "value": 8000000 },
+          { "id": 14, "name": "Sam Wright", "position": "DEF", "dob": "1998-03-27", "rating": 17, "value": 10000000 },
+          { "id": 15, "name": "Oliver Scott", "position": "DEF", "dob": "1996-11-09", "rating": 15, "value": 6000000 },
+          { "id": 16, "name": "Harry Mitchell", "position": "DEF", "dob": "1999-05-13", "rating": 14, "value": 5000000 },
+          { "id": 17, "name": "George Lewis", "position": "MID", "dob": "1997-01-18", "rating": 18, "value": 15000000 },
+          { "id": 18, "name": "William Cooper", "position": "MID", "dob": "1998-07-24", "rating": 17, "value": 12000000 },
+          { "id": 19, "name": "Joseph King", "position": "MID", "dob": "1996-09-30", "rating": 16, "value": 9000000 },
+          { "id": 20, "name": "Charlie Evans", "position": "FWD", "dob": "1999-02-11", "rating": 18, "value": 15000000 },
+          { "id": 21, "name": "Joshua Turner", "position": "FWD", "dob": "1997-04-05", "rating": 17, "value": 12000000 },
+          { "id": 22, "name": "Andrew Hill", "position": "FWD", "dob": "1998-12-19", "rating": 16, "value": 9000000 }
+        ]
+      },
+      {
+        "id": 3,
+        "name": "Bournemouth",
+        "budget": 50000000,
+        "players": [
+          { "id": 23, "name": "Noah Garcia", "position": "GK", "dob": "1995-06-12", "rating": 16, "value": 8000000 },
+          { "id": 24, "name": "Liam Rodriguez", "position": "DEF", "dob": "1998-01-08", "rating": 17, "value": 10000000 },
+          { "id": 25, "name": "Mason Lee", "position": "DEF", "dob": "1997-09-23", "rating": 16, "value": 8000000 },
+          { "id": 26, "name": "Ethan Walker", "position": "DEF", "dob": "1996-03-16", "rating": 15, "value": 6000000 },
+          { "id": 27, "name": "Lucas Hall", "position": "DEF", "dob": "1999-07-29", "rating": 14, "value": 5000000 },
+          { "id": 28, "name": "Aiden Allen", "position": "MID", "dob": "1997-11-02", "rating": 17, "value": 12000000 },
+          { "id": 29, "name": "Logan Young", "position": "MID", "dob": "1998-05-14", "rating": 16, "value": 9000000 },
+          { "id": 30, "name": "Jackson Hernandez", "position": "MID", "dob": "1996-08-20", "rating": 16, "value": 9000000 },
+          { "id": 31, "name": "Sebastian Martin", "position": "FWD", "dob": "1999-04-07", "rating": 18, "value": 15000000 },
+          { "id": 32, "name": "Carter Robinson", "position": "FWD", "dob": "1997-12-11", "rating": 17, "value": 12000000 },
+          { "id": 33, "name": "Dylan Clark", "position": "FWD", "dob": "1998-02-25", "rating": 16, "value": 9000000 }
+        ]
+      },
+      {
+        "id": 4,
+        "name": "Brighton",
+        "budget": 50000000,
+        "players": [
+          { "id": 34, "name": "Gabriel White", "position": "GK", "dob": "1996-09-18", "rating": 17, "value": 10000000 },
+          { "id": 35, "name": "Julian Lopez", "position": "DEF", "dob": "1997-05-03", "rating": 16, "value": 8000000 },
+          { "id": 36, "name": "Mateo Gonzalez", "position": "DEF", "dob": "1998-11-14", "rating": 17, "value": 10000000 },
+          { "id": 37, "name": "Leo Martinez", "position": "DEF", "dob": "1996-01-28", "rating": 15, "value": 6000000 },
+          { "id": 38, "name": "Anthony Perez", "position": "DEF", "dob": "1999-06-09", "rating": 14, "value": 5000000 },
+          { "id": 39, "name": "Elijah Wilson", "position": "MID", "dob": "1997-03-21", "rating": 18, "value": 15000000 },
+          { "id": 40, "name": "Isaiah Anderson", "position": "MID", "dob": "1998-08-06", "rating": 17, "value": 12000000 },
+          { "id": 41, "name": "Owen Thomas", "position": "MID", "dob": "1996-12-30", "rating": 16, "value": 9000000 },
+          { "id": 42, "name": "Lincoln Taylor", "position": "FWD", "dob": "1999-10-15", "rating": 18, "value": 15000000 },
+          { "id": 43, "name": "Jayden Moore", "position": "FWD", "dob": "1997-02-19", "rating": 17, "value": 12000000 },
+          { "id": 44, "name": "Grayson Jackson", "position": "FWD", "dob": "1998-06-23", "rating": 16, "value": 9000000 }
+        ]
+      }
+    ]
+  },
+  "germany": {
+    "name": "Bundesliga",
+    "country": "Germany",
+    "teams": [
+      {
+        "id": 101,
+        "name": "Bayern Munich",
+        "budget": 50000000,
+        "players": [
+          { "id": 101, "name": "Hans Müller", "position": "GK", "dob": "1996-04-12", "rating": 17, "value": 10000000 },
+          { "id": 102, "name": "Klaus Schmidt", "position": "DEF", "dob": "1997-08-20", "rating": 16, "value": 8000000 },
+          { "id": 103, "name": "Franz Weber", "position": "DEF", "dob": "1998-01-15", "rating": 17, "value": 10000000 },
+          { "id": 104, "name": "Otto Fischer", "position": "DEF", "dob": "1996-11-30", "rating": 16, "value": 8000000 },
+          { "id": 105, "name": "Fritz Wagner", "position": "DEF", "dob": "1999-03-22", "rating": 14, "value": 5000000 },
+          { "id": 106, "name": "Wilhelm Becker", "position": "MID", "dob": "1997-07-18", "rating": 18, "value": 15000000 },
+          { "id": 107, "name": "Karl Schulz", "position": "MID", "dob": "1998-09-10", "rating": 17, "value": 12000000 },
+          { "id": 108, "name": "Heinrich Hoffmann", "position": "MID", "dob": "1996-05-25", "rating": 16, "value": 9000000 },
+          { "id": 109, "name": "Ludwig Krause", "position": "FWD", "dob": "1999-12-08", "rating": 18, "value": 15000000 },
+          { "id": 110, "name": "Gustav Klein", "position": "FWD", "dob": "1997-02-14", "rating": 17, "value": 12000000 },
+          { "id": 111, "name": "Ernst Wolf", "position": "FWD", "dob": "1998-06-30", "rating": 16, "value": 9000000 }
+        ]
+      },
+      {
+        "id": 102,
+        "name": "Borussia Dortmund",
+        "budget": 50000000,
+        "players": [
+          { "id": 112, "name": "Stefan Neumann", "position": "GK", "dob": "1995-09-18", "rating": 16, "value": 8000000 },
+          { "id": 113, "name": "Dieter Schwarz", "position": "DEF", "dob": "1998-03-12", "rating": 15, "value": 6000000 },
+          { "id": 114, "name": "Helmut Braun", "position": "DEF", "dob": "1997-11-25", "rating": 17, "value": 10000000 },
+          { "id": 115, "name": "Werner Zimmermann", "position": "DEF", "dob": "1996-07-08", "rating": 16, "value": 8000000 },
+          { "id": 116, "name": "Bruno Hartmann", "position": "DEF", "dob": "1999-01-20", "rating": 14, "value": 5000000 },
+          { "id": 117, "name": "Erich Schmitt", "position": "MID", "dob": "1997-05-15", "rating": 17, "value": 12000000 },
+          { "id": 118, "name": "Walter Lange", "position": "MID", "dob": "1998-08-22", "rating": 16, "value": 9000000 },
+          { "id": 119, "name": "Alfred Werner", "position": "MID", "dob": "1996-12-10", "rating": 15, "value": 7000000 },
+          { "id": 120, "name": "Günther Krüger", "position": "FWD", "dob": "1999-04-28", "rating": 18, "value": 15000000 },
+          { "id": 121, "name": "Kurt Meier", "position": "FWD", "dob": "1997-10-05", "rating": 17, "value": 12000000 },
+          { "id": 122, "name": "Rolf Lehmann", "position": "FWD", "dob": "1998-02-16", "rating": 16, "value": 9000000 }
+        ]
+      },
+      {
+        "id": 103,
+        "name": "RB Leipzig",
+        "budget": 50000000,
+        "players": [
+          { "id": 123, "name": "Horst Koch", "position": "GK", "dob": "1996-06-14", "rating": 16, "value": 8000000 },
+          { "id": 124, "name": "Manfred Bauer", "position": "DEF", "dob": "1997-12-22", "rating": 15, "value": 6000000 },
+          { "id": 125, "name": "Uwe Peters", "position": "DEF", "dob": "1998-04-18", "rating": 16, "value": 8000000 },
+          { "id": 126, "name": "Jürgen Möller", "position": "DEF", "dob": "1996-09-30", "rating": 15, "value": 6000000 },
+          { "id": 127, "name": "Bernd Richter", "position": "DEF", "dob": "1999-02-08", "rating": 14, "value": 5000000 },
+          { "id": 128, "name": "Norbert Jung", "position": "MID", "dob": "1997-08-25", "rating": 17, "value": 12000000 },
+          { "id": 129, "name": "Rainer Frank", "position": "MID", "dob": "1998-11-12", "rating": 16, "value": 9000000 },
+          { "id": 130, "name": "Lothar Beck", "position": "MID", "dob": "1996-03-28", "rating": 15, "value": 7000000 },
+          { "id": 131, "name": "Gerhard Kaiser", "position": "FWD", "dob": "1999-07-16", "rating": 17, "value": 12000000 },
+          { "id": 132, "name": "Heinz Schröder", "position": "FWD", "dob": "1997-01-03", "rating": 16, "value": 9000000 },
+          { "id": 133, "name": "Siegfried Vogt", "position": "FWD", "dob": "1998-05-20", "rating": 16, "value": 9000000 }
+        ]
+      },
+      {
+        "id": 104,
+        "name": "Bayer Leverkusen",
+        "budget": 50000000,
+        "players": [
+          { "id": 134, "name": "Wolfgang Sauer", "position": "GK", "dob": "1995-10-25", "rating": 16, "value": 8000000 },
+          { "id": 135, "name": "Reinhard Huber", "position": "DEF", "dob": "1998-02-11", "rating": 16, "value": 8000000 },
+          { "id": 136, "name": "Joachim Dietrich", "position": "DEF", "dob": "1997-06-28", "rating": 16, "value": 8000000 },
+          { "id": 137, "name": "Gerd Böhm", "position": "DEF", "dob": "1996-11-15", "rating": 15, "value": 6000000 },
+          { "id": 138, "name": "Harald Graf", "position": "DEF", "dob": "1999-04-02", "rating": 14, "value": 5000000 },
+          { "id": 139, "name": "Andreas Seidel", "position": "MID", "dob": "1997-09-18", "rating": 17, "value": 12000000 },
+          { "id": 140, "name": "Thomas König", "position": "MID", "dob": "1998-12-05", "rating": 16, "value": 9000000 },
+          { "id": 141, "name": "Martin Lorenz", "position": "MID", "dob": "1996-05-22", "rating": 16, "value": 9000000 },
+          { "id": 142, "name": "Christian Ludwig", "position": "FWD", "dob": "1999-08-10", "rating": 17, "value": 12000000 },
+          { "id": 143, "name": "Peter Bauer", "position": "FWD", "dob": "1997-03-27", "rating": 16, "value": 9000000 },
+          { "id": 144, "name": "Johannes Walter", "position": "FWD", "dob": "1998-07-14", "rating": 16, "value": 9000000 }
+        ]
+      }
+    ]
+  },
+  "spain": {
+    "name": "La Liga",
+    "country": "Spain",
+    "teams": [
+      {
+        "id": 201,
+        "name": "Real Madrid",
+        "budget": 50000000,
+        "players": [
+          { "id": 201, "name": "Carlos Hernández", "position": "GK", "dob": "1996-03-18", "rating": 17, "value": 10000000 },
+          { "id": 202, "name": "Miguel García", "position": "DEF", "dob": "1997-07-22", "rating": 16, "value": 8000000 },
+          { "id": 203, "name": "Diego Martínez", "position": "DEF", "dob": "1998-11-10", "rating": 17, "value": 10000000 },
+          { "id": 204, "name": "Pablo López", "position": "DEF", "dob": "1996-05-28", "rating": 16, "value": 8000000 },
+          { "id": 205, "name": "Javier González", "position": "DEF", "dob": "1999-01-15", "rating": 14, "value": 5000000 },
+          { "id": 206, "name": "Antonio Rodríguez", "position": "MID", "dob": "1997-09-05", "rating": 18, "value": 15000000 },
+          { "id": 207, "name": "Manuel Fernández", "position": "MID", "dob": "1998-12-20", "rating": 17, "value": 12000000 },
+          { "id": 208, "name": "Fernando Sánchez", "position": "MID", "dob": "1996-06-12", "rating": 16, "value": 9000000 },
+          { "id": 209, "name": "Rafael Pérez", "position": "FWD", "dob": "1999-03-08", "rating": 18, "value": 15000000 },
+          { "id": 210, "name": "Sergio Gómez", "position": "FWD", "dob": "1997-10-25", "rating": 17, "value": 12000000 },
+          { "id": 211, "name": "Luis Ramírez", "position": "FWD", "dob": "1998-04-18", "rating": 16, "value": 9000000 }
+        ]
+      },
+      {
+        "id": 202,
+        "name": "Barcelona",
+        "budget": 50000000,
+        "players": [
+          { "id": 212, "name": "Juan Torres", "position": "GK", "dob": "1995-08-14", "rating": 17, "value": 10000000 },
+          { "id": 213, "name": "Pedro Jiménez", "position": "DEF", "dob": "1998-02-28", "rating": 16, "value": 8000000 },
+          { "id": 214, "name": "Alejandro Ruiz", "position": "DEF", "dob": "1997-06-15", "rating": 17, "value": 10000000 },
+          { "id": 215, "name": "David Moreno", "position": "DEF", "dob": "1996-10-03", "rating": 15, "value": 6000000 },
+          { "id": 216, "name": "Andrés Muñoz", "position": "DEF", "dob": "1999-04-20", "rating": 14, "value": 5000000 },
+          { "id": 217, "name": "Roberto Álvarez", "position": "MID", "dob": "1997-11-08", "rating": 18, "value": 15000000 },
+          { "id": 218, "name": "Ricardo Romero", "position": "MID", "dob": "1998-03-25", "rating": 17, "value": 12000000 },
+          { "id": 219, "name": "Alberto Navarro", "position": "MID", "dob": "1996-07-12", "rating": 16, "value": 9000000 },
+          { "id": 220, "name": "Víctor Castro", "position": "FWD", "dob": "1999-12-05", "rating": 18, "value": 15000000 },
+          { "id": 221, "name": "Raúl Ortiz", "position": "FWD", "dob": "1997-05-22", "rating": 17, "value": 12000000 },
+          { "id": 222, "name": "Ángel Silva", "position": "FWD", "dob": "1998-09-10", "rating": 16, "value": 9000000 }
+        ]
+      },
+      {
+        "id": 203,
+        "name": "Atlético Madrid",
+        "budget": 50000000,
+        "players": [
+          { "id": 223, "name": "José Vargas", "position": "GK", "dob": "1996-01-25", "rating": 16, "value": 8000000 },
+          { "id": 224, "name": "Enrique Ramos", "position": "DEF", "dob": "1997-05-12", "rating": 16, "value": 8000000 },
+          { "id": 225, "name": "Francisco Delgado", "position": "DEF", "dob": "1998-09-28", "rating": 16, "value": 8000000 },
+          { "id": 226, "name": "Julio Méndez", "position": "DEF", "dob": "1996-12-15", "rating": 15, "value": 6000000 },
+          { "id": 227, "name": "Rubén Vega", "position": "DEF", "dob": "1999-06-02", "rating": 14, "value": 5000000 },
+          { "id": 228, "name": "Emilio Herrera", "position": "MID", "dob": "1997-10-18", "rating": 17, "value": 12000000 },
+          { "id": 229, "name": "Jorge Medina", "position": "MID", "dob": "1998-01-05", "rating": 16, "value": 9000000 },
+          { "id": 230, "name": "Marcos Aguilar", "position": "MID", "dob": "1996-04-22", "rating": 15, "value": 7000000 },
+          { "id": 231, "name": "Daniel Cortés", "position": "FWD", "dob": "1999-08-08", "rating": 17, "value": 12000000 },
+          { "id": 232, "name": "César Reyes", "position": "FWD", "dob": "1997-11-25", "rating": 16, "value": 9000000 },
+          { "id": 233, "name": "Omar Fuentes", "position": "FWD", "dob": "1998-03-12", "rating": 16, "value": 9000000 }
+        ]
+      },
+      {
+        "id": 204,
+        "name": "Sevilla",
+        "budget": 50000000,
+        "players": [
+          { "id": 234, "name": "Tomás Serrano", "position": "GK", "dob": "1995-07-20", "rating": 16, "value": 8000000 },
+          { "id": 235, "name": "Iván Blanco", "position": "DEF", "dob": "1998-11-06", "rating": 15, "value": 6000000 },
+          { "id": 236, "name": "Santiago Vázquez", "position": "DEF", "dob": "1997-03-22", "rating": 16, "value": 8000000 },
+          { "id": 237, "name": "Gabriel Morales", "position": "DEF", "dob": "1996-08-10", "rating": 15, "value": 6000000 },
+          { "id": 238, "name": "Ignacio Peña", "position": "DEF", "dob": "1999-02-28", "rating": 14, "value": 5000000 },
+          { "id": 239, "name": "Adrián Cruz", "position": "MID", "dob": "1997-06-14", "rating": 17, "value": 12000000 },
+          { "id": 240, "name": "Lorenzo Campos", "position": "MID", "dob": "1998-10-01", "rating": 16, "value": 9000000 },
+          { "id": 241, "name": "Rodrigo Ibáñez", "position": "MID", "dob": "1996-01-18", "rating": 16, "value": 9000000 },
+          { "id": 242, "name": "Héctor Molina", "position": "FWD", "dob": "1999-05-05", "rating": 17, "value": 12000000 },
+          { "id": 243, "name": "Gustavo Núñez", "position": "FWD", "dob": "1997-09-22", "rating": 16, "value": 9000000 },
+          { "id": 244, "name": "Eduardo Paredes", "position": "FWD", "dob": "1998-01-08", "rating": 16, "value": 9000000 }
+        ]
+      }
+    ]
+  },
+  "france": {
+    "name": "Ligue 1",
+    "country": "France",
+    "teams": [
+      {
+        "id": 301,
+        "name": "Paris Saint-Germain",
+        "budget": 50000000,
+        "players": [
+          { "id": 301, "name": "Pierre Dubois", "position": "GK", "dob": "1996-04-16", "rating": 17, "value": 10000000 },
+          { "id": 302, "name": "Jean Martin", "position": "DEF", "dob": "1997-08-22", "rating": 16, "value": 8000000 },
+          { "id": 303, "name": "Luc Bernard", "position": "DEF", "dob": "1998-12-10", "rating": 17, "value": 10000000 },
+          { "id": 304, "name": "Marc Laurent", "position": "DEF", "dob": "1996-06-28", "rating": 16, "value": 8000000 },
+          { "id": 305, "name": "Henri Rousseau", "position": "DEF", "dob": "1999-02-15", "rating": 14, "value": 5000000 },
+          { "id": 306, "name": "André Moreau", "position": "MID", "dob": "1997-10-05", "rating": 18, "value": 15000000 },
+          { "id": 307, "name": "François Blanc", "position": "MID", "dob": "1998-01-20", "rating": 17, "value": 12000000 },
+          { "id": 308, "name": "Louis Girard", "position": "MID", "dob": "1996-05-12", "rating": 16, "value": 9000000 },
+          { "id": 309, "name": "Michel Lefevre", "position": "FWD", "dob": "1999-09-08", "rating": 18, "value": 15000000 },
+          { "id": 310, "name": "Philippe Roux", "position": "FWD", "dob": "1997-12-25", "rating": 17, "value": 12000000 },
+          { "id": 311, "name": "Étienne Simon", "position": "FWD", "dob": "1998-04-18", "rating": 16, "value": 9000000 }
+        ]
+      },
+      {
+        "id": 302,
+        "name": "Marseille",
+        "budget": 50000000,
+        "players": [
+          { "id": 312, "name": "Claude Mercier", "position": "GK", "dob": "1995-09-14", "rating": 16, "value": 8000000 },
+          { "id": 313, "name": "Albert Bonnet", "position": "DEF", "dob": "1998-03-28", "rating": 15, "value": 6000000 },
+          { "id": 314, "name": "René Lambert", "position": "DEF", "dob": "1997-07-15", "rating": 17, "value": 10000000 },
+          { "id": 315, "name": "Paul Vincent", "position": "DEF", "dob": "1996-11-03", "rating": 16, "value": 8000000 },
+          { "id": 316, "name": "Georges Fontaine", "position": "DEF", "dob": "1999-05-20", "rating": 14, "value": 5000000 },
+          { "id": 317, "name": "Maurice Dupont", "position": "MID", "dob": "1997-01-08", "rating": 17, "value": 12000000 },
+          { "id": 318, "name": "Jules Garnier", "position": "MID", "dob": "1998-08-25", "rating": 16, "value": 9000000 },
+          { "id": 319, "name": "Yves Chevalier", "position": "MID", "dob": "1996-12-12", "rating": 15, "value": 7000000 },
+          { "id": 320, "name": "Antoine Fournier", "position": "FWD", "dob": "1999-04-28", "rating": 17, "value": 12000000 },
+          { "id": 321, "name": "Marcel Fabre", "position": "FWD", "dob": "1997-10-05", "rating": 16, "value": 9000000 },
+          { "id": 322, "name": "Victor Perrin", "position": "FWD", "dob": "1998-02-16", "rating": 16, "value": 9000000 }
+        ]
+      },
+      {
+        "id": 303,
+        "name": "Lyon",
+        "budget": 50000000,
+        "players": [
+          { "id": 323, "name": "Jacques Morel", "position": "GK", "dob": "1996-06-18", "rating": 16, "value": 8000000 },
+          { "id": 324, "name": "Olivier Leclerc", "position": "DEF", "dob": "1997-12-22", "rating": 16, "value": 8000000 },
+          { "id": 325, "name": "Thierry Roy", "position": "DEF", "dob": "1998-04-18", "rating": 16, "value": 8000000 },
+          { "id": 326, "name": "Christian Noel", "position": "DEF", "dob": "1996-09-30", "rating": 15, "value": 6000000 },
+          { "id": 327, "name": "Dominique Clement", "position": "DEF", "dob": "1999-02-08", "rating": 14, "value": 5000000 },
+          { "id": 328, "name": "Alain Gauthier", "position": "MID", "dob": "1997-08-25", "rating": 17, "value": 12000000 },
+          { "id": 329, "name": "Bernard Marchand", "position": "MID", "dob": "1998-11-12", "rating": 16, "value": 9000000 },
+          { "id": 330, "name": "Daniel Arnaud", "position": "MID", "dob": "1996-03-28", "rating": 15, "value": 7000000 },
+          { "id": 331, "name": "Serge Renard", "position": "FWD", "dob": "1999-07-16", "rating": 17, "value": 12000000 },
+          { "id": 332, "name": "Roger Denis", "position": "FWD", "dob": "1997-01-03", "rating": 16, "value": 9000000 },
+          { "id": 333, "name": "Gérard Masson", "position": "FWD", "dob": "1998-05-20", "rating": 16, "value": 9000000 }
+        ]
+      },
+      {
+        "id": 304,
+        "name": "Monaco",
+        "budget": 50000000,
+        "players": [
+          { "id": 334, "name": "Julien Renaud", "position": "GK", "dob": "1995-10-25", "rating": 16, "value": 8000000 },
+          { "id": 335, "name": "Nicolas Giraud", "position": "DEF", "dob": "1998-02-11", "rating": 15, "value": 6000000 },
+          { "id": 336, "name": "Bruno Petit", "position": "DEF", "dob": "1997-06-28", "rating": 16, "value": 8000000 },
+          { "id": 337, "name": "Maxime Colin", "position": "DEF", "dob": "1996-11-15", "rating": 15, "value": 6000000 },
+          { "id": 338, "name": "Xavier Robin", "position": "DEF", "dob": "1999-04-02", "rating": 14, "value": 5000000 },
+          { "id": 339, "name": "Sébastien Michel", "position": "MID", "dob": "1997-09-18", "rating": 17, "value": 12000000 },
+          { "id": 340, "name": "Christophe David", "position": "MID", "dob": "1998-12-05", "rating": 16, "value": 9000000 },
+          { "id": 341, "name": "Patrice Bertrand", "position": "MID", "dob": "1996-05-22", "rating": 16, "value": 9000000 },
+          { "id": 342, "name": "Stéphane Guillaume", "position": "FWD", "dob": "1999-08-10", "rating": 17, "value": 12000000 },
+          { "id": 343, "name": "Laurent Andre", "position": "FWD", "dob": "1997-03-27", "rating": 16, "value": 9000000 },
+          { "id": 344, "name": "Frédéric Lucas", "position": "FWD", "dob": "1998-07-14", "rating": 16, "value": 9000000 }
+        ]
+      }
+    ]
+  },
+  "italy": {
+    "name": "Serie A",
+    "country": "Italy",
+    "teams": [
+      {
+        "id": 401,
+        "name": "Juventus",
+        "budget": 50000000,
+        "players": [
+          { "id": 401, "name": "Marco Rossi", "position": "GK", "dob": "1996-03-20", "rating": 17, "value": 10000000 },
+          { "id": 402, "name": "Alessandro Bianchi", "position": "DEF", "dob": "1997-07-18", "rating": 16, "value": 8000000 },
+          { "id": 403, "name": "Luca Ferrari", "position": "DEF", "dob": "1998-11-10", "rating": 17, "value": 10000000 },
+          { "id": 404, "name": "Andrea Romano", "position": "DEF", "dob": "1996-05-28", "rating": 16, "value": 8000000 },
+          { "id": 405, "name": "Matteo Greco", "position": "DEF", "dob": "1999-01-15", "rating": 14, "value": 5000000 },
+          { "id": 406, "name": "Giovanni Costa", "position": "MID", "dob": "1997-09-05", "rating": 18, "value": 15000000 },
+          { "id": 407, "name": "Francesco Ricci", "position": "MID", "dob": "1998-12-20", "rating": 17, "value": 12000000 },
+          { "id": 408, "name": "Stefano Colombo", "position": "MID", "dob": "1996-06-12", "rating": 16, "value": 9000000 },
+          { "id": 409, "name": "Giuseppe Marino", "position": "FWD", "dob": "1999-03-08", "rating": 18, "value": 15000000 },
+          { "id": 410, "name": "Roberto Bruno", "position": "FWD", "dob": "1997-10-25", "rating": 17, "value": 12000000 },
+          { "id": 411, "name": "Davide Gallo", "position": "FWD", "dob": "1998-04-18", "rating": 16, "value": 9000000 }
+        ]
+      },
+      {
+        "id": 402,
+        "name": "AC Milan",
+        "budget": 50000000,
+        "players": [
+          { "id": 412, "name": "Antonio Conti", "position": "GK", "dob": "1995-08-14", "rating": 17, "value": 10000000 },
+          { "id": 413, "name": "Simone Fontana", "position": "DEF", "dob": "1998-02-28", "rating": 16, "value": 8000000 },
+          { "id": 414, "name": "Paolo Lombardi", "position": "DEF", "dob": "1997-06-15", "rating": 17, "value": 10000000 },
+          { "id": 415, "name": "Nicola Barbieri", "position": "DEF", "dob": "1996-10-03", "rating": 15, "value": 6000000 },
+          { "id": 416, "name": "Lorenzo Russo", "position": "DEF", "dob": "1999-04-20", "rating": 14, "value": 5000000 },
+          { "id": 417, "name": "Riccardo Moretti", "position": "MID", "dob": "1997-11-08", "rating": 18, "value": 15000000 },
+          { "id": 418, "name": "Fabio Martini", "position": "MID", "dob": "1998-03-25", "rating": 17, "value": 12000000 },
+          { "id": 419, "name": "Claudio Esposito", "position": "MID", "dob": "1996-07-12", "rating": 16, "value": 9000000 },
+          { "id": 420, "name": "Massimo Serra", "position": "FWD", "dob": "1999-12-05", "rating": 18, "value": 15000000 },
+          { "id": 421, "name": "Daniele Monti", "position": "FWD", "dob": "1997-05-22", "rating": 17, "value": 12000000 },
+          { "id": 422, "name": "Vincenzo Caruso", "position": "FWD", "dob": "1998-09-10", "rating": 16, "value": 9000000 }
+        ]
+      },
+      {
+        "id": 403,
+        "name": "Inter Milan",
+        "budget": 50000000,
+        "players": [
+          { "id": 423, "name": "Emanuele De Luca", "position": "GK", "dob": "1996-01-25", "rating": 16, "value": 8000000 },
+          { "id": 424, "name": "Gabriele Vitali", "position": "DEF", "dob": "1997-05-12", "rating": 16, "value": 8000000 },
+          { "id": 425, "name": "Alberto Santoro", "position": "DEF", "dob": "1998-09-28", "rating": 16, "value": 8000000 },
+          { "id": 426, "name": "Michele Orlando", "position": "DEF", "dob": "1996-12-15", "rating": 15, "value": 6000000 },
+          { "id": 427, "name": "Cristian Benedetti", "position": "DEF", "dob": "1999-06-02", "rating": 14, "value": 5000000 },
+          { "id": 428, "name": "Tommaso De Santis", "position": "MID", "dob": "1997-10-18", "rating": 17, "value": 12000000 },
+          { "id": 429, "name": "Federico Marchetti", "position": "MID", "dob": "1998-01-05", "rating": 16, "value": 9000000 },
+          { "id": 430, "name": "Alessio Gatti", "position": "MID", "dob": "1996-04-22", "rating": 15, "value": 7000000 },
+          { "id": 431, "name": "Salvatore Mancini", "position": "FWD", "dob": "1999-08-08", "rating": 17, "value": 12000000 },
+          { "id": 432, "name": "Gianluca Battaglia", "position": "FWD", "dob": "1997-11-25", "rating": 16, "value": 9000000 },
+          { "id": 433, "name": "Enrico Fabbri", "position": "FWD", "dob": "1998-03-12", "rating": 16, "value": 9000000 }
+        ]
+      },
+      {
+        "id": 404,
+        "name": "Napoli",
+        "budget": 50000000,
+        "players": [
+          { "id": 434, "name": "Fabrizio Ferri", "position": "GK", "dob": "1995-07-20", "rating": 16, "value": 8000000 },
+          { "id": 435, "name": "Domenico Basile", "position": "DEF", "dob": "1998-11-06", "rating": 15, "value": 6000000 },
+          { "id": 436, "name": "Maurizio Pellegrini", "position": "DEF", "dob": "1997-03-22", "rating": 16, "value": 8000000 },
+          { "id": 437, "name": "Sergio Amato", "position": "DEF", "dob": "1996-08-10", "rating": 15, "value": 6000000 },
+          { "id": 438, "name": "Valerio Gentile", "position": "DEF", "dob": "1999-02-28", "rating": 14, "value": 5000000 },
+          { "id": 439, "name": "Leonardo Pagano", "position": "MID", "dob": "1997-06-14", "rating": 17, "value": 12000000 },
+          { "id": 440, "name": "Raffaele Bianco", "position": "MID", "dob": "1998-10-01", "rating": 16, "value": 9000000 },
+          { "id": 441, "name": "Saverio Villa", "position": "MID", "dob": "1996-01-18", "rating": 16, "value": 9000000 },
+          { "id": 442, "name": "Angelo Parisi", "position": "FWD", "dob": "1999-05-05", "rating": 17, "value": 12000000 },
+          { "id": 443, "name": "Umberto Leone", "position": "FWD", "dob": "1997-09-22", "rating": 16, "value": 9000000 },
+          { "id": 444, "name": "Dario Silvestri", "position": "FWD", "dob": "1998-01-08", "rating": 16, "value": 9000000 }
+        ]
+      }
+    ]
+  }
+}
