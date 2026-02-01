@@ -24,9 +24,14 @@
           { "id": 8, "name": "Martin Ødegaard", "positions": ["CM", "CAM"], "dob": "1998-12-17", "rating": 16 },
           { "id": 41, "name": "Declan Rice", "positions": ["CM"], "dob": "1999-01-14", "rating": 18 },
           { "id": 23, "name": "Mikel Merino", "positions": ["CM"], "dob": "1996-06-22", "rating": 15 },
-          { "id": 10, "name": "Gabriel Jesus", "positions": ["ST"], "dob": "1999-08-17", "rating": 15 },
-          { "id": 11, "name": "Leandro Trossard", "positions": ["LW", "ST"], "dob": "1997-06-21", "rating": 17 },
-          { "id": 7, "name": "Bukayo Saka", "positions": ["RW", "LW"], "dob": "1998-10-14", "rating": 17 }
+          { "id": 41, "name": "Eberechi Eze", "positions": ["CM", "CAM"], "dob": "1998-06-29", "rating": 16 },
+          { "id": 9, "name": "Gabriel Jesus", "positions": ["ST"], "dob": "1997-04-03", "rating": 15 },
+          { "id": 19, "name": "Leandro Trossard", "positions": ["LW", "ST"], "dob": "1997-06-21", "rating": 16 },
+          { "id": 11, "name": "Gabriel Martinelli", "positions": ["LW"], "dob": "2001-06-18", "rating": 16 }
+          { "id": 7, "name": "Bukayo Saka", "positions": ["RW", "LW"], "dob": "2001-09-05", "rating": 17 }
+          { "id": 14, "name": "Viktor Gyokeres", "positions": ["ST"], "dob": "1998-06-04", "rating": 16 }
+          { "id": 20, "name": "Noni Madueke", "positions": ["RW", "LW"], "dob": "2002-03-10", "rating": 16 }
+          { "id": 29, "name": "Kai Havertz", "positions": ["RW", "LW", "CAM", "ST"], "dob": "1999-06-11", "rating": 16 }
         ]
       },
       {
