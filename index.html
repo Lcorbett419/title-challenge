@@ -39,6 +39,35 @@
         const ArrowLeftRight = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></svg>;
         const Globe = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>;
 
+        // Calculate player value based on position and rating
+        const calculatePlayerValue = (player) => {
+          const { positions, rating } = player;
+          
+          // Position multipliers (attacking positions worth more)
+          const positionValues = {
+            'ST': 1.0,
+            'LW': 0.95,
+            'RW': 0.95,
+            'CAM': 0.85,
+            'CM': 0.70,
+            'CDM': 0.68,
+            'LB': 0.65,
+            'RB': 0.65,
+            'CB': 0.60,
+            'GK': 0.55
+          };
+          
+          // Get highest position multiplier
+          const maxMultiplier = Math.max(...positions.map(pos => positionValues[pos] || 0.5));
+          
+          // Base value calculation: rating^2 * multiplier * 250000
+          // This gives values from ~2M (rating 10 GK) to ~100M (rating 20 ST)
+          const baseValue = Math.pow(rating, 2) * maxMultiplier * 250000;
+          
+          // Cap at 100 million
+          return Math.min(Math.round(baseValue), 100000000);
+        };
+
         const App = () => {
           const [databaseLoaded, setDatabaseLoaded] = useState(false);
           const [initialLeagues, setInitialLeagues] = useState(null);
@@ -182,7 +211,36 @@
               
               if (Math.random() < 0.3) {
                 if (Math.random() < homeChance) {
-                  const scorer = homeTeam.players.find(p => p.position === 'FWD' || p.position === 'MID');
+                  // Select scorer based on position probability
+                  const rand = Math.random();
+                  let scorer;
+                  
+                  if (rand < 0.70) {
+                    // 70% attackers
+                    const attackers = homeTeam.players.filter(p => 
+                      p.positions.some(pos => ['ST', 'LW', 'RW', 'CAM'].includes(pos))
+                    );
+                    scorer = attackers[Math.floor(Math.random() * attackers.length)];
+                  } else if (rand < 0.90) {
+                    // 20% midfielders
+                    const midfielders = homeTeam.players.filter(p => 
+                      p.positions.some(pos => ['CDM', 'CM'].includes(pos))
+                    );
+                    scorer = midfielders[Math.floor(Math.random() * midfielders.length)];
+                  } else if (rand < 0.98) {
+                    // 8% defenders
+                    const defenders = homeTeam.players.filter(p => 
+                      p.positions.some(pos => ['LB', 'CB', 'RB'].includes(pos))
+                    );
+                    scorer = defenders[Math.floor(Math.random() * defenders.length)];
+                  } else {
+                    // 2% goalkeeper
+                    const goalkeeper = homeTeam.players.find(p => 
+                      p.positions.includes('GK')
+                    );
+                    scorer = goalkeeper;
+                  }
+                  
                   if (scorer && Math.random() < 0.4) {
                     homeScore++;
                     commentary.push(`${minute}' GOAL! ${scorer.name} scores for ${homeTeam.name}! ${homeScore}-${awayScore}`);
@@ -190,7 +248,36 @@
                     commentary.push(`${minute}' ${scorer.name} with a shot, but it's saved!`);
                   }
                 } else {
-                  const scorer = awayTeam.players.find(p => p.position === 'FWD' || p.position === 'MID');
+                  // Select scorer based on position probability
+                  const rand = Math.random();
+                  let scorer;
+                  
+                  if (rand < 0.70) {
+                    // 70% attackers
+                    const attackers = awayTeam.players.filter(p => 
+                      p.positions.some(pos => ['ST', 'LW', 'RW', 'CAM'].includes(pos))
+                    );
+                    scorer = attackers[Math.floor(Math.random() * attackers.length)];
+                  } else if (rand < 0.90) {
+                    // 20% midfielders
+                    const midfielders = awayTeam.players.filter(p => 
+                      p.positions.some(pos => ['CDM', 'CM'].includes(pos))
+                    );
+                    scorer = midfielders[Math.floor(Math.random() * midfielders.length)];
+                  } else if (rand < 0.98) {
+                    // 8% defenders
+                    const defenders = awayTeam.players.filter(p => 
+                      p.positions.some(pos => ['LB', 'CB', 'RB'].includes(pos))
+                    );
+                    scorer = defenders[Math.floor(Math.random() * defenders.length)];
+                  } else {
+                    // 2% goalkeeper
+                    const goalkeeper = awayTeam.players.find(p => 
+                      p.positions.includes('GK')
+                    );
+                    scorer = goalkeeper;
+                  }
+                  
                   if (scorer && Math.random() < 0.4) {
                     awayScore++;
                     commentary.push(`${minute}' GOAL! ${scorer.name} scores for ${awayTeam.name}! ${homeScore}-${awayScore}`);
@@ -316,7 +403,7 @@
           };
 
           const formatCurrency = (amount) => {
-            return '£' + (amount / 1000000).toFixed(1) + 'M';
+            return '£' + Math.round(amount / 1000000) + 'M';
           };
 
           // Show loading screen
@@ -542,26 +629,16 @@
                     <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-4">
                       <h2 className="text-2xl font-bold text-white mb-4">Your Squad</h2>
                       <div className="space-y-2">
-                        {['GK', 'DEF', 'MID', 'FWD'].map(position => {
-                          const posPlayers = selectedTeam.players.filter(p => p.position === position);
-                          return (
-                            <div key={position}>
-                              <h3 className="text-lg font-semibold text-yellow-400 mb-2 mt-4">
-                                {position === 'GK' ? 'Goalkeeper' : position === 'DEF' ? 'Defenders' : position === 'MID' ? 'Midfielders' : 'Forwards'}
-                              </h3>
-                              {posPlayers.map(player => (
-                                <div key={player.id} className="bg-white/5 rounded p-3 flex justify-between items-center flex-wrap gap-2">
-                                  <div>
-                                    <span className="text-white font-semibold">{player.name}</span>
-                                    <span className="text-green-200 ml-4">Age: {calculateAge(player.dob)}</span>
-                                    <span className="text-green-200 ml-4">Value: {formatCurrency(player.value)}</span>
-                                  </div>
-                                  <div className="text-yellow-400 font-bold text-xl">{player.rating}/20</div>
-                                </div>
-                              ))}
+                        {selectedTeam.players.map(player => (
+                          <div key={player.id} className="bg-white/5 rounded p-3 flex justify-between items-center flex-wrap gap-2">
+                            <div>
+                              <span className="text-white font-semibold">{player.name}</span>
+                              <span className="text-green-200 ml-4">{player.positions.join('/')}</span>
+                              <span className="text-green-200 ml-4">Age: {calculateAge(player.dob)}</span>
                             </div>
-                          );
-                        })}
+                            <div className="text-green-400 font-semibold">{formatCurrency(calculatePlayerValue(player))}</div>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   )}
@@ -579,13 +656,14 @@
                               Cancel
                             </button>
                           </div>
-                          <p className="text-green-200 mb-4">Value: {formatCurrency(selectedPlayerForTransfer.value)}</p>
+                          <p className="text-green-200 mb-4">Value: {formatCurrency(calculatePlayerValue(selectedPlayerForTransfer))}</p>
                           <h3 className="text-xl font-bold text-white mb-3">Select destination team:</h3>
                           <div className="space-y-2">
                             {Object.keys(allLeagues).map(leagueKey => {
                               const league = allLeagues[leagueKey];
                               return league.teams.filter(t => t.id !== selectedTeam.id).map(team => {
-                                const canAfford = team.budget >= selectedPlayerForTransfer.value;
+                                const playerValue = calculatePlayerValue(selectedPlayerForTransfer);
+                                const canAfford = team.budget >= playerValue;
                                 return (
                                   <div
                                     key={team.id}
@@ -597,14 +675,14 @@
                                             if (t.id === selectedTeam.id) {
                                               return {
                                                 ...t,
-                                                budget: t.budget + selectedPlayerForTransfer.value,
+                                                budget: t.budget + playerValue,
                                                 players: t.players.filter(p => p.id !== selectedPlayerForTransfer.id)
                                               };
                                             }
                                             if (t.id === team.id) {
                                               return {
                                                 ...t,
-                                                budget: t.budget - selectedPlayerForTransfer.value,
+                                                budget: t.budget - playerValue,
                                                 players: [...t.players, selectedPlayerForTransfer]
                                               };
                                             }
@@ -647,13 +725,10 @@
                                 >
                                   <div>
                                     <span className="text-white font-semibold">{player.name}</span>
-                                    <span className="text-green-200 ml-4">{player.position}</span>
+                                    <span className="text-green-200 ml-4">{player.positions.join('/')}</span>
                                     <span className="text-green-200 ml-4">Age: {calculateAge(player.dob)}</span>
                                   </div>
-                                  <div className="flex items-center gap-4">
-                                    <span className="text-yellow-400 font-bold">{player.rating}/20</span>
-                                    <span className="text-green-400">{formatCurrency(player.value)}</span>
-                                  </div>
+                                  <span className="text-green-400 font-semibold">{formatCurrency(calculatePlayerValue(player))}</span>
                                 </div>
                               ))}
                             </div>
@@ -671,27 +746,28 @@
                                       <h4 className="text-lg font-semibold text-white mb-2">{team.name}</h4>
                                       <div className="space-y-2">
                                         {team.players.slice(0, 3).map(player => {
-                                          const canAfford = selectedTeam.budget >= player.value;
+                                          const playerValue = calculatePlayerValue(player);
+                                          const canAfford = selectedTeam.budget >= playerValue;
                                           return (
                                             <div
                                               key={player.id}
                                               onClick={() => {
                                                 if (canAfford) {
-                                                  if (confirm(`Sign ${player.name} for ${formatCurrency(player.value)}?`)) {
+                                                  if (confirm(`Sign ${player.name} for ${formatCurrency(playerValue)}?`)) {
                                                     const updatedLeagues = JSON.parse(JSON.stringify(allLeagues));
                                                     Object.keys(updatedLeagues).forEach(lk => {
                                                       updatedLeagues[lk].teams = updatedLeagues[lk].teams.map(t => {
                                                         if (t.id === team.id) {
                                                           return {
                                                             ...t,
-                                                            budget: t.budget + player.value,
+                                                            budget: t.budget + playerValue,
                                                             players: t.players.filter(p => p.id !== player.id)
                                                           };
                                                         }
                                                         if (t.id === selectedTeam.id) {
                                                           return {
                                                             ...t,
-                                                            budget: t.budget - player.value,
+                                                            budget: t.budget - playerValue,
                                                             players: [...t.players, player]
                                                           };
                                                         }
@@ -710,17 +786,14 @@
                                                 canAfford ? 'cursor-pointer hover:bg-white/10' : 'opacity-50 cursor-not-allowed'
                                               }`}
                                             >
-                                              <div>
+                                              <div                                              >
                                                 <span className="text-white font-semibold">{player.name}</span>
-                                                <span className="text-green-200 ml-2">{player.position}</span>
+                                                <span className="text-green-200 ml-2">{player.positions.join('/')}</span>
                                                 <span className="text-green-200 ml-2">Age: {calculateAge(player.dob)}</span>
                                               </div>
-                                              <div className="flex items-center gap-2">
-                                                <span className="text-yellow-400 font-bold">{player.rating}/20</span>
-                                                <span className={canAfford ? 'text-green-400' : 'text-red-400'}>
-                                                  {formatCurrency(player.value)}
-                                                </span>
-                                              </div>
+                                              <span className={canAfford ? 'text-green-400 font-semibold' : 'text-red-400 font-semibold'}>
+                                                {formatCurrency(playerValue)}
+                                              </span>
                                             </div>
                                           );
                                         })}
