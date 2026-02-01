@@ -71,7 +71,7 @@
         "name": "Bournemouth",
         "budget": 50000000,
         "players": [
-          { "id": 23, "name": "Noah Garcia", "positions": ["GK"], "dob": "1995-06-12", "rating": 16 },
+          { "id": 1, "name": "Đorđe Petrović", "positions": ["GK"], "dob": "1995-06-12", "rating": 14 },
           { "id": 24, "name": "Liam Rodriguez", "positions": ["LB", "LW"], "dob": "1998-01-08", "rating": 17 },
           { "id": 25, "name": "Mason Lee", "positions": ["CB"], "dob": "1997-09-23", "rating": 16 },
           { "id": 26, "name": "Ethan Walker", "positions": ["CB"], "dob": "1996-03-16", "rating": 15 },
