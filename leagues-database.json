@@ -60,7 +60,7 @@
           { "id": 24, "name": "Amadou Onana", "positions": ["CM", "CDM"], "dob": "2001-08-16", "rating": 16 },
           { "id": 27, "name": "Morgan Rodgers", "positions": ["CM", "CAM", "LW"], "dob": "2002-07-26", "rating": 17 },
           { "id": 31, "name": "Leon Bailey", "positions": ["LW", "RW"], "dob": "1997-08-09", "rating": 14 },
-          { "id": 44, "name": "Boubacar Kamara", "positions": ["CM". "CDM"], "dob": "1999-11-23", "rating": 16 },
+          { "id": 44, "name": "Boubacar Kamara", "positions": ["CM", "CDM"], "dob": "1999-11-23", "rating": 16 },
           { "id": 47, "name": "Alysson", "positions": ["RW"], "dob": "2006-05-05", "rating": 11 },
           { "id": 11, "name": "Ollie Watkins", "positions": ["ST"], "dob": "1995-12-30", "rating": 16 },
           { "id": 18, "name": "Tammy Abraham", "positions": ["ST"], "dob": "1997-10-02", "rating": 15 }
@@ -71,17 +71,32 @@
         "name": "Bournemouth",
         "budget": 50000000,
         "players": [
-          { "id": 1, "name": "Đorđe Petrović", "positions": ["GK"], "dob": "1995-06-12", "rating": 14 },
-          { "id": 24, "name": "Liam Rodriguez", "positions": ["LB", "LW"], "dob": "1998-01-08", "rating": 17 },
-          { "id": 25, "name": "Mason Lee", "positions": ["CB"], "dob": "1997-09-23", "rating": 16 },
-          { "id": 26, "name": "Ethan Walker", "positions": ["CB"], "dob": "1996-03-16", "rating": 15 },
-          { "id": 27, "name": "Lucas Hall", "positions": ["RB"], "dob": "1999-07-29", "rating": 14 },
-          { "id": 28, "name": "Aiden Allen", "positions": ["CDM"], "dob": "1997-11-02", "rating": 17 },
-          { "id": 29, "name": "Logan Young", "positions": ["CM", "CDM"], "dob": "1998-05-14", "rating": 16 },
-          { "id": 30, "name": "Jackson Hernandez", "positions": ["CAM", "CM"], "dob": "1996-08-20", "rating": 16 },
-          { "id": 31, "name": "Sebastian Martin", "positions": ["ST"], "dob": "1999-04-07", "rating": 18 },
-          { "id": 32, "name": "Carter Robinson", "positions": ["LW", "ST"], "dob": "1997-12-11", "rating": 17 },
-          { "id": 33, "name": "Dylan Clark", "positions": ["RW"], "dob": "1998-02-25", "rating": 16 }
+          { "id": 1, "name": "Đorđe Petrović", "positions": ["GK"], "dob": "1999-10-08", "rating": 14 },
+          { "id": 17, "name": "Fraser Forster", "positions": ["GK"], "dob": "1988-03-17", "rating": 10 },
+          { "id": 29, "name": "Christos Mandas", "positions": ["GK"], "dob": "2001-09-17", "rating": 11 },
+          { "id": 40, "name": "Will Dennis", "positions": ["GK"], "dob": "2000-07-10", "rating": 10 },
+          { "id": 3, "name": "Adrien Truffert", "positions": ["LB"], "dob": "2001-11-20", "rating": 15 },
+          { "id": 5, "name": "Marcos Senesi", "positions": ["CB"], "dob": "1997-05-10", "rating": 15 },
+          { "id": 6, "name": "Julio Soler", "positions": ["LB"], "dob": "2005-02-16", "rating": 12 },
+          { "id": 15, "name": "Adam Smith", "positions": ["RB", "LB"], "dob": "1991-04-29", "rating": 14 },
+          { "id": 18, "name": "Bafodé Diakité", "positions": ["CB"], "dob": "2001-01-06", "rating": 13 },
+          { "id": 20, "name": "Álex Jiménez", "positions": ["RB", "LB"], "dob": "2005-05-08", "rating": 13 },
+          { "id": 23, "name": "James Hill", "positions": ["CB"], "dob": "2002-01-10", "rating": 14 },
+          { "id": 44, "name": "Veljko Milosavljević", "positions": ["CB"], "dob": "2007-06-28", "rating": 11 },
+          { "id": 4, "name": "Lewis Cook", "positions": ["CDM", "CM"], "dob": "1997-02-03", "rating": 13 },
+          { "id": 7, "name": "David Brooks", "positions": ["RW", "LW", "CAM"], "dob": "1997-07-08", "rating": 14 },
+          { "id": 8, "name": "Alex Scott", "positions": ["CAM", "CM"], "dob": "2003-08-21", "rating": 15 },
+          { "id": 10, "name": "Ryan Christie", "positions": ["CAM", "CM", "RW", "LW"], "dob": "1995-02-22", "rating": 13 },
+          { "id": 11, "name": "Ben Doak", "positions": ["RW", "LW"], "dob": "2005-11-11", "rating": 12 },
+          { "id": 12, "name": "Tyler Adams", "positions": ["CDM", "CM"], "dob": "1999-02-14", "rating": 14 },
+          { "id": 16, "name": "Marcus Tavernier", "positions": ["CAM", "CM", "LW", "RW"], "dob": "1999-03-22", "rating": 15 },
+          { "id": 21, "name": "Amine Adli", "positions": ["CAM", "LW", "RW"], "dob": "2000-05-10", "rating": 13 },
+          { "id": 27, "name": "Alex Tóth", "positions": ["CM"], "dob": "2005-10-23", "rating": 12 },
+          { "id": 9, "name": "Evanilson", "positions": ["ST"], "dob": "1999-10-06", "rating": 15 },
+          { "id": 19, "name": "Justin Kluivert", "positions": ["LW", "CAM", "ST"], "dob": "1999-05-05", "rating": 15 },
+          { "id": 22, "name": "Eli Junior Kroupi", "positions": ["RW", "LW", "ST"], "dob": "2006-06-23", "rating": 14 },
+          { "id": 26, "name": "Enes Ünal", "positions": ["RW", "LW", "ST"], "dob": "1997-05-10", "rating": 13 },
+          { "id": 37, "name": "Rayan", "positions": ["RW", "LW", "ST"], "dob": "2006-08-03", "rating": 12 }
         ]
       },
       {
@@ -89,7 +104,7 @@
         "name": "Brentford",
         "budget": 50000000,
         "players": [
-          { "id": 34, "name": "Gabriel White", "positions": ["GK"], "dob": "1996-09-18", "rating": 17 },
+          { "id": 34, "name": "Kelleher", "positions": ["GK"], "dob": "1996-09-18", "rating": 17 },
           { "id": 35, "name": "Julian Lopez", "positions": ["LB"], "dob": "1997-05-03", "rating": 16 },
           { "id": 36, "name": "Mateo Gonzalez", "positions": ["CB"], "dob": "1998-11-14", "rating": 17 },
           { "id": 37, "name": "Leo Martinez", "positions": ["CB", "RB"], "dob": "1996-01-28", "rating": 15 },
@@ -101,9 +116,9 @@
           { "id": 43, "name": "Jayden Moore", "positions": ["LW", "RW"], "dob": "1997-02-19", "rating": 17 },
           { "id": 44, "name": "Grayson Jackson", "positions": ["RW", "ST"], "dob": "1998-06-23", "rating": 16 }
         ]
-      }
+      },
       {
-        "id": 3,
+        "id": 5,
         "name": "Brighton",
         "budget": 50000000,
         "players": [
@@ -121,7 +136,7 @@
         ]
       },
       {
-        "id": 4,
+        "id": 6,
         "name": "Burnley",
         "budget": 50000000,
         "players": [
@@ -137,26 +152,42 @@
           { "id": 43, "name": "Jayden Moore", "positions": ["LW", "RW"], "dob": "1997-02-19", "rating": 17 },
           { "id": 44, "name": "Grayson Jackson", "positions": ["RW", "ST"], "dob": "1998-06-23", "rating": 16 }
         ]
-      }{
-        "id": 3,
+      },
+      {
+        "id": 7,
         "name": "Chelsea",
         "budget": 50000000,
         "players": [
-          { "id": 23, "name": "Noah Garcia", "positions": ["GK"], "dob": "1995-06-12", "rating": 16 },
-          { "id": 24, "name": "Liam Rodriguez", "positions": ["LB", "LW"], "dob": "1998-01-08", "rating": 17 },
-          { "id": 25, "name": "Mason Lee", "positions": ["CB"], "dob": "1997-09-23", "rating": 16 },
-          { "id": 26, "name": "Ethan Walker", "positions": ["CB"], "dob": "1996-03-16", "rating": 15 },
-          { "id": 27, "name": "Lucas Hall", "positions": ["RB"], "dob": "1999-07-29", "rating": 14 },
-          { "id": 28, "name": "Aiden Allen", "positions": ["CDM"], "dob": "1997-11-02", "rating": 17 },
-          { "id": 29, "name": "Logan Young", "positions": ["CM", "CDM"], "dob": "1998-05-14", "rating": 16 },
-          { "id": 30, "name": "Jackson Hernandez", "positions": ["CAM", "CM"], "dob": "1996-08-20", "rating": 16 },
-          { "id": 31, "name": "Sebastian Martin", "positions": ["ST"], "dob": "1999-04-07", "rating": 18 },
-          { "id": 32, "name": "Carter Robinson", "positions": ["LW", "ST"], "dob": "1997-12-11", "rating": 17 },
-          { "id": 33, "name": "Dylan Clark", "positions": ["RW"], "dob": "1998-02-25", "rating": 16 }
+          { "id": 1, "name": "Robert Sánchez", "positions": ["GK"], "dob": "1997-11-18", "rating": 16 },
+          { "id": 12, "name": "Filip Jörgensen", "positions": ["GK"], "dob": "2002-04-16", "rating": 13 },
+          { "id": 3, "name": "Marc Cucurella", "positions": ["LB"], "dob": "1998-07-22", "rating": 17 },
+          { "id": 4, "name": "Tosin Adarabioyo", "positions": ["CB"], "dob": "1997-09-24", "rating": 15 },
+          { "id": 5, "name": "Benoît Badiashile", "positions": ["CB"], "dob": "2001-03-26", "rating": 14 },
+          { "id": 6, "name": "Levi Colwill", "positions": ["CB"], "dob": "2003-02-26", "rating": 16 },
+          { "id": 21, "name": "Jorrel Hato", "positions": ["LB"], "dob": "2006-03-07", "rating": 13 },
+          { "id": 23, "name": "Trevoh Chalobah", "positions": ["CB"], "dob": "1999-07-05", "rating": 15 },
+          { "id": 24, "name": "Reece James", "positions": ["RB". "CM"], "dob": "1999-12-08", "rating": 18 },
+          { "id": 27, "name": "Malo Gusto", "positions": ["RB"], "dob": "2003-05-19", "rating": 15 },
+          { "id": 29, "name": "Wesley Fofana", "positions": ["CB"], "dob": "2000-12-17", "rating": 16 },
+          { "id": 34, "name": "Josh Acheampong", "positions": ["CB"], "dob": "2006-05-05", "rating": 13 },
+          { "id": 7, "name": "Pedro Neto", "positions": ["LW", "RW"], "dob": "2000-03-09", "rating": 16 },
+          { "id": 8, "name": "Enzo Fernandez", "positions": ["CM", "CDM", "CAM"], "dob": "2001-01-17", "rating": 17 },
+          { "id": 10, "name": "Cole Palmer", "positions": ["CAM", "LW", "RW"], "dob": "2002-05-06", "rating": 18 },
+          { "id": 14, "name": "Dário Essugo", "positions": ["CDM", "CM"], "dob": "2005-03-14", "rating": 12 },
+          { "id": 17, "name": "Andrey Santos", "positions": ["CM"], "dob": "2004-05-03", "rating": 14 },
+          { "id": 25, "name": "Moisés Caicedo", "positions": ["CDM", "CM"], "dob": "2001-11-02", "rating": 18 },
+          { "id": 45, "name": "Roméo Lavia", "positions": ["CDM", "CM"], "dob": "2004-01-06", "rating": 15 },
+          { "id": 9, "name": "Liam Delap", "positions": ["ST"], "dob": "2003-02-08", "rating": 14 },
+          { "id": 11, "name": "Jamie Gittens", "positions": ["LW", "RW"], "dob": "2004-08-08", "rating": 14 },
+          { "id": 20, "name": "João Pedro", "positions": ["CAM", "ST"], "dob": "2001-09-26", "rating": 16 },
+          { "id": 32, "name": "Tyrique George", "positions": ["LW", "RW"], "dob": "2006-02-04", "rating": 13 },
+          { "id": 38, "name": "Marc Guiu", "positions": ["ST"], "dob": "2006-01-04", "rating": 13 },
+          { "id": 41, "name": "Estêvão", "positions": ["RW", "LW"], "dob": "2007-04-24", "rating": 15 },
+          { "id": 49, "name": "Alejandro Garnacho", "positions": ["RW", "LW"], "dob": "2004-07-01", "rating": 14 }
         ]
       },
       {
-        "id": 4,
+        "id": 8,
         "name": "Crystal Palace",
         "budget": 50000000,
         "players": [
@@ -172,8 +203,9 @@
           { "id": 43, "name": "Jayden Moore", "positions": ["LW", "RW"], "dob": "1997-02-19", "rating": 17 },
           { "id": 44, "name": "Grayson Jackson", "positions": ["RW", "ST"], "dob": "1998-06-23", "rating": 16 }
         ]
-      }{
-        "id": 3,
+      },
+      {
+        "id": 9,
         "name": "Everton",
         "budget": 50000000,
         "players": [
@@ -191,7 +223,7 @@
         ]
       },
       {
-        "id": 4,
+        "id": 10,
         "name": "Fulham",
         "budget": 50000000,
         "players": [
@@ -207,26 +239,40 @@
           { "id": 43, "name": "Jayden Moore", "positions": ["LW", "RW"], "dob": "1997-02-19", "rating": 17 },
           { "id": 44, "name": "Grayson Jackson", "positions": ["RW", "ST"], "dob": "1998-06-23", "rating": 16 }
         ]
-      }{
-        "id": 3,
+      },
+      {
+        "id": 11,
         "name": "Leeds",
         "budget": 50000000,
         "players": [
-          { "id": 23, "name": "Noah Garcia", "positions": ["GK"], "dob": "1995-06-12", "rating": 16 },
-          { "id": 24, "name": "Liam Rodriguez", "positions": ["LB", "LW"], "dob": "1998-01-08", "rating": 17 },
-          { "id": 25, "name": "Mason Lee", "positions": ["CB"], "dob": "1997-09-23", "rating": 16 },
-          { "id": 26, "name": "Ethan Walker", "positions": ["CB"], "dob": "1996-03-16", "rating": 15 },
-          { "id": 27, "name": "Lucas Hall", "positions": ["RB"], "dob": "1999-07-29", "rating": 14 },
-          { "id": 28, "name": "Aiden Allen", "positions": ["CDM"], "dob": "1997-11-02", "rating": 17 },
-          { "id": 29, "name": "Logan Young", "positions": ["CM", "CDM"], "dob": "1998-05-14", "rating": 16 },
-          { "id": 30, "name": "Jackson Hernandez", "positions": ["CAM", "CM"], "dob": "1996-08-20", "rating": 16 },
-          { "id": 31, "name": "Sebastian Martin", "positions": ["ST"], "dob": "1999-04-07", "rating": 18 },
-          { "id": 32, "name": "Carter Robinson", "positions": ["LW", "ST"], "dob": "1997-12-11", "rating": 17 },
-          { "id": 33, "name": "Dylan Clark", "positions": ["RW"], "dob": "1998-02-25", "rating": 16 }
+          { "id": 1, "name": "Lucas Perri", "positions": ["GK"], "dob": "1997-12-10", "rating": 13 },
+          { "id": 16, "name": "Illan Meslier", "positions": ["GK"], "dob": "2000-03-02", "rating": 12 },
+          { "id": 26, "name": "Karl Darlow", "positions": ["GK"], "dob": "1990-10-08", "rating": 13 },
+          { "id": 2, "name": "Jayden Bogle", "positions": ["RB", "LB"], "dob": "2000-07-27", "rating": 13 },
+          { "id": 3, "name": "Gabriel Gudmundsson", "positions": ["LB", "CB"], "dob": "1999-04-29", "rating": 14 },
+          { "id": 4, "name": "Ethan Ampadu", "positions": ["CB", "CDM"], "dob": "2000-09-14", "rating": 14 },
+          { "id": 5, "name": "Pascal Strujik", "positions": ["CB"], "dob": "1999-03-16", "rating": 13 },
+          { "id": 6, "name": "Joe Rodon", "positions": ["CB"], "dob": "1997-10-22", "rating": 14 },
+          { "id": 15, "name": "Jaka Bijol", "positions": ["LB", "CB"], "dob": "1999-02-05", "rating": 14 },
+          { "id": 23, "name": "Sebastiaan Bornauw", "positions": ["CB"], "dob": "1999-03-22", "rating": 13 },
+          { "id": 24, "name": "James Justin", "positions": ["LB", "RB"], "dob": "1998-02-23", "rating": 14 },
+          { "id": 25, "name": "Sam Byram", "positions": ["LB", "RB"], "dob": "1993-09-16", "rating": 12 },
+          { "id": 7, "name": "Dan James", "positions": ["LW", "RW"], "dob": "1997-11-10", "rating": 14 },
+          { "id": 8, "name": "Sean Longstaff", "positions": ["CM", "CDM"], "dob": "1997-10-30", "rating": 14 },
+          { "id": 11, "name": "Brenden Aaronson", "positions": ["CAM", "CM"], "dob": "2000-10-22", "rating": 14 },
+          { "id": 18, "name": "Anton Stach", "positions": ["CDM", "CM"], "dob": "1998-11-15", "rating": 15 },
+          { "id": 22, "name": "Ao Tanaka", "positions": ["CAM", "CM"], "dob": "1998-09-10", "rating": 13 },
+          { "id": 40, "name": "Facundo Buonanotte", "positions": ["CAM", "LW", "RW"], "dob": "2004-12-23", "rating": 13 },
+          { "id": 44, "name": "Ilia Gruev", "positions": ["CDM", "CM"], "dob": "2000-05-06", "rating": 13 },
+          { "id": 9, "name": "Dominic Calvert-Lewin", "positions": ["ST"], "dob": "1997-03-16", "rating": 15 },
+          { "id": 10, "name": "Joël Piroe", "positions": ["LW", "ST"], "dob": "1999-08-02", "rating": 13 },
+          { "id": 14, "name": "Lukas Nmecha", "positions": ["RW", "ST", "LW"], "dob": "1998-12-14", "rating": 14 },
+          { "id": 19, "name": "Noah Okafor", "positions": ["RW", "ST"], "dob": "2000-05-24", "rating": 14 },
+          { "id": 29, "name": "Wilfried Gnonto", "positions": ["RW", "ST", "LW"], "dob": "2003-11-05", "rating": 13 }
         ]
       },
       {
-        "id": 4,
+        "id": 12,
         "name": "Liverpool",
         "budget": 50000000,
         "players": [
@@ -242,8 +288,9 @@
           { "id": 43, "name": "Jayden Moore", "positions": ["LW", "RW"], "dob": "1997-02-19", "rating": 17 },
           { "id": 44, "name": "Grayson Jackson", "positions": ["RW", "ST"], "dob": "1998-06-23", "rating": 16 }
         ]
-      }{
-        "id": 3,
+      },
+      {
+        "id": 13,
         "name": "Manchester City",
         "budget": 50000000,
         "players": [
@@ -261,7 +308,7 @@
         ]
       },
       {
-        "id": 4,
+        "id": 14,
         "name": "Manchester United",
         "budget": 50000000,
         "players": [
@@ -277,8 +324,9 @@
           { "id": 43, "name": "Jayden Moore", "positions": ["LW", "RW"], "dob": "1997-02-19", "rating": 17 },
           { "id": 44, "name": "Grayson Jackson", "positions": ["RW", "ST"], "dob": "1998-06-23", "rating": 16 }
         ]
-      }{
-        "id": 3,
+      },
+      {
+        "id": 15,
         "name": "Newcastle",
         "budget": 50000000,
         "players": [
@@ -296,7 +344,7 @@
         ]
       },
       {
-        "id": 4,
+        "id": 16,
         "name": "Nottingham Forest",
         "budget": 50000000,
         "players": [
@@ -312,8 +360,9 @@
           { "id": 43, "name": "Jayden Moore", "positions": ["LW", "RW"], "dob": "1997-02-19", "rating": 17 },
           { "id": 44, "name": "Grayson Jackson", "positions": ["RW", "ST"], "dob": "1998-06-23", "rating": 16 }
         ]
-      }{
-        "id": 3,
+      },
+      {
+        "id": 17,
         "name": "Sunderland",
         "budget": 50000000,
         "players": [
@@ -331,7 +380,7 @@
         ]
       },
       {
-        "id": 4,
+        "id": 18,
         "name": "Tottenham Hotspur",
         "budget": 50000000,
         "players": [
@@ -347,8 +396,9 @@
           { "id": 43, "name": "Jayden Moore", "positions": ["LW", "RW"], "dob": "1997-02-19", "rating": 17 },
           { "id": 44, "name": "Grayson Jackson", "positions": ["RW", "ST"], "dob": "1998-06-23", "rating": 16 }
         ]
-      }{
-        "id": 3,
+      },
+      {
+        "id": 19,
         "name": "West Ham",
         "budget": 50000000,
         "players": [
@@ -366,7 +416,7 @@
         ]
       },
       {
-        "id": 4,
+        "id": 20,
         "name": "Wolves",
         "budget": 50000000,
         "players": [
@@ -382,7 +432,7 @@
           { "id": 43, "name": "Jayden Moore", "positions": ["LW", "RW"], "dob": "1997-02-19", "rating": 17 },
           { "id": 44, "name": "Grayson Jackson", "positions": ["RW", "ST"], "dob": "1998-06-23", "rating": 16 }
         ]
-      }
+      },
     ]
   },
   "germany": {
