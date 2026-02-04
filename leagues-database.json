@@ -532,7 +532,7 @@
           { "id": 8, "name": "Yves Bissouma", "positions": ["CM", "CDM"], "dob": "1996-08-30", "rating": 14 },
           { "id": 10, "name": "James Maddison", "positions": ["CAM", "LW"], "dob": "1996-11-23", "rating": 16 },
           { "id": 14, "name": "Archie Gray", "positions": ["CM", "CDM", "LB", "RB", "CB"], "dob": "2006-03-12", "rating": 14 },
-          { "id": 15, "name": "Lucas Bergvall", "positions": ["CM"], "dob": "2006-02-02, "rating": 15 },
+          { "id": 15, "name": "Lucas Bergvall", "positions": ["CM"], "dob": "2006-02-02", "rating": 15 },
           { "id": 22, "name": "Conor Gallagher", "positions": ["CM"], "dob": "2000-02-06", "rating": 16 },
           { "id": 29, "name": "Pape Matar Sarr", "positions": ["CDM", "CM"], "dob": "2002-11-14", "rating": 15 },
           { "id": 30, "name": "Rodrigo Bentancur", "positions": ["CM"], "dob": "1997-06-25", "rating": 15 },
