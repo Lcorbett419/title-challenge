@@ -646,7 +646,7 @@
           { "id": 30, "name": "Enso González", "positions": ["LW"], "dob": "2005-01-20", "rating": 11 },
           { "id": 36, "name": "Mateus Mané", "positions": ["CAM", "ST"], "dob": "2007-09-16", "rating": 13 }
         ]
-      },
+      }
     ]
   },
   "germany": {
