@@ -43,28 +43,13 @@
         const calculatePlayerValue = (player) => {
           const { positions, rating } = player;
           
-          // Position multipliers (attacking positions worth more)
           const positionValues = {
-            'ST': 1.0,
-            'LW': 0.95,
-            'RW': 0.95,
-            'CAM': 0.85,
-            'CM': 0.70,
-            'CDM': 0.68,
-            'LB': 0.65,
-            'RB': 0.65,
-            'CB': 0.60,
-            'GK': 0.55
+            'ST': 1.0, 'LW': 0.95, 'RW': 0.95, 'CAM': 0.85, 'CM': 0.70,
+            'CDM': 0.68, 'LB': 0.65, 'RB': 0.65, 'CB': 0.60, 'GK': 0.55
           };
           
-          // Get highest position multiplier
           const maxMultiplier = Math.max(...positions.map(pos => positionValues[pos] || 0.5));
-          
-          // Base value calculation: rating^2 * multiplier * 250000
-          // This gives values from ~2M (rating 10 GK) to ~100M (rating 20 ST)
           const baseValue = Math.pow(rating, 2) * maxMultiplier * 250000;
-          
-          // Cap at 100 million
           return Math.min(Math.round(baseValue), 100000000);
         };
 
@@ -77,11 +62,10 @@
           const [allLeagues, setAllLeagues] = useState(null);
           const [currentMatch, setCurrentMatch] = useState(null);
           const [matchCommentary, setMatchCommentary] = useState([]);
-          const [leagueTables, setLeagueTables] = useState({});
-          const [matchesPlayed, setMatchesPlayed] = useState(0);
+          const [fixtures, setFixtures] = useState({});
+          const [currentDate, setCurrentDate] = useState(new Date('2025-08-01'));
           const [selectedPlayerForTransfer, setSelectedPlayerForTransfer] = useState(null);
 
-          // Load database
           useEffect(() => {
             fetch('./leagues-database.json')
               .then(response => response.json())
@@ -99,15 +83,15 @@
             if (selectedTeam && gameState !== 'main-menu' && gameState !== 'league-select' && gameState !== 'team-select') {
               saveGame();
             }
-          }, [selectedTeam, allLeagues, leagueTables, matchesPlayed, gameState]);
+          }, [selectedTeam, allLeagues, fixtures, currentDate, gameState]);
 
           const saveGame = () => {
             const gameData = {
               selectedLeague,
               selectedTeam,
               allLeagues,
-              leagueTables,
-              matchesPlayed,
+              fixtures,
+              currentDate: currentDate.toISOString(),
               gameState
             };
             localStorage.setItem('footballManagerSave', JSON.stringify({ gameData }));
@@ -117,8 +101,8 @@
             setSelectedLeague(null);
             setSelectedTeam(null);
             setAllLeagues(JSON.parse(JSON.stringify(initialLeagues)));
-            setLeagueTables({});
-            setMatchesPlayed(0);
+            setFixtures({});
+            setCurrentDate(new Date('2025-08-01'));
             localStorage.removeItem('footballManagerSave');
             setGameState('league-select');
           };
@@ -132,8 +116,8 @@
                   setSelectedLeague(data.gameData.selectedLeague);
                   setSelectedTeam(data.gameData.selectedTeam);
                   setAllLeagues(data.gameData.allLeagues);
-                  setLeagueTables(data.gameData.leagueTables);
-                  setMatchesPlayed(data.gameData.matchesPlayed);
+                  setFixtures(data.gameData.fixtures);
+                  setCurrentDate(new Date(data.gameData.currentDate));
                   setGameState(data.gameData.gameState === 'main-menu' ? 'squad' : data.gameData.gameState);
                 }
               } catch (e) {
@@ -155,23 +139,46 @@
             return false;
           };
 
-          const initializeAllLeagueTables = () => {
-            const tables = {};
+          const generateSeasonFixtures = () => {
+            const newFixtures = {};
+            
             Object.keys(allLeagues).forEach(leagueKey => {
               const league = allLeagues[leagueKey];
-              tables[leagueKey] = league.teams.map(team => ({
-                teamId: team.id,
-                name: team.name,
-                played: 0,
-                won: 0,
-                drawn: 0,
-                lost: 0,
-                goalsFor: 0,
-                goalsAgainst: 0,
-                points: 0
-              }));
+              const teams = league.teams;
+              const leagueFixtures = [];
+              
+              // Generate round-robin fixtures (each team plays each other twice)
+              for (let i = 0; i < teams.length; i++) {
+                for (let j = i + 1; j < teams.length; j++) {
+                  // Home fixture
+                  leagueFixtures.push({
+                    homeTeamId: teams[i].id,
+                    awayTeamId: teams[j].id,
+                    played: false,
+                    homeScore: null,
+                    awayScore: null
+                  });
+                  // Away fixture
+                  leagueFixtures.push({
+                    homeTeamId: teams[j].id,
+                    awayTeamId: teams[i].id,
+                    played: false,
+                    homeScore: null,
+                    awayScore: null
+                  });
+                }
+              }
+              
+              // Shuffle fixtures
+              for (let i = leagueFixtures.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [leagueFixtures[i], leagueFixtures[j]] = [leagueFixtures[j], leagueFixtures[i]];
+              }
+              
+              newFixtures[leagueKey] = leagueFixtures;
             });
-            setLeagueTables(tables);
+            
+            setFixtures(newFixtures);
           };
 
           const selectLeague = (leagueKey) => {
@@ -181,14 +188,74 @@
 
           const selectTeam = (team) => {
             setSelectedTeam(team);
-            initializeAllLeagueTables();
+            generateSeasonFixtures();
             setGameState('squad');
+          };
+
+          const getLeagueTable = (leagueKey) => {
+            const league = allLeagues[leagueKey];
+            const leagueFixtures = fixtures[leagueKey] || [];
+            
+            const table = league.teams.map(team => ({
+              teamId: team.id,
+              name: team.name,
+              played: 0,
+              won: 0,
+              drawn: 0,
+              lost: 0,
+              goalsFor: 0,
+              goalsAgainst: 0,
+              points: 0
+            }));
+            
+            leagueFixtures.filter(f => f.played).forEach(fixture => {
+              const homeTeam = table.find(t => t.teamId === fixture.homeTeamId);
+              const awayTeam = table.find(t => t.teamId === fixture.awayTeamId);
+              
+              if (homeTeam && awayTeam) {
+                homeTeam.played++;
+                awayTeam.played++;
+                homeTeam.goalsFor += fixture.homeScore;
+                homeTeam.goalsAgainst += fixture.awayScore;
+                awayTeam.goalsFor += fixture.awayScore;
+                awayTeam.goalsAgainst += fixture.homeScore;
+                
+                if (fixture.homeScore > fixture.awayScore) {
+                  homeTeam.won++;
+                  homeTeam.points += 3;
+                  awayTeam.lost++;
+                } else if (fixture.homeScore < fixture.awayScore) {
+                  awayTeam.won++;
+                  awayTeam.points += 3;
+                  homeTeam.lost++;
+                } else {
+                  homeTeam.drawn++;
+                  awayTeam.drawn++;
+                  homeTeam.points++;
+                  awayTeam.points++;
+                }
+              }
+            });
+            
+            table.sort((a, b) => {
+              if (b.points !== a.points) return b.points - a.points;
+              return (b.goalsFor - b.goalsAgainst) - (a.goalsFor - a.goalsAgainst);
+            });
+            
+            return table;
           };
 
           const getTeamRating = (team) => {
             if (!team || !team.players) return 0;
             const total = team.players.reduce((sum, player) => sum + player.rating, 0);
             return Math.round(total / team.players.length);
+          };
+
+          const getNextPlayerMatch = () => {
+            const leagueFixtures = fixtures[selectedLeague] || [];
+            return leagueFixtures.find(f => 
+              !f.played && (f.homeTeamId === selectedTeam.id || f.awayTeamId === selectedTeam.id)
+            );
           };
 
           const simulateMatch = (homeTeam, awayTeam) => {
@@ -200,6 +267,7 @@
             let awayScore = 0;
             
             commentary.push(`${homeTeam.name} vs ${awayTeam.name}`);
+            commentary.push(`Date: ${currentDate.toLocaleDateString('en-GB')}`);
             commentary.push("Kick off!");
             commentary.push("");
             
@@ -210,37 +278,33 @@
               const homeChance = (homeRating + Math.random() * 10) / (homeRating + awayRating + Math.random() * 20);
               
               if (Math.random() < 0.3) {
-                if (Math.random() < homeChance) {
-                  // Select scorer based on position probability
+                const selectScorer = (team) => {
                   const rand = Math.random();
                   let scorer;
                   
                   if (rand < 0.70) {
-                    // 70% attackers
-                    const attackers = homeTeam.players.filter(p => 
+                    const attackers = team.players.filter(p => 
                       p.positions.some(pos => ['ST', 'LW', 'RW', 'CAM'].includes(pos))
                     );
                     scorer = attackers[Math.floor(Math.random() * attackers.length)];
                   } else if (rand < 0.90) {
-                    // 20% midfielders
-                    const midfielders = homeTeam.players.filter(p => 
+                    const midfielders = team.players.filter(p => 
                       p.positions.some(pos => ['CDM', 'CM'].includes(pos))
                     );
                     scorer = midfielders[Math.floor(Math.random() * midfielders.length)];
                   } else if (rand < 0.98) {
-                    // 8% defenders
-                    const defenders = homeTeam.players.filter(p => 
+                    const defenders = team.players.filter(p => 
                       p.positions.some(pos => ['LB', 'CB', 'RB'].includes(pos))
                     );
                     scorer = defenders[Math.floor(Math.random() * defenders.length)];
                   } else {
-                    // 2% goalkeeper
-                    const goalkeeper = homeTeam.players.find(p => 
-                      p.positions.includes('GK')
-                    );
-                    scorer = goalkeeper;
+                    scorer = team.players.find(p => p.positions.includes('GK'));
                   }
-                  
+                  return scorer;
+                };
+                
+                if (Math.random() < homeChance) {
+                  const scorer = selectScorer(homeTeam);
                   if (scorer && Math.random() < 0.4) {
                     homeScore++;
                     commentary.push(`${minute}' GOAL! ${scorer.name} scores for ${homeTeam.name}! ${homeScore}-${awayScore}`);
@@ -248,36 +312,7 @@
                     commentary.push(`${minute}' ${scorer.name} with a shot, but it's saved!`);
                   }
                 } else {
-                  // Select scorer based on position probability
-                  const rand = Math.random();
-                  let scorer;
-                  
-                  if (rand < 0.70) {
-                    // 70% attackers
-                    const attackers = awayTeam.players.filter(p => 
-                      p.positions.some(pos => ['ST', 'LW', 'RW', 'CAM'].includes(pos))
-                    );
-                    scorer = attackers[Math.floor(Math.random() * attackers.length)];
-                  } else if (rand < 0.90) {
-                    // 20% midfielders
-                    const midfielders = awayTeam.players.filter(p => 
-                      p.positions.some(pos => ['CDM', 'CM'].includes(pos))
-                    );
-                    scorer = midfielders[Math.floor(Math.random() * midfielders.length)];
-                  } else if (rand < 0.98) {
-                    // 8% defenders
-                    const defenders = awayTeam.players.filter(p => 
-                      p.positions.some(pos => ['LB', 'CB', 'RB'].includes(pos))
-                    );
-                    scorer = defenders[Math.floor(Math.random() * defenders.length)];
-                  } else {
-                    // 2% goalkeeper
-                    const goalkeeper = awayTeam.players.find(p => 
-                      p.positions.includes('GK')
-                    );
-                    scorer = goalkeeper;
-                  }
-                  
+                  const scorer = selectScorer(awayTeam);
                   if (scorer && Math.random() < 0.4) {
                     awayScore++;
                     commentary.push(`${minute}' GOAL! ${scorer.name} scores for ${awayTeam.name}! ${homeScore}-${awayScore}`);
@@ -305,98 +340,126 @@
             return { homeScore, awayScore, commentary };
           };
 
-          const updateLeagueTable = (leagueKey, team1Id, team2Id, team1Score, team2Score) => {
-            const table = leagueTables[leagueKey];
-            const t1Index = table.findIndex(t => t.teamId === team1Id);
-            const t2Index = table.findIndex(t => t.teamId === team2Id);
-
-            if (t1Index !== -1 && t2Index !== -1) {
-              table[t1Index].played++;
-              table[t1Index].goalsFor += team1Score;
-              table[t1Index].goalsAgainst += team2Score;
-              
-              table[t2Index].played++;
-              table[t2Index].goalsFor += team2Score;
-              table[t2Index].goalsAgainst += team1Score;
-              
-              if (team1Score > team2Score) {
-                table[t1Index].won++;
-                table[t1Index].points += 3;
-                table[t2Index].lost++;
-              } else if (team1Score < team2Score) {
-                table[t1Index].lost++;
-                table[t2Index].won++;
-                table[t2Index].points += 3;
-              } else {
-                table[t1Index].drawn++;
-                table[t2Index].drawn++;
-                table[t1Index].points++;
-                table[t2Index].points++;
-              }
-
-              table.sort((a, b) => {
-                if (b.points !== a.points) return b.points - a.points;
-                return (b.goalsFor - b.goalsAgainst) - (a.goalsFor - a.goalsAgainst);
-              });
-            }
-          };
-
           const simulateOtherMatches = () => {
-            const updatedTables = JSON.parse(JSON.stringify(leagueTables));
-            setLeagueTables(updatedTables);
-
+            const updatedFixtures = JSON.parse(JSON.stringify(fixtures));
+            
             Object.keys(allLeagues).forEach(leagueKey => {
               const league = allLeagues[leagueKey];
-              const teams = league.teams;
+              const leagueFixtures = updatedFixtures[leagueKey];
               
-              const availableTeams = leagueKey === selectedLeague 
-                ? teams.filter(t => t.id !== selectedTeam.id)
-                : teams;
-
-              if (availableTeams.length >= 2) {
-                const shuffled = [...availableTeams].sort(() => Math.random() - 0.5);
-                const team1 = shuffled[0];
-                const team2 = shuffled[1];
-
-                const result = simulateMatch(team1, team2);
-                updateLeagueTable(leagueKey, team1.id, team2.id, result.homeScore, result.awayScore);
+              if (!leagueFixtures) return;
+              
+              const unplayedFixtures = leagueFixtures.filter(f => !f.played);
+              
+              if (leagueKey === selectedLeague) {
+                const playerNextMatch = unplayedFixtures.find(f => 
+                  f.homeTeamId === selectedTeam.id || f.awayTeamId === selectedTeam.id
+                );
+                const otherFixtures = unplayedFixtures.filter(f => 
+                  f.homeTeamId !== selectedTeam.id && f.awayTeamId !== selectedTeam.id
+                );
+                
+                if (otherFixtures.length > 0) {
+                  const fixtureToPlay = otherFixtures[0];
+                  const homeTeam = league.teams.find(t => t.id === fixtureToPlay.homeTeamId);
+                  const awayTeam = league.teams.find(t => t.id === fixtureToPlay.awayTeamId);
+                  
+                  if (homeTeam && awayTeam) {
+                    const result = simulateMatch(homeTeam, awayTeam);
+                    fixtureToPlay.played = true;
+                    fixtureToPlay.homeScore = result.homeScore;
+                    fixtureToPlay.awayScore = result.awayScore;
+                  }
+                }
+              } else {
+                if (unplayedFixtures.length > 0) {
+                  const fixtureToPlay = unplayedFixtures[0];
+                  const homeTeam = league.teams.find(t => t.id === fixtureToPlay.homeTeamId);
+                  const awayTeam = league.teams.find(t => t.id === fixtureToPlay.awayTeamId);
+                  
+                  if (homeTeam && awayTeam) {
+                    const result = simulateMatch(homeTeam, awayTeam);
+                    fixtureToPlay.played = true;
+                    fixtureToPlay.homeScore = result.homeScore;
+                    fixtureToPlay.awayScore = result.awayScore;
+                  }
+                }
               }
             });
+            
+            setFixtures(updatedFixtures);
           };
 
           const playNextMatch = () => {
+            const nextMatch = getNextPlayerMatch();
+            
+            if (!nextMatch) {
+              // Season ended
+              const newSeasonStart = new Date(currentDate);
+              newSeasonStart.setFullYear(newSeasonStart.getFullYear() + 1);
+              newSeasonStart.setMonth(7);
+              newSeasonStart.setDate(1);
+              
+              alert(`Season Complete! New season starts ${newSeasonStart.toLocaleDateString('en-GB')}`);
+              setCurrentDate(newSeasonStart);
+              generateSeasonFixtures();
+              return;
+            }
+            
             const league = allLeagues[selectedLeague];
-            const otherTeams = league.teams.filter(t => t.id !== selectedTeam.id);
-            const opponent = otherTeams[Math.floor(Math.random() * otherTeams.length)];
+            const homeTeam = nextMatch.homeTeamId === selectedTeam.id 
+              ? selectedTeam 
+              : league.teams.find(t => t.id === nextMatch.homeTeamId);
+            const awayTeam = nextMatch.awayTeamId === selectedTeam.id 
+              ? selectedTeam 
+              : league.teams.find(t => t.id === nextMatch.awayTeamId);
             
-            const isHome = Math.random() < 0.5;
-            const result = isHome 
-              ? simulateMatch(selectedTeam, opponent)
-              : simulateMatch(opponent, selectedTeam);
+            const result = simulateMatch(homeTeam, awayTeam);
             
-            const playerScore = isHome ? result.homeScore : result.awayScore;
-            const opponentScore = isHome ? result.awayScore : result.homeScore;
+            const updatedFixtures = JSON.parse(JSON.stringify(fixtures));
+            const fixtureIndex = updatedFixtures[selectedLeague].findIndex(f => 
+              f.homeTeamId === nextMatch.homeTeamId && f.awayTeamId === nextMatch.awayTeamId && !f.played
+            );
+            
+            if (fixtureIndex !== -1) {
+              updatedFixtures[selectedLeague][fixtureIndex].played = true;
+              updatedFixtures[selectedLeague][fixtureIndex].homeScore = result.homeScore;
+              updatedFixtures[selectedLeague][fixtureIndex].awayScore = result.awayScore;
+            }
+            
+            setFixtures(updatedFixtures);
             
             setCurrentMatch({
-              opponent: opponent.name,
-              playerScore,
-              opponentScore,
-              isHome
+              opponent: nextMatch.homeTeamId === selectedTeam.id ? awayTeam.name : homeTeam.name,
+              playerScore: nextMatch.homeTeamId === selectedTeam.id ? result.homeScore : result.awayScore,
+              opponentScore: nextMatch.homeTeamId === selectedTeam.id ? result.awayScore : result.homeScore,
+              isHome: nextMatch.homeTeamId === selectedTeam.id
             });
             
             setMatchCommentary(result.commentary);
-            updateLeagueTable(selectedLeague, selectedTeam.id, opponent.id, playerScore, opponentScore);
+            
+            // Advance date by 3-4 days
+            const newDate = new Date(currentDate);
+            newDate.setDate(newDate.getDate() + (3 + Math.floor(Math.random() * 2)));
+            
+            // Check if crossed into new year
+            if (newDate.getMonth() === 6 && newDate.getDate() > 30) {
+              newDate.setMonth(7);
+              newDate.setDate(1);
+              newDate.setFullYear(newDate.getFullYear() + 1);
+            }
+            
+            setCurrentDate(newDate);
+            
             simulateOtherMatches();
-            setMatchesPlayed(matchesPlayed + 1);
             setGameState('match-result');
           };
 
-          const calculateAge = (dob) => {
+          const calculateAge = (dob, asOfDate = currentDate) => {
             const birthDate = new Date(dob);
-            const today = new Date();
-            let age = today.getFullYear() - birthDate.getFullYear();
-            const monthDiff = today.getMonth() - birthDate.getMonth();
-            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            let age = asOfDate.getFullYear() - birthDate.getFullYear();
+            const monthDiff = asOfDate.getMonth() - birthDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && asOfDate.getDate() < birthDate.getDate())) {
               age--;
             }
             return age;
@@ -406,7 +469,10 @@
             return '£' + Math.round(amount / 1000000) + 'M';
           };
 
-          // Show loading screen
+          const formatDate = (date) => {
+            return new Date(date).toLocaleDateString('en-GB');
+          };
+
           if (!databaseLoaded || !initialLeagues) {
             return (
               <div className="min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-green-900 flex items-center justify-center">
@@ -478,7 +544,7 @@
                       <Globe />
                     </div>
                     <h1 className="text-4xl font-bold text-white mb-2">Choose Your League</h1>
-                    <p className="text-green-200">Select from 5 European competitions</p>
+                    <p className="text-green-200">Season starts: 01/08/2025</p>
                   </div>
                   
                   <div className="grid gap-4">
@@ -496,7 +562,7 @@
                                 {leagueFlags[leagueKey]} {league.name}
                               </h2>
                               <p className="text-green-200">{league.country}</p>
-                              <p className="text-green-200 text-sm">{league.teams.length} teams</p>
+                              <p className="text-green-200 text-sm">{league.teams.length} teams • 38 matches per season</p>
                             </div>
                           </div>
                         </div>
@@ -564,7 +630,11 @@
           }
 
           // Squad/League/Transfers view
-          if (gameState === 'squad' || gameState === 'league-table' || gameState === 'all-leagues' || gameState === 'transfers') {
+          if (gameState === 'squad' || gameState === 'league-table' || gameState === 'all-leagues' || gameState === 'transfers' || gameState === 'fixtures') {
+            const nextMatch = getNextPlayerMatch();
+            const table = getLeagueTable(selectedLeague);
+            const playerPosition = table.findIndex(t => t.teamId === selectedTeam.id) + 1;
+            
             return (
               <div className="min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-green-900 p-4">
                 <div className="max-w-6xl mx-auto">
@@ -573,8 +643,9 @@
                       <div>
                         <h1 className="text-3xl font-bold text-white mb-2">{selectedTeam.name}</h1>
                         <p className="text-green-200">
-                          {allLeagues[selectedLeague].name} | Matches: {matchesPlayed} | Budget: {formatCurrency(selectedTeam.budget)}
+                          {allLeagues[selectedLeague].name} | Position: {playerPosition} | Date: {formatDate(currentDate)}
                         </p>
+                        <p className="text-green-200">Budget: {formatCurrency(selectedTeam.budget)}</p>
                       </div>
                       <button
                         onClick={() => setGameState('main-menu')}
@@ -589,7 +660,7 @@
                   <div className="flex gap-2 mb-4 flex-wrap">
                     <button
                       onClick={() => setGameState('squad')}
-                      className={`px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 ${
+                      className={`px-4 py-2 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm ${
                         gameState === 'squad' ? 'bg-yellow-400 text-green-900' : 'bg-white/10 text-white hover:bg-white/20'
                       }`}
                     >
@@ -597,8 +668,17 @@
                       Squad
                     </button>
                     <button
+                      onClick={() => setGameState('fixtures')}
+                      className={`px-4 py-2 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm ${
+                        gameState === 'fixtures' ? 'bg-yellow-400 text-green-900' : 'bg-white/10 text-white hover:bg-white/20'
+                      }`}
+                    >
+                      <Calendar />
+                      Fixtures
+                    </button>
+                    <button
                       onClick={() => setGameState('transfers')}
-                      className={`px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 ${
+                      className={`px-4 py-2 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm ${
                         gameState === 'transfers' ? 'bg-yellow-400 text-green-900' : 'bg-white/10 text-white hover:bg-white/20'
                       }`}
                     >
@@ -607,16 +687,16 @@
                     </button>
                     <button
                       onClick={() => setGameState('league-table')}
-                      className={`px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 ${
+                      className={`px-4 py-2 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm ${
                         gameState === 'league-table' ? 'bg-yellow-400 text-green-900' : 'bg-white/10 text-white hover:bg-white/20'
                       }`}
                     >
                       <TrendingUp />
-                      My League
+                      Table
                     </button>
                     <button
                       onClick={() => setGameState('all-leagues')}
-                      className={`px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 ${
+                      className={`px-4 py-2 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm ${
                         gameState === 'all-leagues' ? 'bg-yellow-400 text-green-900' : 'bg-white/10 text-white hover:bg-white/20'
                       }`}
                     >
@@ -643,6 +723,44 @@
                     </div>
                   )}
 
+                  {gameState === 'fixtures' && (
+                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-4">
+                      <h2 className="text-2xl font-bold text-white mb-4">Season Fixtures</h2>
+                      <div className="space-y-2 max-h-96 overflow-y-auto">
+                        {(fixtures[selectedLeague] || []).map((fixture, index) => {
+                          const league = allLeagues[selectedLeague];
+                          const homeTeam = league.teams.find(t => t.id === fixture.homeTeamId);
+                          const awayTeam = league.teams.find(t => t.id === fixture.awayTeamId);
+                          const isPlayerMatch = fixture.homeTeamId === selectedTeam.id || fixture.awayTeamId === selectedTeam.id;
+                          
+                          return (
+                            <div
+                              key={index}
+                              className={`p-3 rounded text-sm ${
+                                isPlayerMatch 
+                                  ? fixture.played ? 'bg-yellow-400/20' : 'bg-green-400/20'
+                                  : 'bg-white/5'
+                              }`}
+                            >
+                              <div className="flex justify-between items-center">
+                                <span className="text-white">
+                                  {homeTeam?.name} vs {awayTeam?.name}
+                                </span>
+                                {fixture.played ? (
+                                  <span className="text-green-200 font-bold">
+                                    {fixture.homeScore} - {fixture.awayScore}
+                                  </span>
+                                ) : (
+                                  <span className="text-gray-400">Not played</span>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
                   {gameState === 'transfers' && (
                     <div className="space-y-4">
                       {selectedPlayerForTransfer ? (
@@ -658,7 +776,7 @@
                           </div>
                           <p className="text-green-200 mb-4">Value: {formatCurrency(calculatePlayerValue(selectedPlayerForTransfer))}</p>
                           <h3 className="text-xl font-bold text-white mb-3">Select destination team:</h3>
-                          <div className="space-y-2">
+                          <div className="space-y-2 max-h-96 overflow-y-auto">
                             {Object.keys(allLeagues).map(leagueKey => {
                               const league = allLeagues[leagueKey];
                               return league.teams.filter(t => t.id !== selectedTeam.id).map(team => {
@@ -736,73 +854,75 @@
 
                           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6">
                             <h2 className="text-2xl font-bold text-white mb-4">Available Players - All Leagues</h2>
-                            {Object.keys(allLeagues).map(leagueKey => {
-                              const league = allLeagues[leagueKey];
-                              return (
-                                <div key={leagueKey} className="mb-6">
-                                  <h3 className="text-xl font-semibold text-yellow-400 mb-3">{league.name}</h3>
-                                  {league.teams.filter(t => t.id !== selectedTeam.id).map(team => (
-                                    <div key={team.id} className="mb-4">
-                                      <h4 className="text-lg font-semibold text-white mb-2">{team.name}</h4>
-                                      <div className="space-y-2">
-                                        {team.players.slice(0, 3).map(player => {
-                                          const playerValue = calculatePlayerValue(player);
-                                          const canAfford = selectedTeam.budget >= playerValue;
-                                          return (
-                                            <div
-                                              key={player.id}
-                                              onClick={() => {
-                                                if (canAfford) {
-                                                  if (confirm(`Sign ${player.name} for ${formatCurrency(playerValue)}?`)) {
-                                                    const updatedLeagues = JSON.parse(JSON.stringify(allLeagues));
-                                                    Object.keys(updatedLeagues).forEach(lk => {
-                                                      updatedLeagues[lk].teams = updatedLeagues[lk].teams.map(t => {
-                                                        if (t.id === team.id) {
-                                                          return {
-                                                            ...t,
-                                                            budget: t.budget + playerValue,
-                                                            players: t.players.filter(p => p.id !== player.id)
-                                                          };
-                                                        }
-                                                        if (t.id === selectedTeam.id) {
-                                                          return {
-                                                            ...t,
-                                                            budget: t.budget - playerValue,
-                                                            players: [...t.players, player]
-                                                          };
-                                                        }
-                                                        return t;
+                            <div className="space-y-4 max-h-96 overflow-y-auto">
+                              {Object.keys(allLeagues).map(leagueKey => {
+                                const league = allLeagues[leagueKey];
+                                return (
+                                  <div key={leagueKey}>
+                                    <h3 className="text-xl font-semibold text-yellow-400 mb-2">{league.name}</h3>
+                                    {league.teams.filter(t => t.id !== selectedTeam.id).map(team => (
+                                      <div key={team.id} className="mb-3">
+                                        <h4 className="text-md font-semibold text-white mb-2">{team.name}</h4>
+                                        <div className="space-y-1">
+                                          {team.players.slice(0, 3).map(player => {
+                                            const playerValue = calculatePlayerValue(player);
+                                            const canAfford = selectedTeam.budget >= playerValue;
+                                            return (
+                                              <div
+                                                key={player.id}
+                                                onClick={() => {
+                                                  if (canAfford) {
+                                                    if (confirm(`Sign ${player.name} for ${formatCurrency(playerValue)}?`)) {
+                                                      const updatedLeagues = JSON.parse(JSON.stringify(allLeagues));
+                                                      Object.keys(updatedLeagues).forEach(lk => {
+                                                        updatedLeagues[lk].teams = updatedLeagues[lk].teams.map(t => {
+                                                          if (t.id === team.id) {
+                                                            return {
+                                                              ...t,
+                                                              budget: t.budget + playerValue,
+                                                              players: t.players.filter(p => p.id !== player.id)
+                                                            };
+                                                          }
+                                                          if (t.id === selectedTeam.id) {
+                                                            return {
+                                                              ...t,
+                                                              budget: t.budget - playerValue,
+                                                              players: [...t.players, player]
+                                                            };
+                                                          }
+                                                          return t;
+                                                        });
                                                       });
-                                                    });
-                                                    setAllLeagues(updatedLeagues);
-                                                    setSelectedTeam(updatedLeagues[selectedLeague].teams.find(t => t.id === selectedTeam.id));
-                                                    alert(`${player.name} signed!`);
+                                                      setAllLeagues(updatedLeagues);
+                                                      setSelectedTeam(updatedLeagues[selectedLeague].teams.find(t => t.id === selectedTeam.id));
+                                                      alert(`${player.name} signed!`);
+                                                    }
+                                                  } else {
+                                                    alert('Insufficient budget!');
                                                   }
-                                                } else {
-                                                  alert('Insufficient budget!');
-                                                }
-                                              }}
-                                              className={`bg-white/5 rounded p-2 transition-all flex justify-between items-center flex-wrap gap-2 text-sm ${
-                                                canAfford ? 'cursor-pointer hover:bg-white/10' : 'opacity-50 cursor-not-allowed'
-                                              }`}
-                                            >
-                                              <div                                              >
-                                                <span className="text-white font-semibold">{player.name}</span>
-                                                <span className="text-green-200 ml-2">{player.positions.join('/')}</span>
-                                                <span className="text-green-200 ml-2">Age: {calculateAge(player.dob)}</span>
+                                                }}
+                                                className={`bg-white/5 rounded p-2 transition-all flex justify-between items-center flex-wrap gap-2 text-sm ${
+                                                  canAfford ? 'cursor-pointer hover:bg-white/10' : 'opacity-50 cursor-not-allowed'
+                                                }`}
+                                              >
+                                                <div>
+                                                  <span className="text-white font-semibold">{player.name}</span>
+                                                  <span className="text-green-200 ml-2">{player.positions.join('/')}</span>
+                                                  <span className="text-green-200 ml-2">Age: {calculateAge(player.dob)}</span>
+                                                </div>
+                                                <span className={canAfford ? 'text-green-400 font-semibold' : 'text-red-400 font-semibold'}>
+                                                  {formatCurrency(playerValue)}
+                                                </span>
                                               </div>
-                                              <span className={canAfford ? 'text-green-400 font-semibold' : 'text-red-400 font-semibold'}>
-                                                {formatCurrency(playerValue)}
-                                              </span>
-                                            </div>
-                                          );
-                                        })}
+                                            );
+                                          })}
+                                        </div>
                                       </div>
-                                    </div>
-                                  ))}
-                                </div>
-                              );
-                            })}
+                                    ))}
+                                  </div>
+                                );
+                              })}
+                            </div>
                           </div>
                         </>
                       )}
@@ -829,7 +949,7 @@
                             </tr>
                           </thead>
                           <tbody>
-                            {leagueTables[selectedLeague]?.map((team, index) => (
+                            {table.map((team, index) => (
                               <tr
                                 key={team.teamId}
                                 className={`border-b border-white/10 ${
@@ -858,6 +978,7 @@
                     <div className="space-y-4">
                       {Object.keys(allLeagues).map(leagueKey => {
                         const league = allLeagues[leagueKey];
+                        const table = getLeagueTable(leagueKey);
                         return (
                           <div key={leagueKey} className="bg-white/10 backdrop-blur-sm rounded-lg p-6">
                             <h2 className="text-2xl font-bold text-white mb-4">{league.name}</h2>
@@ -868,14 +989,12 @@
                                     <th className="text-left p-2">Pos</th>
                                     <th className="text-left p-2">Team</th>
                                     <th className="text-center p-2">P</th>
-                                    <th className="text-center p-2">W</th>
-                                    <th className="text-center p-2">D</th>
-                                    <th className="text-center p-2">L</th>
                                     <th className="text-center p-2">Pts</th>
+                                    <th className="text-center p-2">GD</th>
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  {leagueTables[leagueKey]?.map((team, index) => (
+                                  {table.slice(0, 5).map((team, index) => (
                                     <tr
                                       key={team.teamId}
                                       className={`border-b border-white/10 ${
@@ -885,10 +1004,8 @@
                                       <td className="p-2 font-bold">{index + 1}</td>
                                       <td className="p-2">{team.name}</td>
                                       <td className="text-center p-2">{team.played}</td>
-                                      <td className="text-center p-2">{team.won}</td>
-                                      <td className="text-center p-2">{team.drawn}</td>
-                                      <td className="text-center p-2">{team.lost}</td>
                                       <td className="text-center p-2 font-bold">{team.points}</td>
+                                      <td className="text-center p-2">{team.goalsFor - team.goalsAgainst}</td>
                                     </tr>
                                   ))}
                                 </tbody>
@@ -900,13 +1017,41 @@
                     </div>
                   )}
 
-                  <button
-                    onClick={playNextMatch}
-                    className="w-full bg-yellow-400 text-green-900 py-4 rounded-lg font-bold text-xl hover:bg-yellow-300 transition-all flex items-center justify-center gap-2"
-                  >
-                    <Calendar />
-                    Play Next Match
-                  </button>
+                  {nextMatch ? (
+                    <button
+                      onClick={playNextMatch}
+                      className="w-full bg-yellow-400 text-green-900 py-4 rounded-lg font-bold text-xl hover:bg-yellow-300 transition-all flex items-center justify-center gap-2"
+                    >
+                      <Calendar />
+                      Play Next Match
+                      {(() => {
+                        const league = allLeagues[selectedLeague];
+                        const opponent = nextMatch.homeTeamId === selectedTeam.id
+                          ? league.teams.find(t => t.id === nextMatch.awayTeamId)
+                          : league.teams.find(t => t.id === nextMatch.homeTeamId);
+                        return opponent ? ` - vs ${opponent.name} (${nextMatch.homeTeamId === selectedTeam.id ? 'H' : 'A'})` : '';
+                      })()}
+                    </button>
+                  ) : (
+                    <div className="bg-yellow-400/20 text-yellow-200 p-6 rounded-lg text-center">
+                      <h2 className="text-2xl font-bold mb-2">Season Complete!</h2>
+                      <p>Final Position: {playerPosition}</p>
+                      <button
+                        onClick={() => {
+                          const newSeasonStart = new Date(currentDate);
+                          newSeasonStart.setFullYear(newSeasonStart.getFullYear() + 1);
+                          newSeasonStart.setMonth(7);
+                          newSeasonStart.setDate(1);
+                          setCurrentDate(newSeasonStart);
+                          generateSeasonFixtures();
+                          alert('New season started!');
+                        }}
+                        className="mt-4 bg-yellow-400 text-green-900 px-6 py-3 rounded-lg font-bold hover:bg-yellow-300"
+                      >
+                        Start New Season
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             );
@@ -924,6 +1069,9 @@
               currentMatch.playerScore < currentMatch.opponentScore ? 'text-red-400' :
               'text-yellow-400';
 
+            const table = getLeagueTable(selectedLeague);
+            const playerPosition = table.findIndex(t => t.teamId === selectedTeam.id) + 1;
+
             return (
               <div className="min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-green-900 p-4">
                 <div className="max-w-4xl mx-auto">
@@ -932,6 +1080,9 @@
                     <div className="text-center text-white text-3xl font-bold mb-2">
                       {currentMatch.isHome ? selectedTeam.name : currentMatch.opponent} {currentMatch.playerScore} - {currentMatch.opponentScore} {currentMatch.isHome ? currentMatch.opponent : selectedTeam.name}
                     </div>
+                    <p className="text-center text-green-200">
+                      {formatDate(currentDate)} | League Position: {playerPosition}
+                    </p>
                   </div>
 
                   <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-4 max-h-96 overflow-y-auto">
@@ -945,16 +1096,23 @@
 
                   <div className="flex gap-4 flex-wrap">
                     <button
-                      onClick={() => setGameState('all-leagues')}
+                      onClick={() => setGameState('league-table')}
                       className="flex-1 min-w-[200px] bg-white/20 text-white py-4 rounded-lg font-bold hover:bg-white/30 transition-all"
                     >
-                      View All Leagues
+                      View Table
                     </button>
                     <button
-                      onClick={playNextMatch}
+                      onClick={() => {
+                        const nextMatch = getNextPlayerMatch();
+                        if (nextMatch) {
+                          setGameState('squad');
+                        } else {
+                          setGameState('squad');
+                        }
+                      }}
                       className="flex-1 min-w-[200px] bg-yellow-400 text-green-900 py-4 rounded-lg font-bold hover:bg-yellow-300 transition-all"
                     >
-                      Next Match
+                      Continue
                     </button>
                   </div>
                 </div>
