@@ -539,7 +539,7 @@
           { "id": 7, "name": "Chemsdine Talbi", "positions": ["LW", "RW"], "dob": "2005-05-09", "rating": 12 },
           { "id": 11, "name": "Chris Rigg", "positions": ["CM", "CAM"], "dob": "2007-06-18", "rating": 12 },
           { "id": 19, "name": "Habib Diarra", "positions": ["CDM", "CM"], "dob": "2004-01-03", "rating": 13 },
-          { "id": 25, "name": "Bertrand Traoré", "positions": ["RW", "LW"], "dob": "1995-09-06 "rating": 13 },
+          { "id": 25, "name": "Bertrand Traoré", "positions": ["RW", "LW"], "dob": "1995-09-06", "rating": 13 },
           { "id": 27, "name": "Noah Sadiki", "positions": ["CDM", "CM"], "dob": "2004-12-17", "rating": 14 },
           { "id": 28, "name": "Enzo Le Fée", "positions": ["CM", "LW"], "dob": "2000-02-03", "rating": 14 },
           { "id": 34, "name": "Granit Xhaka", "positions": ["CDM", "CM"], "dob": "1992-09-27", "rating": 16 },
