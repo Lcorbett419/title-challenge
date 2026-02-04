@@ -635,11 +635,16 @@
           { "id": 37, "name": "Ladislav Krejčí", "positions": ["CB", "CDM"], "dob": "1999-04-20", "rating": 14 },
           { "id": 38, "name": "Jackson Tchatchoua", "positions": ["RB"], "dob": "2001-09-14", "rating": 14 },
           { "id": 7, "name": "André", "positions": ["CDM", "CM"], "dob": "2001-07-16", "rating": 14 },
-          { "id": 40, "name": "Isaiah Anderson", "positions": ["CDM", "CM"], "dob": "1998-08-06", "rating": 17 },
-          { "id": 41, "name": "Owen Thomas", "positions": ["CM"], "dob": "1996-12-30", "rating": 16 },
-          { "id": 42, "name": "Lincoln Taylor", "positions": ["ST"], "dob": "1999-10-15", "rating": 18 },
-          { "id": 43, "name": "Jayden Moore", "positions": ["LW", "RW"], "dob": "1997-02-19", "rating": 17 },
-          { "id": 44, "name": "Grayson Jackson", "positions": ["RW", "ST"], "dob": "1998-06-23", "rating": 16 }
+          { "id": 8, "name": "João Gomes", "positions": ["CM"], "dob": "2001-02-12", "rating": 14 },
+          { "id": 27, "name": "Jean-Ricner Bellegarde", "positions": ["CM"], "dob": "1998-06-27", "rating": 14 },
+          { "id": 47, "name": "Angel Gomes", "positions": ["CM", "CAM"], "dob": "2000-08-31", "rating": 13 },
+          { "id": 9, "name": "Adam Armstrong", "positions": ["ST"], "dob": "1997-02-10", "rating": 12 },
+          { "id": 10, "name": "Jhon Arias", "positions": ["RW", "LW"], "dob": "1997-09-21", "rating": 13 },
+          { "id": 11, "name": "Hwang Hee-chan", "positions": ["ST", "LW"], "dob": "1996-01-26", "rating": 14 },
+          { "id": 14, "name": "Tolu Arokodare", "positions": ["ST"], "dob": "2000-11-23", "rating": 13 },
+          { "id": 21, "name": "Rodrigo Gomes", "positions": ["LW", "RW", "LB", "RB"], "dob": "2003-07-07", "rating": 13 },
+          { "id": 30, "name": "Enso González", "positions": ["LW"], "dob": "2005-01-20", "rating": 11 },
+          { "id": 36, "name": "Mateus Mané", "positions": ["CAM", "ST"], "dob": "2007-09-16", "rating": 13 }
         ]
       },
     ]
