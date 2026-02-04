@@ -188,9 +188,14 @@
 
           const selectTeam = (team) => {
             setSelectedTeam(team);
-            generateSeasonFixtures();
             setGameState('squad');
           };
+          
+          useEffect(() => {
+            if (selectedTeam && Object.keys(fixtures).length === 0) {
+              generateSeasonFixtures();
+            }
+          }, [selectedTeam]);
 
           const getLeagueTable = (leagueKey) => {
             const league = allLeagues[leagueKey];
@@ -341,53 +346,7 @@
           };
 
           const simulateOtherMatches = () => {
-            const updatedFixtures = JSON.parse(JSON.stringify(fixtures));
-            
-            Object.keys(allLeagues).forEach(leagueKey => {
-              const league = allLeagues[leagueKey];
-              const leagueFixtures = updatedFixtures[leagueKey];
-              
-              if (!leagueFixtures) return;
-              
-              const unplayedFixtures = leagueFixtures.filter(f => !f.played);
-              
-              if (leagueKey === selectedLeague) {
-                const playerNextMatch = unplayedFixtures.find(f => 
-                  f.homeTeamId === selectedTeam.id || f.awayTeamId === selectedTeam.id
-                );
-                const otherFixtures = unplayedFixtures.filter(f => 
-                  f.homeTeamId !== selectedTeam.id && f.awayTeamId !== selectedTeam.id
-                );
-                
-                if (otherFixtures.length > 0) {
-                  const fixtureToPlay = otherFixtures[0];
-                  const homeTeam = league.teams.find(t => t.id === fixtureToPlay.homeTeamId);
-                  const awayTeam = league.teams.find(t => t.id === fixtureToPlay.awayTeamId);
-                  
-                  if (homeTeam && awayTeam) {
-                    const result = simulateMatch(homeTeam, awayTeam);
-                    fixtureToPlay.played = true;
-                    fixtureToPlay.homeScore = result.homeScore;
-                    fixtureToPlay.awayScore = result.awayScore;
-                  }
-                }
-              } else {
-                if (unplayedFixtures.length > 0) {
-                  const fixtureToPlay = unplayedFixtures[0];
-                  const homeTeam = league.teams.find(t => t.id === fixtureToPlay.homeTeamId);
-                  const awayTeam = league.teams.find(t => t.id === fixtureToPlay.awayTeamId);
-                  
-                  if (homeTeam && awayTeam) {
-                    const result = simulateMatch(homeTeam, awayTeam);
-                    fixtureToPlay.played = true;
-                    fixtureToPlay.homeScore = result.homeScore;
-                    fixtureToPlay.awayScore = result.awayScore;
-                  }
-                }
-              }
-            });
-            
-            setFixtures(updatedFixtures);
+            // This function is no longer needed as we simulate in playNextMatch
           };
 
           const playNextMatch = () => {
