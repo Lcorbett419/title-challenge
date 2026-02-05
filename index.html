@@ -65,6 +65,17 @@
           const [fixtures, setFixtures] = useState({});
           const [currentDate, setCurrentDate] = useState(new Date('2025-08-01'));
           const [selectedPlayerForTransfer, setSelectedPlayerForTransfer] = useState(null);
+          const [selectedFormation, setSelectedFormation] = useState('4-3-3');
+          const [lineup, setLineup] = useState({});
+          const [showFormationPicker, setShowFormationPicker] = useState(false);
+
+          const formations = {
+            '4-3-3': { GK: 1, LB: 1, CB: 2, RB: 1, CDM: 1, CM: 2, LW: 1, RW: 1, ST: 1 },
+            '4-4-2': { GK: 1, LB: 1, CB: 2, RB: 1, CM: 2, CAM: 2, ST: 2 },
+            '4-2-3-1': { GK: 1, LB: 1, CB: 2, RB: 1, CDM: 2, CAM: 1, LW: 1, RW: 1, ST: 1 },
+            '3-5-2': { GK: 1, CB: 3, LB: 1, RB: 1, CM: 3, ST: 2 },
+            '4-1-4-1': { GK: 1, LB: 1, CB: 2, RB: 1, CDM: 1, CM: 2, LW: 1, RW: 1, ST: 1 }
+          };
 
           useEffect(() => {
             fetch('./leagues-database.json')
@@ -92,6 +103,8 @@
               allLeagues,
               fixtures,
               currentDate: currentDate.toISOString(),
+              selectedFormation,
+              lineup,
               gameState
             };
             localStorage.setItem('footballManagerSave', JSON.stringify({ gameData }));
@@ -103,6 +116,8 @@
             setAllLeagues(JSON.parse(JSON.stringify(initialLeagues)));
             setFixtures({});
             setCurrentDate(new Date('2025-08-01'));
+            setSelectedFormation('4-3-3');
+            setLineup({});
             localStorage.removeItem('footballManagerSave');
             setGameState('league-select');
           };
@@ -118,6 +133,8 @@
                   setAllLeagues(data.gameData.allLeagues);
                   setFixtures(data.gameData.fixtures);
                   setCurrentDate(new Date(data.gameData.currentDate));
+                  setSelectedFormation(data.gameData.selectedFormation || '4-3-3');
+                  setLineup(data.gameData.lineup || {});
                   setGameState(data.gameData.gameState === 'main-menu' ? 'squad' : data.gameData.gameState);
                 }
               } catch (e) {
@@ -145,26 +162,36 @@
             Object.keys(allLeagues).forEach(leagueKey => {
               const league = allLeagues[leagueKey];
               const teams = league.teams;
+              
+              // Add injury system and goal tracking to players
+              teams.forEach(team => {
+                team.players.forEach(player => {
+                  if (!player.goals) player.goals = 0;
+                  if (!player.injured) player.injured = false;
+                  if (!player.injuryUntil) player.injuryUntil = null;
+                });
+              });
+              
               const leagueFixtures = [];
               
-              // Generate round-robin fixtures (each team plays each other twice)
+              // Generate round-robin fixtures
               for (let i = 0; i < teams.length; i++) {
                 for (let j = i + 1; j < teams.length; j++) {
-                  // Home fixture
                   leagueFixtures.push({
                     homeTeamId: teams[i].id,
                     awayTeamId: teams[j].id,
                     played: false,
                     homeScore: null,
-                    awayScore: null
+                    awayScore: null,
+                    scorers: []
                   });
-                  // Away fixture
                   leagueFixtures.push({
                     homeTeamId: teams[j].id,
                     awayTeamId: teams[i].id,
                     played: false,
                     homeScore: null,
-                    awayScore: null
+                    awayScore: null,
+                    scorers: []
                   });
                 }
               }
@@ -263,10 +290,26 @@
             );
           };
 
-          const simulateMatch = (homeTeam, awayTeam) => {
+          const simulateMatch = (homeTeam, awayTeam, trackScorers = false) => {
             const commentary = [];
             const homeRating = getTeamRating(homeTeam);
             const awayRating = getTeamRating(awayTeam);
+            const goalScorers = [];
+            
+            // Check for injuries before match
+            const updateInjuries = (team) => {
+              team.players.forEach(player => {
+                if (player.injured && player.injuryUntil) {
+                  if (new Date(player.injuryUntil) <= currentDate) {
+                    player.injured = false;
+                    player.injuryUntil = null;
+                  }
+                }
+              });
+            };
+            
+            updateInjuries(homeTeam);
+            updateInjuries(awayTeam);
             
             let homeScore = 0;
             let awayScore = 0;
@@ -287,23 +330,25 @@
                   const rand = Math.random();
                   let scorer;
                   
+                  const availablePlayers = team.players.filter(p => !p.injured);
+                  
                   if (rand < 0.70) {
-                    const attackers = team.players.filter(p => 
+                    const attackers = availablePlayers.filter(p => 
                       p.positions.some(pos => ['ST', 'LW', 'RW', 'CAM'].includes(pos))
                     );
                     scorer = attackers[Math.floor(Math.random() * attackers.length)];
                   } else if (rand < 0.90) {
-                    const midfielders = team.players.filter(p => 
+                    const midfielders = availablePlayers.filter(p => 
                       p.positions.some(pos => ['CDM', 'CM'].includes(pos))
                     );
                     scorer = midfielders[Math.floor(Math.random() * midfielders.length)];
                   } else if (rand < 0.98) {
-                    const defenders = team.players.filter(p => 
+                    const defenders = availablePlayers.filter(p => 
                       p.positions.some(pos => ['LB', 'CB', 'RB'].includes(pos))
                     );
                     scorer = defenders[Math.floor(Math.random() * defenders.length)];
                   } else {
-                    scorer = team.players.find(p => p.positions.includes('GK'));
+                    scorer = availablePlayers.find(p => p.positions.includes('GK'));
                   }
                   return scorer;
                 };
@@ -313,6 +358,9 @@
                   if (scorer && Math.random() < 0.4) {
                     homeScore++;
                     commentary.push(`${minute}' GOAL! ${scorer.name} scores for ${homeTeam.name}! ${homeScore}-${awayScore}`);
+                    if (trackScorers) {
+                      goalScorers.push({ playerId: scorer.id, teamId: homeTeam.id, playerName: scorer.name });
+                    }
                   } else if (scorer) {
                     commentary.push(`${minute}' ${scorer.name} with a shot, but it's saved!`);
                   }
@@ -321,6 +369,9 @@
                   if (scorer && Math.random() < 0.4) {
                     awayScore++;
                     commentary.push(`${minute}' GOAL! ${scorer.name} scores for ${awayTeam.name}! ${homeScore}-${awayScore}`);
+                    if (trackScorers) {
+                      goalScorers.push({ playerId: scorer.id, teamId: awayTeam.id, playerName: scorer.name });
+                    }
                   } else if (scorer) {
                     commentary.push(`${minute}' ${scorer.name} shoots wide!`);
                   }
@@ -339,10 +390,28 @@
               }
             }
             
+            // Random injuries (5% chance per match)
+            [homeTeam, awayTeam].forEach(team => {
+              team.players.forEach(player => {
+                if (!player.injured && Math.random() < 0.05) {
+                  player.injured = true;
+                  const weeksOut = 1 + Math.floor(Math.random() * 4); // 1-4 weeks
+                  const injuryDate = new Date(currentDate);
+                  injuryDate.setDate(injuryDate.getDate() + (weeksOut * 7));
+                  player.injuryUntil = injuryDate.toISOString();
+                  
+                  if (team.id === selectedTeam.id || trackScorers) {
+                    commentary.push("");
+                    commentary.push(`INJURY: ${player.name} (${team.name}) injured - out for ${weeksOut} week${weeksOut > 1 ? 's' : ''}`);
+                  }
+                }
+              });
+            });
+            
             commentary.push("");
             commentary.push(`FULL TIME: ${homeTeam.name} ${homeScore} - ${awayScore} ${awayTeam.name}`);
             
-            return { homeScore, awayScore, commentary };
+            return { homeScore, awayScore, commentary, scorers: goalScorers };
           };
 
           const simulateOtherMatches = () => {
@@ -350,6 +419,13 @@
           };
 
           const playNextMatch = () => {
+            // Show formation picker before match
+            if (!showFormationPicker) {
+              setShowFormationPicker(true);
+              setGameState('formation-picker');
+              return;
+            }
+            
             const nextMatch = getNextPlayerMatch();
             
             if (!nextMatch) {
@@ -389,6 +465,18 @@
               playerLeagueFixtures[playerFixtureIndex].played = true;
               playerLeagueFixtures[playerFixtureIndex].homeScore = result.homeScore;
               playerLeagueFixtures[playerFixtureIndex].awayScore = result.awayScore;
+              playerLeagueFixtures[playerFixtureIndex].scorers = result.scorers || [];
+              
+              // Update goal tallies for player's match
+              result.scorers.forEach(scorer => {
+                const team = league.teams.find(t => t.id === scorer.teamId);
+                if (team) {
+                  const player = team.players.find(p => p.id === scorer.playerId);
+                  if (player) {
+                    player.goals = (player.goals || 0) + 1;
+                  }
+                }
+              });
             }
             
             // NOW simulate complete matchday for ALL leagues
@@ -419,10 +507,23 @@
                   const aTeam = lg.teams.find(t => t.id === fix.awayTeamId);
                   
                   if (hTeam && aTeam) {
-                    const res = simulateMatch(hTeam, aTeam);
+                    const res = simulateMatch(hTeam, aTeam, true);
                     lgFixtures[i].played = true;
                     lgFixtures[i].homeScore = res.homeScore;
                     lgFixtures[i].awayScore = res.awayScore;
+                    lgFixtures[i].scorers = res.scorers || [];
+                    
+                    // Update goal tallies
+                    res.scorers.forEach(scorer => {
+                      const team = lg.teams.find(t => t.id === scorer.teamId);
+                      if (team) {
+                        const player = team.players.find(p => p.id === scorer.playerId);
+                        if (player) {
+                          player.goals = (player.goals || 0) + 1;
+                        }
+                      }
+                    });
+                    
                     teamsPlayed.add(fix.homeTeamId);
                     teamsPlayed.add(fix.awayTeamId);
                     
@@ -456,7 +557,28 @@
             }
             
             setCurrentDate(newDate);
+            setShowFormationPicker(false);
             setGameState('match-result');
+          };
+          
+          const getTopScorers = (leagueKey) => {
+            const league = allLeagues[leagueKey];
+            const scorers = [];
+            
+            league.teams.forEach(team => {
+              team.players.forEach(player => {
+                if (player.goals && player.goals > 0) {
+                  scorers.push({
+                    name: player.name,
+                    team: team.name,
+                    goals: player.goals
+                  });
+                }
+              });
+            });
+            
+            scorers.sort((a, b) => b.goals - a.goals);
+            return scorers.slice(0, 10);
           };
 
           const calculateAge = (dob, asOfDate = currentDate) => {
@@ -633,8 +755,75 @@
             );
           }
 
+          // Formation Picker
+          if (gameState === 'formation-picker') {
+            const nextMatch = getNextPlayerMatch();
+            const opponent = nextMatch.homeTeamId === selectedTeam.id
+              ? allLeagues[selectedLeague].teams.find(t => t.id === nextMatch.awayTeamId)
+              : allLeagues[selectedLeague].teams.find(t => t.id === nextMatch.homeTeamId);
+            
+            const injuredPlayers = selectedTeam.players.filter(p => p.injured);
+            
+            return (
+              <div className="min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-green-900 p-4">
+                <div className="max-w-4xl mx-auto">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-4">
+                    <h1 className="text-3xl font-bold text-white mb-2">Pre-Match Setup</h1>
+                    <p className="text-green-200">
+                      {selectedTeam.name} vs {opponent?.name} ({nextMatch.homeTeamId === selectedTeam.id ? 'Home' : 'Away'})
+                    </p>
+                    <p className="text-green-200">{formatDate(currentDate)}</p>
+                  </div>
+
+                  {injuredPlayers.length > 0 && (
+                    <div className="bg-red-500/20 rounded-lg p-4 mb-4">
+                      <h3 className="text-white font-bold mb-2">⚕️ Injured Players</h3>
+                      {injuredPlayers.map(player => (
+                        <p key={player.id} className="text-red-200 text-sm">
+                          {player.name} - Returns: {formatDate(player.injuryUntil)}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-4">
+                    <h2 className="text-2xl font-bold text-white mb-4">Select Formation</h2>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                      {Object.keys(formations).map(formation => (
+                        <button
+                          key={formation}
+                          onClick={() => setSelectedFormation(formation)}
+                          className={`p-4 rounded-lg font-bold text-lg transition-all ${
+                            selectedFormation === formation
+                              ? 'bg-yellow-400 text-green-900'
+                              : 'bg-white/10 text-white hover:bg-white/20'
+                          }`}
+                        >
+                          {formation}
+                        </button>
+                      ))}
+                    </div>
+                    <p className="text-green-200 mt-4 text-sm">
+                      Formation affects match tactics and player positioning
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      setShowFormationPicker(false);
+                      playNextMatch();
+                    }}
+                    className="w-full bg-yellow-400 text-green-900 py-4 rounded-lg font-bold text-xl hover:bg-yellow-300 transition-all"
+                  >
+                    Start Match
+                  </button>
+                </div>
+              </div>
+            );
+          }
+
           // Squad/League/Transfers view
-          if (gameState === 'squad' || gameState === 'league-table' || gameState === 'all-leagues' || gameState === 'transfers' || gameState === 'fixtures') {
+          if (gameState === 'squad' || gameState === 'league-table' || gameState === 'all-leagues' || gameState === 'transfers' || gameState === 'fixtures' || gameState === 'top-scorers') {
             const nextMatch = getNextPlayerMatch();
             const table = getLeagueTable(selectedLeague);
             const playerPosition = table.findIndex(t => t.teamId === selectedTeam.id) + 1;
@@ -707,18 +896,32 @@
                       <Globe />
                       All Leagues
                     </button>
+                    <button
+                      onClick={() => setGameState('top-scorers')}
+                      className={`px-4 py-2 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm ${
+                        gameState === 'top-scorers' ? 'bg-yellow-400 text-green-900' : 'bg-white/10 text-white hover:bg-white/20'
+                      }`}
+                    >
+                      <Trophy />
+                      Top Scorers
+                    </button>
                   </div>
 
                   {gameState === 'squad' && (
                     <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-4">
                       <h2 className="text-2xl font-bold text-white mb-4">Your Squad</h2>
+                      <p className="text-green-200 mb-2 text-sm">Current Formation: {selectedFormation}</p>
                       <div className="space-y-2">
                         {selectedTeam.players.map(player => (
-                          <div key={player.id} className="bg-white/5 rounded p-3 flex justify-between items-center flex-wrap gap-2">
+                          <div key={player.id} className={`rounded p-3 flex justify-between items-center flex-wrap gap-2 ${
+                            player.injured ? 'bg-red-500/20' : 'bg-white/5'
+                          }`}>
                             <div>
                               <span className="text-white font-semibold">{player.name}</span>
+                              {player.injured && <span className="text-red-400 ml-2">⚕️ INJURED</span>}
                               <span className="text-green-200 ml-4">{player.positions.join('/')}</span>
                               <span className="text-green-200 ml-4">Age: {calculateAge(player.dob)}</span>
+                              {player.goals > 0 && <span className="text-yellow-400 ml-4">⚽ {player.goals}</span>}
                             </div>
                             <div className="text-green-400 font-semibold">{formatCurrency(calculatePlayerValue(player))}</div>
                           </div>
@@ -1015,6 +1218,36 @@
                                 </tbody>
                               </table>
                             </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {gameState === 'top-scorers' && (
+                    <div className="space-y-4">
+                      {Object.keys(allLeagues).map(leagueKey => {
+                        const league = allLeagues[leagueKey];
+                        const topScorers = getTopScorers(leagueKey);
+                        return (
+                          <div key={leagueKey} className="bg-white/10 backdrop-blur-sm rounded-lg p-6">
+                            <h2 className="text-2xl font-bold text-white mb-4">⚽ {league.name} - Top Scorers</h2>
+                            {topScorers.length > 0 ? (
+                              <div className="space-y-2">
+                                {topScorers.map((scorer, index) => (
+                                  <div key={index} className="bg-white/5 rounded p-3 flex justify-between items-center">
+                                    <div>
+                                      <span className="text-yellow-400 font-bold mr-3">{index + 1}.</span>
+                                      <span className="text-white font-semibold">{scorer.name}</span>
+                                      <span className="text-green-200 ml-3 text-sm">{scorer.team}</span>
+                                    </div>
+                                    <span className="text-yellow-400 font-bold text-xl">{scorer.goals}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            ) : (
+                              <p className="text-green-200">No goals scored yet this season</p>
+                            )}
                           </div>
                         );
                       })}
