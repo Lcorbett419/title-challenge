@@ -200,14 +200,11 @@
                   const isGK = player.positions.includes('GK');
                   const retirementAge = isGK ? 38 : 36;
                   
-                  // Check for retirement
                   if (age >= retirementAge) {
                     if (player.retirementWarning) {
-                      // Already warned, now retire
                       retirements.push(`${player.name} (${team.name}) has retired at age ${age}`);
-                      return false; // Remove player
+                      return false;
                     } else {
-                      // First warning
                       player.retirementWarning = true;
                       warnings.push(`${player.name} (${team.name}, age ${age}) will retire at end of season`);
                       return true;
@@ -216,7 +213,6 @@
                   return true;
                 });
                 
-                // Add injury system and goal tracking to players
                 team.players.forEach(player => {
                   if (!player.goals) player.goals = 0;
                   if (!player.injured) player.injured = false;
@@ -224,34 +220,38 @@
                 });
               });
               
+              // Generate fixtures using round-robin algorithm
+              const n = teams.length;
               const leagueFixtures = [];
               
-              // Generate round-robin fixtures
-              for (let i = 0; i < teams.length; i++) {
-                for (let j = i + 1; j < teams.length; j++) {
+              // Create matchdays (each team plays once per matchday)
+              for (let round = 0; round < (n - 1) * 2; round++) {
+                const isFirstHalf = round < n - 1;
+                const baseRound = isFirstHalf ? round : round - (n - 1);
+                
+                for (let i = 0; i < n / 2; i++) {
+                  let home = (baseRound + i) % (n - 1);
+                  let away = (n - 1 - i + baseRound) % (n - 1);
+                  
+                  if (i === 0) {
+                    away = n - 1;
+                  }
+                  
+                  // Swap home/away for second half of season
+                  if (!isFirstHalf) {
+                    [home, away] = [away, home];
+                  }
+                  
                   leagueFixtures.push({
-                    homeTeamId: teams[i].id,
-                    awayTeamId: teams[j].id,
+                    homeTeamId: teams[home].id,
+                    awayTeamId: teams[away].id,
                     played: false,
                     homeScore: null,
                     awayScore: null,
-                    scorers: []
-                  });
-                  leagueFixtures.push({
-                    homeTeamId: teams[j].id,
-                    awayTeamId: teams[i].id,
-                    played: false,
-                    homeScore: null,
-                    awayScore: null,
-                    scorers: []
+                    scorers: [],
+                    matchday: round + 1
                   });
                 }
-              }
-              
-              // Shuffle fixtures
-              for (let i = leagueFixtures.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [leagueFixtures[i], leagueFixtures[j]] = [leagueFixtures[j], leagueFixtures[i]];
               }
               
               newFixtures[leagueKey] = leagueFixtures;
@@ -259,7 +259,6 @@
             
             setFixtures(newFixtures);
             
-            // Show retirement messages
             if (warnings.length > 0) {
               alert('Retirement Warnings:\n\n' + warnings.join('\n'));
             }
@@ -547,52 +546,37 @@
               
               if (!lgFixtures) return;
               
-              const teamsPlayed = new Set();
+              // Find the current matchday number for this league
+              const playedCount = lgFixtures.filter(f => f.played).length;
+              const currentMatchday = Math.floor(playedCount / (lg.teams.length / 2)) + 1;
               
-              // If player's league, mark their match teams as played
-              if (leagueKey === selectedLeague) {
-                teamsPlayed.add(nextMatch.homeTeamId);
-                teamsPlayed.add(nextMatch.awayTeamId);
-              }
+              // Get all fixtures for this matchday
+              const matchdayFixtures = lgFixtures.filter(f => f.matchday === currentMatchday && !f.played);
               
-              // Loop through fixtures and play matches for teams that haven't played yet
-              for (let i = 0; i < lgFixtures.length; i++) {
-                const fix = lgFixtures[i];
+              // Play all fixtures for this matchday
+              matchdayFixtures.forEach(fixture => {
+                const hTeam = lg.teams.find(t => t.id === fixture.homeTeamId);
+                const aTeam = lg.teams.find(t => t.id === fixture.awayTeamId);
                 
-                // Skip already played
-                if (fix.played) continue;
-                
-                // Check if both teams available
-                if (!teamsPlayed.has(fix.homeTeamId) && !teamsPlayed.has(fix.awayTeamId)) {
-                  const hTeam = lg.teams.find(t => t.id === fix.homeTeamId);
-                  const aTeam = lg.teams.find(t => t.id === fix.awayTeamId);
+                if (hTeam && aTeam) {
+                  const res = simulateMatch(hTeam, aTeam, true);
+                  fixture.played = true;
+                  fixture.homeScore = res.homeScore;
+                  fixture.awayScore = res.awayScore;
+                  fixture.scorers = res.scorers || [];
                   
-                  if (hTeam && aTeam) {
-                    const res = simulateMatch(hTeam, aTeam, true);
-                    lgFixtures[i].played = true;
-                    lgFixtures[i].homeScore = res.homeScore;
-                    lgFixtures[i].awayScore = res.awayScore;
-                    lgFixtures[i].scorers = res.scorers || [];
-                    
-                    // Update goal tallies
-                    res.scorers.forEach(scorer => {
-                      const team = lg.teams.find(t => t.id === scorer.teamId);
-                      if (team) {
-                        const player = team.players.find(p => p.id === scorer.playerId);
-                        if (player) {
-                          player.goals = (player.goals || 0) + 1;
-                        }
+                  // Update goal tallies
+                  res.scorers.forEach(scorer => {
+                    const team = lg.teams.find(t => t.id === scorer.teamId);
+                    if (team) {
+                      const player = team.players.find(p => p.id === scorer.playerId);
+                      if (player) {
+                        player.goals = (player.goals || 0) + 1;
                       }
-                    });
-                    
-                    teamsPlayed.add(fix.homeTeamId);
-                    teamsPlayed.add(fix.awayTeamId);
-                    
-                    // Stop when all teams have played
-                    if (teamsPlayed.size >= lg.teams.length) break;
-                  }
+                    }
+                  });
                 }
-              }
+              });
             });
             
             // Save updated fixtures
