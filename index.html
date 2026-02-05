@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Title Challenge a - Football Manager</title>
+    <title>Title Challenge - Football Manager</title>
     <meta name="description" content="Text-based football manager game across 5 European leagues!">
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -353,7 +353,6 @@
             const nextMatch = getNextPlayerMatch();
             
             if (!nextMatch) {
-              // Season ended
               const newSeasonStart = new Date(currentDate);
               newSeasonStart.setFullYear(newSeasonStart.getFullYear() + 1);
               newSeasonStart.setMonth(7);
@@ -375,17 +374,66 @@
             
             const result = simulateMatch(homeTeam, awayTeam);
             
+            // Deep clone fixtures
             const updatedFixtures = JSON.parse(JSON.stringify(fixtures));
-            const fixtureIndex = updatedFixtures[selectedLeague].findIndex(f => 
-              f.homeTeamId === nextMatch.homeTeamId && f.awayTeamId === nextMatch.awayTeamId && !f.played
+            
+            // Mark player's match as played
+            const playerLeagueFixtures = updatedFixtures[selectedLeague];
+            const playerFixtureIndex = playerLeagueFixtures.findIndex(f => 
+              f.homeTeamId === nextMatch.homeTeamId && 
+              f.awayTeamId === nextMatch.awayTeamId && 
+              !f.played
             );
             
-            if (fixtureIndex !== -1) {
-              updatedFixtures[selectedLeague][fixtureIndex].played = true;
-              updatedFixtures[selectedLeague][fixtureIndex].homeScore = result.homeScore;
-              updatedFixtures[selectedLeague][fixtureIndex].awayScore = result.awayScore;
+            if (playerFixtureIndex !== -1) {
+              playerLeagueFixtures[playerFixtureIndex].played = true;
+              playerLeagueFixtures[playerFixtureIndex].homeScore = result.homeScore;
+              playerLeagueFixtures[playerFixtureIndex].awayScore = result.awayScore;
             }
             
+            // NOW simulate complete matchday for ALL leagues
+            Object.keys(allLeagues).forEach(leagueKey => {
+              const lg = allLeagues[leagueKey];
+              const lgFixtures = updatedFixtures[leagueKey];
+              
+              if (!lgFixtures) return;
+              
+              const teamsPlayed = new Set();
+              
+              // If player's league, mark their match teams as played
+              if (leagueKey === selectedLeague) {
+                teamsPlayed.add(nextMatch.homeTeamId);
+                teamsPlayed.add(nextMatch.awayTeamId);
+              }
+              
+              // Loop through fixtures and play matches for teams that haven't played yet
+              for (let i = 0; i < lgFixtures.length; i++) {
+                const fix = lgFixtures[i];
+                
+                // Skip already played
+                if (fix.played) continue;
+                
+                // Check if both teams available
+                if (!teamsPlayed.has(fix.homeTeamId) && !teamsPlayed.has(fix.awayTeamId)) {
+                  const hTeam = lg.teams.find(t => t.id === fix.homeTeamId);
+                  const aTeam = lg.teams.find(t => t.id === fix.awayTeamId);
+                  
+                  if (hTeam && aTeam) {
+                    const res = simulateMatch(hTeam, aTeam);
+                    lgFixtures[i].played = true;
+                    lgFixtures[i].homeScore = res.homeScore;
+                    lgFixtures[i].awayScore = res.awayScore;
+                    teamsPlayed.add(fix.homeTeamId);
+                    teamsPlayed.add(fix.awayTeamId);
+                    
+                    // Stop when all teams have played
+                    if (teamsPlayed.size >= lg.teams.length) break;
+                  }
+                }
+              }
+            });
+            
+            // Save updated fixtures
             setFixtures(updatedFixtures);
             
             setCurrentMatch({
@@ -397,11 +445,10 @@
             
             setMatchCommentary(result.commentary);
             
-            // Advance date by 3-4 days
+            // Advance date
             const newDate = new Date(currentDate);
             newDate.setDate(newDate.getDate() + (3 + Math.floor(Math.random() * 2)));
             
-            // Check if crossed into new year
             if (newDate.getMonth() === 6 && newDate.getDate() > 30) {
               newDate.setMonth(7);
               newDate.setDate(1);
@@ -409,8 +456,6 @@
             }
             
             setCurrentDate(newDate);
-            
-            simulateOtherMatches();
             setGameState('match-result');
           };
 
