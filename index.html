@@ -91,8 +91,49 @@
             setLeagues(JSON.parse(JSON.stringify(db)));
             setFixtures({});
             setDate(new Date('2025-08-01'));
+            setFinanceHistory([]);
+            localStorage.removeItem('footballManagerSave');
             setState('league-select');
           };
+
+          const loadGame = () => {
+            const saved = localStorage.getItem('footballManagerSave');
+            if (saved) {
+              try {
+                const data = JSON.parse(saved);
+                if (data.gameData) {
+                  setLeague(data.gameData.league);
+                  setTeam(data.gameData.team);
+                  setLeagues(data.gameData.leagues);
+                  setFixtures(data.gameData.fixtures);
+                  setDate(new Date(data.gameData.date));
+                  setFormation(data.gameData.formation || '4-3-3');
+                  setFinanceHistory(data.gameData.financeHistory || []);
+                  setState('info-page');
+                }
+              } catch (e) {
+                alert('Error loading game');
+              }
+            }
+          };
+
+          const hasSaved = () => {
+            try {
+              const saved = localStorage.getItem('footballManagerSave');
+              if (saved) {
+                const data = JSON.parse(saved);
+                return data.gameData && data.gameData.team;
+              }
+            } catch (e) {}
+            return false;
+          };
+
+          useEffect(() => {
+            if (team && state === 'info-page') {
+              const gameData = { league, team, leagues, fixtures, date: date.toISOString(), formation, financeHistory };
+              localStorage.setItem('footballManagerSave', JSON.stringify({ gameData }));
+            }
+          }, [team, leagues, fixtures, date, state]);
 
           const selectLeague = (lk) => {
             setLeague(lk);
@@ -349,7 +390,14 @@
                 <div className="max-w-md w-full text-center">
                   <div className="w-24 h-24 mx-auto mb-6 text-green-500 flex items-center justify-center"><Trophy /></div>
                   <h1 className="text-5xl font-bold text-white mb-8">Title Challenge</h1>
-                  <button onClick={newGame} className="w-full bg-green-600 text-white py-6 rounded-lg font-bold text-xl mb-4">New Game</button>
+                  <button onClick={newGame} className="w-full bg-green-600 text-white py-6 rounded-lg font-bold text-xl mb-4 hover:bg-green-700">New Game</button>
+                  <button 
+                    onClick={loadGame} 
+                    disabled={!hasSaved()}
+                    className={`w-full py-6 rounded-lg font-bold text-xl ${hasSaved() ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-800 text-gray-600 cursor-not-allowed'}`}
+                  >
+                    Load Game
+                  </button>
                 </div>
               </div>
             );
@@ -514,6 +562,47 @@
                           ))}
                         </tbody>
                       </table>
+                    </div>
+                  )}
+
+                  {page === 'fixtures' && (
+                    <div className="bg-gray-800 rounded-lg p-4">
+                      <h2 className="text-white font-bold mb-4">Fixtures</h2>
+                      <div className="space-y-2 max-h-96 overflow-y-auto">
+                        {(fixtures[league] || []).map((f, i) => {
+                          const h = leagues[league].teams.find(t => t.id === f.homeTeamId);
+                          const a = leagues[league].teams.find(t => t.id === f.awayTeamId);
+                          const isPM = f.homeTeamId === team.id || f.awayTeamId === team.id;
+                          return (
+                            <div key={i} className={`p-3 rounded text-sm ${isPM ? f.played ? 'bg-green-900/30' : 'bg-orange-900/30' : 'bg-gray-700'}`}>
+                              <div className="flex justify-between">
+                                <span className="text-white">{h?.name} vs {a?.name}</span>
+                                {f.played ? <span className="text-white font-bold">{f.homeScore} - {f.awayScore}</span> : <span className="text-gray-500">-</span>}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {page === 'scorers' && (
+                    <div className="bg-gray-800 rounded-lg p-4">
+                      <h2 className="text-white font-bold mb-4">⚽ Top Scorers</h2>
+                      {Object.keys(leagues).map(lk => {
+                        const sc = getScorers(lk);
+                        return (
+                          <div key={lk} className="mb-6">
+                            <h3 className="text-orange-500 font-bold mb-3">{leagues[lk].name}</h3>
+                            {sc.length > 0 ? sc.map((s, i) => (
+                              <div key={i} className="flex justify-between bg-gray-700 p-2 rounded mb-2 text-sm">
+                                <span className="text-white"><span className="text-orange-500">{i + 1}.</span> {s.name} <span className="text-gray-400 text-xs">({s.team})</span></span>
+                                <span className="text-white font-bold">{s.goals}</span>
+                              </div>
+                            )) : <p className="text-gray-500 text-sm">No goals yet</p>}
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
 
