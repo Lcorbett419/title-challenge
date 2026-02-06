@@ -58,6 +58,7 @@
           const [page, setPage] = useState('home');
           const [match, setMatch] = useState(null);
           const [commentary, setCommentary] = useState([]);
+          const [financeHistory, setFinanceHistory] = useState([]);
 
           const formations = {
             '4-3-3': { GK: 1, LB: 1, CB: 2, RB: 1, CDM: 1, CM: 2, LW: 1, RW: 1, ST: 1 },
@@ -101,6 +102,8 @@
           const selectTeam = (t) => {
             setTeam(t);
             generateFixtures();
+            // Initialize finance history with starting balance
+            setFinanceHistory([{ date: new Date('2025-08-01').toISOString(), balance: t.budget }]);
             setState('info-page');
           };
 
@@ -317,6 +320,13 @@
               nd.setFullYear(nd.getFullYear() + 1);
             }
             setDate(nd);
+            
+            // Update finance history monthly
+            if (nd.getDate() === 1 || financeHistory.length === 0 || 
+                new Date(financeHistory[financeHistory.length - 1].date).getMonth() !== nd.getMonth()) {
+              setFinanceHistory([...financeHistory, { date: nd.toISOString(), balance: team.budget }]);
+            }
+            
             setState('match-result');
           };
 
@@ -404,7 +414,7 @@
                     <div className="bg-gray-800 w-64 h-full" onClick={(e) => e.stopPropagation()}>
                       <div className="p-4 space-y-2">
                         <h2 className="text-white font-bold mb-4">{team.name}</h2>
-                        {['home', 'squad', 'table', 'fixtures', 'scorers'].map(p => (
+                        {['home', 'squad', 'table', 'fixtures', 'scorers', 'transfers', 'finances'].map(p => (
                           <button key={p} onClick={() => { setPage(p); setMenuOpen(false); }} className="w-full text-left text-white py-2 px-3 rounded hover:bg-gray-700 capitalize">{p}</button>
                         ))}
                         <button onClick={() => setState('main-menu')} className="w-full text-left text-red-400 py-2 px-3 rounded hover:bg-gray-700">Exit</button>
@@ -458,7 +468,12 @@
 
                       <div className="bg-gray-800 rounded-lg p-4 mb-4">
                         <div className="text-gray-400 text-sm mb-1">Finances: Balance</div>
-                        <div className="text-white font-bold text-3xl">{formatCurrency(team.budget)}</div>
+                        <div 
+                          className="text-white font-bold text-3xl cursor-pointer hover:text-orange-500 transition"
+                          onClick={() => setPage('finances')}
+                        >
+                          {formatCurrency(team.budget)}
+                        </div>
                       </div>
                     </>
                   )}
@@ -502,23 +517,223 @@
                     </div>
                   )}
 
-                  {page === 'scorers' && (
+                  {page === 'finances' && (
                     <div className="bg-gray-800 rounded-lg p-4">
-                      <h2 className="text-white font-bold mb-4">⚽ Top Scorers</h2>
-                      {Object.keys(leagues).map(lk => {
-                        const sc = getScorers(lk);
-                        return (
-                          <div key={lk} className="mb-6">
-                            <h3 className="text-orange-500 font-bold mb-3">{leagues[lk].name}</h3>
-                            {sc.length > 0 ? sc.map((s, i) => (
-                              <div key={i} className="flex justify-between bg-gray-700 p-2 rounded mb-2 text-sm">
-                                <span className="text-white"><span className="text-orange-500">{i + 1}.</span> {s.name} <span className="text-gray-400 text-xs">({s.team})</span></span>
-                                <span className="text-white font-bold">{s.goals}</span>
+                      <h2 className="text-white font-bold mb-4">💰 Finances</h2>
+                      
+                      <div className="mb-6">
+                        <div className="text-gray-400 text-sm mb-1">Current Balance</div>
+                        <div className="text-white font-bold text-4xl">{formatCurrency(team.budget)}</div>
+                      </div>
+
+                      <div className="bg-gray-700 rounded-lg p-4">
+                        <h3 className="text-white font-semibold mb-4">Balance History</h3>
+                        {financeHistory.length > 1 ? (
+                          <svg viewBox="0 0 400 200" className="w-full h-48">
+                            <defs>
+                              <linearGradient id="grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style={{ stopColor: '#10b981', stopOpacity: 0.3 }} />
+                                <stop offset="100%" style={{ stopColor: '#10b981', stopOpacity: 0 }} />
+                              </linearGradient>
+                            </defs>
+                            
+                            {(() => {
+                              const max = Math.max(...financeHistory.map(f => f.balance));
+                              const min = Math.min(...financeHistory.map(f => f.balance));
+                              const range = max - min || 1;
+                              const points = financeHistory.map((f, i) => {
+                                const x = (i / (financeHistory.length - 1)) * 380 + 10;
+                                const y = 180 - ((f.balance - min) / range) * 160;
+                                return `${x},${y}`;
+                              }).join(' ');
+                              
+                              const areaPoints = `10,180 ${points} ${380},180`;
+                              
+                              return (
+                                <>
+                                  <polyline points={areaPoints} fill="url(#grad)" />
+                                  <polyline points={points} fill="none" stroke="#10b981" strokeWidth="2" />
+                                  {financeHistory.map((f, i) => {
+                                    const x = (i / (financeHistory.length - 1)) * 380 + 10;
+                                    const y = 180 - ((f.balance - min) / range) * 160;
+                                    return <circle key={i} cx={x} cy={y} r="3" fill="#10b981" />;
+                                  })}
+                                </>
+                              );
+                            })()}
+                            
+                            <line x1="10" y1="180" x2="390" y2="180" stroke="#4b5563" strokeWidth="1" />
+                            <line x1="10" y1="20" x2="10" y2="180" stroke="#4b5563" strokeWidth="1" />
+                          </svg>
+                        ) : (
+                          <p className="text-gray-400 text-sm">Play more matches to see history</p>
+                        )}
+                        
+                        <div className="mt-4 space-y-2">
+                          {financeHistory.slice(-5).reverse().map((f, i) => (
+                            <div key={i} className="flex justify-between text-sm">
+                              <span className="text-gray-400">{formatDate(f.date)}</span>
+                              <span className="text-white font-semibold">{formatCurrency(f.balance)}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {page === 'transfers' && (
+                    <div className="bg-gray-800 rounded-lg p-4">
+                      <h2 className="text-white font-bold mb-4">Transfer Market</h2>
+                      <p className="text-gray-400 mb-4">Budget: {formatCurrency(team.budget)}</p>
+                      
+                      <div className="mb-6">
+                        <h3 className="text-orange-500 font-bold mb-3">Your Squad</h3>
+                        <div className="space-y-2">
+                          {team.players.map(p => (
+                            <div key={p.id} className="bg-gray-700 rounded p-3 flex justify-between items-center">
+                              <div>
+                                <div className="text-white font-semibold">{p.name}</div>
+                                <div className="text-gray-400 text-xs">{p.positions.join('/')} • Age {calcAge(p.dob)}</div>
                               </div>
-                            )) : <p className="text-gray-500 text-sm">No goals yet</p>}
-                          </div>
-                        );
-                      })}
+                              <div className="text-green-500 text-sm">{formatCurrency(calculatePlayerValue(p, date))}</div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div>
+                        <h3 className="text-orange-500 font-bold mb-3">Available Players</h3>
+                        {Object.keys(leagues).map(lk => {
+                          const lg = leagues[lk];
+                          return lg.teams.filter(t => t.id !== team.id).slice(0, 2).map(t => (
+                            <div key={t.id} className="mb-4">
+                              <h4 className="text-white font-semibold mb-2 text-sm">{t.name} ({lg.name})</h4>
+                              {t.players.slice(0, 3).map(p => {
+                                const val = calculatePlayerValue(p, date);
+                                const can = team.budget >= val;
+                                return (
+                                  <div key={p.id} className={`bg-gray-700 rounded p-2 mb-1 text-xs ${can ? 'cursor-pointer hover:bg-gray-600' : 'opacity-50'}`}>
+                                    <div className="flex justify-between">
+                                      <span className="text-white">{p.name} <span className="text-gray-500">{p.positions[0]}</span></span>
+                                      <span className={can ? 'text-green-500' : 'text-red-500'}>{formatCurrency(val)}</span>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          ));
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {page === 'transfers' && (
+                    <div className="bg-gray-800 rounded-lg p-4">
+                      <h2 className="text-white font-bold mb-4">Transfer Market</h2>
+                      <p className="text-gray-400 mb-4">Budget: {formatCurrency(team.budget)}</p>
+                      
+                      <div className="mb-6">
+                        <h3 className="text-orange-500 font-bold mb-3">Your Squad</h3>
+                        <div className="space-y-2">
+                          {team.players.map(p => (
+                            <div key={p.id} className="bg-gray-700 rounded p-3 flex justify-between items-center">
+                              <div>
+                                <div className="text-white font-semibold">{p.name}</div>
+                                <div className="text-gray-400 text-xs">{p.positions.join('/')} • Age {calcAge(p.dob)}</div>
+                              </div>
+                              <div className="text-green-500 text-sm">{formatCurrency(calculatePlayerValue(p, date))}</div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div>
+                        <h3 className="text-orange-500 font-bold mb-3">Available Players</h3>
+                        {Object.keys(leagues).map(lk => {
+                          const lg = leagues[lk];
+                          return lg.teams.filter(t => t.id !== team.id).slice(0, 2).map(t => (
+                            <div key={t.id} className="mb-4">
+                              <h4 className="text-white font-semibold mb-2">{t.name}</h4>
+                              {t.players.slice(0, 3).map(p => {
+                                const val = calculatePlayerValue(p, date);
+                                const can = team.budget >= val;
+                                return (
+                                  <div key={p.id} className={`bg-gray-700 rounded p-2 mb-2 text-sm ${can ? 'cursor-pointer hover:bg-gray-600' : 'opacity-50'}`}>
+                                    <div className="flex justify-between">
+                                      <span className="text-white">{p.name} <span className="text-gray-400 text-xs">{p.positions.join('/')}</span></span>
+                                      <span className={can ? 'text-green-500' : 'text-red-500'}>{formatCurrency(val)}</span>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          ));
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {page === 'finances' && (
+                    <div className="bg-gray-800 rounded-lg p-4">
+                      <h2 className="text-white font-bold mb-4">💰 Finances</h2>
+                      
+                      <div className="mb-6">
+                        <div className="text-gray-400 text-sm mb-1">Current Balance</div>
+                        <div className="text-white font-bold text-4xl">{formatCurrency(team.budget)}</div>
+                      </div>
+
+                      <div className="bg-gray-700 rounded-lg p-4">
+                        <h3 className="text-white font-semibold mb-4">Balance History</h3>
+                        {financeHistory.length > 1 ? (
+                          <svg viewBox="0 0 400 200" className="w-full h-48">
+                            <defs>
+                              <linearGradient id="grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style={{ stopColor: '#10b981', stopOpacity: 0.3 }} />
+                                <stop offset="100%" style={{ stopColor: '#10b981', stopOpacity: 0 }} />
+                              </linearGradient>
+                            </defs>
+                            
+                            {(() => {
+                              const max = Math.max(...financeHistory.map(f => f.balance));
+                              const min = Math.min(...financeHistory.map(f => f.balance));
+                              const range = max - min || 1;
+                              const points = financeHistory.map((f, i) => {
+                                const x = (i / (financeHistory.length - 1)) * 380 + 10;
+                                const y = 180 - ((f.balance - min) / range) * 160;
+                                return `${x},${y}`;
+                              }).join(' ');
+                              
+                              const areaPoints = `10,180 ${points} ${380},180`;
+                              
+                              return (
+                                <>
+                                  <polyline points={areaPoints} fill="url(#grad)" />
+                                  <polyline points={points} fill="none" stroke="#10b981" strokeWidth="2" />
+                                  {financeHistory.map((f, i) => {
+                                    const x = (i / (financeHistory.length - 1)) * 380 + 10;
+                                    const y = 180 - ((f.balance - min) / range) * 160;
+                                    return <circle key={i} cx={x} cy={y} r="3" fill="#10b981" />;
+                                  })}
+                                </>
+                              );
+                            })()}
+                            
+                            <line x1="10" y1="180" x2="390" y2="180" stroke="#4b5563" strokeWidth="1" />
+                            <line x1="10" y1="20" x2="10" y2="180" stroke="#4b5563" strokeWidth="1" />
+                          </svg>
+                        ) : (
+                          <p className="text-gray-400 text-sm">Play more matches to see history</p>
+                        )}
+                        
+                        <div className="mt-4 space-y-2">
+                          {financeHistory.slice(-5).reverse().map((f, i) => (
+                            <div key={i} className="flex justify-between text-sm">
+                              <span className="text-gray-400">{formatDate(f.date)}</span>
+                              <span className="text-white font-semibold">{formatCurrency(f.balance)}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   )}
                 </div>
