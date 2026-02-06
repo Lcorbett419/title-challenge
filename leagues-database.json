@@ -655,7 +655,7 @@
     "teams": [
       {
         "id": 101,
-        "name": "Bayern Munich",
+        "name": "FC Augsburg",
         "budget": 50000000,
         "players": [
           { "id": 101, "name": "Hans Müller", "positions": ["GK"], "dob": "1996-04-12", "rating": 17 },
@@ -666,14 +666,14 @@
           { "id": 106, "name": "Wilhelm Becker", "positions": ["CDM", "CM"], "dob": "1997-07-18", "rating": 18 },
           { "id": 107, "name": "Karl Schulz", "positions": ["CM", "CAM"], "dob": "1998-09-10", "rating": 17 },
           { "id": 108, "name": "Heinrich Hoffmann", "positions": ["CM"], "dob": "1996-05-25", "rating": 16 },
-          { "id": 109, "name": "Harry Kane", "positions": ["ST"], "dob": "1999-12-08", "rating": 18 },
+          { "id": 109, "name": "Lol", "positions": ["ST"], "dob": "1999-12-08", "rating": 18 },
           { "id": 110, "name": "Gustav Klein", "positions": ["LW", "ST"], "dob": "1997-02-14", "rating": 17 },
           { "id": 111, "name": "Ernst Wolf", "positions": ["RW"], "dob": "1998-06-30", "rating": 16 }
         ]
       },
       {
         "id": 102,
-        "name": "Borussia Dortmund",
+        "name": "Bayer Leverkusen",
         "budget": 50000000,
         "players": [
           { "id": 112, "name": "Stefan Neumann", "positions": ["GK"], "dob": "1995-09-18", "rating": 16 },
@@ -691,6 +691,192 @@
       },
       {
         "id": 103,
+        "name": "Bayern Munich",
+        "budget": 50000000,
+        "players": [
+          { "id": 1, "name": "Manuel Neuer", "positions": ["GK"], "dob": "1986-03-27", "rating": 17 },
+          { "id": 26, "name": "Sven Ulreich", "positions": ["GK"], "dob": "1988-08-03", "rating": 12 },
+          { "id": 40, "name": "Jonas Urbig", "positions": ["GK"], "dob": "2003-08-08", "rating": 13 },
+          { "id": 2, "name": "Dayot Upamecano", "positions": ["CB"], "dob": "1998-10-27", "rating": 17 },
+          { "id": 3, "name": "Kim Min-Jae", "positions": ["CB"], "dob": "1996-11-15", "rating": 16 },
+          { "id": 4, "name": "Jonathan Tah", "positions": ["CB"], "dob": "1996-02-11", "rating": 17 },
+          { "id": 19, "name": "Alphonso Davies", "positions": ["LB", "LW"], "dob": "2000-11-02", "rating": 17 },
+          { "id": 21, "name": "Hiroki Ito", "positions": ["CB", "LB"], "dob": "1999-05-12", "rating": 15 },
+          { "id": 22, "name": "Raphaël Guerreiro", "positions": ["LB"], "dob": "1993-12-22", "rating": 16 },
+          { "id": 23, "name": "Sacha Boey", "positions": ["RB"], "dob": "2000-09-13", "rating": 15 },
+          { "id": 44, "name": "Josip Stanišić", "positions": ["CB", "RB"], "dob": "2000-04-02", "rating": 15 },
+          { "id": 6, "name": "Joshua Kimmich", "positions": ["CM", "CDM", "RB"], "dob": "1995-02-08", "rating": 18 },
+          { "id": 8, "name": "Leon Goretzka", "positions": ["CM", "CDM"], "dob": "1995-02-06", "rating": 16 },
+          { "id": 10, "name": "Jamal Musiala", "positions": ["CAM", "LW"], "dob": "2003-02-26", "rating": 19 },
+          { "id": 20, "name": "Tom Bischof", "positions": ["CM", "CDM", "RB"], "dob": "2005-06-28", "rating": 14 },
+          { "id": 27, "name": "Konrad Laimer", "positions": ["CDM", "CM"], "dob": "1997-05-27", "rating": 16 },
+          { "id": 42, "name": "Lennart Karl", "positions": ["CAM", "RW"], "dob": "2008-02-22", "rating": 15 },
+          { "id": 45, "name": "Aleksandar Pavlović", "positions": ["CDM", "CM"], "dob": "2004-05-03", "rating": 15 },
+          { "id": 7, "name": "Serge Gnabry", "positions": ["LW", "RW"], "dob": "1995-07-14", "rating": 16 },
+          { "id": 9, "name": "Harry Kane", "positions": ["ST"], "dob": "1993-07-28", "rating": 19 },
+          { "id": 11, "name": "Nicolas Jackson", "positions": ["ST"], "dob": "2001-06-20", "rating": 16 },
+          { "id": 14, "name": "Luis Díaz", "positions": ["LW"], "dob": "1997-01-13", "rating": 17 },
+          { "id": 17, "name": "Michael Olise", "positions": ["RW", "CAM"], "dob": "2001-12-12", "rating": 17 }
+        ]
+      },
+      {
+        "id": 104,
+        "name": "Borussia Dortmund",
+        "budget": 50000000,
+        "players": [
+          { "id": 1, "name": "Gregor Kobel", "positions": ["GK"], "dob": "1997-12-06", "rating": 17 },
+          { "id": 30, "name": "Patrick Drewes", "positions": ["GK"], "dob": "1993-02-04", "rating": 13 },
+          { "id": 33, "name": "Alexander Meyer", "positions": ["GK"], "dob": "1991-04-13", "rating": 14 },
+          { "id": 2, "name": "Yan Couto", "positions": ["RB", "RW"], "dob": "2002-06-03", "rating": 15 },
+          { "id": 3, "name": "Waldemar Anton", "positions": ["CB"], "dob": "1996-07-20", "rating": 16 },
+          { "id": 4, "name": "Nico Schlotterbeck", "positions": ["CB"], "dob": "1999-12-01", "rating": 17 },
+          { "id": 5, "name": "Ramy Bensebaini", "positions": ["LB", "CB"], "dob": "1995-04-16", "rating": 15 },
+          { "id": 24, "name": "Daniel Svensson", "positions": ["LB", "CM"], "dob": "2002-02-12", "rating": 15 },
+          { "id": 25, "name": "Niklas Süle", "positions": ["CB"], "dob": "1995-09-03", "rating": 16 },
+          { "id": 26, "name": "Julian Ryerson", "positions": ["RB"], "dob": "1997-11-17", "rating": 15 },
+          { "id": 39, "name": "Filippo Mané", "positions": ["CB"], "dob": "2005-03-08", "rating": 11 },
+          { "id": 42, "name": "Almugera Kabar", "positions": ["LB"], "dob": "2006-06-06", "rating": 11 },
+          { "id": 6, "name": "Salih Özcan", "positions": ["CDM", "CM"], "dob": "1998-01-11", "rating": 15 },
+          { "id": 7, "name": "Jobe Bellingham", "positions": ["CM", "CAM"], "dob": "2005-09-23", "rating": 13 },
+          { "id": 8, "name": "Felix Nmecha", "positions": ["CM"], "dob": "1996-03-28", "rating": 16 },
+          { "id": 10, "name": "Julian Brandt", "positions": ["CAM", "LW"], "dob": "1996-05-02", "rating": 16 },
+          { "id": 17, "name": "Carney Chukwuemeka", "positions": ["CAM", "LW"], "dob": "2003-10-20", "rating": 14 },
+          { "id": 20, "name": "Marcel Sabitzer", "positions": ["CAM", "CM"], "dob": "1994-03-17", "rating": 15 },
+          { "id": 23, "name": "Emre Can", "positions": ["CDM", "CM", "CB"], "dob": "1994-01-12", "rating": 15 },
+          { "id": 9, "name": "Serhou Guirassy", "positions": ["ST"], "dob": "1996-03-12", "rating": 17 },
+          { "id": 14, "name": "Maximilian Beier", "positions": ["ST"], "dob": "2002-10-17", "rating": 15 },
+          { "id": 21, "name": "Fábio Silva", "positions": ["ST", "RW", "LW"], "dob": "2002-07-19", "rating": 14 },
+          { "id": 27, "name": "Karim Adeyemi", "positions": ["RW"], "dob": "2002-01-18", "rating": 16 }
+        ]
+      },
+      {
+        "id": 105,
+        "name": "Borussia Mönchengladbach",
+        "budget": 50000000,
+        "players": [
+          { "id": 123, "name": "Horst Koch", "positions": ["GK"], "dob": "1996-06-14", "rating": 16 },
+          { "id": 124, "name": "Manfred Bauer", "positions": ["LB"], "dob": "1997-12-22", "rating": 15 },
+          { "id": 125, "name": "Uwe Peters", "positions": ["CB"], "dob": "1998-04-18", "rating": 16 },
+          { "id": 126, "name": "Jürgen Möller", "positions": ["CB"], "dob": "1996-09-30", "rating": 15 },
+          { "id": 127, "name": "Bernd Richter", "positions": ["RB", "RW"], "dob": "1999-02-08", "rating": 14 },
+          { "id": 128, "name": "Norbert Jung", "positions": ["CDM"], "dob": "1997-08-25", "rating": 17 },
+          { "id": 129, "name": "Rainer Frank", "positions": ["CM", "CDM"], "dob": "1998-11-12", "rating": 16 },
+          { "id": 130, "name": "Lothar Beck", "positions": ["CAM", "CM"], "dob": "1996-03-28", "rating": 15 },
+          { "id": 131, "name": "Gerhard Kaiser", "positions": ["LW", "ST"], "dob": "1999-07-16", "rating": 17 },
+          { "id": 132, "name": "Heinz Schröder", "positions": ["ST"], "dob": "1997-01-03", "rating": 16 },
+          { "id": 133, "name": "Siegfried Vogt", "positions": ["RW"], "dob": "1998-05-20", "rating": 16 }
+        ]
+      },
+      {
+        "id": 106,
+        "name": "Eintracht Frankfurt",
+        "budget": 50000000,
+        "players": [
+          { "id": 123, "name": "Horst Koch", "positions": ["GK"], "dob": "1996-06-14", "rating": 16 },
+          { "id": 124, "name": "Manfred Bauer", "positions": ["LB"], "dob": "1997-12-22", "rating": 15 },
+          { "id": 125, "name": "Uwe Peters", "positions": ["CB"], "dob": "1998-04-18", "rating": 16 },
+          { "id": 126, "name": "Jürgen Möller", "positions": ["CB"], "dob": "1996-09-30", "rating": 15 },
+          { "id": 127, "name": "Bernd Richter", "positions": ["RB", "RW"], "dob": "1999-02-08", "rating": 14 },
+          { "id": 128, "name": "Norbert Jung", "positions": ["CDM"], "dob": "1997-08-25", "rating": 17 },
+          { "id": 129, "name": "Rainer Frank", "positions": ["CM", "CDM"], "dob": "1998-11-12", "rating": 16 },
+          { "id": 130, "name": "Lothar Beck", "positions": ["CAM", "CM"], "dob": "1996-03-28", "rating": 15 },
+          { "id": 131, "name": "Gerhard Kaiser", "positions": ["LW", "ST"], "dob": "1999-07-16", "rating": 17 },
+          { "id": 132, "name": "Heinz Schröder", "positions": ["ST"], "dob": "1997-01-03", "rating": 16 },
+          { "id": 133, "name": "Siegfried Vogt", "positions": ["RW"], "dob": "1998-05-20", "rating": 16 }
+        ]
+      },
+      {
+        "id": 107,
+        "name": "SC Freiburg",
+        "budget": 50000000,
+        "players": [
+          { "id": 123, "name": "Horst Koch", "positions": ["GK"], "dob": "1996-06-14", "rating": 16 },
+          { "id": 124, "name": "Manfred Bauer", "positions": ["LB"], "dob": "1997-12-22", "rating": 15 },
+          { "id": 125, "name": "Uwe Peters", "positions": ["CB"], "dob": "1998-04-18", "rating": 16 },
+          { "id": 126, "name": "Jürgen Möller", "positions": ["CB"], "dob": "1996-09-30", "rating": 15 },
+          { "id": 127, "name": "Bernd Richter", "positions": ["RB", "RW"], "dob": "1999-02-08", "rating": 14 },
+          { "id": 128, "name": "Norbert Jung", "positions": ["CDM"], "dob": "1997-08-25", "rating": 17 },
+          { "id": 129, "name": "Rainer Frank", "positions": ["CM", "CDM"], "dob": "1998-11-12", "rating": 16 },
+          { "id": 130, "name": "Lothar Beck", "positions": ["CAM", "CM"], "dob": "1996-03-28", "rating": 15 },
+          { "id": 131, "name": "Gerhard Kaiser", "positions": ["LW", "ST"], "dob": "1999-07-16", "rating": 17 },
+          { "id": 132, "name": "Heinz Schröder", "positions": ["ST"], "dob": "1997-01-03", "rating": 16 },
+          { "id": 133, "name": "Siegfried Vogt", "positions": ["RW"], "dob": "1998-05-20", "rating": 16 }
+        ]
+      },
+      {
+        "id": 108,
+        "name": "Hamburger SV",
+        "budget": 50000000,
+        "players": [
+          { "id": 123, "name": "Horst Koch", "positions": ["GK"], "dob": "1996-06-14", "rating": 16 },
+          { "id": 124, "name": "Manfred Bauer", "positions": ["LB"], "dob": "1997-12-22", "rating": 15 },
+          { "id": 125, "name": "Uwe Peters", "positions": ["CB"], "dob": "1998-04-18", "rating": 16 },
+          { "id": 126, "name": "Jürgen Möller", "positions": ["CB"], "dob": "1996-09-30", "rating": 15 },
+          { "id": 127, "name": "Bernd Richter", "positions": ["RB", "RW"], "dob": "1999-02-08", "rating": 14 },
+          { "id": 128, "name": "Norbert Jung", "positions": ["CDM"], "dob": "1997-08-25", "rating": 17 },
+          { "id": 129, "name": "Rainer Frank", "positions": ["CM", "CDM"], "dob": "1998-11-12", "rating": 16 },
+          { "id": 130, "name": "Lothar Beck", "positions": ["CAM", "CM"], "dob": "1996-03-28", "rating": 15 },
+          { "id": 131, "name": "Gerhard Kaiser", "positions": ["LW", "ST"], "dob": "1999-07-16", "rating": 17 },
+          { "id": 132, "name": "Heinz Schröder", "positions": ["ST"], "dob": "1997-01-03", "rating": 16 },
+          { "id": 133, "name": "Siegfried Vogt", "positions": ["RW"], "dob": "1998-05-20", "rating": 16 }
+        ]
+      },
+      {
+        "id": 109,
+        "name": "1. FC Heidenheim",
+        "budget": 50000000,
+        "players": [
+          { "id": 123, "name": "Horst Koch", "positions": ["GK"], "dob": "1996-06-14", "rating": 16 },
+          { "id": 124, "name": "Manfred Bauer", "positions": ["LB"], "dob": "1997-12-22", "rating": 15 },
+          { "id": 125, "name": "Uwe Peters", "positions": ["CB"], "dob": "1998-04-18", "rating": 16 },
+          { "id": 126, "name": "Jürgen Möller", "positions": ["CB"], "dob": "1996-09-30", "rating": 15 },
+          { "id": 127, "name": "Bernd Richter", "positions": ["RB", "RW"], "dob": "1999-02-08", "rating": 14 },
+          { "id": 128, "name": "Norbert Jung", "positions": ["CDM"], "dob": "1997-08-25", "rating": 17 },
+          { "id": 129, "name": "Rainer Frank", "positions": ["CM", "CDM"], "dob": "1998-11-12", "rating": 16 },
+          { "id": 130, "name": "Lothar Beck", "positions": ["CAM", "CM"], "dob": "1996-03-28", "rating": 15 },
+          { "id": 131, "name": "Gerhard Kaiser", "positions": ["LW", "ST"], "dob": "1999-07-16", "rating": 17 },
+          { "id": 132, "name": "Heinz Schröder", "positions": ["ST"], "dob": "1997-01-03", "rating": 16 },
+          { "id": 133, "name": "Siegfried Vogt", "positions": ["RW"], "dob": "1998-05-20", "rating": 16 }
+        ]
+      },
+      {
+        "id": 110,
+        "name": "TSG Hoffenheim",
+        "budget": 50000000,
+        "players": [
+          { "id": 123, "name": "Horst Koch", "positions": ["GK"], "dob": "1996-06-14", "rating": 16 },
+          { "id": 124, "name": "Manfred Bauer", "positions": ["LB"], "dob": "1997-12-22", "rating": 15 },
+          { "id": 125, "name": "Uwe Peters", "positions": ["CB"], "dob": "1998-04-18", "rating": 16 },
+          { "id": 126, "name": "Jürgen Möller", "positions": ["CB"], "dob": "1996-09-30", "rating": 15 },
+          { "id": 127, "name": "Bernd Richter", "positions": ["RB", "RW"], "dob": "1999-02-08", "rating": 14 },
+          { "id": 128, "name": "Norbert Jung", "positions": ["CDM"], "dob": "1997-08-25", "rating": 17 },
+          { "id": 129, "name": "Rainer Frank", "positions": ["CM", "CDM"], "dob": "1998-11-12", "rating": 16 },
+          { "id": 130, "name": "Lothar Beck", "positions": ["CAM", "CM"], "dob": "1996-03-28", "rating": 15 },
+          { "id": 131, "name": "Gerhard Kaiser", "positions": ["LW", "ST"], "dob": "1999-07-16", "rating": 17 },
+          { "id": 132, "name": "Heinz Schröder", "positions": ["ST"], "dob": "1997-01-03", "rating": 16 },
+          { "id": 133, "name": "Siegfried Vogt", "positions": ["RW"], "dob": "1998-05-20", "rating": 16 }
+        ]
+      },
+      {
+        "id": 111,
+        "name": "1. FC Köln",
+        "budget": 50000000,
+        "players": [
+          { "id": 123, "name": "Horst Koch", "positions": ["GK"], "dob": "1996-06-14", "rating": 16 },
+          { "id": 124, "name": "Manfred Bauer", "positions": ["LB"], "dob": "1997-12-22", "rating": 15 },
+          { "id": 125, "name": "Uwe Peters", "positions": ["CB"], "dob": "1998-04-18", "rating": 16 },
+          { "id": 126, "name": "Jürgen Möller", "positions": ["CB"], "dob": "1996-09-30", "rating": 15 },
+          { "id": 127, "name": "Bernd Richter", "positions": ["RB", "RW"], "dob": "1999-02-08", "rating": 14 },
+          { "id": 128, "name": "Norbert Jung", "positions": ["CDM"], "dob": "1997-08-25", "rating": 17 },
+          { "id": 129, "name": "Rainer Frank", "positions": ["CM", "CDM"], "dob": "1998-11-12", "rating": 16 },
+          { "id": 130, "name": "Lothar Beck", "positions": ["CAM", "CM"], "dob": "1996-03-28", "rating": 15 },
+          { "id": 131, "name": "Gerhard Kaiser", "positions": ["LW", "ST"], "dob": "1999-07-16", "rating": 17 },
+          { "id": 132, "name": "Heinz Schröder", "positions": ["ST"], "dob": "1997-01-03", "rating": 16 },
+          { "id": 133, "name": "Siegfried Vogt", "positions": ["RW"], "dob": "1998-05-20", "rating": 16 }
+        ]
+      },
+      {
+        "id": 112,
         "name": "RB Leipzig",
         "budget": 50000000,
         "players": [
@@ -708,8 +894,98 @@
         ]
       },
       {
-        "id": 104,
-        "name": "Bayer Leverkusen",
+        "id": 113,
+        "name": "Mainz 05",
+        "budget": 50000000,
+        "players": [
+          { "id": 123, "name": "Horst Koch", "positions": ["GK"], "dob": "1996-06-14", "rating": 16 },
+          { "id": 124, "name": "Manfred Bauer", "positions": ["LB"], "dob": "1997-12-22", "rating": 15 },
+          { "id": 125, "name": "Uwe Peters", "positions": ["CB"], "dob": "1998-04-18", "rating": 16 },
+          { "id": 126, "name": "Jürgen Möller", "positions": ["CB"], "dob": "1996-09-30", "rating": 15 },
+          { "id": 127, "name": "Bernd Richter", "positions": ["RB", "RW"], "dob": "1999-02-08", "rating": 14 },
+          { "id": 128, "name": "Norbert Jung", "positions": ["CDM"], "dob": "1997-08-25", "rating": 17 },
+          { "id": 129, "name": "Rainer Frank", "positions": ["CM", "CDM"], "dob": "1998-11-12", "rating": 16 },
+          { "id": 130, "name": "Lothar Beck", "positions": ["CAM", "CM"], "dob": "1996-03-28", "rating": 15 },
+          { "id": 131, "name": "Gerhard Kaiser", "positions": ["LW", "ST"], "dob": "1999-07-16", "rating": 17 },
+          { "id": 132, "name": "Heinz Schröder", "positions": ["ST"], "dob": "1997-01-03", "rating": 16 },
+          { "id": 133, "name": "Siegfried Vogt", "positions": ["RW"], "dob": "1998-05-20", "rating": 16 }
+        ]
+      },
+      {
+        "id": 114,
+        "name": "FC St. Pauli",
+        "budget": 50000000,
+        "players": [
+          { "id": 123, "name": "Horst Koch", "positions": ["GK"], "dob": "1996-06-14", "rating": 16 },
+          { "id": 124, "name": "Manfred Bauer", "positions": ["LB"], "dob": "1997-12-22", "rating": 15 },
+          { "id": 125, "name": "Uwe Peters", "positions": ["CB"], "dob": "1998-04-18", "rating": 16 },
+          { "id": 126, "name": "Jürgen Möller", "positions": ["CB"], "dob": "1996-09-30", "rating": 15 },
+          { "id": 127, "name": "Bernd Richter", "positions": ["RB", "RW"], "dob": "1999-02-08", "rating": 14 },
+          { "id": 128, "name": "Norbert Jung", "positions": ["CDM"], "dob": "1997-08-25", "rating": 17 },
+          { "id": 129, "name": "Rainer Frank", "positions": ["CM", "CDM"], "dob": "1998-11-12", "rating": 16 },
+          { "id": 130, "name": "Lothar Beck", "positions": ["CAM", "CM"], "dob": "1996-03-28", "rating": 15 },
+          { "id": 131, "name": "Gerhard Kaiser", "positions": ["LW", "ST"], "dob": "1999-07-16", "rating": 17 },
+          { "id": 132, "name": "Heinz Schröder", "positions": ["ST"], "dob": "1997-01-03", "rating": 16 },
+          { "id": 133, "name": "Siegfried Vogt", "positions": ["RW"], "dob": "1998-05-20", "rating": 16 }
+        ]
+      },
+      {
+        "id": 115,
+        "name": "VfB Stuttgart",
+        "budget": 50000000,
+        "players": [
+          { "id": 123, "name": "Horst Koch", "positions": ["GK"], "dob": "1996-06-14", "rating": 16 },
+          { "id": 124, "name": "Manfred Bauer", "positions": ["LB"], "dob": "1997-12-22", "rating": 15 },
+          { "id": 125, "name": "Uwe Peters", "positions": ["CB"], "dob": "1998-04-18", "rating": 16 },
+          { "id": 126, "name": "Jürgen Möller", "positions": ["CB"], "dob": "1996-09-30", "rating": 15 },
+          { "id": 127, "name": "Bernd Richter", "positions": ["RB", "RW"], "dob": "1999-02-08", "rating": 14 },
+          { "id": 128, "name": "Norbert Jung", "positions": ["CDM"], "dob": "1997-08-25", "rating": 17 },
+          { "id": 129, "name": "Rainer Frank", "positions": ["CM", "CDM"], "dob": "1998-11-12", "rating": 16 },
+          { "id": 130, "name": "Lothar Beck", "positions": ["CAM", "CM"], "dob": "1996-03-28", "rating": 15 },
+          { "id": 131, "name": "Gerhard Kaiser", "positions": ["LW", "ST"], "dob": "1999-07-16", "rating": 17 },
+          { "id": 132, "name": "Heinz Schröder", "positions": ["ST"], "dob": "1997-01-03", "rating": 16 },
+          { "id": 133, "name": "Siegfried Vogt", "positions": ["RW"], "dob": "1998-05-20", "rating": 16 }
+        ]
+      },
+      {
+        "id": 116,
+        "name": "Union Berlin",
+        "budget": 50000000,
+        "players": [
+          { "id": 123, "name": "Horst Koch", "positions": ["GK"], "dob": "1996-06-14", "rating": 16 },
+          { "id": 124, "name": "Manfred Bauer", "positions": ["LB"], "dob": "1997-12-22", "rating": 15 },
+          { "id": 125, "name": "Uwe Peters", "positions": ["CB"], "dob": "1998-04-18", "rating": 16 },
+          { "id": 126, "name": "Jürgen Möller", "positions": ["CB"], "dob": "1996-09-30", "rating": 15 },
+          { "id": 127, "name": "Bernd Richter", "positions": ["RB", "RW"], "dob": "1999-02-08", "rating": 14 },
+          { "id": 128, "name": "Norbert Jung", "positions": ["CDM"], "dob": "1997-08-25", "rating": 17 },
+          { "id": 129, "name": "Rainer Frank", "positions": ["CM", "CDM"], "dob": "1998-11-12", "rating": 16 },
+          { "id": 130, "name": "Lothar Beck", "positions": ["CAM", "CM"], "dob": "1996-03-28", "rating": 15 },
+          { "id": 131, "name": "Gerhard Kaiser", "positions": ["LW", "ST"], "dob": "1999-07-16", "rating": 17 },
+          { "id": 132, "name": "Heinz Schröder", "positions": ["ST"], "dob": "1997-01-03", "rating": 16 },
+          { "id": 133, "name": "Siegfried Vogt", "positions": ["RW"], "dob": "1998-05-20", "rating": 16 }
+        ]
+      },
+      {
+        "id": 117,
+        "name": "Werder Bremen",
+        "budget": 50000000,
+        "players": [
+          { "id": 123, "name": "Horst Koch", "positions": ["GK"], "dob": "1996-06-14", "rating": 16 },
+          { "id": 124, "name": "Manfred Bauer", "positions": ["LB"], "dob": "1997-12-22", "rating": 15 },
+          { "id": 125, "name": "Uwe Peters", "positions": ["CB"], "dob": "1998-04-18", "rating": 16 },
+          { "id": 126, "name": "Jürgen Möller", "positions": ["CB"], "dob": "1996-09-30", "rating": 15 },
+          { "id": 127, "name": "Bernd Richter", "positions": ["RB", "RW"], "dob": "1999-02-08", "rating": 14 },
+          { "id": 128, "name": "Norbert Jung", "positions": ["CDM"], "dob": "1997-08-25", "rating": 17 },
+          { "id": 129, "name": "Rainer Frank", "positions": ["CM", "CDM"], "dob": "1998-11-12", "rating": 16 },
+          { "id": 130, "name": "Lothar Beck", "positions": ["CAM", "CM"], "dob": "1996-03-28", "rating": 15 },
+          { "id": 131, "name": "Gerhard Kaiser", "positions": ["LW", "ST"], "dob": "1999-07-16", "rating": 17 },
+          { "id": 132, "name": "Heinz Schröder", "positions": ["ST"], "dob": "1997-01-03", "rating": 16 },
+          { "id": 133, "name": "Siegfried Vogt", "positions": ["RW"], "dob": "1998-05-20", "rating": 16 }
+        ]
+      },
+      {
+        "id": 118,
+        "name": "VfL Wolfsburg",
         "budget": 50000000,
         "players": [
           { "id": 134, "name": "Wolfgang Sauer", "positions": ["GK"], "dob": "1995-10-25", "rating": 16 },
