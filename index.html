@@ -72,6 +72,30 @@
             return age;
           };
 
+          const getWeeksUntil = (isoDate) => {
+            const ret = new Date(isoDate);
+            const diff = ret.getTime() - date.getTime();
+            const weeks = Math.ceil(diff / (7 * 24 * 60 * 60 * 1000));
+            return Math.max(0, weeks);
+          };
+
+          // Clear injuries whose return date has passed
+          const healInjuredPlayers = (currentDate) => {
+            if (!leagues) return;
+            Object.keys(leagues).forEach(lk => {
+              leagues[lk].teams.forEach(tm => {
+                tm.players.forEach(p => {
+                  if (p.injured && p.injuryUntil) {
+                    if (new Date(p.injuryUntil) <= currentDate) {
+                      p.injured = false;
+                      p.injuryUntil = null;
+                    }
+                  }
+                });
+              });
+            });
+          };
+
           const formatCurrency = (amt) => '£' + (amt / 1000000).toFixed(1) + 'M';
           const formatDate = (d) => new Date(d).toLocaleDateString('en-GB');
 
@@ -95,6 +119,7 @@
                   setDate(new Date(data.gameData.date));
                   setFormation(data.gameData.formation || '4-3-3');
                   setFinanceHistory(data.gameData.financeHistory || []);
+                  setStartingXI(data.gameData.startingXI || {});
                   setState('info-page');
                 }
               } catch (e) { alert('Error loading game'); }
@@ -111,7 +136,7 @@
 
           useEffect(() => {
             if (team && state === 'info-page') {
-              const gameData = { league, team, leagues, fixtures, date: date.toISOString(), formation, financeHistory };
+              const gameData = { league, team, leagues, fixtures, date: date.toISOString(), formation, financeHistory, startingXI };
               localStorage.setItem('footballManagerSave', JSON.stringify({ gameData }));
             }
           }, [team, leagues, fixtures, date, state]);
@@ -149,6 +174,26 @@
             setFixtures(newFix);
           };
 
+          const startNewSeason = () => {
+            // Season runs Aug 1 - Jul 31. New season starts Aug 1 of the next year.
+            const seasonYear = date.getMonth() >= 7 ? date.getFullYear() + 1 : date.getFullYear();
+            const newDate = new Date(`${seasonYear}-08-01`);
+            setDate(newDate);
+            
+            // Reset goals and clear all injuries for the new season
+            Object.keys(leagues).forEach(lk => {
+              leagues[lk].teams.forEach(tm => {
+                tm.players.forEach(p => {
+                  p.goals = 0;
+                  p.injured = false;
+                  p.injuryUntil = null;
+                });
+              });
+            });
+            
+            generateFixtures();
+          };
+
           const getTable = (lk) => {
             const lg = leagues[lk]; const fix = fixtures[lk] || [];
             const tbl = lg.teams.map(t => ({ teamId: t.id, name: t.name, played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 }));
@@ -178,11 +223,12 @@
               if (tm.id === team.id && Object.keys(startingXI).length > 0) {
                 return Object.entries(startingXI).map(([key, playerId]) => {
                   const player = tm.players.find(p => p.id === playerId);
+                  if (!player || player.injured) return null;
                   const posIdx = parseInt(key.replace('pos', ''));
                   const requiredPos = formations[formation].positions[posIdx];
                   const inPosition = player.positions.includes(requiredPos);
                   return { ...player, effectiveRating: inPosition ? player.rating : Math.max(1, player.rating - 5) };
-                }).filter(p => p && !p.injured);
+                }).filter(p => p !== null);
               } else {
                 return tm.players.filter(p => !p.injured).sort((a, b) => b.rating - a.rating).slice(0, 11).map(p => ({ ...p, effectiveRating: p.rating }));
               }
@@ -195,10 +241,10 @@
               if (Math.random() < 0.3) {
                 const pickScorer = (players) => {
                   const r = Math.random();
-                  if (r < 0.70) return players.filter(p => p.positions.some(pos => ['ST','LW','RW','CAM'].includes(pos)))[Math.floor(Math.random() * players.filter(p => p.positions.some(pos => ['ST','LW','RW','CAM'].includes(pos))).length)];
-                  if (r < 0.90) return players.filter(p => p.positions.some(pos => ['CDM','CM'].includes(pos)))[0];
-                  if (r < 0.999) return players.filter(p => p.positions.some(pos => ['LB','CB','RB'].includes(pos)))[0];
-                  return players.find(p => p.positions.includes('GK'));
+                  if (r < 0.70) { const fwd = players.filter(p => p.positions.some(pos => ['ST','LW','RW','CAM'].includes(pos))); return fwd.length > 0 ? fwd[Math.floor(Math.random() * fwd.length)] : null; }
+                  if (r < 0.90) { const mid = players.filter(p => p.positions.some(pos => ['CDM','CM'].includes(pos))); return mid.length > 0 ? mid[0] : null; }
+                  if (r < 0.999) { const def = players.filter(p => p.positions.some(pos => ['LB','CB','RB'].includes(pos))); return def.length > 0 ? def[0] : null; }
+                  return players.find(p => p.positions.includes('GK')) || null;
                 };
                 if (Math.random() < 0.5) {
                   const sc = pickScorer(homePlayers);
@@ -211,12 +257,16 @@
             }
             [...homePlayers, ...awayPlayers].forEach(p => {
               if (!p.injured && Math.random() < 0.01) {
-                const originalPlayer = (p.teamId === h.id ? h : a).players.find(pl => pl.id === p.id);
-                originalPlayer.injured = true;
-                const w = 1 + Math.floor(Math.random() * 4);
-                const id = new Date(date); id.setDate(id.getDate() + w * 7);
-                originalPlayer.injuryUntil = id.toISOString();
-                if ((h.id === team.id || a.id === team.id)) comm.push(`⚕️ ${p.name} injured (${w}w)`);
+                const tmObj = h.players.find(pl => pl.id === p.id) ? h : a;
+                const originalPlayer = tmObj.players.find(pl => pl.id === p.id);
+                if (originalPlayer) {
+                  originalPlayer.injured = true;
+                  const w = 1 + Math.floor(Math.random() * 4);
+                  const injDate = new Date(date);
+                  injDate.setDate(injDate.getDate() + w * 7);
+                  originalPlayer.injuryUntil = injDate.toISOString();
+                  if ((h.id === team.id || a.id === team.id)) comm.push(`⚕️ ${p.name} injured (${w} week${w > 1 ? 's' : ''})`);
+                }
               }
             });
             comm.push(`FULL TIME: ${h.name} ${hs} - ${as} ${a.name}`);
@@ -227,8 +277,8 @@
             const next = getNext();
             if (!next) {
               alert('Season complete!');
-              const ns = new Date(date); ns.setFullYear(ns.getFullYear() + 1); ns.setMonth(7); ns.setDate(1);
-              setDate(ns); generateFixtures(); return;
+              startNewSeason();
+              return;
             }
             const lg = leagues[league];
             const h = next.homeTeamId === team.id ? team : lg.teams.find(t => t.id === next.homeTeamId);
@@ -256,9 +306,23 @@
             setFixtures(uf);
             setMatch({ opp: next.homeTeamId === team.id ? a.name : h.name, ps: next.homeTeamId === team.id ? res.homeScore : res.awayScore, os: next.homeTeamId === team.id ? res.awayScore : res.homeScore, home: next.homeTeamId === team.id });
             setCommentary(res.commentary);
-            const nd = new Date(date); nd.setDate(nd.getDate() + 3 + Math.floor(Math.random() * 2));
-            if (nd.getMonth() === 6 && nd.getDate() > 30) { nd.setMonth(7); nd.setDate(1); nd.setFullYear(nd.getFullYear() + 1); }
+
+            // Advance date by 3-4 days
+            const nd = new Date(date);
+            nd.setDate(nd.getDate() + 3 + Math.floor(Math.random() * 2));
+
+            // Clamp to end of season (Jul 31)
+            const seasonEndYear = date.getMonth() >= 7 ? date.getFullYear() + 1 : date.getFullYear();
+            const seasonEnd = new Date(`${seasonEndYear}-07-31`);
+            if (nd > seasonEnd) {
+              nd.setTime(seasonEnd.getTime());
+            }
+
             setDate(nd);
+
+            // Heal injured players whose return date has passed
+            healInjuredPlayers(nd);
+
             if (nd.getDate() === 1 || financeHistory.length === 0 || new Date(financeHistory[financeHistory.length - 1].date).getMonth() !== nd.getMonth()) {
               setFinanceHistory([...financeHistory, { date: nd.toISOString(), balance: team.budget }]);
             }
@@ -269,6 +333,19 @@
             const sc = [];
             leagues[lk].teams.forEach(t => { t.players.forEach(p => { if (p.goals > 0) sc.push({ name: p.name, team: t.name, goals: p.goals }); }); });
             sc.sort((a, b) => b.goals - a.goals); return sc.slice(0, 10);
+          };
+
+          // Get current season string for display
+          const getSeasonDisplay = () => {
+            if (date.getMonth() >= 7) {
+              return `${date.getFullYear()}/${date.getFullYear() + 1}`;
+            }
+            return `${date.getFullYear() - 1}/${date.getFullYear()}`;
+          };
+
+          const getSeasonNumber = () => {
+            if (date.getMonth() >= 7) return date.getFullYear() - 2024;
+            return date.getFullYear() - 2025;
           };
 
           if (!db) return <div className="min-h-screen bg-gray-900 flex items-center justify-center"><div className="text-white">Loading...</div></div>;
@@ -334,8 +411,8 @@
                 <div className="bg-orange-600 p-4 flex justify-between items-center">
                   <button onClick={() => setMenuOpen(!menuOpen)} className="text-white"><Menu /></button>
                   <div className="text-center">
-                    <div className="text-white text-sm">Week {Math.floor((fixtures[league]?.filter(f => f.played).length || 0) / 10) + 1}</div>
-                    <div className="text-white font-bold">Season {date.getFullYear() - 2024}</div>
+                    <div className="text-white text-sm">Season {getSeasonNumber()}</div>
+                    <div className="text-white font-bold">{getSeasonDisplay()}</div>
                   </div>
                   <div className="w-10"></div>
                 </div>
@@ -404,6 +481,14 @@
                     </>
                   )}
 
+                  {page === 'home' && !next && (
+                    <div className="bg-gray-800 rounded-lg p-6 mb-4 text-center">
+                      <h2 className="text-white font-bold text-2xl mb-2">Season Complete!</h2>
+                      <p className="text-gray-400 mb-4">Final position: {pos + 1}{pos === 0 ? 'st' : pos === 1 ? 'nd' : pos === 2 ? 'rd' : 'th'}</p>
+                      <button onClick={startNewSeason} className="bg-green-600 text-white py-3 px-8 rounded-lg font-bold hover:bg-green-700">Start New Season</button>
+                    </div>
+                  )}
+
                   {page === 'starting-xi' && (
                     <div className="bg-gray-800 rounded-lg p-4">
                       <h2 className="text-white font-bold mb-4">Starting XI</h2>
@@ -428,17 +513,19 @@
                           const selectedPlayerId = startingXI[`pos${idx}`];
                           const selectedPlayer = team.players.find(p => p.id === selectedPlayerId);
                           const isOutOfPosition = selectedPlayer && !selectedPlayer.positions.includes(requiredPos);
+                          const isInjured = selectedPlayer && selectedPlayer.injured;
                           return (
                             <div key={idx} className="bg-gray-700 rounded-lg p-3">
                               <div className="text-gray-400 text-xs mb-2">{formations[formation].labels[idx]}</div>
-                              <select value={selectedPlayerId || ''} onChange={(e) => setStartingXI({ ...startingXI, [`pos${idx}`]: parseInt(e.target.value) })} className={`w-full bg-gray-600 text-white p-2 rounded ${isOutOfPosition ? 'ring-2 ring-yellow-500' : ''}`}>
+                              <select value={selectedPlayerId || ''} onChange={(e) => setStartingXI({ ...startingXI, [`pos${idx}`]: parseInt(e.target.value) })} className={`w-full bg-gray-600 text-white p-2 rounded ${isOutOfPosition ? 'ring-2 ring-yellow-500' : ''} ${isInjured ? 'ring-2 ring-red-500' : ''}`}>
                                 <option value="">Select player...</option>
                                 {team.players.filter(p => !p.injured).map(p => {
                                   const outOfPos = !p.positions.includes(requiredPos);
                                   return <option key={p.id} value={p.id}>{p.name} ({p.positions.join('/')}) {outOfPos ? '⚠️ Out of position' : ''}</option>;
                                 })}
                               </select>
-                              {isOutOfPosition && <div className="text-yellow-500 text-xs mt-1">⚠️ Out of position (-5 rating for this match)</div>}
+                              {isOutOfPosition && !isInjured && <div className="text-yellow-500 text-xs mt-1">⚠️ Out of position (-5 rating for this match)</div>}
+                              {isInjured && <div className="text-red-500 text-xs mt-1">⚕️ Player is injured! Select a replacement.</div>}
                             </div>
                           );
                         })}
@@ -455,7 +542,13 @@
                           <div className="flex justify-between">
                             <div>
                               <div className="text-white font-semibold">{p.name} {p.injured && '⚕️'}</div>
-                              <div className="text-gray-400 text-sm">{p.positions.join('/')} • Age {calcAge(p.dob)} {p.goals > 0 && `• ⚽ ${p.goals}`}</div>
+                              <div className="text-gray-400 text-sm">
+                                {p.positions.join('/')} • Age {calcAge(p.dob)} {p.goals > 0 && `• ⚽ ${p.goals}`}
+                                {p.injured && p.injuryUntil && (() => {
+                                  const w = getWeeksUntil(p.injuryUntil);
+                                  return ` • 🏥 ${w > 0 ? `${w} week${w > 1 ? 's' : ''} left` : 'Returning soon'}`;
+                                })()}
+                              </div>
                             </div>
                             <div className="text-green-500 text-sm">{formatCurrency(calculatePlayerValue(p, date))}</div>
                           </div>
@@ -657,7 +750,10 @@
                   {inj.length > 0 && (
                     <div className="bg-red-900/20 rounded-lg p-4 mb-4">
                       <h3 className="text-red-400 font-bold mb-2">⚕️ Injured Players</h3>
-                      {inj.map(p => <p key={p.id} className="text-red-300 text-sm">{p.name} - Returns {formatDate(p.injuryUntil)}</p>)}
+                      {inj.map(p => {
+                        const w = getWeeksUntil(p.injuryUntil);
+                        return <p key={p.id} className="text-red-300 text-sm">{p.name} - {w > 0 ? `${w} week${w > 1 ? 's' : ''} remaining` : 'Returning soon'}</p>;
+                      })}
                     </div>
                   )}
                   <div className="bg-gray-800 rounded-lg p-4 mb-4">
@@ -687,7 +783,7 @@
                     <h2 className="text-white font-bold mb-4">Commentary</h2>
                     {commentary.map((c, i) => <p key={i} className="text-gray-300 mb-2 text-sm">{c}</p>)}
                   </div>
-                  <button onClick={() => setState('info-page')} className="w-full bg-green-600 text-white py-4 rounded-lg font-bold text-xl">Continue</button>
+                  <button onClick={() => { setPage('home'); setState('info-page'); }} className="w-full bg-green-600 text-white py-4 rounded-lg font-bold text-xl">Continue</button>
                 </div>
               </div>
             );
