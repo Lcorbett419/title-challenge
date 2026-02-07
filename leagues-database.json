@@ -550,7 +550,7 @@
           { "id": 18, "name": "Wilson Isidor", "positions": ["ST"], "dob": "2000-08-27", "rating": 14 },
           { "id": 29, "name": "Ahmed Abdullahi", "positions": ["LW", "RW"], "dob": "2004-06-19", "rating": 10 },
           { "id": 37, "name": "Jocelin Ta Bi", "positions": ["LW", "RW"], "dob": "2005-02-09", "rating": 11 },
-          { "id": 99, "name": "Nilson Angulo", "positions": ["LW"], "dob": "2003-06-19", "rating": 13 }
+          { "id": 10, "name": "Nilson Angulo", "positions": ["LW"], "dob": "2003-06-19", "rating": 13 }
         ]
       },
       {
