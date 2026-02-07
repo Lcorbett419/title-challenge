@@ -20,28 +20,20 @@
 
         const Menu = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>;
         const Trophy = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>;
-        const Play = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>;
 
         const calculatePlayerValue = (player, asOfDate) => {
           const { positions, rating, dob } = player;
           const positionValues = { 'ST': 1.0, 'LW': 0.95, 'RW': 0.95, 'CAM': 0.85, 'CM': 0.70, 'CDM': 0.68, 'LB': 0.65, 'RB': 0.65, 'CB': 0.60, 'GK': 0.55 };
           const maxMultiplier = Math.max(...positions.map(pos => positionValues[pos] || 0.5));
-          
           const birthDate = new Date(dob);
           const checkDate = asOfDate || new Date();
           let age = checkDate.getFullYear() - birthDate.getFullYear();
           const monthDiff = checkDate.getMonth() - birthDate.getMonth();
           if (monthDiff < 0 || (monthDiff === 0 && checkDate.getDate() < birthDate.getDate())) age--;
-          
           let ageMultiplier;
-          if (age >= 21 && age <= 29) {
-            ageMultiplier = 1.0;
-          } else if (age < 21) {
-            ageMultiplier = rating >= 14 ? 0.6 + (age - 16) * 0.08 + (rating - 14) * 0.05 : 0.4 + (age - 16) * 0.12;
-          } else {
-            ageMultiplier = Math.max(0.2, 1.0 - ((age - 29) * 0.08));
-          }
-          
+          if (age >= 21 && age <= 29) ageMultiplier = 1.0;
+          else if (age < 21) ageMultiplier = rating >= 14 ? 0.6 + (age - 16) * 0.08 + (rating - 14) * 0.05 : 0.4 + (age - 16) * 0.12;
+          else ageMultiplier = Math.max(0.2, 1.0 - ((age - 29) * 0.08));
           return Math.min(Math.round(Math.pow(rating, 2) * maxMultiplier * ageMultiplier * 250000), 100000000);
         };
 
@@ -62,29 +54,14 @@
           const [startingXI, setStartingXI] = useState({});
 
           const formations = {
-            '4-3-3': { 
-              positions: ['GK', 'LB', 'CB', 'CB', 'RB', 'CDM', 'CM', 'CM', 'LW', 'RW', 'ST'],
-              labels: ['GK', 'LB', 'CB', 'CB', 'RB', 'CDM', 'CM', 'CM', 'LW', 'RW', 'ST']
-            },
-            '4-4-2': { 
-              positions: ['GK', 'LB', 'CB', 'CB', 'RB', 'CM', 'CM', 'CAM', 'CAM', 'ST', 'ST'],
-              labels: ['GK', 'LB', 'CB', 'CB', 'RB', 'CM', 'CM', 'CAM', 'CAM', 'ST', 'ST']
-            },
-            '4-2-3-1': { 
-              positions: ['GK', 'LB', 'CB', 'CB', 'RB', 'CDM', 'CDM', 'CAM', 'LW', 'RW', 'ST'],
-              labels: ['GK', 'LB', 'CB', 'CB', 'RB', 'CDM', 'CDM', 'CAM', 'LW', 'RW', 'ST']
-            },
-            '3-5-2': { 
-              positions: ['GK', 'CB', 'CB', 'CB', 'LB', 'RB', 'CM', 'CM', 'CM', 'ST', 'ST'],
-              labels: ['GK', 'CB', 'CB', 'CB', 'LB', 'RB', 'CM', 'CM', 'CM', 'ST', 'ST']
-            }
+            '4-3-3': { positions: ['GK','LB','CB','CB','RB','CDM','CM','CM','LW','RW','ST'], labels: ['GK','LB','CB','CB','RB','CDM','CM','CM','LW','RW','ST'] },
+            '4-4-2': { positions: ['GK','LB','CB','CB','RB','CM','CM','CAM','CAM','ST','ST'], labels: ['GK','LB','CB','CB','RB','CM','CM','CAM','CAM','ST','ST'] },
+            '4-2-3-1': { positions: ['GK','LB','CB','CB','RB','CDM','CDM','CAM','LW','RW','ST'], labels: ['GK','LB','CB','CB','RB','CDM','CDM','CAM','LW','RW','ST'] },
+            '3-5-2': { positions: ['GK','CB','CB','CB','LB','RB','CM','CM','CM','ST','ST'], labels: ['GK','CB','CB','CB','LB','RB','CM','CM','CM','ST','ST'] }
           };
 
           useEffect(() => {
-            fetch('./leagues-database.json')
-              .then(r => r.json())
-              .then(data => setDb(data))
-              .catch(() => alert('Failed to load database'));
+            fetch('./leagues-database.json').then(r => r.json()).then(data => setDb(data)).catch(() => alert('Failed to load database'));
           }, []);
 
           const calcAge = (dob) => {
@@ -99,11 +76,9 @@
           const formatDate = (d) => new Date(d).toLocaleDateString('en-GB');
 
           const newGame = () => {
-            setTeam(null);
-            setLeague(null);
+            setTeam(null); setLeague(null);
             setLeagues(JSON.parse(JSON.stringify(db)));
-            setFixtures({});
-            setDate(new Date('2025-08-01'));
+            setFixtures({}); setDate(new Date('2025-08-01'));
             setFinanceHistory([]);
             localStorage.removeItem('footballManagerSave');
             setState('league-select');
@@ -115,28 +90,21 @@
               try {
                 const data = JSON.parse(saved);
                 if (data.gameData) {
-                  setLeague(data.gameData.league);
-                  setTeam(data.gameData.team);
-                  setLeagues(data.gameData.leagues);
-                  setFixtures(data.gameData.fixtures);
+                  setLeague(data.gameData.league); setTeam(data.gameData.team);
+                  setLeagues(data.gameData.leagues); setFixtures(data.gameData.fixtures);
                   setDate(new Date(data.gameData.date));
                   setFormation(data.gameData.formation || '4-3-3');
                   setFinanceHistory(data.gameData.financeHistory || []);
                   setState('info-page');
                 }
-              } catch (e) {
-                alert('Error loading game');
-              }
+              } catch (e) { alert('Error loading game'); }
             }
           };
 
           const hasSaved = () => {
             try {
               const saved = localStorage.getItem('footballManagerSave');
-              if (saved) {
-                const data = JSON.parse(saved);
-                return data.gameData && data.gameData.team;
-              }
+              if (saved) { const data = JSON.parse(saved); return data.gameData && data.gameData.team; }
             } catch (e) {}
             return false;
           };
@@ -148,65 +116,32 @@
             }
           }, [team, leagues, fixtures, date, state]);
 
-          const selectLeague = (lk) => {
-            setLeague(lk);
-            setState('team-select');
-          };
+          const selectLeague = (lk) => { setLeague(lk); setState('team-select'); };
 
           const selectTeam = (t) => {
-            setTeam(t);
-            generateFixtures();
-            // Initialize finance history and starting XI
+            setTeam(t); generateFixtures();
             setFinanceHistory([{ date: new Date('2025-08-01').toISOString(), balance: t.budget }]);
-            
-            // Auto-select best XI based on rating
             const xi = {};
-            const formPos = formations['4-3-3'].positions;
-            formPos.forEach((pos, idx) => {
+            formations['4-3-3'].positions.forEach((pos, idx) => {
               const eligible = t.players.filter(p => p.positions.includes(pos) && !Object.values(xi).includes(p.id));
-              if (eligible.length > 0) {
-                xi[`pos${idx}`] = eligible.sort((a, b) => b.rating - a.rating)[0].id;
-              }
+              if (eligible.length > 0) xi[`pos${idx}`] = eligible.sort((a, b) => b.rating - a.rating)[0].id;
             });
             setStartingXI(xi);
-            
             setState('info-page');
           };
 
           const generateFixtures = () => {
             const newFix = {};
             Object.keys(leagues).forEach(lk => {
-              const lg = leagues[lk];
-              const teams = lg.teams;
-              teams.forEach(tm => {
-                tm.players.forEach(p => {
-                  if (!p.goals) p.goals = 0;
-                  if (!p.injured) p.injured = false;
-                });
-              });
-              
-              const n = teams.length;
-              const fix = [];
-              
+              const lg = leagues[lk]; const teams = lg.teams;
+              teams.forEach(tm => { tm.players.forEach(p => { if (!p.goals) p.goals = 0; if (!p.injured) p.injured = false; }); });
+              const n = teams.length; const fix = [];
               for (let r = 0; r < (n - 1) * 2; r++) {
-                const first = r < n - 1;
-                const base = first ? r : r - (n - 1);
-                
+                const first = r < n - 1; const base = first ? r : r - (n - 1);
                 for (let i = 0; i < n / 2; i++) {
-                  let h = (base + i) % (n - 1);
-                  let a = (n - 1 - i + base) % (n - 1);
-                  if (i === 0) a = n - 1;
-                  if (!first) [h, a] = [a, h];
-                  
-                  fix.push({
-                    homeTeamId: teams[h].id,
-                    awayTeamId: teams[a].id,
-                    played: false,
-                    homeScore: null,
-                    awayScore: null,
-                    scorers: [],
-                    matchday: r + 1
-                  });
+                  let h = (base + i) % (n - 1); let a = (n - 1 - i + base) % (n - 1);
+                  if (i === 0) a = n - 1; if (!first) [h, a] = [a, h];
+                  fix.push({ homeTeamId: teams[h].id, awayTeamId: teams[a].id, played: false, homeScore: null, awayScore: null, scorers: [], matchday: r + 1 });
                 }
               }
               newFix[lk] = fix;
@@ -215,29 +150,19 @@
           };
 
           const getTable = (lk) => {
-            const lg = leagues[lk];
-            const fix = fixtures[lk] || [];
-            
-            const tbl = lg.teams.map(t => ({
-              teamId: t.id, name: t.name, played: 0, won: 0, drawn: 0, lost: 0,
-              goalsFor: 0, goalsAgainst: 0, points: 0
-            }));
-            
+            const lg = leagues[lk]; const fix = fixtures[lk] || [];
+            const tbl = lg.teams.map(t => ({ teamId: t.id, name: t.name, played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 }));
             fix.filter(f => f.played).forEach(f => {
-              const h = tbl.find(t => t.teamId === f.homeTeamId);
-              const a = tbl.find(t => t.teamId === f.awayTeamId);
-              
+              const h = tbl.find(t => t.teamId === f.homeTeamId); const a = tbl.find(t => t.teamId === f.awayTeamId);
               if (h && a) {
                 h.played++; a.played++;
                 h.goalsFor += f.homeScore; h.goalsAgainst += f.awayScore;
                 a.goalsFor += f.awayScore; a.goalsAgainst += f.homeScore;
-                
                 if (f.homeScore > f.awayScore) { h.won++; h.points += 3; a.lost++; }
                 else if (f.homeScore < f.awayScore) { a.won++; a.points += 3; h.lost++; }
                 else { h.drawn++; a.drawn++; h.points++; a.points++; }
               }
             });
-            
             tbl.sort((a, b) => b.points !== a.points ? b.points - a.points : (b.goalsFor - b.goalsAgainst) - (a.goalsFor - a.goalsAgainst));
             return tbl;
           };
@@ -248,44 +173,25 @@
           };
 
           const simMatch = (h, a, track) => {
-            const comm = [];
-            const scorers = [];
-            
-            // Get starting XI players with position ratings
+            const comm = []; const scorers = [];
             const getMatchPlayers = (tm) => {
               if (tm.id === team.id && Object.keys(startingXI).length > 0) {
-                // Use selected starting XI for player's team
                 return Object.entries(startingXI).map(([key, playerId]) => {
                   const player = tm.players.find(p => p.id === playerId);
                   const posIdx = parseInt(key.replace('pos', ''));
                   const requiredPos = formations[formation].positions[posIdx];
                   const inPosition = player.positions.includes(requiredPos);
-                  
-                  return {
-                    ...player,
-                    effectiveRating: inPosition ? player.rating : Math.max(1, player.rating - 5)
-                  };
+                  return { ...player, effectiveRating: inPosition ? player.rating : Math.max(1, player.rating - 5) };
                 }).filter(p => p && !p.injured);
               } else {
-                // Auto-select best XI for AI teams
-                return tm.players.filter(p => !p.injured).sort((a, b) => b.rating - a.rating).slice(0, 11).map(p => ({
-                  ...p,
-                  effectiveRating: p.rating
-                }));
+                return tm.players.filter(p => !p.injured).sort((a, b) => b.rating - a.rating).slice(0, 11).map(p => ({ ...p, effectiveRating: p.rating }));
               }
             };
-            
-            const homePlayers = getMatchPlayers(h);
-            const awayPlayers = getMatchPlayers(a);
-            
+            const homePlayers = getMatchPlayers(h); const awayPlayers = getMatchPlayers(a);
             let hs = 0, as = 0;
-            
-            comm.push(`${h.name} vs ${a.name}`);
-            comm.push("Kick off!");
-            
+            comm.push(`${h.name} vs ${a.name}`); comm.push("Kick off!");
             for (let i = 0; i < 10; i++) {
               const min = Math.floor(Math.random() * 90) + 1;
-              
               if (Math.random() < 0.3) {
                 const pickScorer = (players) => {
                   const r = Math.random();
@@ -294,38 +200,25 @@
                   if (r < 0.999) return players.filter(p => p.positions.some(pos => ['LB','CB','RB'].includes(pos)))[0];
                   return players.find(p => p.positions.includes('GK'));
                 };
-                
                 if (Math.random() < 0.5) {
                   const sc = pickScorer(homePlayers);
-                  if (sc && Math.random() < 0.4) {
-                    hs++;
-                    comm.push(`${min}' GOAL! ${sc.name}! ${hs}-${as}`);
-                    if (track) scorers.push({ playerId: sc.id, teamId: h.id });
-                  }
+                  if (sc && Math.random() < 0.4) { hs++; comm.push(`${min}' GOAL! ${sc.name}! ${hs}-${as}`); if (track) scorers.push({ playerId: sc.id, teamId: h.id }); }
                 } else {
                   const sc = pickScorer(awayPlayers);
-                  if (sc && Math.random() < 0.4) {
-                    as++;
-                    comm.push(`${min}' GOAL! ${sc.name}! ${hs}-${as}`);
-                    if (track) scorers.push({ playerId: sc.id, teamId: a.id });
-                  }
+                  if (sc && Math.random() < 0.4) { as++; comm.push(`${min}' GOAL! ${sc.name}! ${hs}-${as}`); if (track) scorers.push({ playerId: sc.id, teamId: a.id }); }
                 }
               }
             }
-            
-            // Injuries only affect starting XI
             [...homePlayers, ...awayPlayers].forEach(p => {
               if (!p.injured && Math.random() < 0.01) {
                 const originalPlayer = (p.teamId === h.id ? h : a).players.find(pl => pl.id === p.id);
                 originalPlayer.injured = true;
                 const w = 1 + Math.floor(Math.random() * 4);
-                const id = new Date(date);
-                id.setDate(id.getDate() + w * 7);
+                const id = new Date(date); id.setDate(id.getDate() + w * 7);
                 originalPlayer.injuryUntil = id.toISOString();
                 if ((h.id === team.id || a.id === team.id)) comm.push(`⚕️ ${p.name} injured (${w}w)`);
               }
             });
-            
             comm.push(`FULL TIME: ${h.name} ${hs} - ${as} ${a.name}`);
             return { homeScore: hs, awayScore: as, commentary: comm, scorers };
           };
@@ -334,104 +227,48 @@
             const next = getNext();
             if (!next) {
               alert('Season complete!');
-              const ns = new Date(date);
-              ns.setFullYear(ns.getFullYear() + 1);
-              ns.setMonth(7);
-              ns.setDate(1);
-              setDate(ns);
-              generateFixtures();
-              return;
+              const ns = new Date(date); ns.setFullYear(ns.getFullYear() + 1); ns.setMonth(7); ns.setDate(1);
+              setDate(ns); generateFixtures(); return;
             }
-            
             const lg = leagues[league];
             const h = next.homeTeamId === team.id ? team : lg.teams.find(t => t.id === next.homeTeamId);
             const a = next.awayTeamId === team.id ? team : lg.teams.find(t => t.id === next.awayTeamId);
-            
             const res = simMatch(h, a, true);
-            
             const uf = JSON.parse(JSON.stringify(fixtures));
             const idx = uf[league].findIndex(f => f.homeTeamId === next.homeTeamId && f.awayTeamId === next.awayTeamId && !f.played);
-            
             if (idx !== -1) {
-              uf[league][idx].played = true;
-              uf[league][idx].homeScore = res.homeScore;
-              uf[league][idx].awayScore = res.awayScore;
-              uf[league][idx].scorers = res.scorers;
-              
-              res.scorers.forEach(sc => {
-                const t = lg.teams.find(tm => tm.id === sc.teamId);
-                if (t) {
-                  const p = t.players.find(pl => pl.id === sc.playerId);
-                  if (p) p.goals = (p.goals || 0) + 1;
-                }
-              });
+              uf[league][idx].played = true; uf[league][idx].homeScore = res.homeScore;
+              uf[league][idx].awayScore = res.awayScore; uf[league][idx].scorers = res.scorers;
+              res.scorers.forEach(sc => { const t = lg.teams.find(tm => tm.id === sc.teamId); if (t) { const p = t.players.find(pl => pl.id === sc.playerId); if (p) p.goals = (p.goals || 0) + 1; } });
             }
-            
             Object.keys(leagues).forEach(lk => {
-              const l = leagues[lk];
-              const lf = uf[lk];
-              if (!lf) return;
-              
+              const l = leagues[lk]; const lf = uf[lk]; if (!lf) return;
               const played = lf.filter(f => f.played).length;
               const md = Math.floor(played / (l.teams.length / 2)) + 1;
-              const mdf = lf.filter(f => f.matchday === md && !f.played);
-              
-              mdf.forEach(f => {
-                const ht = l.teams.find(t => t.id === f.homeTeamId);
-                const at = l.teams.find(t => t.id === f.awayTeamId);
+              lf.filter(f => f.matchday === md && !f.played).forEach(f => {
+                const ht = l.teams.find(t => t.id === f.homeTeamId); const at = l.teams.find(t => t.id === f.awayTeamId);
                 if (ht && at) {
-                  const r = simMatch(ht, at, true);
-                  f.played = true;
-                  f.homeScore = r.homeScore;
-                  f.awayScore = r.awayScore;
-                  f.scorers = r.scorers;
-                  r.scorers.forEach(sc => {
-                    const tm = l.teams.find(t => t.id === sc.teamId);
-                    if (tm) {
-                      const pl = tm.players.find(p => p.id === sc.playerId);
-                      if (pl) pl.goals = (pl.goals || 0) + 1;
-                    }
-                  });
+                  const r = simMatch(ht, at, true); f.played = true; f.homeScore = r.homeScore; f.awayScore = r.awayScore; f.scorers = r.scorers;
+                  r.scorers.forEach(sc => { const tm = l.teams.find(t => t.id === sc.teamId); if (tm) { const pl = tm.players.find(p => p.id === sc.playerId); if (pl) pl.goals = (pl.goals || 0) + 1; } });
                 }
               });
             });
-            
             setFixtures(uf);
-            setMatch({
-              opp: next.homeTeamId === team.id ? a.name : h.name,
-              ps: next.homeTeamId === team.id ? res.homeScore : res.awayScore,
-              os: next.homeTeamId === team.id ? res.awayScore : res.homeScore,
-              home: next.homeTeamId === team.id
-            });
+            setMatch({ opp: next.homeTeamId === team.id ? a.name : h.name, ps: next.homeTeamId === team.id ? res.homeScore : res.awayScore, os: next.homeTeamId === team.id ? res.awayScore : res.homeScore, home: next.homeTeamId === team.id });
             setCommentary(res.commentary);
-            
-            const nd = new Date(date);
-            nd.setDate(nd.getDate() + 3 + Math.floor(Math.random() * 2));
-            if (nd.getMonth() === 6 && nd.getDate() > 30) {
-              nd.setMonth(7);
-              nd.setDate(1);
-              nd.setFullYear(nd.getFullYear() + 1);
-            }
+            const nd = new Date(date); nd.setDate(nd.getDate() + 3 + Math.floor(Math.random() * 2));
+            if (nd.getMonth() === 6 && nd.getDate() > 30) { nd.setMonth(7); nd.setDate(1); nd.setFullYear(nd.getFullYear() + 1); }
             setDate(nd);
-            
-            // Update finance history monthly
-            if (nd.getDate() === 1 || financeHistory.length === 0 || 
-                new Date(financeHistory[financeHistory.length - 1].date).getMonth() !== nd.getMonth()) {
+            if (nd.getDate() === 1 || financeHistory.length === 0 || new Date(financeHistory[financeHistory.length - 1].date).getMonth() !== nd.getMonth()) {
               setFinanceHistory([...financeHistory, { date: nd.toISOString(), balance: team.budget }]);
             }
-            
             setState('match-result');
           };
 
           const getScorers = (lk) => {
             const sc = [];
-            leagues[lk].teams.forEach(t => {
-              t.players.forEach(p => {
-                if (p.goals > 0) sc.push({ name: p.name, team: t.name, goals: p.goals });
-              });
-            });
-            sc.sort((a, b) => b.goals - a.goals);
-            return sc.slice(0, 10);
+            leagues[lk].teams.forEach(t => { t.players.forEach(p => { if (p.goals > 0) sc.push({ name: p.name, team: t.name, goals: p.goals }); }); });
+            sc.sort((a, b) => b.goals - a.goals); return sc.slice(0, 10);
           };
 
           if (!db) return <div className="min-h-screen bg-gray-900 flex items-center justify-center"><div className="text-white">Loading...</div></div>;
@@ -443,13 +280,7 @@
                   <div className="w-24 h-24 mx-auto mb-6 text-green-500 flex items-center justify-center"><Trophy /></div>
                   <h1 className="text-5xl font-bold text-white mb-8">Title Challenge</h1>
                   <button onClick={newGame} className="w-full bg-green-600 text-white py-6 rounded-lg font-bold text-xl mb-4 hover:bg-green-700">New Game</button>
-                  <button 
-                    onClick={loadGame} 
-                    disabled={!hasSaved()}
-                    className={`w-full py-6 rounded-lg font-bold text-xl ${hasSaved() ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-800 text-gray-600 cursor-not-allowed'}`}
-                  >
-                    Load Game
-                  </button>
+                  <button onClick={loadGame} disabled={!hasSaved()} className={`w-full py-6 rounded-lg font-bold text-xl ${hasSaved() ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-800 text-gray-600 cursor-not-allowed'}`}>Load Game</button>
                 </div>
               </div>
             );
@@ -514,7 +345,7 @@
                     <div className="bg-gray-800 w-64 h-full" onClick={(e) => e.stopPropagation()}>
                       <div className="p-4 space-y-2">
                         <h2 className="text-white font-bold mb-4">{team.name}</h2>
-                        {['home', 'squad', 'starting-xi', 'table', 'fixtures', 'scorers', 'transfers', 'finances'].map(p => (
+                        {['home','squad','starting-xi','table','fixtures','scorers','transfers','finances'].map(p => (
                           <button key={p} onClick={() => { setPage(p); setMenuOpen(false); }} className="w-full text-left text-white py-2 px-3 rounded hover:bg-gray-700 capitalize">{p.replace('-', ' ')}</button>
                         ))}
                         <button onClick={() => setState('main-menu')} className="w-full text-left text-red-400 py-2 px-3 rounded hover:bg-gray-700">Exit</button>
@@ -568,12 +399,7 @@
 
                       <div className="bg-gray-800 rounded-lg p-4 mb-4">
                         <div className="text-gray-400 text-sm mb-1">Finances: Balance</div>
-                        <div 
-                          className="text-white font-bold text-3xl cursor-pointer hover:text-orange-500 transition"
-                          onClick={() => setPage('finances')}
-                        >
-                          {formatCurrency(team.budget)}
-                        </div>
+                        <div className="text-white font-bold text-3xl cursor-pointer hover:text-orange-500 transition" onClick={() => setPage('finances')}>{formatCurrency(team.budget)}</div>
                       </div>
                     </>
                   )}
@@ -581,73 +407,43 @@
                   {page === 'starting-xi' && (
                     <div className="bg-gray-800 rounded-lg p-4">
                       <h2 className="text-white font-bold mb-4">Starting XI</h2>
-                      
                       <div className="mb-4">
                         <label className="text-gray-400 text-sm mb-2 block">Formation</label>
                         <div className="grid grid-cols-2 gap-2">
                           {Object.keys(formations).map(f => (
-                            <button 
-                              key={f} 
-                              onClick={() => {
-                                setFormation(f);
-                                // Reset lineup when formation changes
-                                const xi = {};
-                                const formPos = formations[f].positions;
-                                formPos.forEach((pos, idx) => {
-                                  const eligible = team.players.filter(p => p.positions.includes(pos) && !Object.values(xi).includes(p.id) && !p.injured);
-                                  if (eligible.length > 0) {
-                                    xi[`pos${idx}`] = eligible.sort((a, b) => b.rating - a.rating)[0].id;
-                                  }
-                                });
-                                setStartingXI(xi);
-                              }}
-                              className={`p-3 rounded-lg font-bold text-sm ${formation === f ? 'bg-orange-600 text-white' : 'bg-gray-700 text-gray-300'}`}
-                            >
-                              {f}
-                            </button>
+                            <button key={f} onClick={() => {
+                              setFormation(f);
+                              const xi = {};
+                              formations[f].positions.forEach((pos, idx) => {
+                                const eligible = team.players.filter(p => p.positions.includes(pos) && !Object.values(xi).includes(p.id) && !p.injured);
+                                if (eligible.length > 0) xi[`pos${idx}`] = eligible.sort((a, b) => b.rating - a.rating)[0].id;
+                              });
+                              setStartingXI(xi);
+                            }} className={`p-3 rounded-lg font-bold text-sm ${formation === f ? 'bg-orange-600 text-white' : 'bg-gray-700 text-gray-300'}`}>{f}</button>
                           ))}
                         </div>
                       </div>
-
                       <div className="space-y-3">
                         {formations[formation].positions.map((requiredPos, idx) => {
                           const selectedPlayerId = startingXI[`pos${idx}`];
                           const selectedPlayer = team.players.find(p => p.id === selectedPlayerId);
                           const isOutOfPosition = selectedPlayer && !selectedPlayer.positions.includes(requiredPos);
-                          
                           return (
                             <div key={idx} className="bg-gray-700 rounded-lg p-3">
                               <div className="text-gray-400 text-xs mb-2">{formations[formation].labels[idx]}</div>
-                              <select
-                                value={selectedPlayerId || ''}
-                                onChange={(e) => setStartingXI({ ...startingXI, [`pos${idx}`]: parseInt(e.target.value) })}
-                                className={`w-full bg-gray-600 text-white p-2 rounded ${isOutOfPosition ? 'ring-2 ring-yellow-500' : ''}`}
-                              >
+                              <select value={selectedPlayerId || ''} onChange={(e) => setStartingXI({ ...startingXI, [`pos${idx}`]: parseInt(e.target.value) })} className={`w-full bg-gray-600 text-white p-2 rounded ${isOutOfPosition ? 'ring-2 ring-yellow-500' : ''}`}>
                                 <option value="">Select player...</option>
                                 {team.players.filter(p => !p.injured).map(p => {
                                   const outOfPos = !p.positions.includes(requiredPos);
-                                  return (
-                                    <option key={p.id} value={p.id}>
-                                      {p.name} ({p.positions.join('/')}) {outOfPos ? '⚠️ Out of position' : ''}
-                                    </option>
-                                  );
+                                  return <option key={p.id} value={p.id}>{p.name} ({p.positions.join('/')}) {outOfPos ? '⚠️ Out of position' : ''}</option>;
                                 })}
                               </select>
-                              {isOutOfPosition && (
-                                <div className="text-yellow-500 text-xs mt-1">
-                                  ⚠️ Out of position (-5 rating for this match)
-                                </div>
-                              )}
+                              {isOutOfPosition && <div className="text-yellow-500 text-xs mt-1">⚠️ Out of position (-5 rating for this match)</div>}
                             </div>
                           );
                         })}
                       </div>
-
-                      <div className="mt-4 bg-orange-900/20 rounded p-3">
-                        <p className="text-orange-300 text-sm">
-                          💡 Players out of position get -5 rating penalty for the match
-                        </p>
-                      </div>
+                      <div className="mt-4 bg-orange-900/20 rounded p-3"><p className="text-orange-300 text-sm">💡 Players out of position get -5 rating penalty for the match</p></div>
                     </div>
                   )}
 
@@ -676,12 +472,9 @@
                         <tbody>
                           {tbl.map((t, i) => (
                             <tr key={t.teamId} className={`border-b border-gray-700 ${t.teamId === team.id ? 'bg-green-900/30' : ''}`}>
-                              <td className="text-white p-2">{i + 1}</td>
-                              <td className="text-white p-2">{t.name}</td>
-                              <td className="text-center text-gray-400 p-2">{t.played}</td>
-                              <td className="text-center text-gray-400 p-2">{t.won}</td>
-                              <td className="text-center text-gray-400 p-2">{t.drawn}</td>
-                              <td className="text-center text-gray-400 p-2">{t.lost}</td>
+                              <td className="text-white p-2">{i + 1}</td><td className="text-white p-2">{t.name}</td>
+                              <td className="text-center text-gray-400 p-2">{t.played}</td><td className="text-center text-gray-400 p-2">{t.won}</td>
+                              <td className="text-center text-gray-400 p-2">{t.drawn}</td><td className="text-center text-gray-400 p-2">{t.lost}</td>
                               <td className="text-center text-white font-bold p-2">{t.points}</td>
                             </tr>
                           ))}
@@ -731,75 +524,10 @@
                     </div>
                   )}
 
-                  {page === 'finances' && (
-                    <div className="bg-gray-800 rounded-lg p-4">
-                      <h2 className="text-white font-bold mb-4">💰 Finances</h2>
-                      
-                      <div className="mb-6">
-                        <div className="text-gray-400 text-sm mb-1">Current Balance</div>
-                        <div className="text-white font-bold text-4xl">{formatCurrency(team.budget)}</div>
-                      </div>
-
-                      <div className="bg-gray-700 rounded-lg p-4">
-                        <h3 className="text-white font-semibold mb-4">Balance History</h3>
-                        {financeHistory.length > 1 ? (
-                          <svg viewBox="0 0 400 200" className="w-full h-48">
-                            <defs>
-                              <linearGradient id="grad" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" style={{ stopColor: '#10b981', stopOpacity: 0.3 }} />
-                                <stop offset="100%" style={{ stopColor: '#10b981', stopOpacity: 0 }} />
-                              </linearGradient>
-                            </defs>
-                            
-                            {(() => {
-                              const max = Math.max(...financeHistory.map(f => f.balance));
-                              const min = Math.min(...financeHistory.map(f => f.balance));
-                              const range = max - min || 1;
-                              const points = financeHistory.map((f, i) => {
-                                const x = (i / (financeHistory.length - 1)) * 380 + 10;
-                                const y = 180 - ((f.balance - min) / range) * 160;
-                                return `${x},${y}`;
-                              }).join(' ');
-                              
-                              const areaPoints = `10,180 ${points} ${380},180`;
-                              
-                              return (
-                                <>
-                                  <polyline points={areaPoints} fill="url(#grad)" />
-                                  <polyline points={points} fill="none" stroke="#10b981" strokeWidth="2" />
-                                  {financeHistory.map((f, i) => {
-                                    const x = (i / (financeHistory.length - 1)) * 380 + 10;
-                                    const y = 180 - ((f.balance - min) / range) * 160;
-                                    return <circle key={i} cx={x} cy={y} r="3" fill="#10b981" />;
-                                  })}
-                                </>
-                              );
-                            })()}
-                            
-                            <line x1="10" y1="180" x2="390" y2="180" stroke="#4b5563" strokeWidth="1" />
-                            <line x1="10" y1="20" x2="10" y2="180" stroke="#4b5563" strokeWidth="1" />
-                          </svg>
-                        ) : (
-                          <p className="text-gray-400 text-sm">Play more matches to see history</p>
-                        )}
-                        
-                        <div className="mt-4 space-y-2">
-                          {financeHistory.slice(-5).reverse().map((f, i) => (
-                            <div key={i} className="flex justify-between text-sm">
-                              <span className="text-gray-400">{formatDate(f.date)}</span>
-                              <span className="text-white font-semibold">{formatCurrency(f.balance)}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
                   {page === 'transfers' && (
                     <div className="bg-gray-800 rounded-lg p-4">
                       <h2 className="text-white font-bold mb-4">Transfer Market</h2>
                       <p className="text-gray-400 mb-4">Budget: {formatCurrency(team.budget)}</p>
-                      
                       <div className="mb-6">
                         <h3 className="text-orange-500 font-bold mb-3">Your Squad</h3>
                         <div className="space-y-2">
@@ -814,7 +542,6 @@
                           ))}
                         </div>
                       </div>
-
                       <div>
                         <h3 className="text-orange-500 font-bold mb-3">Available Players</h3>
                         {Object.keys(leagues).map(lk => {
@@ -841,61 +568,13 @@
                     </div>
                   )}
 
-                  {page === 'transfers' && (
-                    <div className="bg-gray-800 rounded-lg p-4">
-                      <h2 className="text-white font-bold mb-4">Transfer Market</h2>
-                      <p className="text-gray-400 mb-4">Budget: {formatCurrency(team.budget)}</p>
-                      
-                      <div className="mb-6">
-                        <h3 className="text-orange-500 font-bold mb-3">Your Squad</h3>
-                        <div className="space-y-2">
-                          {team.players.map(p => (
-                            <div key={p.id} className="bg-gray-700 rounded p-3 flex justify-between items-center">
-                              <div>
-                                <div className="text-white font-semibold">{p.name}</div>
-                                <div className="text-gray-400 text-xs">{p.positions.join('/')} • Age {calcAge(p.dob)}</div>
-                              </div>
-                              <div className="text-green-500 text-sm">{formatCurrency(calculatePlayerValue(p, date))}</div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div>
-                        <h3 className="text-orange-500 font-bold mb-3">Available Players</h3>
-                        {Object.keys(leagues).map(lk => {
-                          const lg = leagues[lk];
-                          return lg.teams.filter(t => t.id !== team.id).slice(0, 2).map(t => (
-                            <div key={t.id} className="mb-4">
-                              <h4 className="text-white font-semibold mb-2">{t.name}</h4>
-                              {t.players.slice(0, 3).map(p => {
-                                const val = calculatePlayerValue(p, date);
-                                const can = team.budget >= val;
-                                return (
-                                  <div key={p.id} className={`bg-gray-700 rounded p-2 mb-2 text-sm ${can ? 'cursor-pointer hover:bg-gray-600' : 'opacity-50'}`}>
-                                    <div className="flex justify-between">
-                                      <span className="text-white">{p.name} <span className="text-gray-400 text-xs">{p.positions.join('/')}</span></span>
-                                      <span className={can ? 'text-green-500' : 'text-red-500'}>{formatCurrency(val)}</span>
-                                    </div>
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          ));
-                        })}
-                      </div>
-                    </div>
-                  )}
-
                   {page === 'finances' && (
                     <div className="bg-gray-800 rounded-lg p-4">
                       <h2 className="text-white font-bold mb-4">💰 Finances</h2>
-                      
                       <div className="mb-6">
                         <div className="text-gray-400 text-sm mb-1">Current Balance</div>
                         <div className="text-white font-bold text-4xl">{formatCurrency(team.budget)}</div>
                       </div>
-
                       <div className="bg-gray-700 rounded-lg p-4">
                         <h3 className="text-white font-semibold mb-4">Balance History</h3>
                         {financeHistory.length > 1 ? (
@@ -906,7 +585,6 @@
                                 <stop offset="100%" style={{ stopColor: '#10b981', stopOpacity: 0 }} />
                               </linearGradient>
                             </defs>
-                            
                             {(() => {
                               const max = Math.max(...financeHistory.map(f => f.balance));
                               const min = Math.min(...financeHistory.map(f => f.balance));
@@ -916,9 +594,7 @@
                                 const y = 180 - ((f.balance - min) / range) * 160;
                                 return `${x},${y}`;
                               }).join(' ');
-                              
                               const areaPoints = `10,180 ${points} ${380},180`;
-                              
                               return (
                                 <>
                                   <polyline points={areaPoints} fill="url(#grad)" />
@@ -931,14 +607,12 @@
                                 </>
                               );
                             })()}
-                            
                             <line x1="10" y1="180" x2="390" y2="180" stroke="#4b5563" strokeWidth="1" />
                             <line x1="10" y1="20" x2="10" y2="180" stroke="#4b5563" strokeWidth="1" />
                           </svg>
                         ) : (
                           <p className="text-gray-400 text-sm">Play more matches to see history</p>
                         )}
-                        
                         <div className="mt-4 space-y-2">
                           {financeHistory.slice(-5).reverse().map((f, i) => (
                             <div key={i} className="flex justify-between text-sm">
@@ -965,8 +639,6 @@
             const next = getNext();
             const opp = next ? (next.homeTeamId === team.id ? leagues[league].teams.find(t => t.id === next.awayTeamId) : leagues[league].teams.find(t => t.id === next.homeTeamId)) : null;
             const inj = team.players.filter(p => p.injured);
-            
-            // Check if valid starting XI selected
             const selectedCount = Object.keys(startingXI).length;
             const validXI = selectedCount === 11;
 
@@ -978,66 +650,44 @@
                     <p className="text-white">{team.name} vs {opp?.name}</p>
                     <p className="text-gray-400 text-sm">{next?.homeTeamId === team.id ? 'Home' : 'Away'}</p>
                   </div>
-
                   {inj.length > 0 && (
                     <div className="bg-red-900/20 rounded-lg p-4 mb-4">
                       <h3 className="text-red-400 font-bold mb-2">⚕️ Injured Players</h3>
                       {inj.map(p => <p key={p.id} className="text-red-300 text-sm">{p.name} - Returns {formatDate(p.injuryUntil)}</p>)}
                     </div>
                   )}
-
                   <div className="bg-gray-800 rounded-lg p-4 mb-4">
                     <h3 className="text-white font-bold mb-2">Formation: {formation}</h3>
-                    <p className="text-gray-400 text-sm mb-3">
-                      {validXI ? '✅ Starting XI selected' : `⚠️ Select ${11 - selectedCount} more player${11 - selectedCount !== 1 ? 's' : ''}`}
-                    </p>
-                    <button
-                      onClick={() => {
-                        setPage('starting-xi');
-                        setState('info-page');
-                      }}
-                      className="w-full bg-orange-600 text-white py-3 rounded-lg font-semibold hover:bg-orange-700"
-                    >
-                      Edit Starting XI
-                    </button>
+                    <p className="text-gray-400 text-sm mb-3">{validXI ? '✅ Starting XI selected' : `⚠️ Select ${11 - selectedCount} more player${11 - selectedCount !== 1 ? 's' : ''}`}</p>
+                    <button onClick={() => { setPage('starting-xi'); setState('info-page'); }} className="w-full bg-orange-600 text-white py-3 rounded-lg font-semibold hover:bg-orange-700">Edit Starting XI</button>
                   </div>
-
-                  <button 
-                    onClick={playMatch} 
-                    disabled={!validXI}
-                    className={`w-full py-4 rounded-lg font-bold text-xl ${validXI ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-gray-700 text-gray-500 cursor-not-allowed'}`}
-                  >
-                    {validXI ? 'Start Match' : 'Select Starting XI First'}
-                  </button>
+                  <button onClick={playMatch} disabled={!validXI} className={`w-full py-4 rounded-lg font-bold text-xl ${validXI ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-gray-700 text-gray-500 cursor-not-allowed'}`}>{validXI ? 'Start Match' : 'Select Starting XI First'}</button>
                 </div>
               </div>
             );
           }
 
-         if (state === 'match-result') {
-  const rt = match.ps > match.os ? 'VICTORY!' : match.ps < match.os ? 'DEFEAT' : 'DRAW';
-  const rc = match.ps > match.os ? 'text-green-400' : match.ps < match.os ? 'text-red-400' : 'text-yellow-400';
-
-  return (
-    <div className="min-h-screen bg-gray-900 p-4">
-      <div className="max-w-4xl mx-auto">
-        <div className="bg-gray-800 rounded-lg p-6 mb-4">
-          <h1 className={`text-4xl font-bold text-center mb-4 ${rc}`}>{rt}</h1>
-          <div className="text-center text-white text-3xl font-bold">
-            {match.home ? team.name : match.opp} {match.home ? match.ps : match.os} - {match.home ? match.os : match.ps} {match.home ? match.opp : team.name}
-          </div>
-        </div>
-
-        <div className="bg-gray-800 rounded-lg p-6 mb-4 max-h-96 overflow-y-auto">
-          <h2 className="text-white font-bold mb-4">Commentary</h2>
-          {commentary.map((c, i) => <p key={i} className="text-gray-300 mb-2 text-sm">{c}</p>)}
-        </div>
-
-        <button onClick={() => setState('info-page')} className="w-full bg-green-600 text-white py-4 rounded-lg font-bold text-xl">Continue</button>
-      </div>
-    </div>
-  );
-}
+          if (state === 'match-result') {
+            const rt = match.ps > match.os ? 'VICTORY!' : match.ps < match.os ? 'DEFEAT' : 'DRAW';
+            const rc = match.ps > match.os ? 'text-green-400' : match.ps < match.os ? 'text-red-400' : 'text-yellow-400';
+            return (
+              <div className="min-h-screen bg-gray-900 p-4">
+                <div className="max-w-4xl mx-auto">
+                  <div className="bg-gray-800 rounded-lg p-6 mb-4">
+                    <h1 className={`text-4xl font-bold text-center mb-4 ${rc}`}>{rt}</h1>
+                    <div className="text-center text-white text-3xl font-bold">
+                      {match.home ? team.name : match.opp} {match.home ? match.ps : match.os} - {match.home ? match.os : match.ps} {match.home ? match.opp : team.name}
+                    </div>
+                  </div>
+                  <div className="bg-gray-800 rounded-lg p-6 mb-4 max-h-96 overflow-y-auto">
+                    <h2 className="text-white font-bold mb-4">Commentary</h2>
+                    {commentary.map((c, i) => <p key={i} className="text-gray-300 mb-2 text-sm">{c}</p>)}
+                  </div>
+                  <button onClick={() => setState('info-page')} className="w-full bg-green-600 text-white py-4 rounded-lg font-bold text-xl">Continue</button>
+                </div>
+              </div>
+            );
+          }
 
           return null;
         };
