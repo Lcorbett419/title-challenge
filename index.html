@@ -1014,30 +1014,30 @@
             );
           }
 
-          if (state === 'match-result') {
-            const rt = match.ps > match.os ? 'VICTORY!' : match.ps < match.os ? 'DEFEAT' : 'DRAW';
-            const rc = match.ps > match.os ? 'text-green-400' : match.ps < match.os ? 'text-red-400' : 'text-yellow-400';
+         if (state === 'match-result') {
+  const rt = match.ps > match.os ? 'VICTORY!' : match.ps < match.os ? 'DEFEAT' : 'DRAW';
+  const rc = match.ps > match.os ? 'text-green-400' : match.ps < match.os ? 'text-red-400' : 'text-yellow-400';
 
-            return (
-              <div className="min-h-screen bg-gray-900 p-4">
-                <div className="max-w-4xl mx-auto">
-                  <div className="bg-gray-800 rounded-lg p-6 mb-4">
-                      <h1 className={`text-4xl font-bold text-center mb-4 ${rc}`}>{rt}</h1>
-                      <div className="text-center text-white text-3xl font-bold">{match.home ? team.name : match.opp} {match.home ? match.ps : match.os} - {match.home ? match.os : match.ps} {match.home ? match.opp : team.name}</div>
-                    <h1 className={`text-4xl font-bold text-center mb-4 ${rc}`}>{rt}</h1>
-                    <div className="text-center text-white text-3xl font-bold">{match.home ? team.name : match.opp} {match.home ? match.ps : match.os} - {match.home ? match.os : match.ps} {match.home ? match.opp : team.name}
-                  </div>
+  return (
+    <div className="min-h-screen bg-gray-900 p-4">
+      <div className="max-w-4xl mx-auto">
+        <div className="bg-gray-800 rounded-lg p-6 mb-4">
+          <h1 className={`text-4xl font-bold text-center mb-4 ${rc}`}>{rt}</h1>
+          <div className="text-center text-white text-3xl font-bold">
+            {match.home ? team.name : match.opp} {match.home ? match.ps : match.os} - {match.home ? match.os : match.ps} {match.home ? match.opp : team.name}
+          </div>
+        </div>
 
-                  <div className="bg-gray-800 rounded-lg p-6 mb-4 max-h-96 overflow-y-auto">
-                    <h2 className="text-white font-bold mb-4">Commentary</h2>
-                    {commentary.map((c, i) => <p key={i} className="text-gray-300 mb-2 text-sm">{c}</p>)}
-                  </div>
+        <div className="bg-gray-800 rounded-lg p-6 mb-4 max-h-96 overflow-y-auto">
+          <h2 className="text-white font-bold mb-4">Commentary</h2>
+          {commentary.map((c, i) => <p key={i} className="text-gray-300 mb-2 text-sm">{c}</p>)}
+        </div>
 
-                  <button onClick={() => setState('info-page')} className="w-full bg-green-600 text-white py-4 rounded-lg font-bold text-xl">Continue</button>
-                </div>
-              </div>
-            );
-          }
+        <button onClick={() => setState('info-page')} className="w-full bg-green-600 text-white py-4 rounded-lg font-bold text-xl">Continue</button>
+      </div>
+    </div>
+  );
+}
 
           return null;
         };
