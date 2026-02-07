@@ -639,7 +639,11 @@
             const next = getNext();
             const opp = next ? (next.homeTeamId === team.id ? leagues[league].teams.find(t => t.id === next.awayTeamId) : leagues[league].teams.find(t => t.id === next.homeTeamId)) : null;
             const inj = team.players.filter(p => p.injured);
-            const selectedCount = Object.keys(startingXI).length;
+            const validPlayers = Object.values(startingXI).filter(pid => {
+              const p = team.players.find(pl => pl.id === pid);
+              return p && !p.injured;
+            });
+            const selectedCount = validPlayers.length;
             const validXI = selectedCount === 11;
 
             return (
