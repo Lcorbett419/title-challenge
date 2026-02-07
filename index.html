@@ -422,8 +422,18 @@
                     <div className="bg-gray-800 w-64 h-full" onClick={(e) => e.stopPropagation()}>
                       <div className="p-4 space-y-2">
                         <h2 className="text-white font-bold mb-4">{team.name}</h2>
-                        {['home','squad','starting-xi','table','fixtures','scorers','transfers','finances'].map(p => (
-                          <button key={p} onClick={() => { setPage(p); setMenuOpen(false); }} className="w-full text-left text-white py-2 px-3 rounded hover:bg-gray-700 capitalize">{p.replace('-', ' ')}</button>
+                        {[
+                          { key: 'home', label: 'Home' },
+                          { key: 'squad', label: 'Squad' },
+                          { key: 'starting-xi', label: 'Tactics' },
+                          { key: 'transfers', label: 'Transfers' },
+                          { key: 'finances', label: 'Finances' },
+                          { key: 'facilities', label: 'Facilities' },
+                          { key: 'table', label: 'League Table' },
+                          { key: 'fixtures', label: 'Fixtures' },
+                          { key: 'scorers', label: 'Stats Tables' },
+                        ].map(p => (
+                          <button key={p.key} onClick={() => { setPage(p.key); setMenuOpen(false); }} className="w-full text-left text-white py-2 px-3 rounded hover:bg-gray-700">{p.label}</button>
                         ))}
                         <button onClick={() => setState('main-menu')} className="w-full text-left text-red-400 py-2 px-3 rounded hover:bg-gray-700">Exit</button>
                       </div>
