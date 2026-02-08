@@ -6,6 +6,9 @@
       {
         "id": 1,
         "name": "Arsenal",
+        "shirtStyle": "sleeves",
+        "primaryColor": "#EF0107",
+        "secondaryColor": "#FFFFFF",
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "David Raya", "positions": ["GK"], "dob": "1995-09-15", "rating": 16 },
@@ -37,6 +40,9 @@
       {
         "id": 2,
         "name": "Aston Villa",
+        "shirtStyle": "sleeves",
+        "primaryColor": "#670E36",
+        "secondaryColor": "#95BFE5",
         "budget": 50000000,
         "players": [
           { "id": 23, "name": "Emiliano Martínez", "positions": ["GK"], "dob": "1992-09-02", "rating": 17 },
@@ -69,6 +75,9 @@
       {
         "id": 3,
         "name": "Bournemouth",
+        "shirtStyle": "stripes",
+        "primaryColor": "#DA291C",
+        "secondaryColor": "#000000",
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Đorđe Petrović", "positions": ["GK"], "dob": "1999-10-08", "rating": 14 },
@@ -102,6 +111,9 @@
       {
         "id": 4,
         "name": "Brentford",
+        "shirtStyle": "stripes",
+        "primaryColor": "#e30613",
+        "secondaryColor": "#FFFFFF",
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Caoimhín Kelleher", "positions": ["GK"], "dob": "1998-11-23", "rating": 15 },
@@ -130,6 +142,9 @@
       {
         "id": 5,
         "name": "Brighton",
+        "shirtStyle": "stripes",
+        "primaryColor": "#0057B8",
+        "secondaryColor": "#FFFFFF",
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Bart Verbruggen", "positions": ["GK"], "dob": "2002-08-18", "rating": 16 },
@@ -163,6 +178,9 @@
       {
         "id": 6,
         "name": "Burnley",
+        "shirtStyle": "sleeves",
+        "primaryColor": "#6C1D45",
+        "secondaryColor": "#99D6EA",
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Martin Dúbravka", "positions": ["GK"], "dob": "1989-01-15", "rating": 15 },
@@ -200,6 +218,9 @@
       {
         "id": 7,
         "name": "Chelsea",
+        "shirtStyle": "plain",
+        "primaryColor": "#034694",
+        "secondaryColor": "#FFFFFF",
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Robert Sánchez", "positions": ["GK"], "dob": "1997-11-18", "rating": 16 },
@@ -232,6 +253,9 @@
       {
         "id": 8,
         "name": "Crystal Palace",
+        "shirtStyle": "stripes",
+        "primaryColor": "#1B458F",
+        "secondaryColor": "#C4122E",
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Dean Henderson", "positions": ["GK"], "dob": "1997-03-12", "rating": 16 },
@@ -265,6 +289,9 @@
       {
         "id": 9,
         "name": "Everton",
+        "shirtStyle": "plain",
+        "primaryColor": "#003399",
+        "secondaryColor": "#FFFFFF",
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Jordan Pickford", "positions": ["GK"], "dob": "1994-03-07", "rating": 16 },
@@ -297,6 +324,9 @@
       {
         "id": 10,
         "name": "Fulham",
+        "shirtStyle": "plain",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#000000",
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Bernd Leno", "positions": ["GK"], "dob": "1992-03-04", "rating": 15 },
@@ -328,6 +358,9 @@
       {
         "id": 11,
         "name": "Leeds",
+        "shirtStyle": "plain",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#1D428A",
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Lucas Perri", "positions": ["GK"], "dob": "1997-12-10", "rating": 13 },
@@ -359,6 +392,9 @@
       {
         "id": 12,
         "name": "Liverpool",
+        "shirtStyle": "plain",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Allison Becker", "positions": ["GK"], "dob": "1992-10-02", "rating": 18 },
@@ -392,6 +428,9 @@
       {
         "id": 13,
         "name": "Manchester City",
+        "shirtStyle": "plain",
+        "primaryColor": "#6CABDD",
+        "secondaryColor": "#FFFFFF",
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "James Trafford", "positions": ["GK"], "dob": "2002-10-10", "rating": 14 },
@@ -426,6 +465,9 @@
       {
         "id": 14,
         "name": "Manchester United",
+        "shirtStyle": "plain",
+        "primaryColor": "#DA291C",
+        "secondaryColor": "#FFFFFF",
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Altay Bayındır", "positions": ["GK"], "dob": "1998-04-14", "rating": 13 },
@@ -456,6 +498,9 @@
       {
         "id": 15,
         "name": "Newcastle",
+        "shirtStyle": "stripes",
+        "primaryColor": "#241F20",
+        "secondaryColor": "#FFFFFF",
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Nick Pope", "positions": ["GK"], "dob": "1992-04-19", "rating": 15 },
@@ -489,6 +534,9 @@
       {
         "id": 16,
         "name": "Nottingham Forest",
+        "shirtStyle": "plain",
+        "primaryColor": "#DD0000",
+        "secondaryColor": "#FFFFFF",
         "budget": 50000000,
         "players": [
           { "id": 13, "name": "John Victor", "positions": ["GK"], "dob": "1996-02-13", "rating": 13 },
@@ -523,6 +571,9 @@
       {
         "id": 17,
         "name": "Sunderland",
+        "shirtStyle": "stripes",
+        "primaryColor": "#EB172B",
+        "secondaryColor": "#FFFFFF",
         "budget": 50000000,
         "players": [
           { "id": 21, "name": "Simon Moore", "positions": ["GK"], "dob": "1990-05-19", "rating": 10 },
@@ -556,6 +607,9 @@
       {
         "id": 18,
         "name": "Tottenham Hotspur",
+        "shirtStyle": "plain",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#132257",
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Guglielmo Vicario", "positions": ["GK"], "dob": "1996-10-07", "rating": 16 },
@@ -591,6 +645,9 @@
       {
         "id": 19,
         "name": "West Ham",
+        "shirtStyle": "sleeves",
+        "primaryColor": "#7A263A",
+        "secondaryColor": "#1BB1E7",
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Mads Hermansen", "positions": ["GK"], "dob": "2000-07-11", "rating": 14 },
@@ -619,6 +676,9 @@
       {
         "id": 20,
         "name": "Wolves",
+        "shirtStyle": "plain",
+        "primaryColor": "#FDB913",
+        "secondaryColor": "#231F20",
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "José Sá", "positions": ["GK"], "dob": "1993-01-17", "rating": 14 },
@@ -656,6 +716,9 @@
       {
         "id": 101,
         "name": "FC Augsburg",
+        "shirtStyle": "plain",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#BA3733",
         "budget": 50000000,
         "players": [
           { "id": 101, "name": "Hans Müller", "positions": ["GK"], "dob": "1996-04-12", "rating": 17 },
@@ -674,6 +737,9 @@
       {
         "id": 102,
         "name": "Bayer Leverkusen",
+        "shirtStyle": "plain",
+        "primaryColor": "#000000",
+        "secondaryColor": "#E32221",
         "budget": 50000000,
         "players": [
           { "id": 112, "name": "Stefan Neumann", "positions": ["GK"], "dob": "1995-09-18", "rating": 16 },
@@ -692,6 +758,9 @@
       {
         "id": 103,
         "name": "Bayern Munich",
+        "shirtStyle": "plain",
+        "primaryColor": "#DC052D",
+        "secondaryColor": "#FFFFFF",
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Manuel Neuer", "positions": ["GK"], "dob": "1986-03-27", "rating": 17 },
@@ -722,6 +791,9 @@
       {
         "id": 104,
         "name": "Borussia Dortmund",
+        "shirtStyle": "sleeves",
+        "primaryColor": "#FDE100",
+        "secondaryColor": "#000000",
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Gregor Kobel", "positions": ["GK"], "dob": "1997-12-06", "rating": 17 },
@@ -752,6 +824,9 @@
       {
         "id": 105,
         "name": "Borussia Mönchengladbach",
+        "shirtStyle": "plain",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#000000",
         "budget": 50000000,
         "players": [
           { "id": 123, "name": "Horst Koch", "positions": ["GK"], "dob": "1996-06-14", "rating": 16 },
@@ -770,6 +845,9 @@
       {
         "id": 106,
         "name": "Eintracht Frankfurt",
+        "shirtStyle": "stripes",
+        "primaryColor": "#000000",
+        "secondaryColor": "#E1000F",
         "budget": 50000000,
         "players": [
           { "id": 123, "name": "Horst Koch", "positions": ["GK"], "dob": "1996-06-14", "rating": 16 },
@@ -788,6 +866,9 @@
       {
         "id": 107,
         "name": "SC Freiburg",
+        "shirtStyle": "stripes",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#E2001A",
         "budget": 50000000,
         "players": [
           { "id": 123, "name": "Horst Koch", "positions": ["GK"], "dob": "1996-06-14", "rating": 16 },
@@ -806,6 +887,9 @@
       {
         "id": 108,
         "name": "Hamburger SV",
+        "shirtStyle": "sleeves",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#00296B",
         "budget": 50000000,
         "players": [
           { "id": 123, "name": "Horst Koch", "positions": ["GK"], "dob": "1996-06-14", "rating": 16 },
@@ -824,6 +908,9 @@
       {
         "id": 109,
         "name": "1. FC Heidenheim",
+        "shirtStyle": "plain",
+        "primaryColor": "#ED1C24",
+        "secondaryColor": "#003D7C",
         "budget": 50000000,
         "players": [
           { "id": 123, "name": "Horst Koch", "positions": ["GK"], "dob": "1996-06-14", "rating": 16 },
@@ -842,6 +929,9 @@
       {
         "id": 110,
         "name": "TSG Hoffenheim",
+        "shirtStyle": "plain",
+        "primaryColor": "#122336",
+        "secondaryColor": "#1961B5",
         "budget": 50000000,
         "players": [
           { "id": 123, "name": "Horst Koch", "positions": ["GK"], "dob": "1996-06-14", "rating": 16 },
@@ -860,6 +950,9 @@
       {
         "id": 111,
         "name": "1. FC Köln",
+        "shirtStyle": "stripes",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#ED1C24",
         "budget": 50000000,
         "players": [
           { "id": 123, "name": "Horst Koch", "positions": ["GK"], "dob": "1996-06-14", "rating": 16 },
@@ -878,6 +971,9 @@
       {
         "id": 112,
         "name": "RB Leipzig",
+        "shirtStyle": "plain",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#DD0741",
         "budget": 50000000,
         "players": [
           { "id": 123, "name": "Horst Koch", "positions": ["GK"], "dob": "1996-06-14", "rating": 16 },
@@ -896,6 +992,9 @@
       {
         "id": 113,
         "name": "Mainz 05",
+        "shirtStyle": "plain",
+        "primaryColor": "#ED1C24",
+        "secondaryColor": "#FFFFFF",
         "budget": 50000000,
         "players": [
           { "id": 123, "name": "Horst Koch", "positions": ["GK"], "dob": "1996-06-14", "rating": 16 },
@@ -914,6 +1013,9 @@
       {
         "id": 114,
         "name": "FC St. Pauli",
+        "shirtStyle": "stripes",
+        "primaryColor": "#6B3524",
+        "secondaryColor": "#FFFFFF",
         "budget": 50000000,
         "players": [
           { "id": 123, "name": "Horst Koch", "positions": ["GK"], "dob": "1996-06-14", "rating": 16 },
@@ -932,6 +1034,9 @@
       {
         "id": 115,
         "name": "VfB Stuttgart",
+        "shirtStyle": "plain",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#E32219",
         "budget": 50000000,
         "players": [
           { "id": 123, "name": "Horst Koch", "positions": ["GK"], "dob": "1996-06-14", "rating": 16 },
@@ -950,6 +1055,9 @@
       {
         "id": 116,
         "name": "Union Berlin",
+        "shirtStyle": "hoops",
+        "primaryColor": "#EB1923",
+        "secondaryColor": "#FFFFFF",
         "budget": 50000000,
         "players": [
           { "id": 123, "name": "Horst Koch", "positions": ["GK"], "dob": "1996-06-14", "rating": 16 },
@@ -968,6 +1076,9 @@
       {
         "id": 117,
         "name": "Werder Bremen",
+        "shirtStyle": "plain",
+        "primaryColor": "#2B6303",
+        "secondaryColor": "#FFFFFF",
         "budget": 50000000,
         "players": [
           { "id": 123, "name": "Horst Koch", "positions": ["GK"], "dob": "1996-06-14", "rating": 16 },
@@ -986,6 +1097,9 @@
       {
         "id": 118,
         "name": "VfL Wolfsburg",
+        "shirtStyle": "plain",
+        "primaryColor": "#245701",
+        "secondaryColor": "#65B32E",
         "budget": 50000000,
         "players": [
           { "id": 134, "name": "Wolfgang Sauer", "positions": ["GK"], "dob": "1995-10-25", "rating": 16 },
@@ -1009,7 +1123,10 @@
     "teams": [
       {
         "id": 201,
-        "name": "Real Madrid",
+        "name": "Alavés",
+        "shirtStyle": "stripes",
+        "primaryColor": "#0054A6",
+        "secondaryColor": "#FFFFFF",
         "budget": 50000000,
         "players": [
           { "id": 201, "name": "Carlos Hernández", "positions": ["GK"], "dob": "1996-03-18", "rating": 17 },
@@ -1027,7 +1144,10 @@
       },
       {
         "id": 202,
-        "name": "Barcelona",
+        "name": "Athletic Bilbao",
+        "shirtStyle": "stripes",
+        "primaryColor": "#EE2523",
+        "secondaryColor": "#FFFFFF",
         "budget": 50000000,
         "players": [
           { "id": 212, "name": "Juan Torres", "positions": ["GK"], "dob": "1995-08-14", "rating": 17 },
@@ -1046,6 +1166,9 @@
       {
         "id": 203,
         "name": "Atlético Madrid",
+        "shirtStyle": "stripes",
+        "primaryColor": "#CB3524",
+        "secondaryColor": "#FFFFFF",
         "budget": 50000000,
         "players": [
           { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -1063,7 +1186,346 @@
       },
       {
         "id": 204,
+        "name": "Barcelona",
+        "shirtStyle": "stripes",
+        "primaryColor": "#99022C",
+        "secondaryColor": "#012C57",
+        "budget": 50000000,
+        "players": [
+          { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
+          { "id": 224, "name": "Enrique Ramos", "positions": ["LB"], "dob": "1997-05-12", "rating": 16 },
+          { "id": 225, "name": "Francisco Delgado", "positions": ["CB"], "dob": "1998-09-28", "rating": 16 },
+          { "id": 226, "name": "Julio Méndez", "positions": ["CB", "CDM"], "dob": "1996-12-15", "rating": 15 },
+          { "id": 227, "name": "Rubén Vega", "positions": ["RB"], "dob": "1999-06-02", "rating": 14 },
+          { "id": 228, "name": "Emilio Herrera", "positions": ["CDM", "CM"], "dob": "1997-10-18", "rating": 17 },
+          { "id": 229, "name": "Jorge Medina", "positions": ["CM"], "dob": "1998-01-05", "rating": 16 },
+          { "id": 230, "name": "Marcos Aguilar", "positions": ["CAM", "CM"], "dob": "1996-04-22", "rating": 15 },
+          { "id": 231, "name": "Daniel Cortés", "positions": ["LW", "ST"], "dob": "1999-08-08", "rating": 17 },
+          { "id": 232, "name": "César Reyes", "positions": ["ST"], "dob": "1997-11-25", "rating": 16 },
+          { "id": 233, "name": "Omar Fuentes", "positions": ["RW", "ST"], "dob": "1998-03-12", "rating": 16 }
+        ]
+      },
+      {
+        "id": 205,
+        "name": "Celta Vigo",
+        "shirtStyle": "plain",
+        "primaryColor": "#8AC3EE",
+        "secondaryColor": "#000000",
+        "budget": 50000000,
+        "players": [
+          { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
+          { "id": 224, "name": "Enrique Ramos", "positions": ["LB"], "dob": "1997-05-12", "rating": 16 },
+          { "id": 225, "name": "Francisco Delgado", "positions": ["CB"], "dob": "1998-09-28", "rating": 16 },
+          { "id": 226, "name": "Julio Méndez", "positions": ["CB", "CDM"], "dob": "1996-12-15", "rating": 15 },
+          { "id": 227, "name": "Rubén Vega", "positions": ["RB"], "dob": "1999-06-02", "rating": 14 },
+          { "id": 228, "name": "Emilio Herrera", "positions": ["CDM", "CM"], "dob": "1997-10-18", "rating": 17 },
+          { "id": 229, "name": "Jorge Medina", "positions": ["CM"], "dob": "1998-01-05", "rating": 16 },
+          { "id": 230, "name": "Marcos Aguilar", "positions": ["CAM", "CM"], "dob": "1996-04-22", "rating": 15 },
+          { "id": 231, "name": "Daniel Cortés", "positions": ["LW", "ST"], "dob": "1999-08-08", "rating": 17 },
+          { "id": 232, "name": "César Reyes", "positions": ["ST"], "dob": "1997-11-25", "rating": 16 },
+          { "id": 233, "name": "Omar Fuentes", "positions": ["RW", "ST"], "dob": "1998-03-12", "rating": 16 }
+        ]
+      },
+      {
+        "id": 206,
+        "name": "Elche",
+        "shirtStyle": "plain",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#006633",
+        "budget": 50000000,
+        "players": [
+          { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
+          { "id": 224, "name": "Enrique Ramos", "positions": ["LB"], "dob": "1997-05-12", "rating": 16 },
+          { "id": 225, "name": "Francisco Delgado", "positions": ["CB"], "dob": "1998-09-28", "rating": 16 },
+          { "id": 226, "name": "Julio Méndez", "positions": ["CB", "CDM"], "dob": "1996-12-15", "rating": 15 },
+          { "id": 227, "name": "Rubén Vega", "positions": ["RB"], "dob": "1999-06-02", "rating": 14 },
+          { "id": 228, "name": "Emilio Herrera", "positions": ["CDM", "CM"], "dob": "1997-10-18", "rating": 17 },
+          { "id": 229, "name": "Jorge Medina", "positions": ["CM"], "dob": "1998-01-05", "rating": 16 },
+          { "id": 230, "name": "Marcos Aguilar", "positions": ["CAM", "CM"], "dob": "1996-04-22", "rating": 15 },
+          { "id": 231, "name": "Daniel Cortés", "positions": ["LW", "ST"], "dob": "1999-08-08", "rating": 17 },
+          { "id": 232, "name": "César Reyes", "positions": ["ST"], "dob": "1997-11-25", "rating": 16 },
+          { "id": 233, "name": "Omar Fuentes", "positions": ["RW", "ST"], "dob": "1998-03-12", "rating": 16 }
+        ]
+      },
+      {
+        "id": 207,
+        "name": "Espanyol",
+        "shirtStyle": "stripes",
+        "primaryColor": "#007FC8",
+        "secondaryColor": "#FFFFFF",
+        "budget": 50000000,
+        "players": [
+          { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
+          { "id": 224, "name": "Enrique Ramos", "positions": ["LB"], "dob": "1997-05-12", "rating": 16 },
+          { "id": 225, "name": "Francisco Delgado", "positions": ["CB"], "dob": "1998-09-28", "rating": 16 },
+          { "id": 226, "name": "Julio Méndez", "positions": ["CB", "CDM"], "dob": "1996-12-15", "rating": 15 },
+          { "id": 227, "name": "Rubén Vega", "positions": ["RB"], "dob": "1999-06-02", "rating": 14 },
+          { "id": 228, "name": "Emilio Herrera", "positions": ["CDM", "CM"], "dob": "1997-10-18", "rating": 17 },
+          { "id": 229, "name": "Jorge Medina", "positions": ["CM"], "dob": "1998-01-05", "rating": 16 },
+          { "id": 230, "name": "Marcos Aguilar", "positions": ["CAM", "CM"], "dob": "1996-04-22", "rating": 15 },
+          { "id": 231, "name": "Daniel Cortés", "positions": ["LW", "ST"], "dob": "1999-08-08", "rating": 17 },
+          { "id": 232, "name": "César Reyes", "positions": ["ST"], "dob": "1997-11-25", "rating": 16 },
+          { "id": 233, "name": "Omar Fuentes", "positions": ["RW", "ST"], "dob": "1998-03-12", "rating": 16 }
+        ]
+      },
+      {
+        "id": 208,
+        "name": "Getafe",
+        "shirtStyle": "plain",
+        "primaryColor": "#004FA3",
+        "secondaryColor": "#FFFFFF",
+        "budget": 50000000,
+        "players": [
+          { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
+          { "id": 224, "name": "Enrique Ramos", "positions": ["LB"], "dob": "1997-05-12", "rating": 16 },
+          { "id": 225, "name": "Francisco Delgado", "positions": ["CB"], "dob": "1998-09-28", "rating": 16 },
+          { "id": 226, "name": "Julio Méndez", "positions": ["CB", "CDM"], "dob": "1996-12-15", "rating": 15 },
+          { "id": 227, "name": "Rubén Vega", "positions": ["RB"], "dob": "1999-06-02", "rating": 14 },
+          { "id": 228, "name": "Emilio Herrera", "positions": ["CDM", "CM"], "dob": "1997-10-18", "rating": 17 },
+          { "id": 229, "name": "Jorge Medina", "positions": ["CM"], "dob": "1998-01-05", "rating": 16 },
+          { "id": 230, "name": "Marcos Aguilar", "positions": ["CAM", "CM"], "dob": "1996-04-22", "rating": 15 },
+          { "id": 231, "name": "Daniel Cortés", "positions": ["LW", "ST"], "dob": "1999-08-08", "rating": 17 },
+          { "id": 232, "name": "César Reyes", "positions": ["ST"], "dob": "1997-11-25", "rating": 16 },
+          { "id": 233, "name": "Omar Fuentes", "positions": ["RW", "ST"], "dob": "1998-03-12", "rating": 16 }
+        ]
+      },
+      {
+        "id": 209,
+        "name": "Girona",
+        "shirtStyle": "stripes",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#CD2534",
+        "budget": 50000000,
+        "players": [
+          { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
+          { "id": 224, "name": "Enrique Ramos", "positions": ["LB"], "dob": "1997-05-12", "rating": 16 },
+          { "id": 225, "name": "Francisco Delgado", "positions": ["CB"], "dob": "1998-09-28", "rating": 16 },
+          { "id": 226, "name": "Julio Méndez", "positions": ["CB", "CDM"], "dob": "1996-12-15", "rating": 15 },
+          { "id": 227, "name": "Rubén Vega", "positions": ["RB"], "dob": "1999-06-02", "rating": 14 },
+          { "id": 228, "name": "Emilio Herrera", "positions": ["CDM", "CM"], "dob": "1997-10-18", "rating": 17 },
+          { "id": 229, "name": "Jorge Medina", "positions": ["CM"], "dob": "1998-01-05", "rating": 16 },
+          { "id": 230, "name": "Marcos Aguilar", "positions": ["CAM", "CM"], "dob": "1996-04-22", "rating": 15 },
+          { "id": 231, "name": "Daniel Cortés", "positions": ["LW", "ST"], "dob": "1999-08-08", "rating": 17 },
+          { "id": 232, "name": "César Reyes", "positions": ["ST"], "dob": "1997-11-25", "rating": 16 },
+          { "id": 233, "name": "Omar Fuentes", "positions": ["RW", "ST"], "dob": "1998-03-12", "rating": 16 }
+        ]
+      },
+      {
+        "id": 210,
+        "name": "Levante",
+        "shirtStyle": "stripes",
+        "primaryColor": "#0A2452", 
+        "secondaryColor": "#700D11", 
+        "budget": 50000000,
+        "players": [
+          { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
+          { "id": 224, "name": "Enrique Ramos", "positions": ["LB"], "dob": "1997-05-12", "rating": 16 },
+          { "id": 225, "name": "Francisco Delgado", "positions": ["CB"], "dob": "1998-09-28", "rating": 16 },
+          { "id": 226, "name": "Julio Méndez", "positions": ["CB", "CDM"], "dob": "1996-12-15", "rating": 15 },
+          { "id": 227, "name": "Rubén Vega", "positions": ["RB"], "dob": "1999-06-02", "rating": 14 },
+          { "id": 228, "name": "Emilio Herrera", "positions": ["CDM", "CM"], "dob": "1997-10-18", "rating": 17 },
+          { "id": 229, "name": "Jorge Medina", "positions": ["CM"], "dob": "1998-01-05", "rating": 16 },
+          { "id": 230, "name": "Marcos Aguilar", "positions": ["CAM", "CM"], "dob": "1996-04-22", "rating": 15 },
+          { "id": 231, "name": "Daniel Cortés", "positions": ["LW", "ST"], "dob": "1999-08-08", "rating": 17 },
+          { "id": 232, "name": "César Reyes", "positions": ["ST"], "dob": "1997-11-25", "rating": 16 },
+          { "id": 233, "name": "Omar Fuentes", "positions": ["RW", "ST"], "dob": "1998-03-12", "rating": 16 }
+        ]
+      },
+      {
+        "id": 211,
+        "name": "Mallorca",
+        "shirtStyle": "plain",
+        "primaryColor": "#E20613",
+        "secondaryColor": "#000000",
+        "budget": 50000000,
+        "players": [
+          { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
+          { "id": 224, "name": "Enrique Ramos", "positions": ["LB"], "dob": "1997-05-12", "rating": 16 },
+          { "id": 225, "name": "Francisco Delgado", "positions": ["CB"], "dob": "1998-09-28", "rating": 16 },
+          { "id": 226, "name": "Julio Méndez", "positions": ["CB", "CDM"], "dob": "1996-12-15", "rating": 15 },
+          { "id": 227, "name": "Rubén Vega", "positions": ["RB"], "dob": "1999-06-02", "rating": 14 },
+          { "id": 228, "name": "Emilio Herrera", "positions": ["CDM", "CM"], "dob": "1997-10-18", "rating": 17 },
+          { "id": 229, "name": "Jorge Medina", "positions": ["CM"], "dob": "1998-01-05", "rating": 16 },
+          { "id": 230, "name": "Marcos Aguilar", "positions": ["CAM", "CM"], "dob": "1996-04-22", "rating": 15 },
+          { "id": 231, "name": "Daniel Cortés", "positions": ["LW", "ST"], "dob": "1999-08-08", "rating": 17 },
+          { "id": 232, "name": "César Reyes", "positions": ["ST"], "dob": "1997-11-25", "rating": 16 },
+          { "id": 233, "name": "Omar Fuentes", "positions": ["RW", "ST"], "dob": "1998-03-12", "rating": 16 }
+        ]
+      },
+      {
+        "id": 212,
+        "name": "Osasuna",
+        "shirtStyle": "plain",
+        "primaryColor": "#D91A2A",
+        "secondaryColor": "#00205B",
+        "budget": 50000000,
+        "players": [
+          { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
+          { "id": 224, "name": "Enrique Ramos", "positions": ["LB"], "dob": "1997-05-12", "rating": 16 },
+          { "id": 225, "name": "Francisco Delgado", "positions": ["CB"], "dob": "1998-09-28", "rating": 16 },
+          { "id": 226, "name": "Julio Méndez", "positions": ["CB", "CDM"], "dob": "1996-12-15", "rating": 15 },
+          { "id": 227, "name": "Rubén Vega", "positions": ["RB"], "dob": "1999-06-02", "rating": 14 },
+          { "id": 228, "name": "Emilio Herrera", "positions": ["CDM", "CM"], "dob": "1997-10-18", "rating": 17 },
+          { "id": 229, "name": "Jorge Medina", "positions": ["CM"], "dob": "1998-01-05", "rating": 16 },
+          { "id": 230, "name": "Marcos Aguilar", "positions": ["CAM", "CM"], "dob": "1996-04-22", "rating": 15 },
+          { "id": 231, "name": "Daniel Cortés", "positions": ["LW", "ST"], "dob": "1999-08-08", "rating": 17 },
+          { "id": 232, "name": "César Reyes", "positions": ["ST"], "dob": "1997-11-25", "rating": 16 },
+          { "id": 233, "name": "Omar Fuentes", "positions": ["RW", "ST"], "dob": "1998-03-12", "rating": 16 }
+        ]
+      },
+      {
+        "id": 213,
+        "name": "Oviedo",
+        "shirtStyle": "plain",
+        "primaryColor": "#1D2CCF",
+        "secondaryColor": "#D6B504",
+        "budget": 50000000,
+        "players": [
+          { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
+          { "id": 224, "name": "Enrique Ramos", "positions": ["LB"], "dob": "1997-05-12", "rating": 16 },
+          { "id": 225, "name": "Francisco Delgado", "positions": ["CB"], "dob": "1998-09-28", "rating": 16 },
+          { "id": 226, "name": "Julio Méndez", "positions": ["CB", "CDM"], "dob": "1996-12-15", "rating": 15 },
+          { "id": 227, "name": "Rubén Vega", "positions": ["RB"], "dob": "1999-06-02", "rating": 14 },
+          { "id": 228, "name": "Emilio Herrera", "positions": ["CDM", "CM"], "dob": "1997-10-18", "rating": 17 },
+          { "id": 229, "name": "Jorge Medina", "positions": ["CM"], "dob": "1998-01-05", "rating": 16 },
+          { "id": 230, "name": "Marcos Aguilar", "positions": ["CAM", "CM"], "dob": "1996-04-22", "rating": 15 },
+          { "id": 231, "name": "Daniel Cortés", "positions": ["LW", "ST"], "dob": "1999-08-08", "rating": 17 },
+          { "id": 232, "name": "César Reyes", "positions": ["ST"], "dob": "1997-11-25", "rating": 16 },
+          { "id": 233, "name": "Omar Fuentes", "positions": ["RW", "ST"], "dob": "1998-03-12", "rating": 16 }
+        ]
+      },
+      {
+        "id": 214,
+        "name": "Rayo Vallecano",
+        "shirtStyle": "sash",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#E4002B",
+        "budget": 50000000,
+        "players": [
+          { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
+          { "id": 224, "name": "Enrique Ramos", "positions": ["LB"], "dob": "1997-05-12", "rating": 16 },
+          { "id": 225, "name": "Francisco Delgado", "positions": ["CB"], "dob": "1998-09-28", "rating": 16 },
+          { "id": 226, "name": "Julio Méndez", "positions": ["CB", "CDM"], "dob": "1996-12-15", "rating": 15 },
+          { "id": 227, "name": "Rubén Vega", "positions": ["RB"], "dob": "1999-06-02", "rating": 14 },
+          { "id": 228, "name": "Emilio Herrera", "positions": ["CDM", "CM"], "dob": "1997-10-18", "rating": 17 },
+          { "id": 229, "name": "Jorge Medina", "positions": ["CM"], "dob": "1998-01-05", "rating": 16 },
+          { "id": 230, "name": "Marcos Aguilar", "positions": ["CAM", "CM"], "dob": "1996-04-22", "rating": 15 },
+          { "id": 231, "name": "Daniel Cortés", "positions": ["LW", "ST"], "dob": "1999-08-08", "rating": 17 },
+          { "id": 232, "name": "César Reyes", "positions": ["ST"], "dob": "1997-11-25", "rating": 16 },
+          { "id": 233, "name": "Omar Fuentes", "positions": ["RW", "ST"], "dob": "1998-03-12", "rating": 16 }
+        ]
+      },
+      {
+        "id": 215,
+        "name": "Real Betis",
+        "shirtStyle": "stripes",
+        "primaryColor": "#00954C",
+        "secondaryColor": "#FFFFFF",
+        "budget": 50000000,
+        "players": [
+          { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
+          { "id": 224, "name": "Enrique Ramos", "positions": ["LB"], "dob": "1997-05-12", "rating": 16 },
+          { "id": 225, "name": "Francisco Delgado", "positions": ["CB"], "dob": "1998-09-28", "rating": 16 },
+          { "id": 226, "name": "Julio Méndez", "positions": ["CB", "CDM"], "dob": "1996-12-15", "rating": 15 },
+          { "id": 227, "name": "Rubén Vega", "positions": ["RB"], "dob": "1999-06-02", "rating": 14 },
+          { "id": 228, "name": "Emilio Herrera", "positions": ["CDM", "CM"], "dob": "1997-10-18", "rating": 17 },
+          { "id": 229, "name": "Jorge Medina", "positions": ["CM"], "dob": "1998-01-05", "rating": 16 },
+          { "id": 230, "name": "Marcos Aguilar", "positions": ["CAM", "CM"], "dob": "1996-04-22", "rating": 15 },
+          { "id": 231, "name": "Daniel Cortés", "positions": ["LW", "ST"], "dob": "1999-08-08", "rating": 17 },
+          { "id": 232, "name": "César Reyes", "positions": ["ST"], "dob": "1997-11-25", "rating": 16 },
+          { "id": 233, "name": "Omar Fuentes", "positions": ["RW", "ST"], "dob": "1998-03-12", "rating": 16 }
+        ]
+      },
+      {
+        "id": 216,
+        "name": "Real Madrid",
+        "shirtStyle": "plain",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#000000",
+        "budget": 50000000,
+        "players": [
+          { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
+          { "id": 224, "name": "Enrique Ramos", "positions": ["LB"], "dob": "1997-05-12", "rating": 16 },
+          { "id": 225, "name": "Francisco Delgado", "positions": ["CB"], "dob": "1998-09-28", "rating": 16 },
+          { "id": 226, "name": "Julio Méndez", "positions": ["CB", "CDM"], "dob": "1996-12-15", "rating": 15 },
+          { "id": 227, "name": "Rubén Vega", "positions": ["RB"], "dob": "1999-06-02", "rating": 14 },
+          { "id": 228, "name": "Emilio Herrera", "positions": ["CDM", "CM"], "dob": "1997-10-18", "rating": 17 },
+          { "id": 229, "name": "Jorge Medina", "positions": ["CM"], "dob": "1998-01-05", "rating": 16 },
+          { "id": 230, "name": "Marcos Aguilar", "positions": ["CAM", "CM"], "dob": "1996-04-22", "rating": 15 },
+          { "id": 231, "name": "Daniel Cortés", "positions": ["LW", "ST"], "dob": "1999-08-08", "rating": 17 },
+          { "id": 232, "name": "César Reyes", "positions": ["ST"], "dob": "1997-11-25", "rating": 16 },
+          { "id": 233, "name": "Omar Fuentes", "positions": ["RW", "ST"], "dob": "1998-03-12", "rating": 16 }
+        ]
+      },
+      {
+        "id": 217,
+        "name": "Real Sociedad",
+        "shirtStyle": "stripes",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "budget": 50000000,
+        "players": [
+          { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
+          { "id": 224, "name": "Enrique Ramos", "positions": ["LB"], "dob": "1997-05-12", "rating": 16 },
+          { "id": 225, "name": "Francisco Delgado", "positions": ["CB"], "dob": "1998-09-28", "rating": 16 },
+          { "id": 226, "name": "Julio Méndez", "positions": ["CB", "CDM"], "dob": "1996-12-15", "rating": 15 },
+          { "id": 227, "name": "Rubén Vega", "positions": ["RB"], "dob": "1999-06-02", "rating": 14 },
+          { "id": 228, "name": "Emilio Herrera", "positions": ["CDM", "CM"], "dob": "1997-10-18", "rating": 17 },
+          { "id": 229, "name": "Jorge Medina", "positions": ["CM"], "dob": "1998-01-05", "rating": 16 },
+          { "id": 230, "name": "Marcos Aguilar", "positions": ["CAM", "CM"], "dob": "1996-04-22", "rating": 15 },
+          { "id": 231, "name": "Daniel Cortés", "positions": ["LW", "ST"], "dob": "1999-08-08", "rating": 17 },
+          { "id": 232, "name": "César Reyes", "positions": ["ST"], "dob": "1997-11-25", "rating": 16 },
+          { "id": 233, "name": "Omar Fuentes", "positions": ["RW", "ST"], "dob": "1998-03-12", "rating": 16 }
+        ]
+      },
+      {
+        "id": 218,
         "name": "Sevilla",
+        "shirtStyle": "plain",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#D40027",
+        "budget": 50000000,
+        "players": [
+          { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
+          { "id": 224, "name": "Enrique Ramos", "positions": ["LB"], "dob": "1997-05-12", "rating": 16 },
+          { "id": 225, "name": "Francisco Delgado", "positions": ["CB"], "dob": "1998-09-28", "rating": 16 },
+          { "id": 226, "name": "Julio Méndez", "positions": ["CB", "CDM"], "dob": "1996-12-15", "rating": 15 },
+          { "id": 227, "name": "Rubén Vega", "positions": ["RB"], "dob": "1999-06-02", "rating": 14 },
+          { "id": 228, "name": "Emilio Herrera", "positions": ["CDM", "CM"], "dob": "1997-10-18", "rating": 17 },
+          { "id": 229, "name": "Jorge Medina", "positions": ["CM"], "dob": "1998-01-05", "rating": 16 },
+          { "id": 230, "name": "Marcos Aguilar", "positions": ["CAM", "CM"], "dob": "1996-04-22", "rating": 15 },
+          { "id": 231, "name": "Daniel Cortés", "positions": ["LW", "ST"], "dob": "1999-08-08", "rating": 17 },
+          { "id": 232, "name": "César Reyes", "positions": ["ST"], "dob": "1997-11-25", "rating": 16 },
+          { "id": 233, "name": "Omar Fuentes", "positions": ["RW", "ST"], "dob": "1998-03-12", "rating": 16 }
+        ]
+      },
+      {
+        "id": 219,
+        "name": "Valencia",
+        "shirtStyle": "plain",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#000000",
+        "budget": 50000000,
+        "players": [
+          { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
+          { "id": 224, "name": "Enrique Ramos", "positions": ["LB"], "dob": "1997-05-12", "rating": 16 },
+          { "id": 225, "name": "Francisco Delgado", "positions": ["CB"], "dob": "1998-09-28", "rating": 16 },
+          { "id": 226, "name": "Julio Méndez", "positions": ["CB", "CDM"], "dob": "1996-12-15", "rating": 15 },
+          { "id": 227, "name": "Rubén Vega", "positions": ["RB"], "dob": "1999-06-02", "rating": 14 },
+          { "id": 228, "name": "Emilio Herrera", "positions": ["CDM", "CM"], "dob": "1997-10-18", "rating": 17 },
+          { "id": 229, "name": "Jorge Medina", "positions": ["CM"], "dob": "1998-01-05", "rating": 16 },
+          { "id": 230, "name": "Marcos Aguilar", "positions": ["CAM", "CM"], "dob": "1996-04-22", "rating": 15 },
+          { "id": 231, "name": "Daniel Cortés", "positions": ["LW", "ST"], "dob": "1999-08-08", "rating": 17 },
+          { "id": 232, "name": "César Reyes", "positions": ["ST"], "dob": "1997-11-25", "rating": 16 },
+          { "id": 233, "name": "Omar Fuentes", "positions": ["RW", "ST"], "dob": "1998-03-12", "rating": 16 }
+        ]
+      },
+      {
+        "id": 220,
+        "name": "Villarreal",
+        "shirtStyle": "plain",
+        "primaryColor": "#FFE114",
+        "secondaryColor": "#012D52",
         "budget": 50000000,
         "players": [
           { "id": 234, "name": "Tomás Serrano", "positions": ["GK"], "dob": "1995-07-20", "rating": 16 },
@@ -1087,7 +1549,10 @@
     "teams": [
       {
         "id": 301,
-        "name": "Paris Saint-Germain",
+        "name": "Angers",
+        "shirtStyle": "stripes",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
         "budget": 50000000,
         "players": [
           { "id": 301, "name": "Pierre Dubois", "positions": ["GK"], "dob": "1996-04-16", "rating": 17 },
@@ -1105,7 +1570,10 @@
       },
       {
         "id": 302,
-        "name": "Marseille",
+        "name": "Auxerre",
+        "shirtStyle": "plain",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#0055A4",
         "budget": 50000000,
         "players": [
           { "id": 312, "name": "Claude Mercier", "positions": ["GK"], "dob": "1995-09-14", "rating": 16 },
@@ -1123,7 +1591,304 @@
       },
       {
         "id": 303,
+        "name": "Brest",
+        "shirtStyle": "sleeves",
+        "primaryColor": "#ED1C24",
+        "secondaryColor": "#FFFFFF",
+        "budget": 50000000,
+        "players": [
+          { "id": 312, "name": "Claude Mercier", "positions": ["GK"], "dob": "1995-09-14", "rating": 16 },
+          { "id": 313, "name": "Albert Bonnet", "positions": ["LB"], "dob": "1998-03-28", "rating": 15 },
+          { "id": 314, "name": "René Lambert", "positions": ["CB"], "dob": "1997-07-15", "rating": 17 },
+          { "id": 315, "name": "Paul Vincent", "positions": ["CB", "CDM"], "dob": "1996-11-03", "rating": 16 },
+          { "id": 316, "name": "Georges Fontaine", "positions": ["RB"], "dob": "1999-05-20", "rating": 14 },
+          { "id": 317, "name": "Maurice Dupont", "positions": ["CDM", "CM"], "dob": "1997-01-08", "rating": 17 },
+          { "id": 318, "name": "Jules Garnier", "positions": ["CM"], "dob": "1998-08-25", "rating": 16 },
+          { "id": 319, "name": "Yves Chevalier", "positions": ["CAM", "CM"], "dob": "1996-12-12", "rating": 15 },
+          { "id": 320, "name": "Antoine Fournier", "positions": ["LW", "ST"], "dob": "1999-04-28", "rating": 17 },
+          { "id": 321, "name": "Marcel Fabre", "positions": ["ST"], "dob": "1997-10-05", "rating": 16 },
+          { "id": 322, "name": "Victor Perrin", "positions": ["RW", "ST"], "dob": "1998-02-16", "rating": 16 }
+        ]
+      },
+      {
+        "id": 304,
+        "name": "Le Havre",
+        "shirtStyle": "halves",
+        "primaryColor": "#87CEEB",
+        "secondaryColor": "#1B2A4A",
+        "budget": 50000000,
+        "players": [
+          { "id": 312, "name": "Claude Mercier", "positions": ["GK"], "dob": "1995-09-14", "rating": 16 },
+          { "id": 313, "name": "Albert Bonnet", "positions": ["LB"], "dob": "1998-03-28", "rating": 15 },
+          { "id": 314, "name": "René Lambert", "positions": ["CB"], "dob": "1997-07-15", "rating": 17 },
+          { "id": 315, "name": "Paul Vincent", "positions": ["CB", "CDM"], "dob": "1996-11-03", "rating": 16 },
+          { "id": 316, "name": "Georges Fontaine", "positions": ["RB"], "dob": "1999-05-20", "rating": 14 },
+          { "id": 317, "name": "Maurice Dupont", "positions": ["CDM", "CM"], "dob": "1997-01-08", "rating": 17 },
+          { "id": 318, "name": "Jules Garnier", "positions": ["CM"], "dob": "1998-08-25", "rating": 16 },
+          { "id": 319, "name": "Yves Chevalier", "positions": ["CAM", "CM"], "dob": "1996-12-12", "rating": 15 },
+          { "id": 320, "name": "Antoine Fournier", "positions": ["LW", "ST"], "dob": "1999-04-28", "rating": 17 },
+          { "id": 321, "name": "Marcel Fabre", "positions": ["ST"], "dob": "1997-10-05", "rating": 16 },
+          { "id": 322, "name": "Victor Perrin", "positions": ["RW", "ST"], "dob": "1998-02-16", "rating": 16 }
+        ]
+      },
+      {
+        "id": 305,
+        "name": "Lens",
+        "shirtStyle": "plain",
+        "primaryColor": "#FFD700",
+        "secondaryColor": "#ED1C24",
+        "budget": 50000000,
+        "players": [
+          { "id": 312, "name": "Claude Mercier", "positions": ["GK"], "dob": "1995-09-14", "rating": 16 },
+          { "id": 313, "name": "Albert Bonnet", "positions": ["LB"], "dob": "1998-03-28", "rating": 15 },
+          { "id": 314, "name": "René Lambert", "positions": ["CB"], "dob": "1997-07-15", "rating": 17 },
+          { "id": 315, "name": "Paul Vincent", "positions": ["CB", "CDM"], "dob": "1996-11-03", "rating": 16 },
+          { "id": 316, "name": "Georges Fontaine", "positions": ["RB"], "dob": "1999-05-20", "rating": 14 },
+          { "id": 317, "name": "Maurice Dupont", "positions": ["CDM", "CM"], "dob": "1997-01-08", "rating": 17 },
+          { "id": 318, "name": "Jules Garnier", "positions": ["CM"], "dob": "1998-08-25", "rating": 16 },
+          { "id": 319, "name": "Yves Chevalier", "positions": ["CAM", "CM"], "dob": "1996-12-12", "rating": 15 },
+          { "id": 320, "name": "Antoine Fournier", "positions": ["LW", "ST"], "dob": "1999-04-28", "rating": 17 },
+          { "id": 321, "name": "Marcel Fabre", "positions": ["ST"], "dob": "1997-10-05", "rating": 16 },
+          { "id": 322, "name": "Victor Perrin", "positions": ["RW", "ST"], "dob": "1998-02-16", "rating": 16 }
+        ]
+      },
+      {
+        "id": 306,
+        "name": "Lille",
+        "shirtStyle": "plain",
+        "primaryColor": "#E2001A",
+        "secondaryColor": "#FFFFFF",
+        "budget": 50000000,
+        "players": [
+          { "id": 312, "name": "Claude Mercier", "positions": ["GK"], "dob": "1995-09-14", "rating": 16 },
+          { "id": 313, "name": "Albert Bonnet", "positions": ["LB"], "dob": "1998-03-28", "rating": 15 },
+          { "id": 314, "name": "René Lambert", "positions": ["CB"], "dob": "1997-07-15", "rating": 17 },
+          { "id": 315, "name": "Paul Vincent", "positions": ["CB", "CDM"], "dob": "1996-11-03", "rating": 16 },
+          { "id": 316, "name": "Georges Fontaine", "positions": ["RB"], "dob": "1999-05-20", "rating": 14 },
+          { "id": 317, "name": "Maurice Dupont", "positions": ["CDM", "CM"], "dob": "1997-01-08", "rating": 17 },
+          { "id": 318, "name": "Jules Garnier", "positions": ["CM"], "dob": "1998-08-25", "rating": 16 },
+          { "id": 319, "name": "Yves Chevalier", "positions": ["CAM", "CM"], "dob": "1996-12-12", "rating": 15 },
+          { "id": 320, "name": "Antoine Fournier", "positions": ["LW", "ST"], "dob": "1999-04-28", "rating": 17 },
+          { "id": 321, "name": "Marcel Fabre", "positions": ["ST"], "dob": "1997-10-05", "rating": 16 },
+          { "id": 322, "name": "Victor Perrin", "positions": ["RW", "ST"], "dob": "1998-02-16", "rating": 16 }
+        ]
+      },
+      {
+        "id": 307,
+        "name": "Lorient",
+        "shirtStyle": "plain",
+        "primaryColor": "#F47920",
+        "secondaryColor": "#000000",
+        "budget": 50000000,
+        "players": [
+          { "id": 312, "name": "Claude Mercier", "positions": ["GK"], "dob": "1995-09-14", "rating": 16 },
+          { "id": 313, "name": "Albert Bonnet", "positions": ["LB"], "dob": "1998-03-28", "rating": 15 },
+          { "id": 314, "name": "René Lambert", "positions": ["CB"], "dob": "1997-07-15", "rating": 17 },
+          { "id": 315, "name": "Paul Vincent", "positions": ["CB", "CDM"], "dob": "1996-11-03", "rating": 16 },
+          { "id": 316, "name": "Georges Fontaine", "positions": ["RB"], "dob": "1999-05-20", "rating": 14 },
+          { "id": 317, "name": "Maurice Dupont", "positions": ["CDM", "CM"], "dob": "1997-01-08", "rating": 17 },
+          { "id": 318, "name": "Jules Garnier", "positions": ["CM"], "dob": "1998-08-25", "rating": 16 },
+          { "id": 319, "name": "Yves Chevalier", "positions": ["CAM", "CM"], "dob": "1996-12-12", "rating": 15 },
+          { "id": 320, "name": "Antoine Fournier", "positions": ["LW", "ST"], "dob": "1999-04-28", "rating": 17 },
+          { "id": 321, "name": "Marcel Fabre", "positions": ["ST"], "dob": "1997-10-05", "rating": 16 },
+          { "id": 322, "name": "Victor Perrin", "positions": ["RW", "ST"], "dob": "1998-02-16", "rating": 16 }
+        ]
+      },
+      {
+        "id": 308,
         "name": "Lyon",
+        "shirtStyle": "plain",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#DA291C",
+        "budget": 50000000,
+        "players": [
+          { "id": 312, "name": "Claude Mercier", "positions": ["GK"], "dob": "1995-09-14", "rating": 16 },
+          { "id": 313, "name": "Albert Bonnet", "positions": ["LB"], "dob": "1998-03-28", "rating": 15 },
+          { "id": 314, "name": "René Lambert", "positions": ["CB"], "dob": "1997-07-15", "rating": 17 },
+          { "id": 315, "name": "Paul Vincent", "positions": ["CB", "CDM"], "dob": "1996-11-03", "rating": 16 },
+          { "id": 316, "name": "Georges Fontaine", "positions": ["RB"], "dob": "1999-05-20", "rating": 14 },
+          { "id": 317, "name": "Maurice Dupont", "positions": ["CDM", "CM"], "dob": "1997-01-08", "rating": 17 },
+          { "id": 318, "name": "Jules Garnier", "positions": ["CM"], "dob": "1998-08-25", "rating": 16 },
+          { "id": 319, "name": "Yves Chevalier", "positions": ["CAM", "CM"], "dob": "1996-12-12", "rating": 15 },
+          { "id": 320, "name": "Antoine Fournier", "positions": ["LW", "ST"], "dob": "1999-04-28", "rating": 17 },
+          { "id": 321, "name": "Marcel Fabre", "positions": ["ST"], "dob": "1997-10-05", "rating": 16 },
+          { "id": 322, "name": "Victor Perrin", "positions": ["RW", "ST"], "dob": "1998-02-16", "rating": 16 }
+        ]
+      },
+      {
+        "id": 309,
+        "name": "Marseille",
+        "shirtStyle": "plain",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#2FAEE0",
+        "budget": 50000000,
+        "players": [
+          { "id": 312, "name": "Claude Mercier", "positions": ["GK"], "dob": "1995-09-14", "rating": 16 },
+          { "id": 313, "name": "Albert Bonnet", "positions": ["LB"], "dob": "1998-03-28", "rating": 15 },
+          { "id": 314, "name": "René Lambert", "positions": ["CB"], "dob": "1997-07-15", "rating": 17 },
+          { "id": 315, "name": "Paul Vincent", "positions": ["CB", "CDM"], "dob": "1996-11-03", "rating": 16 },
+          { "id": 316, "name": "Georges Fontaine", "positions": ["RB"], "dob": "1999-05-20", "rating": 14 },
+          { "id": 317, "name": "Maurice Dupont", "positions": ["CDM", "CM"], "dob": "1997-01-08", "rating": 17 },
+          { "id": 318, "name": "Jules Garnier", "positions": ["CM"], "dob": "1998-08-25", "rating": 16 },
+          { "id": 319, "name": "Yves Chevalier", "positions": ["CAM", "CM"], "dob": "1996-12-12", "rating": 15 },
+          { "id": 320, "name": "Antoine Fournier", "positions": ["LW", "ST"], "dob": "1999-04-28", "rating": 17 },
+          { "id": 321, "name": "Marcel Fabre", "positions": ["ST"], "dob": "1997-10-05", "rating": 16 },
+          { "id": 322, "name": "Victor Perrin", "positions": ["RW", "ST"], "dob": "1998-02-16", "rating": 16 }
+        ]
+      },
+      {
+        "id": 310,
+        "name": "Metz",
+        "shirtStyle": "plain",
+        "primaryColor": "#6D2C34",
+        "secondaryColor": "#FFFFFF",
+        "budget": 50000000,
+        "players": [
+          { "id": 312, "name": "Claude Mercier", "positions": ["GK"], "dob": "1995-09-14", "rating": 16 },
+          { "id": 313, "name": "Albert Bonnet", "positions": ["LB"], "dob": "1998-03-28", "rating": 15 },
+          { "id": 314, "name": "René Lambert", "positions": ["CB"], "dob": "1997-07-15", "rating": 17 },
+          { "id": 315, "name": "Paul Vincent", "positions": ["CB", "CDM"], "dob": "1996-11-03", "rating": 16 },
+          { "id": 316, "name": "Georges Fontaine", "positions": ["RB"], "dob": "1999-05-20", "rating": 14 },
+          { "id": 317, "name": "Maurice Dupont", "positions": ["CDM", "CM"], "dob": "1997-01-08", "rating": 17 },
+          { "id": 318, "name": "Jules Garnier", "positions": ["CM"], "dob": "1998-08-25", "rating": 16 },
+          { "id": 319, "name": "Yves Chevalier", "positions": ["CAM", "CM"], "dob": "1996-12-12", "rating": 15 },
+          { "id": 320, "name": "Antoine Fournier", "positions": ["LW", "ST"], "dob": "1999-04-28", "rating": 17 },
+          { "id": 321, "name": "Marcel Fabre", "positions": ["ST"], "dob": "1997-10-05", "rating": 16 },
+          { "id": 322, "name": "Victor Perrin", "positions": ["RW", "ST"], "dob": "1998-02-16", "rating": 16 }
+        ]
+      },
+      {
+        "id": 311,
+        "name": "Monaco",
+        "shirtStyle": "halves",
+        "primaryColor": "#E7192F",
+        "secondaryColor": "#FFFFFF",
+        "budget": 50000000,
+        "players": [
+          { "id": 312, "name": "Claude Mercier", "positions": ["GK"], "dob": "1995-09-14", "rating": 16 },
+          { "id": 313, "name": "Albert Bonnet", "positions": ["LB"], "dob": "1998-03-28", "rating": 15 },
+          { "id": 314, "name": "René Lambert", "positions": ["CB"], "dob": "1997-07-15", "rating": 17 },
+          { "id": 315, "name": "Paul Vincent", "positions": ["CB", "CDM"], "dob": "1996-11-03", "rating": 16 },
+          { "id": 316, "name": "Georges Fontaine", "positions": ["RB"], "dob": "1999-05-20", "rating": 14 },
+          { "id": 317, "name": "Maurice Dupont", "positions": ["CDM", "CM"], "dob": "1997-01-08", "rating": 17 },
+          { "id": 318, "name": "Jules Garnier", "positions": ["CM"], "dob": "1998-08-25", "rating": 16 },
+          { "id": 319, "name": "Yves Chevalier", "positions": ["CAM", "CM"], "dob": "1996-12-12", "rating": 15 },
+          { "id": 320, "name": "Antoine Fournier", "positions": ["LW", "ST"], "dob": "1999-04-28", "rating": 17 },
+          { "id": 321, "name": "Marcel Fabre", "positions": ["ST"], "dob": "1997-10-05", "rating": 16 },
+          { "id": 322, "name": "Victor Perrin", "positions": ["RW", "ST"], "dob": "1998-02-16", "rating": 16 }
+        ]
+      },
+      {
+        "id": 312,
+        "name": "Nantes",
+        "shirtStyle": "plain",
+        "primaryColor": "#FCDD09",
+        "secondaryColor": "#00843D",
+        "budget": 50000000,
+        "players": [
+          { "id": 312, "name": "Claude Mercier", "positions": ["GK"], "dob": "1995-09-14", "rating": 16 },
+          { "id": 313, "name": "Albert Bonnet", "positions": ["LB"], "dob": "1998-03-28", "rating": 15 },
+          { "id": 314, "name": "René Lambert", "positions": ["CB"], "dob": "1997-07-15", "rating": 17 },
+          { "id": 315, "name": "Paul Vincent", "positions": ["CB", "CDM"], "dob": "1996-11-03", "rating": 16 },
+          { "id": 316, "name": "Georges Fontaine", "positions": ["RB"], "dob": "1999-05-20", "rating": 14 },
+          { "id": 317, "name": "Maurice Dupont", "positions": ["CDM", "CM"], "dob": "1997-01-08", "rating": 17 },
+          { "id": 318, "name": "Jules Garnier", "positions": ["CM"], "dob": "1998-08-25", "rating": 16 },
+          { "id": 319, "name": "Yves Chevalier", "positions": ["CAM", "CM"], "dob": "1996-12-12", "rating": 15 },
+          { "id": 320, "name": "Antoine Fournier", "positions": ["LW", "ST"], "dob": "1999-04-28", "rating": 17 },
+          { "id": 321, "name": "Marcel Fabre", "positions": ["ST"], "dob": "1997-10-05", "rating": 16 },
+          { "id": 322, "name": "Victor Perrin", "positions": ["RW", "ST"], "dob": "1998-02-16", "rating": 16 }
+        ]
+      },
+      {
+        "id": 313,
+        "name": "Nice",
+        "shirtStyle": "stripes",
+        "primaryColor": "#000000",
+        "secondaryColor": "#ED1C24",
+        "budget": 50000000,
+        "players": [
+          { "id": 312, "name": "Claude Mercier", "positions": ["GK"], "dob": "1995-09-14", "rating": 16 },
+          { "id": 313, "name": "Albert Bonnet", "positions": ["LB"], "dob": "1998-03-28", "rating": 15 },
+          { "id": 314, "name": "René Lambert", "positions": ["CB"], "dob": "1997-07-15", "rating": 17 },
+          { "id": 315, "name": "Paul Vincent", "positions": ["CB", "CDM"], "dob": "1996-11-03", "rating": 16 },
+          { "id": 316, "name": "Georges Fontaine", "positions": ["RB"], "dob": "1999-05-20", "rating": 14 },
+          { "id": 317, "name": "Maurice Dupont", "positions": ["CDM", "CM"], "dob": "1997-01-08", "rating": 17 },
+          { "id": 318, "name": "Jules Garnier", "positions": ["CM"], "dob": "1998-08-25", "rating": 16 },
+          { "id": 319, "name": "Yves Chevalier", "positions": ["CAM", "CM"], "dob": "1996-12-12", "rating": 15 },
+          { "id": 320, "name": "Antoine Fournier", "positions": ["LW", "ST"], "dob": "1999-04-28", "rating": 17 },
+          { "id": 321, "name": "Marcel Fabre", "positions": ["ST"], "dob": "1997-10-05", "rating": 16 },
+          { "id": 322, "name": "Victor Perrin", "positions": ["RW", "ST"], "dob": "1998-02-16", "rating": 16 }
+        ]
+      },
+      {
+        "id": 314,
+        "name": "Paris FC",
+        "shirtStyle": "plain",
+        "primaryColor": "#00225C",
+        "secondaryColor": "#FFFFFF",
+        "budget": 50000000,
+        "players": [
+          { "id": 312, "name": "Claude Mercier", "positions": ["GK"], "dob": "1995-09-14", "rating": 16 },
+          { "id": 313, "name": "Albert Bonnet", "positions": ["LB"], "dob": "1998-03-28", "rating": 15 },
+          { "id": 314, "name": "René Lambert", "positions": ["CB"], "dob": "1997-07-15", "rating": 17 },
+          { "id": 315, "name": "Paul Vincent", "positions": ["CB", "CDM"], "dob": "1996-11-03", "rating": 16 },
+          { "id": 316, "name": "Georges Fontaine", "positions": ["RB"], "dob": "1999-05-20", "rating": 14 },
+          { "id": 317, "name": "Maurice Dupont", "positions": ["CDM", "CM"], "dob": "1997-01-08", "rating": 17 },
+          { "id": 318, "name": "Jules Garnier", "positions": ["CM"], "dob": "1998-08-25", "rating": 16 },
+          { "id": 319, "name": "Yves Chevalier", "positions": ["CAM", "CM"], "dob": "1996-12-12", "rating": 15 },
+          { "id": 320, "name": "Antoine Fournier", "positions": ["LW", "ST"], "dob": "1999-04-28", "rating": 17 },
+          { "id": 321, "name": "Marcel Fabre", "positions": ["ST"], "dob": "1997-10-05", "rating": 16 },
+          { "id": 322, "name": "Victor Perrin", "positions": ["RW", "ST"], "dob": "1998-02-16", "rating": 16 }
+        ]
+      },
+      {
+        "id": 315,
+        "name": "Paris Saint-Germain",
+        "shirtStyle": "plain",
+        "primaryColor": "#012B4A",
+        "secondaryColor": "#DA291C",
+        "budget": 50000000,
+        "players": [
+          { "id": 312, "name": "Claude Mercier", "positions": ["GK"], "dob": "1995-09-14", "rating": 16 },
+          { "id": 313, "name": "Albert Bonnet", "positions": ["LB"], "dob": "1998-03-28", "rating": 15 },
+          { "id": 314, "name": "René Lambert", "positions": ["CB"], "dob": "1997-07-15", "rating": 17 },
+          { "id": 315, "name": "Paul Vincent", "positions": ["CB", "CDM"], "dob": "1996-11-03", "rating": 16 },
+          { "id": 316, "name": "Georges Fontaine", "positions": ["RB"], "dob": "1999-05-20", "rating": 14 },
+          { "id": 317, "name": "Maurice Dupont", "positions": ["CDM", "CM"], "dob": "1997-01-08", "rating": 17 },
+          { "id": 318, "name": "Jules Garnier", "positions": ["CM"], "dob": "1998-08-25", "rating": 16 },
+          { "id": 319, "name": "Yves Chevalier", "positions": ["CAM", "CM"], "dob": "1996-12-12", "rating": 15 },
+          { "id": 320, "name": "Antoine Fournier", "positions": ["LW", "ST"], "dob": "1999-04-28", "rating": 17 },
+          { "id": 321, "name": "Marcel Fabre", "positions": ["ST"], "dob": "1997-10-05", "rating": 16 },
+          { "id": 322, "name": "Victor Perrin", "positions": ["RW", "ST"], "dob": "1998-02-16", "rating": 16 }
+        ]
+      },
+      {
+        "id": 316,
+        "name": "Rennes",
+        "shirtStyle": "sleeves",
+        "primaryColor": "#ED1C24",
+        "secondaryColor": "#000000",
+        "budget": 50000000,
+        "players": [
+          { "id": 312, "name": "Claude Mercier", "positions": ["GK"], "dob": "1995-09-14", "rating": 16 },
+          { "id": 313, "name": "Albert Bonnet", "positions": ["LB"], "dob": "1998-03-28", "rating": 15 },
+          { "id": 314, "name": "René Lambert", "positions": ["CB"], "dob": "1997-07-15", "rating": 17 },
+          { "id": 315, "name": "Paul Vincent", "positions": ["CB", "CDM"], "dob": "1996-11-03", "rating": 16 },
+          { "id": 316, "name": "Georges Fontaine", "positions": ["RB"], "dob": "1999-05-20", "rating": 14 },
+          { "id": 317, "name": "Maurice Dupont", "positions": ["CDM", "CM"], "dob": "1997-01-08", "rating": 17 },
+          { "id": 318, "name": "Jules Garnier", "positions": ["CM"], "dob": "1998-08-25", "rating": 16 },
+          { "id": 319, "name": "Yves Chevalier", "positions": ["CAM", "CM"], "dob": "1996-12-12", "rating": 15 },
+          { "id": 320, "name": "Antoine Fournier", "positions": ["LW", "ST"], "dob": "1999-04-28", "rating": 17 },
+          { "id": 321, "name": "Marcel Fabre", "positions": ["ST"], "dob": "1997-10-05", "rating": 16 },
+          { "id": 322, "name": "Victor Perrin", "positions": ["RW", "ST"], "dob": "1998-02-16", "rating": 16 }
+        ]
+      },
+      {
+        "id": 317,
+        "name": "Strasbourg",
+        "shirtStyle": "plain",
+        "primaryColor": "#0055A4",
+        "secondaryColor": "#FFFFFF",
         "budget": 50000000,
         "players": [
           { "id": 323, "name": "Jacques Morel", "positions": ["GK"], "dob": "1996-06-18", "rating": 16 },
@@ -1140,8 +1905,11 @@
         ]
       },
       {
-        "id": 304,
-        "name": "Monaco",
+        "id": 318,
+        "name": "Toulouse",
+        "shirtStyle": "halves",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#6A2382",
         "budget": 50000000,
         "players": [
           { "id": 334, "name": "Julien Renaud", "positions": ["GK"], "dob": "1995-10-25", "rating": 16 },
@@ -1165,7 +1933,10 @@
     "teams": [
       {
         "id": 401,
-        "name": "Juventus",
+        "name": "AC Milan",
+        "shirtStyle": "stripes",
+        "primaryColor": "#FB090B",
+        "secondaryColor": "#000000",
         "budget": 50000000,
         "players": [
           { "id": 401, "name": "Marco Rossi", "positions": ["GK"], "dob": "1996-03-20", "rating": 17 },
@@ -1183,7 +1954,10 @@
       },
       {
         "id": 402,
-        "name": "AC Milan",
+        "name": "Atalanta Bergamo",
+        "shirtStyle": "stripes",
+        "primaryColor": "#1E71B8",
+        "secondaryColor": "#000000",
         "budget": 50000000,
         "players": [
           { "id": 412, "name": "Antonio Conti", "positions": ["GK"], "dob": "1995-08-14", "rating": 17 },
@@ -1201,7 +1975,10 @@
       },
       {
         "id": 403,
-        "name": "Inter Milan",
+        "name": "Bologna",
+        "shirtStyle": "stripes",
+        "primaryColor": "#1A2F6B",
+        "secondaryColor": "#A31E2D",
         "budget": 50000000,
         "players": [
           { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -1219,7 +1996,346 @@
       },
       {
         "id": 404,
+        "name": "Cagliari",
+        "shirtStyle": "halves",
+        "primaryColor": "#c22538",
+        "secondaryColor": "#10274f",
+        "budget": 50000000,
+        "players": [
+          { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
+          { "id": 424, "name": "Gabriele Vitali", "positions": ["LB", "CB"], "dob": "1997-05-12", "rating": 16 },
+          { "id": 425, "name": "Alberto Santoro", "positions": ["CB"], "dob": "1998-09-28", "rating": 16 },
+          { "id": 426, "name": "Michele Orlando", "positions": ["CB"], "dob": "1996-12-15", "rating": 15 },
+          { "id": 427, "name": "Cristian Benedetti", "positions": ["RB"], "dob": "1999-06-02", "rating": 14 },
+          { "id": 428, "name": "Tommaso De Santis", "positions": ["CDM", "CM"], "dob": "1997-10-18", "rating": 17 },
+          { "id": 429, "name": "Federico Marchetti", "positions": ["CM"], "dob": "1998-01-05", "rating": 16 },
+          { "id": 430, "name": "Alessio Gatti", "positions": ["CAM", "CM"], "dob": "1996-04-22", "rating": 15 },
+          { "id": 431, "name": "Salvatore Mancini", "positions": ["LW", "ST"], "dob": "1999-08-08", "rating": 17 },
+          { "id": 432, "name": "Gianluca Battaglia", "positions": ["ST"], "dob": "1997-11-25", "rating": 16 },
+          { "id": 433, "name": "Enrico Fabbri", "positions": ["RW", "ST"], "dob": "1998-03-12", "rating": 16 }
+        ]
+      },
+      {
+        "id": 405,
+        "name": "Como",
+        "shirtStyle": "plain",
+        "primaryColor": "#0055A4",
+        "secondaryColor": "#FFFFFF",
+        "budget": 50000000,
+        "players": [
+          { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
+          { "id": 424, "name": "Gabriele Vitali", "positions": ["LB", "CB"], "dob": "1997-05-12", "rating": 16 },
+          { "id": 425, "name": "Alberto Santoro", "positions": ["CB"], "dob": "1998-09-28", "rating": 16 },
+          { "id": 426, "name": "Michele Orlando", "positions": ["CB"], "dob": "1996-12-15", "rating": 15 },
+          { "id": 427, "name": "Cristian Benedetti", "positions": ["RB"], "dob": "1999-06-02", "rating": 14 },
+          { "id": 428, "name": "Tommaso De Santis", "positions": ["CDM", "CM"], "dob": "1997-10-18", "rating": 17 },
+          { "id": 429, "name": "Federico Marchetti", "positions": ["CM"], "dob": "1998-01-05", "rating": 16 },
+          { "id": 430, "name": "Alessio Gatti", "positions": ["CAM", "CM"], "dob": "1996-04-22", "rating": 15 },
+          { "id": 431, "name": "Salvatore Mancini", "positions": ["LW", "ST"], "dob": "1999-08-08", "rating": 17 },
+          { "id": 432, "name": "Gianluca Battaglia", "positions": ["ST"], "dob": "1997-11-25", "rating": 16 },
+          { "id": 433, "name": "Enrico Fabbri", "positions": ["RW", "ST"], "dob": "1998-03-12", "rating": 16 }
+        ]
+      },
+      {
+        "id": 406,
+        "name": "Cremonese",
+        "shirtStyle": "stripes",
+        "primaryColor": "#6E6E6E",
+        "secondaryColor": "#ED1C24",
+        "budget": 50000000,
+        "players": [
+          { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
+          { "id": 424, "name": "Gabriele Vitali", "positions": ["LB", "CB"], "dob": "1997-05-12", "rating": 16 },
+          { "id": 425, "name": "Alberto Santoro", "positions": ["CB"], "dob": "1998-09-28", "rating": 16 },
+          { "id": 426, "name": "Michele Orlando", "positions": ["CB"], "dob": "1996-12-15", "rating": 15 },
+          { "id": 427, "name": "Cristian Benedetti", "positions": ["RB"], "dob": "1999-06-02", "rating": 14 },
+          { "id": 428, "name": "Tommaso De Santis", "positions": ["CDM", "CM"], "dob": "1997-10-18", "rating": 17 },
+          { "id": 429, "name": "Federico Marchetti", "positions": ["CM"], "dob": "1998-01-05", "rating": 16 },
+          { "id": 430, "name": "Alessio Gatti", "positions": ["CAM", "CM"], "dob": "1996-04-22", "rating": 15 },
+          { "id": 431, "name": "Salvatore Mancini", "positions": ["LW", "ST"], "dob": "1999-08-08", "rating": 17 },
+          { "id": 432, "name": "Gianluca Battaglia", "positions": ["ST"], "dob": "1997-11-25", "rating": 16 },
+          { "id": 433, "name": "Enrico Fabbri", "positions": ["RW", "ST"], "dob": "1998-03-12", "rating": 16 }
+        ]
+      },
+      {
+        "id": 407,
+        "name": "Fiorentina",
+        "shirtStyle": "plain",
+        "primaryColor": "#5B2D8E",
+        "secondaryColor": "#FFFFFF",
+        "budget": 50000000,
+        "players": [
+          { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
+          { "id": 424, "name": "Gabriele Vitali", "positions": ["LB", "CB"], "dob": "1997-05-12", "rating": 16 },
+          { "id": 425, "name": "Alberto Santoro", "positions": ["CB"], "dob": "1998-09-28", "rating": 16 },
+          { "id": 426, "name": "Michele Orlando", "positions": ["CB"], "dob": "1996-12-15", "rating": 15 },
+          { "id": 427, "name": "Cristian Benedetti", "positions": ["RB"], "dob": "1999-06-02", "rating": 14 },
+          { "id": 428, "name": "Tommaso De Santis", "positions": ["CDM", "CM"], "dob": "1997-10-18", "rating": 17 },
+          { "id": 429, "name": "Federico Marchetti", "positions": ["CM"], "dob": "1998-01-05", "rating": 16 },
+          { "id": 430, "name": "Alessio Gatti", "positions": ["CAM", "CM"], "dob": "1996-04-22", "rating": 15 },
+          { "id": 431, "name": "Salvatore Mancini", "positions": ["LW", "ST"], "dob": "1999-08-08", "rating": 17 },
+          { "id": 432, "name": "Gianluca Battaglia", "positions": ["ST"], "dob": "1997-11-25", "rating": 16 },
+          { "id": 433, "name": "Enrico Fabbri", "positions": ["RW", "ST"], "dob": "1998-03-12", "rating": 16 }
+        ]
+      },
+      {
+        "id": 408,
+        "name": "Genoa",
+        "shirtStyle": "halves",
+        "primaryColor": "#ED1C24",
+        "secondaryColor": "#00205B",
+        "budget": 50000000,
+        "players": [
+          { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
+          { "id": 424, "name": "Gabriele Vitali", "positions": ["LB", "CB"], "dob": "1997-05-12", "rating": 16 },
+          { "id": 425, "name": "Alberto Santoro", "positions": ["CB"], "dob": "1998-09-28", "rating": 16 },
+          { "id": 426, "name": "Michele Orlando", "positions": ["CB"], "dob": "1996-12-15", "rating": 15 },
+          { "id": 427, "name": "Cristian Benedetti", "positions": ["RB"], "dob": "1999-06-02", "rating": 14 },
+          { "id": 428, "name": "Tommaso De Santis", "positions": ["CDM", "CM"], "dob": "1997-10-18", "rating": 17 },
+          { "id": 429, "name": "Federico Marchetti", "positions": ["CM"], "dob": "1998-01-05", "rating": 16 },
+          { "id": 430, "name": "Alessio Gatti", "positions": ["CAM", "CM"], "dob": "1996-04-22", "rating": 15 },
+          { "id": 431, "name": "Salvatore Mancini", "positions": ["LW", "ST"], "dob": "1999-08-08", "rating": 17 },
+          { "id": 432, "name": "Gianluca Battaglia", "positions": ["ST"], "dob": "1997-11-25", "rating": 16 },
+          { "id": 433, "name": "Enrico Fabbri", "positions": ["RW", "ST"], "dob": "1998-03-12", "rating": 16 }
+        ]
+      },
+      {
+        "id": 409,
+        "name": "Hellas Verona",
+        "shirtStyle": "plain",
+        "primaryColor": "#022663",
+        "secondaryColor": "#FFD700",
+        "budget": 50000000,
+        "players": [
+          { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
+          { "id": 424, "name": "Gabriele Vitali", "positions": ["LB", "CB"], "dob": "1997-05-12", "rating": 16 },
+          { "id": 425, "name": "Alberto Santoro", "positions": ["CB"], "dob": "1998-09-28", "rating": 16 },
+          { "id": 426, "name": "Michele Orlando", "positions": ["CB"], "dob": "1996-12-15", "rating": 15 },
+          { "id": 427, "name": "Cristian Benedetti", "positions": ["RB"], "dob": "1999-06-02", "rating": 14 },
+          { "id": 428, "name": "Tommaso De Santis", "positions": ["CDM", "CM"], "dob": "1997-10-18", "rating": 17 },
+          { "id": 429, "name": "Federico Marchetti", "positions": ["CM"], "dob": "1998-01-05", "rating": 16 },
+          { "id": 430, "name": "Alessio Gatti", "positions": ["CAM", "CM"], "dob": "1996-04-22", "rating": 15 },
+          { "id": 431, "name": "Salvatore Mancini", "positions": ["LW", "ST"], "dob": "1999-08-08", "rating": 17 },
+          { "id": 432, "name": "Gianluca Battaglia", "positions": ["ST"], "dob": "1997-11-25", "rating": 16 },
+          { "id": 433, "name": "Enrico Fabbri", "positions": ["RW", "ST"], "dob": "1998-03-12", "rating": 16 }
+        ]
+      },
+      {
+        "id": 410,
+        "name": "Inter Milan",
+        "shirtStyle": "stripes",
+        "primaryColor": "#0068A8",
+        "secondaryColor": "#000000",
+        "budget": 50000000,
+        "players": [
+          { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
+          { "id": 424, "name": "Gabriele Vitali", "positions": ["LB", "CB"], "dob": "1997-05-12", "rating": 16 },
+          { "id": 425, "name": "Alberto Santoro", "positions": ["CB"], "dob": "1998-09-28", "rating": 16 },
+          { "id": 426, "name": "Michele Orlando", "positions": ["CB"], "dob": "1996-12-15", "rating": 15 },
+          { "id": 427, "name": "Cristian Benedetti", "positions": ["RB"], "dob": "1999-06-02", "rating": 14 },
+          { "id": 428, "name": "Tommaso De Santis", "positions": ["CDM", "CM"], "dob": "1997-10-18", "rating": 17 },
+          { "id": 429, "name": "Federico Marchetti", "positions": ["CM"], "dob": "1998-01-05", "rating": 16 },
+          { "id": 430, "name": "Alessio Gatti", "positions": ["CAM", "CM"], "dob": "1996-04-22", "rating": 15 },
+          { "id": 431, "name": "Salvatore Mancini", "positions": ["LW", "ST"], "dob": "1999-08-08", "rating": 17 },
+          { "id": 432, "name": "Gianluca Battaglia", "positions": ["ST"], "dob": "1997-11-25", "rating": 16 },
+          { "id": 433, "name": "Enrico Fabbri", "positions": ["RW", "ST"], "dob": "1998-03-12", "rating": 16 }
+        ]
+      },
+      {
+        "id": 411,
+        "name": "Juventus",
+        "shirtStyle": "stripes",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
+        "budget": 50000000,
+        "players": [
+          { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
+          { "id": 424, "name": "Gabriele Vitali", "positions": ["LB", "CB"], "dob": "1997-05-12", "rating": 16 },
+          { "id": 425, "name": "Alberto Santoro", "positions": ["CB"], "dob": "1998-09-28", "rating": 16 },
+          { "id": 426, "name": "Michele Orlando", "positions": ["CB"], "dob": "1996-12-15", "rating": 15 },
+          { "id": 427, "name": "Cristian Benedetti", "positions": ["RB"], "dob": "1999-06-02", "rating": 14 },
+          { "id": 428, "name": "Tommaso De Santis", "positions": ["CDM", "CM"], "dob": "1997-10-18", "rating": 17 },
+          { "id": 429, "name": "Federico Marchetti", "positions": ["CM"], "dob": "1998-01-05", "rating": 16 },
+          { "id": 430, "name": "Alessio Gatti", "positions": ["CAM", "CM"], "dob": "1996-04-22", "rating": 15 },
+          { "id": 431, "name": "Salvatore Mancini", "positions": ["LW", "ST"], "dob": "1999-08-08", "rating": 17 },
+          { "id": 432, "name": "Gianluca Battaglia", "positions": ["ST"], "dob": "1997-11-25", "rating": 16 },
+          { "id": 433, "name": "Enrico Fabbri", "positions": ["RW", "ST"], "dob": "1998-03-12", "rating": 16 }
+        ]
+      },
+      {
+        "id": 412,
+        "name": "Lazio",
+        "shirtStyle": "plain",
+        "primaryColor": "#87CEEB",
+        "secondaryColor": "#FFFFFF",
+        "budget": 50000000,
+        "players": [
+          { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
+          { "id": 424, "name": "Gabriele Vitali", "positions": ["LB", "CB"], "dob": "1997-05-12", "rating": 16 },
+          { "id": 425, "name": "Alberto Santoro", "positions": ["CB"], "dob": "1998-09-28", "rating": 16 },
+          { "id": 426, "name": "Michele Orlando", "positions": ["CB"], "dob": "1996-12-15", "rating": 15 },
+          { "id": 427, "name": "Cristian Benedetti", "positions": ["RB"], "dob": "1999-06-02", "rating": 14 },
+          { "id": 428, "name": "Tommaso De Santis", "positions": ["CDM", "CM"], "dob": "1997-10-18", "rating": 17 },
+          { "id": 429, "name": "Federico Marchetti", "positions": ["CM"], "dob": "1998-01-05", "rating": 16 },
+          { "id": 430, "name": "Alessio Gatti", "positions": ["CAM", "CM"], "dob": "1996-04-22", "rating": 15 },
+          { "id": 431, "name": "Salvatore Mancini", "positions": ["LW", "ST"], "dob": "1999-08-08", "rating": 17 },
+          { "id": 432, "name": "Gianluca Battaglia", "positions": ["ST"], "dob": "1997-11-25", "rating": 16 },
+          { "id": 433, "name": "Enrico Fabbri", "positions": ["RW", "ST"], "dob": "1998-03-12", "rating": 16 }
+        ]
+      },
+      {
+        "id": 413,
+        "name": "Lecce",
+        "shirtStyle": "stripes",
+        "primaryColor": "#FFD700",
+        "secondaryColor": "#ED1C24",
+        "budget": 50000000,
+        "players": [
+          { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
+          { "id": 424, "name": "Gabriele Vitali", "positions": ["LB", "CB"], "dob": "1997-05-12", "rating": 16 },
+          { "id": 425, "name": "Alberto Santoro", "positions": ["CB"], "dob": "1998-09-28", "rating": 16 },
+          { "id": 426, "name": "Michele Orlando", "positions": ["CB"], "dob": "1996-12-15", "rating": 15 },
+          { "id": 427, "name": "Cristian Benedetti", "positions": ["RB"], "dob": "1999-06-02", "rating": 14 },
+          { "id": 428, "name": "Tommaso De Santis", "positions": ["CDM", "CM"], "dob": "1997-10-18", "rating": 17 },
+          { "id": 429, "name": "Federico Marchetti", "positions": ["CM"], "dob": "1998-01-05", "rating": 16 },
+          { "id": 430, "name": "Alessio Gatti", "positions": ["CAM", "CM"], "dob": "1996-04-22", "rating": 15 },
+          { "id": 431, "name": "Salvatore Mancini", "positions": ["LW", "ST"], "dob": "1999-08-08", "rating": 17 },
+          { "id": 432, "name": "Gianluca Battaglia", "positions": ["ST"], "dob": "1997-11-25", "rating": 16 },
+          { "id": 433, "name": "Enrico Fabbri", "positions": ["RW", "ST"], "dob": "1998-03-12", "rating": 16 }
+        ]
+      },
+      {
+        "id": 414,
         "name": "Napoli",
+        "shirtStyle": "plain",
+        "primaryColor": "#12A0D7",
+        "secondaryColor": "#FFFFFF",
+        "budget": 50000000,
+        "players": [
+          { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
+          { "id": 424, "name": "Gabriele Vitali", "positions": ["LB", "CB"], "dob": "1997-05-12", "rating": 16 },
+          { "id": 425, "name": "Alberto Santoro", "positions": ["CB"], "dob": "1998-09-28", "rating": 16 },
+          { "id": 426, "name": "Michele Orlando", "positions": ["CB"], "dob": "1996-12-15", "rating": 15 },
+          { "id": 427, "name": "Cristian Benedetti", "positions": ["RB"], "dob": "1999-06-02", "rating": 14 },
+          { "id": 428, "name": "Tommaso De Santis", "positions": ["CDM", "CM"], "dob": "1997-10-18", "rating": 17 },
+          { "id": 429, "name": "Federico Marchetti", "positions": ["CM"], "dob": "1998-01-05", "rating": 16 },
+          { "id": 430, "name": "Alessio Gatti", "positions": ["CAM", "CM"], "dob": "1996-04-22", "rating": 15 },
+          { "id": 431, "name": "Salvatore Mancini", "positions": ["LW", "ST"], "dob": "1999-08-08", "rating": 17 },
+          { "id": 432, "name": "Gianluca Battaglia", "positions": ["ST"], "dob": "1997-11-25", "rating": 16 },
+          { "id": 433, "name": "Enrico Fabbri", "positions": ["RW", "ST"], "dob": "1998-03-12", "rating": 16 }
+        ]
+      },
+      {
+        "id": 415,
+        "name": "Parma",
+        "shirtStyle": "plain",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#000000",
+        "budget": 50000000,
+        "players": [
+          { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
+          { "id": 424, "name": "Gabriele Vitali", "positions": ["LB", "CB"], "dob": "1997-05-12", "rating": 16 },
+          { "id": 425, "name": "Alberto Santoro", "positions": ["CB"], "dob": "1998-09-28", "rating": 16 },
+          { "id": 426, "name": "Michele Orlando", "positions": ["CB"], "dob": "1996-12-15", "rating": 15 },
+          { "id": 427, "name": "Cristian Benedetti", "positions": ["RB"], "dob": "1999-06-02", "rating": 14 },
+          { "id": 428, "name": "Tommaso De Santis", "positions": ["CDM", "CM"], "dob": "1997-10-18", "rating": 17 },
+          { "id": 429, "name": "Federico Marchetti", "positions": ["CM"], "dob": "1998-01-05", "rating": 16 },
+          { "id": 430, "name": "Alessio Gatti", "positions": ["CAM", "CM"], "dob": "1996-04-22", "rating": 15 },
+          { "id": 431, "name": "Salvatore Mancini", "positions": ["LW", "ST"], "dob": "1999-08-08", "rating": 17 },
+          { "id": 432, "name": "Gianluca Battaglia", "positions": ["ST"], "dob": "1997-11-25", "rating": 16 },
+          { "id": 433, "name": "Enrico Fabbri", "positions": ["RW", "ST"], "dob": "1998-03-12", "rating": 16 }
+        ]
+      },
+      {
+        "id": 416,
+        "name": "Pisa",
+        "shirtStyle": "stripes",
+        "primaryColor": "#000000",
+        "secondaryColor": "#003DA5",
+        "budget": 50000000,
+        "players": [
+          { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
+          { "id": 424, "name": "Gabriele Vitali", "positions": ["LB", "CB"], "dob": "1997-05-12", "rating": 16 },
+          { "id": 425, "name": "Alberto Santoro", "positions": ["CB"], "dob": "1998-09-28", "rating": 16 },
+          { "id": 426, "name": "Michele Orlando", "positions": ["CB"], "dob": "1996-12-15", "rating": 15 },
+          { "id": 427, "name": "Cristian Benedetti", "positions": ["RB"], "dob": "1999-06-02", "rating": 14 },
+          { "id": 428, "name": "Tommaso De Santis", "positions": ["CDM", "CM"], "dob": "1997-10-18", "rating": 17 },
+          { "id": 429, "name": "Federico Marchetti", "positions": ["CM"], "dob": "1998-01-05", "rating": 16 },
+          { "id": 430, "name": "Alessio Gatti", "positions": ["CAM", "CM"], "dob": "1996-04-22", "rating": 15 },
+          { "id": 431, "name": "Salvatore Mancini", "positions": ["LW", "ST"], "dob": "1999-08-08", "rating": 17 },
+          { "id": 432, "name": "Gianluca Battaglia", "positions": ["ST"], "dob": "1997-11-25", "rating": 16 },
+          { "id": 433, "name": "Enrico Fabbri", "positions": ["RW", "ST"], "dob": "1998-03-12", "rating": 16 }
+        ]
+      },
+      {
+        "id": 417,
+        "name": "Roma",
+        "shirtStyle": "plain",
+        "primaryColor": "#781D2A",
+        "secondaryColor": "#F5A623",
+        "budget": 50000000,
+        "players": [
+          { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
+          { "id": 424, "name": "Gabriele Vitali", "positions": ["LB", "CB"], "dob": "1997-05-12", "rating": 16 },
+          { "id": 425, "name": "Alberto Santoro", "positions": ["CB"], "dob": "1998-09-28", "rating": 16 },
+          { "id": 426, "name": "Michele Orlando", "positions": ["CB"], "dob": "1996-12-15", "rating": 15 },
+          { "id": 427, "name": "Cristian Benedetti", "positions": ["RB"], "dob": "1999-06-02", "rating": 14 },
+          { "id": 428, "name": "Tommaso De Santis", "positions": ["CDM", "CM"], "dob": "1997-10-18", "rating": 17 },
+          { "id": 429, "name": "Federico Marchetti", "positions": ["CM"], "dob": "1998-01-05", "rating": 16 },
+          { "id": 430, "name": "Alessio Gatti", "positions": ["CAM", "CM"], "dob": "1996-04-22", "rating": 15 },
+          { "id": 431, "name": "Salvatore Mancini", "positions": ["LW", "ST"], "dob": "1999-08-08", "rating": 17 },
+          { "id": 432, "name": "Gianluca Battaglia", "positions": ["ST"], "dob": "1997-11-25", "rating": 16 },
+          { "id": 433, "name": "Enrico Fabbri", "positions": ["RW", "ST"], "dob": "1998-03-12", "rating": 16 }
+        ]
+      },
+      {
+        "id": 418,
+        "name": "Sassuolo",
+        "shirtStyle": "stripes",
+        "primaryColor": "#00A556",
+        "secondaryColor": "#000000",
+        "budget": 50000000,
+        "players": [
+          { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
+          { "id": 424, "name": "Gabriele Vitali", "positions": ["LB", "CB"], "dob": "1997-05-12", "rating": 16 },
+          { "id": 425, "name": "Alberto Santoro", "positions": ["CB"], "dob": "1998-09-28", "rating": 16 },
+          { "id": 426, "name": "Michele Orlando", "positions": ["CB"], "dob": "1996-12-15", "rating": 15 },
+          { "id": 427, "name": "Cristian Benedetti", "positions": ["RB"], "dob": "1999-06-02", "rating": 14 },
+          { "id": 428, "name": "Tommaso De Santis", "positions": ["CDM", "CM"], "dob": "1997-10-18", "rating": 17 },
+          { "id": 429, "name": "Federico Marchetti", "positions": ["CM"], "dob": "1998-01-05", "rating": 16 },
+          { "id": 430, "name": "Alessio Gatti", "positions": ["CAM", "CM"], "dob": "1996-04-22", "rating": 15 },
+          { "id": 431, "name": "Salvatore Mancini", "positions": ["LW", "ST"], "dob": "1999-08-08", "rating": 17 },
+          { "id": 432, "name": "Gianluca Battaglia", "positions": ["ST"], "dob": "1997-11-25", "rating": 16 },
+          { "id": 433, "name": "Enrico Fabbri", "positions": ["RW", "ST"], "dob": "1998-03-12", "rating": 16 }
+        ]
+      },
+      {
+        "id": 419,
+        "name": "Torino",
+        "shirtStyle": "plain",
+        "primaryColor": "#6D2C34",
+        "secondaryColor": "#FFFFFF",
+        "budget": 50000000,
+        "players": [
+          { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
+          { "id": 424, "name": "Gabriele Vitali", "positions": ["LB", "CB"], "dob": "1997-05-12", "rating": 16 },
+          { "id": 425, "name": "Alberto Santoro", "positions": ["CB"], "dob": "1998-09-28", "rating": 16 },
+          { "id": 426, "name": "Michele Orlando", "positions": ["CB"], "dob": "1996-12-15", "rating": 15 },
+          { "id": 427, "name": "Cristian Benedetti", "positions": ["RB"], "dob": "1999-06-02", "rating": 14 },
+          { "id": 428, "name": "Tommaso De Santis", "positions": ["CDM", "CM"], "dob": "1997-10-18", "rating": 17 },
+          { "id": 429, "name": "Federico Marchetti", "positions": ["CM"], "dob": "1998-01-05", "rating": 16 },
+          { "id": 430, "name": "Alessio Gatti", "positions": ["CAM", "CM"], "dob": "1996-04-22", "rating": 15 },
+          { "id": 431, "name": "Salvatore Mancini", "positions": ["LW", "ST"], "dob": "1999-08-08", "rating": 17 },
+          { "id": 432, "name": "Gianluca Battaglia", "positions": ["ST"], "dob": "1997-11-25", "rating": 16 },
+          { "id": 433, "name": "Enrico Fabbri", "positions": ["RW", "ST"], "dob": "1998-03-12", "rating": 16 }
+        ]
+      },
+      {
+        "id": 420,
+        "name": "Udinese",
+        "shirtStyle": "stripes",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
         "budget": 50000000,
         "players": [
           { "id": 434, "name": "Fabrizio Ferri", "positions": ["GK"], "dob": "1995-07-20", "rating": 16 },
