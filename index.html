@@ -499,50 +499,254 @@
                     </div>
                   )}
 
-                  {page === 'starting-xi' && (
-                    <div className="bg-gray-800 rounded-lg p-4">
-                      <h2 className="text-white font-bold mb-4">Starting XI</h2>
-                      <div className="mb-4">
-                        <label className="text-gray-400 text-sm mb-2 block">Formation</label>
-                        <div className="grid grid-cols-2 gap-2">
-                          {Object.keys(formations).map(f => (
-                            <button key={f} onClick={() => {
-                              setFormation(f);
-                              const xi = {};
-                              formations[f].positions.forEach((pos, idx) => {
-                                const eligible = team.players.filter(p => p.positions.includes(pos) && !Object.values(xi).includes(p.id) && !p.injured);
-                                if (eligible.length > 0) xi[`pos${idx}`] = eligible.sort((a, b) => b.rating - a.rating)[0].id;
-                              });
-                              setStartingXI(xi);
-                            }} className={`p-3 rounded-lg font-bold text-sm ${formation === f ? 'bg-orange-600 text-white' : 'bg-gray-700 text-gray-300'}`}>{f}</button>
-                          ))}
+                  {page === 'starting-xi' && (() => {
+                    const formationLayouts = {
+                      '4-3-3': [
+                        { x: 50, y: 92 },
+                        { x: 12, y: 74 }, { x: 37, y: 77 }, { x: 63, y: 77 }, { x: 88, y: 74 },
+                        { x: 50, y: 56 }, { x: 25, y: 50 }, { x: 75, y: 50 },
+                        { x: 15, y: 28 }, { x: 85, y: 28 }, { x: 50, y: 22 }
+                      ],
+                      '4-4-2': [
+                        { x: 50, y: 92 },
+                        { x: 12, y: 74 }, { x: 37, y: 77 }, { x: 63, y: 77 }, { x: 88, y: 74 },
+                        { x: 15, y: 50 }, { x: 40, y: 53 }, { x: 60, y: 53 }, { x: 85, y: 50 },
+                        { x: 35, y: 22 }, { x: 65, y: 22 }
+                      ],
+                      '4-2-3-1': [
+                        { x: 50, y: 92 },
+                        { x: 12, y: 74 }, { x: 37, y: 77 }, { x: 63, y: 77 }, { x: 88, y: 74 },
+                        { x: 35, y: 58 }, { x: 65, y: 58 },
+                        { x: 15, y: 38 }, { x: 50, y: 40 }, { x: 85, y: 38 },
+                        { x: 50, y: 20 }
+                      ],
+                      '3-5-2': [
+                        { x: 50, y: 92 },
+                        { x: 25, y: 77 }, { x: 50, y: 77 }, { x: 75, y: 77 },
+                        { x: 10, y: 53 }, { x: 90, y: 53 },
+                        { x: 30, y: 48 }, { x: 50, y: 45 }, { x: 70, y: 48 },
+                        { x: 35, y: 22 }, { x: 65, y: 22 }
+                      ]
+                    };
+
+                    const layout = formationLayouts[formation];
+                    const availablePlayers = team.players.filter(p => !p.injured);
+                    const benchPlayers = availablePlayers.filter(p => !Object.values(startingXI).includes(p.id));
+                    const [selectedSlot, setSelectedSlot] = React.useState(null);
+                    const [showBench, setShowBench] = React.useState(false);
+
+                    const handleSlotClick = (idx) => {
+                      if (selectedSlot === idx) { setSelectedSlot(null); return; }
+                      if (selectedSlot !== null) {
+                        const xi = { ...startingXI };
+                        const temp = xi[`pos${selectedSlot}`];
+                        xi[`pos${selectedSlot}`] = xi[`pos${idx}`];
+                        xi[`pos${idx}`] = temp;
+                        setStartingXI(xi);
+                        setSelectedSlot(null);
+                      } else {
+                        setSelectedSlot(idx);
+                      }
+                    };
+
+                    const handleBenchToSlot = (playerId, slotIdx) => {
+                      const xi = { ...startingXI };
+                      const existingSlot = Object.entries(xi).find(([k, v]) => v === playerId);
+                      if (existingSlot) xi[existingSlot[0]] = xi[`pos${slotIdx}`];
+                      xi[`pos${slotIdx}`] = playerId;
+                      setStartingXI(xi);
+                      setSelectedSlot(null);
+                      setShowBench(false);
+                    };
+
+                    const handleBenchClick = (playerId) => {
+                      if (selectedSlot !== null) handleBenchToSlot(playerId, selectedSlot);
+                    };
+
+                    const autoFillBest = () => {
+                      const xi = {};
+                      formations[formation].positions.forEach((pos, idx) => {
+                        const eligible = team.players.filter(p => p.positions.includes(pos) && !Object.values(xi).includes(p.id) && !p.injured);
+                        if (eligible.length > 0) xi[`pos${idx}`] = eligible.sort((a, b) => b.rating - a.rating)[0].id;
+                      });
+                      setStartingXI(xi);
+                    };
+
+                    // Shirt SVG component
+                    const Shirt = ({ color, number, isGK }) => (
+                      <svg viewBox="0 0 60 55" className="w-full h-full">
+                        <path d={isGK
+                          ? "M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z"
+                          : "M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z"
+                        } fill={color} stroke="white" strokeWidth="1.5" />
+                        <text x="30" y="36" textAnchor="middle" fill="white" fontSize="18" fontWeight="bold" fontFamily="Arial">{number}</text>
+                      </svg>
+                    );
+
+                    return (
+                      <div>
+                        {/* Header bar */}
+                        <div className="bg-gray-800 rounded-t-lg p-3 flex justify-between items-center border-b border-gray-700">
+                          <div>
+                            <h2 className="text-white font-bold text-lg">{team.name}</h2>
+                            <p className="text-gray-400 text-xs">Tactics</p>
+                          </div>
+                          <button onClick={() => setShowBench(!showBench)} className={`px-4 py-2 rounded-lg text-sm font-bold ${showBench ? 'bg-orange-600 text-white' : 'bg-gray-700 text-gray-300'}`}>
+                            Subs
+                          </button>
                         </div>
-                      </div>
-                      <div className="space-y-3">
-                        {formations[formation].positions.map((requiredPos, idx) => {
-                          const selectedPlayerId = startingXI[`pos${idx}`];
-                          const selectedPlayer = team.players.find(p => p.id === selectedPlayerId);
-                          const isOutOfPosition = selectedPlayer && !selectedPlayer.positions.includes(requiredPos);
-                          const isInjured = selectedPlayer && selectedPlayer.injured;
+
+                        {/* Formation selector */}
+                        <div className="bg-gray-800 p-3 border-b border-gray-700">
+                          <div className="flex gap-2 items-center">
+                            {Object.keys(formations).map(f => (
+                              <button key={f} onClick={() => {
+                                setFormation(f);
+                                const xi = {};
+                                formations[f].positions.forEach((pos, idx) => {
+                                  const eligible = team.players.filter(p => p.positions.includes(pos) && !Object.values(xi).includes(p.id) && !p.injured);
+                                  if (eligible.length > 0) xi[`pos${idx}`] = eligible.sort((a, b) => b.rating - a.rating)[0].id;
+                                });
+                                setStartingXI(xi);
+                                setSelectedSlot(null);
+                              }} className={`px-3 py-1.5 rounded text-xs font-bold ${formation === f ? 'bg-orange-600 text-white' : 'bg-gray-700 text-gray-400'}`}>{f}</button>
+                            ))}
+                            <button onClick={autoFillBest} className="ml-auto px-3 py-1.5 rounded bg-gray-700 text-gray-300 text-xs font-bold hover:bg-gray-600">⚡ Auto</button>
+                          </div>
+                        </div>
+
+                        {/* Next fixture bar */}
+                        {(() => {
+                          const next = getNext();
+                          if (!next) return null;
+                          const tbl = getTable(league);
+                          const opp = next.homeTeamId === team.id ? leagues[league].teams.find(t => t.id === next.awayTeamId) : leagues[league].teams.find(t => t.id === next.homeTeamId);
+                          const oppPos = tbl.findIndex(t => t.teamId === opp?.id) + 1;
+                          const homeAway = next.homeTeamId === team.id ? 'Home' : 'Away';
+                          const ordinal = oppPos === 1 ? 'st' : oppPos === 2 ? 'nd' : oppPos === 3 ? 'rd' : 'th';
                           return (
-                            <div key={idx} className="bg-gray-700 rounded-lg p-3">
-                              <div className="text-gray-400 text-xs mb-2">{formations[formation].labels[idx]}</div>
-                              <select value={selectedPlayerId || ''} onChange={(e) => setStartingXI({ ...startingXI, [`pos${idx}`]: parseInt(e.target.value) })} className={`w-full bg-gray-600 text-white p-2 rounded ${isOutOfPosition ? 'ring-2 ring-yellow-500' : ''} ${isInjured ? 'ring-2 ring-red-500' : ''}`}>
-                                <option value="">Select player...</option>
-                                {team.players.filter(p => !p.injured).map(p => {
-                                  const outOfPos = !p.positions.includes(requiredPos);
-                                  return <option key={p.id} value={p.id}>{p.name} ({p.positions.join('/')}) {outOfPos ? '⚠️ Out of position' : ''}</option>;
-                                })}
-                              </select>
-                              {isOutOfPosition && !isInjured && <div className="text-yellow-500 text-xs mt-1">⚠️ Out of position (-5 rating for this match)</div>}
-                              {isInjured && <div className="text-red-500 text-xs mt-1">⚕️ Player is injured! Select a replacement.</div>}
+                            <div className="bg-green-900/60 px-3 py-2 text-center">
+                              <p className="text-green-300 text-xs font-semibold">Next fixture: {homeAway} to {opp?.name} ({oppPos}{ordinal})</p>
                             </div>
                           );
-                        })}
+                        })()}
+
+                        {/* Pitch */}
+                        <div className="relative w-full" style={{ paddingBottom: '140%', background: 'linear-gradient(180deg, #2d5a1e 0%, #357a24 8%, #2d5a1e 16%, #357a24 24%, #2d5a1e 32%, #357a24 40%, #2d5a1e 48%, #357a24 56%, #2d5a1e 64%, #357a24 72%, #2d5a1e 80%, #357a24 88%, #2d5a1e 100%)' }}>
+                          <div className="absolute inset-0">
+                            {/* Pitch lines */}
+                            <svg viewBox="0 0 100 140" className="absolute inset-0 w-full h-full">
+                              <rect x="2" y="2" width="96" height="136" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.4" />
+                              <line x1="2" y1="70" x2="98" y2="70" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                              <circle cx="50" cy="70" r="10" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                              <circle cx="50" cy="70" r="0.6" fill="rgba(255,255,255,0.2)" />
+                              <rect x="25" y="2" width="50" height="18" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                              <rect x="35" y="2" width="30" height="7" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                              <rect x="25" y="120" width="50" height="18" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                              <rect x="35" y="131" width="30" height="7" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                              <path d="M 35 20 A 12 12 0 0 0 65 20" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                              <path d="M 35 120 A 12 12 0 0 1 65 120" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                            </svg>
+
+                            {/* Players on pitch */}
+                            {layout.map((pos, idx) => {
+                              const playerId = startingXI[`pos${idx}`];
+                              const player = playerId ? team.players.find(p => p.id === playerId) : null;
+                              const requiredPos = formations[formation].positions[idx];
+                              const isGK = requiredPos === 'GK';
+                              const isOutOfPosition = player && !player.positions.includes(requiredPos);
+                              const isSelected = selectedSlot === idx;
+
+                              // Get position abbreviation for display
+                              const posAbbrevs = player ? player.positions.map(p => {
+                                const map = { 'GK':'G', 'LB':'DL', 'RB':'DR', 'CB':'DC', 'CDM':'MC', 'CM':'MC', 'CAM':'AC', 'LW':'ALC', 'RW':'ARC', 'ST':'A' };
+                                return map[p] || p;
+                              }).join(' ') : '';
+
+                              const shirtNum = player ? (idx + 1) : '?';
+                              const surname = player ? player.name.split(' ').pop() : requiredPos;
+
+                              return (
+                                <div
+                                  key={idx}
+                                  onClick={() => handleSlotClick(idx)}
+                                  className="absolute flex flex-col items-center cursor-pointer"
+                                  style={{
+                                    left: `${pos.x}%`,
+                                    top: `${pos.y / 140 * 100}%`,
+                                    transform: 'translate(-50%, -50%)',
+                                    zIndex: isSelected ? 20 : 10,
+                                    width: '18%'
+                                  }}
+                                >
+                                  {/* Shirt */}
+                                  <div className={`relative transition-transform ${isSelected ? 'scale-110' : ''}`} style={{ width: '42px', height: '38px' }}>
+                                    <Shirt color={isGK ? '#2d8a4e' : isOutOfPosition ? '#b45309' : '#1a1a2e'} number={shirtNum} isGK={isGK} />
+                                    {isSelected && <div className="absolute inset-0 rounded" style={{ boxShadow: '0 0 12px rgba(249,115,22,0.8)' }}></div>}
+                                  </div>
+                                  {/* Name */}
+                                  <div className="text-white text-center font-bold leading-tight mt-0.5" style={{ fontSize: '8px', textShadow: '0 1px 3px rgba(0,0,0,0.9)' }}>
+                                    {surname}
+                                  </div>
+                                  {/* Position codes */}
+                                  <div className="text-gray-300 text-center leading-tight" style={{ fontSize: '7px', textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}>
+                                    {player ? posAbbrevs : ''}
+                                  </div>
+                                  {isOutOfPosition && player && (
+                                    <div style={{ fontSize: '8px' }} className="text-yellow-400">⚠️</div>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+
+                        {selectedSlot !== null && (
+                          <div className="bg-orange-900/40 px-3 py-2 text-center">
+                            <p className="text-orange-300 text-xs font-semibold">Tap a bench player to place them, or tap another shirt to swap</p>
+                          </div>
+                        )}
+
+                        {/* Bench / Subs panel */}
+                        {showBench && (
+                          <div className="bg-gray-800 rounded-b-lg p-4">
+                            <h3 className="text-white font-bold mb-3">Substitutes</h3>
+                            <div className="space-y-2 max-h-64 overflow-y-auto">
+                              {benchPlayers.map(p => {
+                                const bestSlot = selectedSlot !== null ? formations[formation].positions[selectedSlot] : null;
+                                const fitsSelected = bestSlot && p.positions.includes(bestSlot);
+                                return (
+                                  <div key={p.id} onClick={() => handleBenchClick(p.id)}
+                                    className={`rounded p-2 flex items-center gap-3 transition-all ${
+                                      selectedSlot !== null
+                                        ? fitsSelected ? 'bg-green-900/40 cursor-pointer ring-1 ring-green-500' : 'bg-gray-700 cursor-pointer hover:bg-gray-600'
+                                        : 'bg-gray-700'
+                                    }`}
+                                  >
+                                    <div style={{ width: '32px', height: '28px', flexShrink: 0 }}>
+                                      <Shirt color={p.positions.includes('GK') ? '#2d8a4e' : '#1a1a2e'} number={p.rating} isGK={p.positions.includes('GK')} />
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                      <div className="text-white font-semibold text-sm truncate">{p.name}</div>
+                                      <div className="text-gray-400 text-xs">{p.positions.join('/')} • Age {calcAge(p.dob)}</div>
+                                    </div>
+                                    {selectedSlot !== null && fitsSelected && <span className="text-green-400 text-xs font-bold">✓</span>}
+                                  </div>
+                                );
+                              })}
+                              {benchPlayers.length === 0 && <p className="text-gray-500 text-sm">All players in starting XI</p>}
+                            </div>
+                          </div>
+                        )}
+
+                        {!showBench && (
+                          <div className="bg-gray-800 rounded-b-lg p-3">
+                            <p className="text-gray-500 text-xs text-center">Tap "Subs" to view bench players</p>
+                          </div>
+                        )}
                       </div>
-                      <div className="mt-4 bg-orange-900/20 rounded p-3"><p className="text-orange-300 text-sm">💡 Players out of position get -5 rating penalty for the match</p></div>
-                    </div>
-                  )}
+                    );
+                  })()}
 
                   {page === 'squad' && (
                     <div className="bg-gray-800 rounded-lg p-4">
