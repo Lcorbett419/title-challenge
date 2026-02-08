@@ -760,7 +760,7 @@
                                 >
                                   {/* Shirt */}
                                   <div className={`relative transition-transform ${isSelected ? 'scale-110' : ''}`} style={{ width: '42px', height: '38px' }}>
-                                    <ShirtSvg number={shirtNum} isGK={isGK} isOOP={isOutOfPosition && !isEmpty} />
+                                    <ShirtSvg number={shirtNum} isGK={isGK} isOOP={isOutOfPosition && !!player} />
                                     {isSelected && <div className="absolute inset-0 rounded" style={{ boxShadow: '0 0 12px rgba(249,115,22,0.8)' }}></div>}
                                   </div>
                                   {/* Name */}
