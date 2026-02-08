@@ -578,21 +578,24 @@
                     const gkColor = '#2d8a4e';
 
                     const ShirtSvg = ({ number, isGK, isOOP }) => {
+                      const clipId = `sc${number}-${Math.random().toString(36).substr(2,5)}`;
                       const c1 = isGK ? gkColor : isOOP ? '#b45309' : pc;
                       const c2 = isGK ? '#1a6b30' : isOOP ? '#92400e' : sc;
                       const s = isGK ? 'plain' : isOOP ? 'plain' : style;
-                      const txtCol = isGK || ['#000000','#00205B','#1a1a2e','#1B458F','#034694','#003399','#1D428A','#132257','#231F20','#241F20','#012B4A','#00225C','#122336','#0A2452','#1A2F6B','#10274f','#022663','#6D2C34','#7A263A','#670E36','#6C1D45','#5B2D8E','#781D2A','#004D98','#012C57','#99022C'].includes(c1) ? '#FFFFFF' : (c1 === '#FFFFFF' || c1 === '#FFE114' || c1 === '#FDE100' || c1 === '#FDB913' || c1 === '#FCDD09' || c1 === '#FFD700' || c1 === '#8AC3EE' || c1 === '#87CEEB' || c1 === '#6CABDD' || c1 === '#95BFE5' || c1 === '#99D6EA') ? '#000000' : '#FFFFFF';
+                      const dark = ['#000000','#00205B','#1a1a2e','#1B458F','#034694','#003399','#1D428A','#132257','#231F20','#241F20','#012B4A','#00225C','#122336','#0A2452','#1A2F6B','#10274f','#022663','#6D2C34','#7A263A','#670E36','#6C1D45','#5B2D8E','#781D2A','#004D98','#012C57','#99022C','#00205B','#003DA5','#004FA3','#0054A6','#0055A4','#245701','#2B6303','#1D2CCF','#00296B','#003D7C','#DD0000','#DC052D','#ED1C24','#E2001A','#E32221','#CB3524','#E20613','#D91A2A','#C8102E','#DA291C','#e30613','#EB172B','#EE2523','#E7192F','#E1000F','#ED0000','#6B3524','#c22538','#1B2A4A','#0068A8','#FB090B','#1E71B8','#A31E2D','#A50044','#D40027','#CD2534','#00954C','#12A0D7','#F47920','#E2001A','#6A2382','#00843D'].includes(c1);
+                      const light = ['#FFFFFF','#FFE114','#FDE100','#FDB913','#FCDD09','#FFD700','#8AC3EE','#87CEEB','#6CABDD','#95BFE5','#99D6EA','#65B32E'].includes(c1);
+                      const txtCol = isGK ? '#FFFFFF' : dark ? '#FFFFFF' : light ? '#000000' : '#FFFFFF';
                       return (
                         <svg viewBox="0 0 60 55" style={{ width: '100%', height: '100%' }}>
                           <defs>
-                            <clipPath id={`shirt-clip-${number}`}>
+                            <clipPath id={clipId}>
                               <path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" />
                             </clipPath>
                           </defs>
                           {/* Base shirt */}
                           <path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" fill={c1} />
                           {/* Pattern overlay */}
-                          <g clipPath={`url(#shirt-clip-${number})`}>
+                          <g clipPath={`url(#${clipId})`}>
                             {s === 'stripes' && <>
                               <rect x="4" y="0" width="5" height="55" fill={c2} />
                               <rect x="14" y="0" width="5" height="55" fill={c2} />
@@ -733,7 +736,7 @@
                                 >
                                   {/* Shirt */}
                                   <div className={`relative transition-transform ${isSelected ? 'scale-110' : ''}`} style={{ width: '42px', height: '38px' }}>
-                                    <Shirt color={isGK ? '#2d8a4e' : isOutOfPosition ? '#b45309' : '#1a1a2e'} number={shirtNum} isGK={isGK} />
+                                    <ShirtSvg number={shirtNum} isGK={isGK} isOOP={isOutOfPosition && !isEmpty} />
                                     {isSelected && <div className="absolute inset-0 rounded" style={{ boxShadow: '0 0 12px rgba(249,115,22,0.8)' }}></div>}
                                   </div>
                                   {/* Name */}
