@@ -52,6 +52,8 @@
           const [commentary, setCommentary] = useState([]);
           const [financeHistory, setFinanceHistory] = useState([]);
           const [startingXI, setStartingXI] = useState({});
+          const [selectedSlot, setSelectedSlot] = useState(null);
+          const [showBench, setShowBench] = useState(false);
 
           const formations = {
             '4-3-3': { positions: ['GK','LB','CB','CB','RB','CDM','CM','CM','LW','RW','ST'], labels: ['GK','LB','CB','CB','RB','CDM','CM','CM','LW','RW','ST'] },
@@ -532,8 +534,6 @@
                     const layout = formationLayouts[formation];
                     const availablePlayers = team.players.filter(p => !p.injured);
                     const benchPlayers = availablePlayers.filter(p => !Object.values(startingXI).includes(p.id));
-                    const [selectedSlot, setSelectedSlot] = React.useState(null);
-                    const [showBench, setShowBench] = React.useState(false);
 
                     const handleSlotClick = (idx) => {
                       if (selectedSlot === idx) { setSelectedSlot(null); return; }
@@ -572,13 +572,9 @@
                       setStartingXI(xi);
                     };
 
-                    // Shirt SVG component
-                    const Shirt = ({ color, number, isGK }) => (
-                      <svg viewBox="0 0 60 55" className="w-full h-full">
-                        <path d={isGK
-                          ? "M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z"
-                          : "M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z"
-                        } fill={color} stroke="white" strokeWidth="1.5" />
+                    const ShirtSvg = ({ color, number, isGK }) => (
+                      <svg viewBox="0 0 60 55" style={{ width: '100%', height: '100%' }}>
+                        <path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" fill={color} stroke="white" strokeWidth="1.5" />
                         <text x="30" y="36" textAnchor="middle" fill="white" fontSize="18" fontWeight="bold" fontFamily="Arial">{number}</text>
                       </svg>
                     );
@@ -724,7 +720,7 @@
                                     }`}
                                   >
                                     <div style={{ width: '32px', height: '28px', flexShrink: 0 }}>
-                                      <Shirt color={p.positions.includes('GK') ? '#2d8a4e' : '#1a1a2e'} number={p.rating} isGK={p.positions.includes('GK')} />
+                                      <ShirtSvg color={p.positions.includes('GK') ? '#2d8a4e' : '#1a1a2e'} number={p.rating} isGK={p.positions.includes('GK')} />
                                     </div>
                                     <div className="flex-1 min-w-0">
                                       <div className="text-white font-semibold text-sm truncate">{p.name}</div>
