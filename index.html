@@ -1,86 +1,182 @@
-const startNewSeason = () => {
-            // Check if season is complete
-            const fix = fixtures[league] || [];
-            const seasonComplete = fix.length > 0 && fix.every(f => f.played);
-            
-            if (!seasonComplete) {
-              alert('Season not complete yet!');
-              return;
-            }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title Challenge - Football Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState, useEffect } = React;
 
-            // Get final table
-            const tbl = getTable(league);
-            const playerPos = tbl.findIndex(t => t.teamId === team.id);
-            
-            // Define league hierarchy by country
-            const leaguePyramids = {
-              england: ['england', 'england_championship', 'england_league1', 'england_league2'],
-              germany: ['germany', 'germany_2'],
-              spain: ['spain', 'spain_segunda'],
-              france: ['france', 'france_ligue2'],
-              italy: ['italy', 'italy_serieb']
-            };
-            
-            // Find which country and tier we're in
-            let country = null;
-            let currentTier = -1;
-            
-            for (const [countryKey, pyramid] of Object.entries(leaguePyramids)) {
-              const tierIndex = pyramid.indexOf(league);
-              if (tierIndex !== -1) {
-                country = countryKey;
-                currentTier = tierIndex;
-                break;
+        const Menu = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>;
+        const Trophy = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>;
+
+        const calculatePlayerValue = (player, asOfDate) => {
+          const { positions, rating, dob } = player;
+          const positionValues = { 'ST': 1.0, 'LW': 0.95, 'RW': 0.95, 'CAM': 0.85, 'CM': 0.70, 'CDM': 0.68, 'LB': 0.65, 'RB': 0.65, 'CB': 0.60, 'GK': 0.55 };
+          const maxMultiplier = Math.max(...positions.map(pos => positionValues[pos] || 0.5));
+          const birthDate = new Date(dob);
+          const checkDate = asOfDate || new Date();
+          let age = checkDate.getFullYear() - birthDate.getFullYear();
+          const monthDiff = checkDate.getMonth() - birthDate.getMonth();
+          if (monthDiff < 0 || (monthDiff === 0 && checkDate.getDate() < birthDate.getDate())) age--;
+          let ageMultiplier;
+          if (age >= 21 && age <= 29) ageMultiplier = 1.0;
+          else if (age < 21) ageMultiplier = rating >= 14 ? 0.6 + (age - 16) * 0.08 + (rating - 14) * 0.05 : 0.4 + (age - 16) * 0.12;
+          else ageMultiplier = Math.max(0.2, 1.0 - ((age - 29) * 0.08));
+          return Math.min(Math.round(Math.pow(rating, 2) * maxMultiplier * ageMultiplier * 250000), 100000000);
+        };
+
+        const App = () => {
+          const [db, setDb] = useState(null);
+          const [state, setState] = useState('main-menu');
+          const [league, setLeague] = useState(null);
+          const [team, setTeam] = useState(null);
+          const [leagues, setLeagues] = useState(null);
+          const [fixtures, setFixtures] = useState({});
+          const [date, setDate] = useState(new Date('2025-08-01'));
+          const [formation, setFormation] = useState('4-3-3');
+          const [menuOpen, setMenuOpen] = useState(false);
+          const [page, setPage] = useState('home');
+          const [match, setMatch] = useState(null);
+          const [commentary, setCommentary] = useState([]);
+          const [financeHistory, setFinanceHistory] = useState([]);
+          const [startingXI, setStartingXI] = useState({});
+          const [selectedSlot, setSelectedSlot] = useState(null);
+          const [showBench, setShowBench] = useState(false);
+
+          const formations = {
+            '4-3-3': { positions: ['GK','LB','CB','CB','RB','CDM','CM','CM','LW','RW','ST'], labels: ['GK','LB','CB','CB','RB','CDM','CM','CM','LW','RW','ST'] },
+            '4-4-2': { positions: ['GK','LB','CB','CB','RB','CM','CM','CAM','CAM','ST','ST'], labels: ['GK','LB','CB','CB','RB','CM','CM','CAM','CAM','ST','ST'] },
+            '4-2-3-1': { positions: ['GK','LB','CB','CB','RB','CDM','CDM','CAM','LW','RW','ST'], labels: ['GK','LB','CB','CB','RB','CDM','CDM','CAM','LW','RW','ST'] },
+            '3-5-2': { positions: ['GK','CB','CB','CB','LB','RB','CM','CM','CM','ST','ST'], labels: ['GK','CB','CB','CB','LB','RB','CM','CM','CM','ST','ST'] }
+          };
+
+          useEffect(() => {
+            fetch('./leagues-database.json').then(r => r.json()).then(data => setDb(data)).catch(() => alert('Failed to load database'));
+          }, []);
+
+          const calcAge = (dob) => {
+            const bd = new Date(dob);
+            let age = date.getFullYear() - bd.getFullYear();
+            const m = date.getMonth() - bd.getMonth();
+            if (m < 0 || (m === 0 && date.getDate() < bd.getDate())) age--;
+            return age;
+          };
+
+          const getWeeksUntil = (isoDate) => {
+            const ret = new Date(isoDate);
+            const diff = ret.getTime() - date.getTime();
+            const weeks = Math.ceil(diff / (7 * 24 * 60 * 60 * 1000));
+            return Math.max(0, weeks);
+          };
+
+          // Clear injuries whose return date has passed
+          const healInjuredPlayers = (currentDate) => {
+            if (!leagues) return;
+            Object.keys(leagues).forEach(lk => {
+              leagues[lk].teams.forEach(tm => {
+                tm.players.forEach(p => {
+                  if (p.injured && p.injuryUntil) {
+                    if (new Date(p.injuryUntil) <= currentDate) {
+                      p.injured = false;
+                      p.injuryUntil = null;
+                    }
+                  }
+                });
+              });
+            });
+          };
+
+          const formatCurrency = (amt) => '£' + (amt / 1000000).toFixed(1) + 'M';
+          const formatDate = (d) => new Date(d).toLocaleDateString('en-GB');
+
+          const newGame = () => {
+            setTeam(null); setLeague(null);
+            setLeagues(JSON.parse(JSON.stringify(db)));
+            setFixtures({}); setDate(new Date('2025-08-01'));
+            setFinanceHistory([]);
+            localStorage.removeItem('footballManagerSave');
+            setState('league-select');
+          };
+
+          const loadGame = () => {
+            const saved = localStorage.getItem('footballManagerSave');
+            if (saved) {
+              try {
+                const data = JSON.parse(saved);
+                if (data.gameData) {
+                  setLeague(data.gameData.league); setTeam(data.gameData.team);
+                  setLeagues(data.gameData.leagues); setFixtures(data.gameData.fixtures);
+                  setDate(new Date(data.gameData.date));
+                  setFormation(data.gameData.formation || '4-3-3');
+                  setFinanceHistory(data.gameData.financeHistory || []);
+                  setStartingXI(data.gameData.startingXI || {});
+                  setState('info-page');
+                }
+              } catch (e) { alert('Error loading game'); }
+            }
+          };
+
+          const hasSaved = () => {
+            try {
+              const saved = localStorage.getItem('footballManagerSave');
+              if (saved) { const data = JSON.parse(saved); return data.gameData && data.gameData.team; }
+            } catch (e) {}
+            return false;
+          };
+
+          useEffect(() => {
+            if (team && state === 'info-page') {
+              const gameData = { league, team, leagues, fixtures, date: date.toISOString(), formation, financeHistory, startingXI };
+              localStorage.setItem('footballManagerSave', JSON.stringify({ gameData }));
+            }
+          }, [team, leagues, fixtures, date, state]);
+
+          const selectLeague = (lk) => { setLeague(lk); setState('team-select'); };
+
+          const selectTeam = (t) => {
+            setTeam(t); generateFixtures();
+            setFinanceHistory([{ date: new Date('2025-08-01').toISOString(), balance: t.budget }]);
+            const xi = {};
+            formations['4-3-3'].positions.forEach((pos, idx) => {
+              const eligible = t.players.filter(p => p.positions.includes(pos) && !Object.values(xi).includes(p.id));
+              if (eligible.length > 0) xi[`pos${idx}`] = eligible.sort((a, b) => b.rating - a.rating)[0].id;
+            });
+            setStartingXI(xi);
+            setState('info-page');
+          };
+
+          const generateFixtures = () => {
+            const newFix = {};
+            Object.keys(leagues).forEach(lk => {
+              const lg = leagues[lk]; const teams = lg.teams;
+              teams.forEach(tm => { tm.players.forEach(p => { if (!p.goals) p.goals = 0; if (!p.injured) p.injured = false; }); });
+              const n = teams.length; const fix = [];
+              for (let r = 0; r < (n - 1) * 2; r++) {
+                const first = r < n - 1; const base = first ? r : r - (n - 1);
+                for (let i = 0; i < n / 2; i++) {
+                  let h = (base + i) % (n - 1); let a = (n - 1 - i + base) % (n - 1);
+                  if (i === 0) a = n - 1; if (!first) [h, a] = [a, h];
+                  fix.push({ homeTeamId: teams[h].id, awayTeamId: teams[a].id, played: false, homeScore: null, awayScore: null, scorers: [], matchday: r + 1 });
+                }
               }
-            }
-            
-            if (!country) {
-              alert('Error: League not found in pyramid system');
-              return;
-            }
-            
-            const pyramid = leaguePyramids[country];
-            let newLeague = league;
-            let message = '';
-            
-            // Check for promotion (top 2) or relegation (bottom 3)
-            if (playerPos < 2 && currentTier > 0) {
-              // PROMOTED!
-              newLeague = pyramid[currentTier - 1];
-              message = `🎉 PROMOTED! You finished ${playerPos + 1}${playerPos === 0 ? 'st' : 'nd'} and are promoted to ${db[newLeague].name}!`;
-            } else if (playerPos >= tbl.length - 3 && currentTier < pyramid.length - 1) {
-              // RELEGATED
-              newLeague = pyramid[currentTier + 1];
-              message = `😢 RELEGATED. You finished ${playerPos + 1}th and are relegated to ${db[newLeague].name}.`;
-            } else if (playerPos === 0 && currentTier === 0) {
-              // WON THE TOP LEAGUE!
-              message = `🏆 CHAMPIONS! You won ${leagues[league].name}! You are the best team in ${leagues[league].country}!`;
-            } else if (playerPos === 0) {
-              // WON A LOWER LEAGUE!
-              message = `🏆 CHAMPIONS! You won ${leagues[league].name}!`;
-            } else {
-              message = `Season complete! You finished ${playerPos + 1}${playerPos === 1 ? 'nd' : playerPos === 2 ? 'rd' : 'th'}.`;
-            }
-            
-            // Show message
-            alert(message);
-            
-            // Handle league change if promoted/relegated
-            if (newLeague !== league) {
-              // Transfer team to new league
-              const oldLeague = leagues[league];
-              const newLeagueData = leagues[newLeague];
-              
-              // Remove team from old league
-              oldLeague.teams = oldLeague.teams.filter(t => t.id !== team.id);
-              
-              // Add team to new league (replace a random team)
-              const replaceIdx = Math.floor(Math.random() * newLeagueData.teams.length);
-              newLeagueData.teams[replaceIdx] = team;
-              
-              setLeague(newLeague);
-            }
-            
+              newFix[lk] = fix;
+            });
+            setFixtures(newFix);
+          };
+
+          const startNewSeason = () => {
             // Season runs Aug 1 - Jul 31. New season starts Aug 1 of the next year.
             const seasonYear = date.getMonth() >= 7 ? date.getFullYear() + 1 : date.getFullYear();
             const newDate = new Date(`${seasonYear}-08-01`);
@@ -99,3 +195,897 @@ const startNewSeason = () => {
             
             generateFixtures();
           };
+
+          const getTable = (lk) => {
+            const lg = leagues[lk]; const fix = fixtures[lk] || [];
+            const tbl = lg.teams.map(t => ({ teamId: t.id, name: t.name, played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 }));
+            fix.filter(f => f.played).forEach(f => {
+              const h = tbl.find(t => t.teamId === f.homeTeamId); const a = tbl.find(t => t.teamId === f.awayTeamId);
+              if (h && a) {
+                h.played++; a.played++;
+                h.goalsFor += f.homeScore; h.goalsAgainst += f.awayScore;
+                a.goalsFor += f.awayScore; a.goalsAgainst += f.homeScore;
+                if (f.homeScore > f.awayScore) { h.won++; h.points += 3; a.lost++; }
+                else if (f.homeScore < f.awayScore) { a.won++; a.points += 3; h.lost++; }
+                else { h.drawn++; a.drawn++; h.points++; a.points++; }
+              }
+            });
+            tbl.sort((a, b) => b.points !== a.points ? b.points - a.points : (b.goalsFor - b.goalsAgainst) - (a.goalsFor - a.goalsAgainst));
+            return tbl;
+          };
+
+          const getNext = () => {
+            const fix = fixtures[league] || [];
+            return fix.find(f => !f.played && (f.homeTeamId === team.id || f.awayTeamId === team.id));
+          };
+
+          const simMatch = (h, a, track) => {
+            const comm = []; const scorers = [];
+            const getMatchPlayers = (tm) => {
+              if (tm.id === team.id && Object.keys(startingXI).length > 0) {
+                return Object.entries(startingXI).map(([key, playerId]) => {
+                  const player = tm.players.find(p => p.id === playerId);
+                  if (!player || player.injured) return null;
+                  const posIdx = parseInt(key.replace('pos', ''));
+                  const requiredPos = formations[formation].positions[posIdx];
+                  const inPosition = player.positions.includes(requiredPos);
+                  return { ...player, effectiveRating: inPosition ? player.rating : Math.max(1, player.rating - 5) };
+                }).filter(p => p !== null);
+              } else {
+                return tm.players.filter(p => !p.injured).sort((a, b) => b.rating - a.rating).slice(0, 11).map(p => ({ ...p, effectiveRating: p.rating }));
+              }
+            };
+            const homePlayers = getMatchPlayers(h); const awayPlayers = getMatchPlayers(a);
+            let hs = 0, as = 0;
+            comm.push(`${h.name} vs ${a.name}`); comm.push("Kick off!");
+            for (let i = 0; i < 10; i++) {
+              const min = Math.floor(Math.random() * 90) + 1;
+              if (Math.random() < 0.3) {
+                const pickScorer = (players) => {
+                  const r = Math.random();
+                  if (r < 0.70) { const fwd = players.filter(p => p.positions.some(pos => ['ST','LW','RW','CAM'].includes(pos))); return fwd.length > 0 ? fwd[Math.floor(Math.random() * fwd.length)] : null; }
+                  if (r < 0.90) { const mid = players.filter(p => p.positions.some(pos => ['CDM','CM'].includes(pos))); return mid.length > 0 ? mid[0] : null; }
+                  if (r < 0.999) { const def = players.filter(p => p.positions.some(pos => ['LB','CB','RB'].includes(pos))); return def.length > 0 ? def[0] : null; }
+                  return players.find(p => p.positions.includes('GK')) || null;
+                };
+                if (Math.random() < 0.5) {
+                  const sc = pickScorer(homePlayers);
+                  if (sc && Math.random() < 0.4) { hs++; comm.push(`${min}' GOAL! ${sc.name}! ${hs}-${as}`); if (track) scorers.push({ playerId: sc.id, teamId: h.id }); }
+                } else {
+                  const sc = pickScorer(awayPlayers);
+                  if (sc && Math.random() < 0.4) { as++; comm.push(`${min}' GOAL! ${sc.name}! ${hs}-${as}`); if (track) scorers.push({ playerId: sc.id, teamId: a.id }); }
+                }
+              }
+            }
+            [...homePlayers, ...awayPlayers].forEach(p => {
+              if (!p.injured && Math.random() < 0.01) {
+                const tmObj = h.players.find(pl => pl.id === p.id) ? h : a;
+                const originalPlayer = tmObj.players.find(pl => pl.id === p.id);
+                if (originalPlayer) {
+                  originalPlayer.injured = true;
+                  const w = 1 + Math.floor(Math.random() * 4);
+                  const injDate = new Date(date);
+                  injDate.setDate(injDate.getDate() + w * 7);
+                  originalPlayer.injuryUntil = injDate.toISOString();
+                  if ((h.id === team.id || a.id === team.id)) comm.push(`⚕️ ${p.name} injured (${w} week${w > 1 ? 's' : ''})`);
+                }
+              }
+            });
+            comm.push(`FULL TIME: ${h.name} ${hs} - ${as} ${a.name}`);
+            return { homeScore: hs, awayScore: as, commentary: comm, scorers };
+          };
+
+          const playMatch = () => {
+            const next = getNext();
+            if (!next) {
+              alert('Season complete!');
+              startNewSeason();
+              return;
+            }
+            const lg = leagues[league];
+            const h = next.homeTeamId === team.id ? team : lg.teams.find(t => t.id === next.homeTeamId);
+            const a = next.awayTeamId === team.id ? team : lg.teams.find(t => t.id === next.awayTeamId);
+            const res = simMatch(h, a, true);
+            const uf = JSON.parse(JSON.stringify(fixtures));
+            const idx = uf[league].findIndex(f => f.homeTeamId === next.homeTeamId && f.awayTeamId === next.awayTeamId && !f.played);
+            if (idx !== -1) {
+              uf[league][idx].played = true; uf[league][idx].homeScore = res.homeScore;
+              uf[league][idx].awayScore = res.awayScore; uf[league][idx].scorers = res.scorers;
+              res.scorers.forEach(sc => { const t = lg.teams.find(tm => tm.id === sc.teamId); if (t) { const p = t.players.find(pl => pl.id === sc.playerId); if (p) p.goals = (p.goals || 0) + 1; } });
+            }
+            Object.keys(leagues).forEach(lk => {
+              const l = leagues[lk]; const lf = uf[lk]; if (!lf) return;
+              const played = lf.filter(f => f.played).length;
+              const md = Math.floor(played / (l.teams.length / 2)) + 1;
+              lf.filter(f => f.matchday === md && !f.played).forEach(f => {
+                const ht = l.teams.find(t => t.id === f.homeTeamId); const at = l.teams.find(t => t.id === f.awayTeamId);
+                if (ht && at) {
+                  const r = simMatch(ht, at, true); f.played = true; f.homeScore = r.homeScore; f.awayScore = r.awayScore; f.scorers = r.scorers;
+                  r.scorers.forEach(sc => { const tm = l.teams.find(t => t.id === sc.teamId); if (tm) { const pl = tm.players.find(p => p.id === sc.playerId); if (pl) pl.goals = (pl.goals || 0) + 1; } });
+                }
+              });
+            });
+            setFixtures(uf);
+            setMatch({ opp: next.homeTeamId === team.id ? a.name : h.name, ps: next.homeTeamId === team.id ? res.homeScore : res.awayScore, os: next.homeTeamId === team.id ? res.awayScore : res.homeScore, home: next.homeTeamId === team.id });
+            setCommentary(res.commentary);
+
+            // Advance date by 3-4 days
+            const nd = new Date(date);
+            nd.setDate(nd.getDate() + 3 + Math.floor(Math.random() * 2));
+
+            // Clamp to end of season (Jul 31)
+            const seasonEndYear = date.getMonth() >= 7 ? date.getFullYear() + 1 : date.getFullYear();
+            const seasonEnd = new Date(`${seasonEndYear}-07-31`);
+            if (nd > seasonEnd) {
+              nd.setTime(seasonEnd.getTime());
+            }
+
+            setDate(nd);
+
+            // Heal injured players whose return date has passed
+            healInjuredPlayers(nd);
+
+            if (nd.getDate() === 1 || financeHistory.length === 0 || new Date(financeHistory[financeHistory.length - 1].date).getMonth() !== nd.getMonth()) {
+              setFinanceHistory([...financeHistory, { date: nd.toISOString(), balance: team.budget }]);
+            }
+            setState('match-result');
+          };
+
+          const getScorers = (lk) => {
+            const sc = [];
+            leagues[lk].teams.forEach(t => { t.players.forEach(p => { if (p.goals > 0) sc.push({ name: p.name, team: t.name, goals: p.goals }); }); });
+            sc.sort((a, b) => b.goals - a.goals); return sc.slice(0, 10);
+          };
+
+          // Get current season string for display
+          const getSeasonDisplay = () => {
+            if (date.getMonth() >= 7) {
+              return `${date.getFullYear()}/${date.getFullYear() + 1}`;
+            }
+            return `${date.getFullYear() - 1}/${date.getFullYear()}`;
+          };
+
+          const getSeasonNumber = () => {
+            if (date.getMonth() >= 7) return date.getFullYear() - 2024;
+            return date.getFullYear() - 2025;
+          };
+
+          if (!db) return <div className="min-h-screen bg-gray-900 flex items-center justify-center"><div className="text-white">Loading...</div></div>;
+
+          const renderShirt = (teamObj, size) => {
+            const s = teamObj?.shirtStyle || 'plain';
+            const c1 = teamObj?.primaryColor || '#1a1a2e';
+            const c2 = teamObj?.secondaryColor || '#FFFFFF';
+            const clipId = `hsc-${teamObj?.id}-${Math.random().toString(36).substr(2,5)}`;
+            return (
+              <svg viewBox="0 0 60 55" style={{ width: size || '80px', height: size ? undefined : '72px' }}>
+                <defs><clipPath id={clipId}><path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" /></clipPath></defs>
+                <path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" fill={c1} />
+                <g clipPath={`url(#${clipId})`}>
+                  {s === 'stripes' && <>{[4,14,24,34,44,54].map(x => <rect key={x} x={x} y="0" width="5" height="55" fill={c2} />)}</>}
+                  {s === 'hoops' && <>{[5,15,25,35,45].map(y => <rect key={y} x="0" y={y} width="60" height="5" fill={c2} />)}</>}
+                  {s === 'quarters' && <><rect x="30" y="0" width="30" height="25" fill={c2} /><rect x="0" y="25" width="30" height="30" fill={c2} /></>}
+                  {s === 'sleeves' && <><path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} /><path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c2} /></>}
+                  {s === 'sash' && <><path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} /><path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c2} /><polygon points="5,50 15,50 55,10 55,0 50,0 45,0 0,45 0,50" fill={c2} opacity="0.9" /></>}
+                  {s === 'halves' && <><rect x="30" y="0" width="30" height="55" fill={c2} /><path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} /><path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c1} /></>}
+                </g>
+                <path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="0.8" />
+              </svg>
+            );
+          };
+
+          if (state === 'main-menu') {
+            return (
+              <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center p-4">
+                <div className="max-w-md w-full text-center">
+                  <div className="w-24 h-24 mx-auto mb-6 text-green-500 flex items-center justify-center"><Trophy /></div>
+                  <h1 className="text-5xl font-bold text-white mb-8">Title Challenge</h1>
+                  <button onClick={newGame} className="w-full bg-green-600 text-white py-6 rounded-lg font-bold text-xl mb-4 hover:bg-green-700">New Game</button>
+                  <button onClick={loadGame} disabled={!hasSaved()} className={`w-full py-6 rounded-lg font-bold text-xl ${hasSaved() ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-800 text-gray-600 cursor-not-allowed'}`}>Load Game</button>
+                </div>
+              </div>
+            );
+          }
+
+          if (state === 'league-select') {
+            return (
+              <div className="min-h-screen bg-gray-900 p-4">
+                <div className="max-w-4xl mx-auto pt-8">
+                  <h1 className="text-4xl font-bold text-white mb-8 text-center">Choose Your League</h1>
+                  <div className="space-y-4">
+                    {Object.keys(db).map(lk => (
+                      <div key={lk} onClick={() => selectLeague(lk)} className="bg-gray-800 rounded-lg p-6 cursor-pointer hover:bg-gray-700">
+                        <h2 className="text-2xl font-bold text-white">{db[lk].name}</h2>
+                        <p className="text-gray-400">{db[lk].country}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            );
+          }
+
+          if (state === 'team-select') {
+            return (
+              <div className="min-h-screen bg-gray-900 p-4">
+                <div className="max-w-4xl mx-auto pt-8">
+                  <h1 className="text-4xl font-bold text-white mb-8 text-center">{db[league].name}</h1>
+                  <div className="grid gap-4">
+                    {db[league].teams.map(t => (
+                      <div key={t.id} onClick={() => selectTeam(t)} className="bg-gray-800 rounded-lg p-6 cursor-pointer hover:bg-gray-700">
+                        <h2 className="text-2xl font-bold text-white">{t.name}</h2>
+                        <p className="text-gray-400">Squad: {t.players.length}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            );
+          }
+
+          if (state === 'info-page') {
+            const next = getNext();
+            const tbl = getTable(league);
+            const pos = tbl.findIndex(t => t.teamId === team.id);
+            const ctx = tbl.slice(Math.max(0, pos - 2), Math.min(tbl.length, pos + 3));
+            const opp = next ? (next.homeTeamId === team.id ? leagues[league].teams.find(t => t.id === next.awayTeamId) : leagues[league].teams.find(t => t.id === next.homeTeamId)) : null;
+
+            return (
+              <div className="min-h-screen bg-gray-900">
+                <div className="p-4 flex justify-between items-center" style={{ backgroundColor: team.primaryColor || '#ea580c' }}>
+                  <button onClick={() => setMenuOpen(!menuOpen)} style={{ color: ['#FFFFFF','#FFE114','#FDE100','#FDB913','#FCDD09','#FFD700','#8AC3EE','#87CEEB','#6CABDD','#95BFE5','#99D6EA','#65B32E'].includes(team.primaryColor) ? '#000' : '#fff' }}><Menu /></button>
+                  <div className="text-center" style={{ color: ['#FFFFFF','#FFE114','#FDE100','#FDB913','#FCDD09','#FFD700','#8AC3EE','#87CEEB','#6CABDD','#95BFE5','#99D6EA','#65B32E'].includes(team.primaryColor) ? '#000' : '#fff' }}>
+                    <div className="text-sm opacity-80">Season {getSeasonNumber()}</div>
+                    <div className="font-bold">{getSeasonDisplay()}</div>
+                  </div>
+                  <div className="w-10"></div>
+                </div>
+
+                {menuOpen && (
+                  <div className="fixed inset-0 bg-black/50 z-50" onClick={() => setMenuOpen(false)}>
+                    <div className="bg-gray-800 w-64 h-full" onClick={(e) => e.stopPropagation()}>
+                      <div className="p-4 space-y-2">
+                        <h2 className="text-white font-bold mb-4">{team.name}</h2>
+                        {[
+                          { key: 'home', label: 'Home' },
+                          { key: 'squad', label: 'Squad' },
+                          { key: 'starting-xi', label: 'Tactics' },
+                          { key: 'transfers', label: 'Transfers' },
+                          { key: 'finances', label: 'Finances' },
+                          { key: 'facilities', label: 'Facilities' },
+                          { key: 'table', label: 'League Table' },
+                          { key: 'fixtures', label: 'Fixtures' },
+                          { key: 'scorers', label: 'Stats Tables' },
+                        ].map(p => (
+                          <button key={p.key} onClick={() => { setPage(p.key); setMenuOpen(false); }} className="w-full text-left text-white py-2 px-3 rounded hover:bg-gray-700">{p.label}</button>
+                        ))}
+                        <button onClick={() => setState('main-menu')} className="w-full text-left text-red-400 py-2 px-3 rounded hover:bg-gray-700">Exit</button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div className="bg-gray-800 p-3 text-center border-b border-gray-700">
+                  <div className="text-orange-500 text-sm">📅 {formatDate(date)}</div>
+                </div>
+
+                <div className="p-4 max-w-4xl mx-auto pb-24">
+                  {page === 'home' && next && opp && (
+                    <>
+                      <div className="bg-gray-800 rounded-lg p-6 mb-4">
+                        <div className="text-gray-400 text-sm mb-2">NEXT FIXTURE</div>
+                        <div className="flex items-center justify-between">
+                          <div className="text-center flex-1">
+                            <div className="flex justify-center mb-2">{renderShirt(next.homeTeamId === team.id ? team : opp, '70px')}</div>
+                            <div className="text-white font-bold text-lg">{next.homeTeamId === team.id ? team.name : opp.name}</div>
+                            <div className="text-gray-500 text-sm">{next.homeTeamId === team.id ? pos + 1 : tbl.findIndex(t => t.teamId === opp.id) + 1}th</div>
+                          </div>
+                          <div className="text-gray-400 font-bold px-4 text-xl">vs</div>
+                          <div className="text-center flex-1">
+                            <div className="flex justify-center mb-2">{renderShirt(next.awayTeamId === team.id ? team : opp, '70px')}</div>
+                            <div className="text-white font-bold text-lg">{next.awayTeamId === team.id ? team.name : opp.name}</div>
+                            <div className="text-gray-500 text-sm">{next.awayTeamId === team.id ? pos + 1 : tbl.findIndex(t => t.teamId === opp.id) + 1}th</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="bg-gray-800 rounded-lg p-4 mb-4">
+                        <div className="flex justify-between mb-3">
+                          <h3 className="text-white font-bold">League Table</h3>
+                          <button onClick={() => setPage('table')} className="text-orange-500 text-sm">View Full →</button>
+                        </div>
+                        <table className="w-full text-sm">
+                          <thead><tr className="text-gray-500 text-xs"><th className="text-left">Pos</th><th className="text-left">Team</th><th className="text-center">Pld</th><th className="text-center">GD</th><th className="text-center">Pts</th></tr></thead>
+                          <tbody>
+                            {ctx.map(t => (
+                              <tr key={t.teamId} className={t.teamId === team.id ? 'bg-green-900/30' : ''}>
+                                <td className="text-white py-2">{tbl.findIndex(x => x.teamId === t.teamId) + 1}</td>
+                                <td className="text-white font-semibold">{t.name}</td>
+                                <td className="text-center text-gray-400">{t.played}</td>
+                                <td className="text-center text-gray-400">{t.goalsFor - t.goalsAgainst}</td>
+                                <td className="text-center text-white font-bold">{t.points}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+
+                      <div className="bg-gray-800 rounded-lg p-4 mb-4">
+                        <div className="text-gray-400 text-sm mb-1">Finances: Balance</div>
+                        <div className="text-white font-bold text-3xl cursor-pointer hover:text-orange-500 transition" onClick={() => setPage('finances')}>{formatCurrency(team.budget)}</div>
+                      </div>
+                    </>
+                  )}
+
+                  {page === 'home' && !next && (
+                    <div className="bg-gray-800 rounded-lg p-6 mb-4 text-center">
+                      <h2 className="text-white font-bold text-2xl mb-2">Season Complete!</h2>
+                      <p className="text-gray-400 mb-4">Final position: {pos + 1}{pos === 0 ? 'st' : pos === 1 ? 'nd' : pos === 2 ? 'rd' : 'th'}</p>
+                      <button onClick={startNewSeason} className="bg-green-600 text-white py-3 px-8 rounded-lg font-bold hover:bg-green-700">Start New Season</button>
+                    </div>
+                  )}
+
+                  {page === 'starting-xi' && (() => {
+                    const formationLayouts = {
+                      '4-3-3': [
+                        { x: 50, y: 92 },
+                        { x: 12, y: 74 }, { x: 37, y: 77 }, { x: 63, y: 77 }, { x: 88, y: 74 },
+                        { x: 50, y: 56 }, { x: 25, y: 50 }, { x: 75, y: 50 },
+                        { x: 15, y: 28 }, { x: 85, y: 28 }, { x: 50, y: 22 }
+                      ],
+                      '4-4-2': [
+                        { x: 50, y: 92 },
+                        { x: 12, y: 74 }, { x: 37, y: 77 }, { x: 63, y: 77 }, { x: 88, y: 74 },
+                        { x: 15, y: 50 }, { x: 40, y: 53 }, { x: 60, y: 53 }, { x: 85, y: 50 },
+                        { x: 35, y: 22 }, { x: 65, y: 22 }
+                      ],
+                      '4-2-3-1': [
+                        { x: 50, y: 92 },
+                        { x: 12, y: 74 }, { x: 37, y: 77 }, { x: 63, y: 77 }, { x: 88, y: 74 },
+                        { x: 35, y: 58 }, { x: 65, y: 58 },
+                        { x: 15, y: 38 }, { x: 50, y: 40 }, { x: 85, y: 38 },
+                        { x: 50, y: 20 }
+                      ],
+                      '3-5-2': [
+                        { x: 50, y: 92 },
+                        { x: 25, y: 77 }, { x: 50, y: 77 }, { x: 75, y: 77 },
+                        { x: 10, y: 53 }, { x: 90, y: 53 },
+                        { x: 30, y: 48 }, { x: 50, y: 45 }, { x: 70, y: 48 },
+                        { x: 35, y: 22 }, { x: 65, y: 22 }
+                      ]
+                    };
+
+                    const layout = formationLayouts[formation];
+                    const availablePlayers = team.players.filter(p => !p.injured);
+                    const benchPlayers = availablePlayers.filter(p => !Object.values(startingXI).includes(p.id));
+
+                    const handleSlotClick = (idx) => {
+                      if (selectedSlot === idx) { setSelectedSlot(null); return; }
+                      if (selectedSlot !== null) {
+                        const xi = { ...startingXI };
+                        const temp = xi[`pos${selectedSlot}`];
+                        xi[`pos${selectedSlot}`] = xi[`pos${idx}`];
+                        xi[`pos${idx}`] = temp;
+                        setStartingXI(xi);
+                        setSelectedSlot(null);
+                      } else {
+                        setSelectedSlot(idx);
+                      }
+                    };
+
+                    const handleBenchToSlot = (playerId, slotIdx) => {
+                      const xi = { ...startingXI };
+                      const existingSlot = Object.entries(xi).find(([k, v]) => v === playerId);
+                      if (existingSlot) xi[existingSlot[0]] = xi[`pos${slotIdx}`];
+                      xi[`pos${slotIdx}`] = playerId;
+                      setStartingXI(xi);
+                      setSelectedSlot(null);
+                      setShowBench(false);
+                    };
+
+                    const handleBenchClick = (playerId) => {
+                      if (selectedSlot !== null) handleBenchToSlot(playerId, selectedSlot);
+                    };
+
+                    const autoFillBest = () => {
+                      const xi = {};
+                      formations[formation].positions.forEach((pos, idx) => {
+                        const eligible = team.players.filter(p => p.positions.includes(pos) && !Object.values(xi).includes(p.id) && !p.injured);
+                        if (eligible.length > 0) xi[`pos${idx}`] = eligible.sort((a, b) => b.rating - a.rating)[0].id;
+                      });
+                      setStartingXI(xi);
+                    };
+
+                    const style = team.shirtStyle || 'plain';
+                    const pc = team.primaryColor || '#1a1a2e';
+                    const sc = team.secondaryColor || '#FFFFFF';
+                    const gkColor = '#2d8a4e';
+
+                    const ShirtSvg = ({ number, isGK, isOOP }) => {
+                      const clipId = `sc${number}-${Math.random().toString(36).substr(2,5)}`;
+                      const c1 = isGK ? gkColor : isOOP ? '#b45309' : pc;
+                      const c2 = isGK ? '#1a6b30' : isOOP ? '#92400e' : sc;
+                      const s = isGK ? 'plain' : isOOP ? 'plain' : style;
+                      const dark = ['#000000','#00205B','#1a1a2e','#1B458F','#034694','#003399','#1D428A','#132257','#231F20','#241F20','#012B4A','#00225C','#122336','#0A2452','#1A2F6B','#10274f','#022663','#6D2C34','#7A263A','#670E36','#6C1D45','#5B2D8E','#781D2A','#004D98','#012C57','#99022C','#00205B','#003DA5','#004FA3','#0054A6','#0055A4','#245701','#2B6303','#1D2CCF','#00296B','#003D7C','#DD0000','#DC052D','#ED1C24','#E2001A','#E32221','#CB3524','#E20613','#D91A2A','#C8102E','#DA291C','#e30613','#EB172B','#EE2523','#E7192F','#E1000F','#ED0000','#6B3524','#c22538','#1B2A4A','#0068A8','#FB090B','#1E71B8','#A31E2D','#A50044','#D40027','#CD2534','#00954C','#12A0D7','#F47920','#E2001A','#6A2382','#00843D'].includes(c1);
+                      const light = ['#FFFFFF','#FFE114','#FDE100','#FDB913','#FCDD09','#FFD700','#8AC3EE','#87CEEB','#6CABDD','#95BFE5','#99D6EA','#65B32E'].includes(c1);
+                      const txtCol = isGK ? '#FFFFFF' : dark ? '#FFFFFF' : light ? '#000000' : '#FFFFFF';
+                      return (
+                        <svg viewBox="0 0 60 55" style={{ width: '100%', height: '100%' }}>
+                          <defs>
+                            <clipPath id={clipId}>
+                              <path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" />
+                            </clipPath>
+                          </defs>
+                          {/* Base shirt */}
+                          <path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" fill={c1} />
+                          {/* Pattern overlay */}
+                          <g clipPath={`url(#${clipId})`}>
+                            {s === 'stripes' && <>
+                              <rect x="4" y="0" width="5" height="55" fill={c2} />
+                              <rect x="14" y="0" width="5" height="55" fill={c2} />
+                              <rect x="24" y="0" width="5" height="55" fill={c2} />
+                              <rect x="34" y="0" width="5" height="55" fill={c2} />
+                              <rect x="44" y="0" width="5" height="55" fill={c2} />
+                              <rect x="54" y="0" width="5" height="55" fill={c2} />
+                            </>}
+                            {s === 'hoops' && <>
+                              <rect x="0" y="5" width="60" height="5" fill={c2} />
+                              <rect x="0" y="15" width="60" height="5" fill={c2} />
+                              <rect x="0" y="25" width="60" height="5" fill={c2} />
+                              <rect x="0" y="35" width="60" height="5" fill={c2} />
+                              <rect x="0" y="45" width="60" height="5" fill={c2} />
+                            </>}
+                            {s === 'quarters' && <>
+                              <rect x="30" y="0" width="30" height="25" fill={c2} />
+                              <rect x="0" y="25" width="30" height="30" fill={c2} />
+                            </>}
+                            {s === 'sleeves' && <>
+                              <path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} />
+                              <path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c2} />
+                            </>}
+                            {s === 'sash' && <>
+                              <path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} />
+                              <path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c2} />
+                              <polygon points="5,50 15,50 55,10 55,0 50,0 45,0 0,45 0,50" fill={c2} opacity="0.9" />
+                            </>}
+                            {s === 'halves' && <>
+                              <rect x="30" y="0" width="30" height="55" fill={c2} />
+                              <path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} />
+                              <path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c1} />
+                            </>}
+                          </g>
+                          {/* Outline */}
+                          <path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="1" />
+                          {/* Number */}
+                          <text x="30" y="36" textAnchor="middle" fill={txtCol} fontSize="18" fontWeight="bold" fontFamily="Arial" stroke={txtCol === '#FFFFFF' ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.3)'} strokeWidth="0.5">{number}</text>
+                        </svg>
+                      );
+                    };
+
+                    return (
+                      <div>
+                        {/* Header bar */}
+                        <div className="bg-gray-800 rounded-t-lg p-3 flex justify-between items-center border-b border-gray-700">
+                          <div>
+                            <h2 className="text-white font-bold text-lg">{team.name}</h2>
+                            <p className="text-gray-400 text-xs">Tactics</p>
+                          </div>
+                          <button onClick={() => setShowBench(!showBench)} className={`px-4 py-2 rounded-lg text-sm font-bold ${showBench ? 'bg-orange-600 text-white' : 'bg-gray-700 text-gray-300'}`}>
+                            Subs
+                          </button>
+                        </div>
+
+                        {/* Formation selector */}
+                        <div className="bg-gray-800 p-3 border-b border-gray-700">
+                          <div className="flex gap-2 items-center">
+                            {Object.keys(formations).map(f => (
+                              <button key={f} onClick={() => {
+                                setFormation(f);
+                                const xi = {};
+                                formations[f].positions.forEach((pos, idx) => {
+                                  const eligible = team.players.filter(p => p.positions.includes(pos) && !Object.values(xi).includes(p.id) && !p.injured);
+                                  if (eligible.length > 0) xi[`pos${idx}`] = eligible.sort((a, b) => b.rating - a.rating)[0].id;
+                                });
+                                setStartingXI(xi);
+                                setSelectedSlot(null);
+                              }} className={`px-3 py-1.5 rounded text-xs font-bold ${formation === f ? 'bg-orange-600 text-white' : 'bg-gray-700 text-gray-400'}`}>{f}</button>
+                            ))}
+                            <button onClick={autoFillBest} className="ml-auto px-3 py-1.5 rounded bg-gray-700 text-gray-300 text-xs font-bold hover:bg-gray-600">⚡ Auto</button>
+                          </div>
+                        </div>
+
+                        {/* Next fixture bar */}
+                        {(() => {
+                          const next = getNext();
+                          if (!next) return null;
+                          const tbl = getTable(league);
+                          const opp = next.homeTeamId === team.id ? leagues[league].teams.find(t => t.id === next.awayTeamId) : leagues[league].teams.find(t => t.id === next.homeTeamId);
+                          const oppPos = tbl.findIndex(t => t.teamId === opp?.id) + 1;
+                          const homeAway = next.homeTeamId === team.id ? 'Home' : 'Away';
+                          const ordinal = oppPos === 1 ? 'st' : oppPos === 2 ? 'nd' : oppPos === 3 ? 'rd' : 'th';
+                          return (
+                            <div className="bg-green-900/60 px-3 py-2 text-center">
+                              <p className="text-green-300 text-xs font-semibold">Next fixture: {homeAway} to {opp?.name} ({oppPos}{ordinal})</p>
+                            </div>
+                          );
+                        })()}
+
+                        {/* Pitch */}
+                        <div className="relative w-full" style={{ paddingBottom: '140%', background: 'linear-gradient(180deg, #2d5a1e 0%, #357a24 8%, #2d5a1e 16%, #357a24 24%, #2d5a1e 32%, #357a24 40%, #2d5a1e 48%, #357a24 56%, #2d5a1e 64%, #357a24 72%, #2d5a1e 80%, #357a24 88%, #2d5a1e 100%)' }}>
+                          <div className="absolute inset-0">
+                            {/* Pitch lines */}
+                            <svg viewBox="0 0 100 140" className="absolute inset-0 w-full h-full">
+                              <rect x="2" y="2" width="96" height="136" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.4" />
+                              <line x1="2" y1="70" x2="98" y2="70" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                              <circle cx="50" cy="70" r="10" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                              <circle cx="50" cy="70" r="0.6" fill="rgba(255,255,255,0.2)" />
+                              <rect x="25" y="2" width="50" height="18" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                              <rect x="35" y="2" width="30" height="7" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                              <rect x="25" y="120" width="50" height="18" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                              <rect x="35" y="131" width="30" height="7" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                              <path d="M 35 20 A 12 12 0 0 0 65 20" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                              <path d="M 35 120 A 12 12 0 0 1 65 120" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                            </svg>
+
+                            {/* Players on pitch */}
+                            {layout.map((pos, idx) => {
+                              const playerId = startingXI[`pos${idx}`];
+                              const player = playerId ? team.players.find(p => p.id === playerId) : null;
+                              const requiredPos = formations[formation].positions[idx];
+                              const isGK = requiredPos === 'GK';
+                              const isOutOfPosition = player && !player.positions.includes(requiredPos);
+                              const isSelected = selectedSlot === idx;
+
+                              // Get position abbreviation for display
+                              const posAbbrevs = player ? player.positions.map(p => {
+                                const map = { 'GK':'G', 'LB':'DL', 'RB':'DR', 'CB':'DC', 'CDM':'MC', 'CM':'MC', 'CAM':'AC', 'LW':'ALC', 'RW':'ARC', 'ST':'A' };
+                                return map[p] || p;
+                              }).join(' ') : '';
+
+                              const shirtNum = player ? (idx + 1) : '?';
+                              const surname = player ? player.name.split(' ').pop() : requiredPos;
+
+                              return (
+                                <div
+                                  key={idx}
+                                  onClick={() => handleSlotClick(idx)}
+                                  className="absolute flex flex-col items-center cursor-pointer"
+                                  style={{
+                                    left: `${pos.x}%`,
+                                    top: `${pos.y / 140 * 100}%`,
+                                    transform: 'translate(-50%, -50%)',
+                                    zIndex: isSelected ? 20 : 10,
+                                    width: '18%'
+                                  }}
+                                >
+                                  {/* Shirt */}
+                                  <div className={`relative transition-transform ${isSelected ? 'scale-110' : ''}`} style={{ width: '42px', height: '38px' }}>
+                                    <ShirtSvg number={shirtNum} isGK={isGK} isOOP={isOutOfPosition && !!player} />
+                                    {isSelected && <div className="absolute inset-0 rounded" style={{ boxShadow: '0 0 12px rgba(249,115,22,0.8)' }}></div>}
+                                  </div>
+                                  {/* Name */}
+                                  <div className="text-white text-center font-bold leading-tight mt-0.5" style={{ fontSize: '8px', textShadow: '0 1px 3px rgba(0,0,0,0.9)' }}>
+                                    {surname}
+                                  </div>
+                                  {/* Position codes */}
+                                  <div className="text-gray-300 text-center leading-tight" style={{ fontSize: '7px', textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}>
+                                    {player ? posAbbrevs : ''}
+                                  </div>
+                                  {isOutOfPosition && player && (
+                                    <div style={{ fontSize: '8px' }} className="text-yellow-400">⚠️</div>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+
+                        {selectedSlot !== null && (
+                          <div className="bg-orange-900/40 px-3 py-2 text-center">
+                            <p className="text-orange-300 text-xs font-semibold">Tap a bench player to place them, or tap another shirt to swap</p>
+                          </div>
+                        )}
+
+                        {/* Bench / Subs panel */}
+                        {showBench && (
+                          <div className="bg-gray-800 rounded-b-lg p-4">
+                            <h3 className="text-white font-bold mb-3">Substitutes</h3>
+                            <div className="space-y-2 max-h-64 overflow-y-auto">
+                              {benchPlayers.map(p => {
+                                const bestSlot = selectedSlot !== null ? formations[formation].positions[selectedSlot] : null;
+                                const fitsSelected = bestSlot && p.positions.includes(bestSlot);
+                                return (
+                                  <div key={p.id} onClick={() => handleBenchClick(p.id)}
+                                    className={`rounded p-2 flex items-center gap-3 transition-all ${
+                                      selectedSlot !== null
+                                        ? fitsSelected ? 'bg-green-900/40 cursor-pointer ring-1 ring-green-500' : 'bg-gray-700 cursor-pointer hover:bg-gray-600'
+                                        : 'bg-gray-700'
+                                    }`}
+                                  >
+                                    <div style={{ width: '32px', height: '28px', flexShrink: 0 }}>
+                                      <ShirtSvg number={p.rating} isGK={p.positions.includes('GK')} isOOP={false} />
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                      <div className="text-white font-semibold text-sm truncate">{p.name}</div>
+                                      <div className="text-gray-400 text-xs">{p.positions.join('/')} • Age {calcAge(p.dob)}</div>
+                                    </div>
+                                    {selectedSlot !== null && fitsSelected && <span className="text-green-400 text-xs font-bold">✓</span>}
+                                  </div>
+                                );
+                              })}
+                              {benchPlayers.length === 0 && <p className="text-gray-500 text-sm">All players in starting XI</p>}
+                            </div>
+                          </div>
+                        )}
+
+                        {!showBench && (
+                          <div className="bg-gray-800 rounded-b-lg p-3">
+                            <p className="text-gray-500 text-xs text-center">Tap "Subs" to view bench players</p>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })()}
+
+                  {page === 'squad' && (
+                    <div className="bg-gray-800 rounded-lg p-4">
+                      <h2 className="text-white font-bold mb-4">Squad</h2>
+                      {team.players.map(p => (
+                        <div key={p.id} className={`rounded p-3 mb-2 ${p.injured ? 'bg-red-900/20' : 'bg-gray-700'}`}>
+                          <div className="flex justify-between">
+                            <div>
+                              <div className="text-white font-semibold">{p.name} {p.injured && '⚕️'}</div>
+                              <div className="text-gray-400 text-sm">
+                                {p.positions.join('/')} • Age {calcAge(p.dob)} {p.goals > 0 && `• ⚽ ${p.goals}`}
+                                {p.injured && p.injuryUntil && (() => {
+                                  const w = getWeeksUntil(p.injuryUntil);
+                                  return ` • 🏥 ${w > 0 ? `${w} week${w > 1 ? 's' : ''} left` : 'Returning soon'}`;
+                                })()}
+                              </div>
+                            </div>
+                            <div className="text-green-500 text-sm">{formatCurrency(calculatePlayerValue(p, date))}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {page === 'table' && (
+                    <div className="bg-gray-800 rounded-lg p-4">
+                      <h2 className="text-white font-bold mb-4">{leagues[league].name}</h2>
+                      <table className="w-full text-sm">
+                        <thead><tr className="text-gray-400 border-b border-gray-700"><th className="text-left p-2">Pos</th><th className="text-left p-2">Team</th><th className="text-center p-2">P</th><th className="text-center p-2">W</th><th className="text-center p-2">D</th><th className="text-center p-2">L</th><th className="text-center p-2">Pts</th></tr></thead>
+                        <tbody>
+                          {tbl.map((t, i) => (
+                            <tr key={t.teamId} className={`border-b border-gray-700 ${t.teamId === team.id ? 'bg-green-900/30' : ''}`}>
+                              <td className="text-white p-2">{i + 1}</td><td className="text-white p-2">{t.name}</td>
+                              <td className="text-center text-gray-400 p-2">{t.played}</td><td className="text-center text-gray-400 p-2">{t.won}</td>
+                              <td className="text-center text-gray-400 p-2">{t.drawn}</td><td className="text-center text-gray-400 p-2">{t.lost}</td>
+                              <td className="text-center text-white font-bold p-2">{t.points}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+
+                  {page === 'fixtures' && (
+                    <div className="bg-gray-800 rounded-lg p-4">
+                      <h2 className="text-white font-bold mb-4">Fixtures</h2>
+                      <div className="space-y-2 max-h-96 overflow-y-auto">
+                        {(fixtures[league] || []).map((f, i) => {
+                          const h = leagues[league].teams.find(t => t.id === f.homeTeamId);
+                          const a = leagues[league].teams.find(t => t.id === f.awayTeamId);
+                          const isPM = f.homeTeamId === team.id || f.awayTeamId === team.id;
+                          return (
+                            <div key={i} className={`p-3 rounded text-sm ${isPM ? f.played ? 'bg-green-900/30' : 'bg-orange-900/30' : 'bg-gray-700'}`}>
+                              <div className="flex justify-between">
+                                <span className="text-white">{h?.name} vs {a?.name}</span>
+                                {f.played ? <span className="text-white font-bold">{f.homeScore} - {f.awayScore}</span> : <span className="text-gray-500">-</span>}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {page === 'scorers' && (
+                    <div className="bg-gray-800 rounded-lg p-4">
+                      <h2 className="text-white font-bold mb-4">⚽ Top Scorers</h2>
+                      {Object.keys(leagues).map(lk => {
+                        const sc = getScorers(lk);
+                        return (
+                          <div key={lk} className="mb-6">
+                            <h3 className="text-orange-500 font-bold mb-3">{leagues[lk].name}</h3>
+                            {sc.length > 0 ? sc.map((s, i) => (
+                              <div key={i} className="flex justify-between bg-gray-700 p-2 rounded mb-2 text-sm">
+                                <span className="text-white"><span className="text-orange-500">{i + 1}.</span> {s.name} <span className="text-gray-400 text-xs">({s.team})</span></span>
+                                <span className="text-white font-bold">{s.goals}</span>
+                              </div>
+                            )) : <p className="text-gray-500 text-sm">No goals yet</p>}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {page === 'transfers' && (
+                    <div className="bg-gray-800 rounded-lg p-4">
+                      <h2 className="text-white font-bold mb-4">Transfer Market</h2>
+                      <p className="text-gray-400 mb-4">Budget: {formatCurrency(team.budget)}</p>
+                      <div className="mb-6">
+                        <h3 className="text-orange-500 font-bold mb-3">Your Squad</h3>
+                        <div className="space-y-2">
+                          {team.players.map(p => (
+                            <div key={p.id} className="bg-gray-700 rounded p-3 flex justify-between items-center">
+                              <div>
+                                <div className="text-white font-semibold">{p.name}</div>
+                                <div className="text-gray-400 text-xs">{p.positions.join('/')} • Age {calcAge(p.dob)}</div>
+                              </div>
+                              <div className="text-green-500 text-sm">{formatCurrency(calculatePlayerValue(p, date))}</div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      <div>
+                        <h3 className="text-orange-500 font-bold mb-3">Available Players</h3>
+                        {Object.keys(leagues).map(lk => {
+                          const lg = leagues[lk];
+                          return lg.teams.filter(t => t.id !== team.id).slice(0, 2).map(t => (
+                            <div key={t.id} className="mb-4">
+                              <h4 className="text-white font-semibold mb-2 text-sm">{t.name} ({lg.name})</h4>
+                              {t.players.slice(0, 3).map(p => {
+                                const val = calculatePlayerValue(p, date);
+                                const can = team.budget >= val;
+                                return (
+                                  <div key={p.id} className={`bg-gray-700 rounded p-2 mb-1 text-xs ${can ? 'cursor-pointer hover:bg-gray-600' : 'opacity-50'}`}>
+                                    <div className="flex justify-between">
+                                      <span className="text-white">{p.name} <span className="text-gray-500">{p.positions[0]}</span></span>
+                                      <span className={can ? 'text-green-500' : 'text-red-500'}>{formatCurrency(val)}</span>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          ));
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {page === 'finances' && (
+                    <div className="bg-gray-800 rounded-lg p-4">
+                      <h2 className="text-white font-bold mb-4">💰 Finances</h2>
+                      <div className="mb-6">
+                        <div className="text-gray-400 text-sm mb-1">Current Balance</div>
+                        <div className="text-white font-bold text-4xl">{formatCurrency(team.budget)}</div>
+                      </div>
+                      <div className="bg-gray-700 rounded-lg p-4">
+                        <h3 className="text-white font-semibold mb-4">Balance History</h3>
+                        {financeHistory.length > 1 ? (
+                          <svg viewBox="0 0 400 200" className="w-full h-48">
+                            <defs>
+                              <linearGradient id="grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style={{ stopColor: '#10b981', stopOpacity: 0.3 }} />
+                                <stop offset="100%" style={{ stopColor: '#10b981', stopOpacity: 0 }} />
+                              </linearGradient>
+                            </defs>
+                            {(() => {
+                              const max = Math.max(...financeHistory.map(f => f.balance));
+                              const min = Math.min(...financeHistory.map(f => f.balance));
+                              const range = max - min || 1;
+                              const points = financeHistory.map((f, i) => {
+                                const x = (i / (financeHistory.length - 1)) * 380 + 10;
+                                const y = 180 - ((f.balance - min) / range) * 160;
+                                return `${x},${y}`;
+                              }).join(' ');
+                              const areaPoints = `10,180 ${points} ${380},180`;
+                              return (
+                                <>
+                                  <polyline points={areaPoints} fill="url(#grad)" />
+                                  <polyline points={points} fill="none" stroke="#10b981" strokeWidth="2" />
+                                  {financeHistory.map((f, i) => {
+                                    const x = (i / (financeHistory.length - 1)) * 380 + 10;
+                                    const y = 180 - ((f.balance - min) / range) * 160;
+                                    return <circle key={i} cx={x} cy={y} r="3" fill="#10b981" />;
+                                  })}
+                                </>
+                              );
+                            })()}
+                            <line x1="10" y1="180" x2="390" y2="180" stroke="#4b5563" strokeWidth="1" />
+                            <line x1="10" y1="20" x2="10" y2="180" stroke="#4b5563" strokeWidth="1" />
+                          </svg>
+                        ) : (
+                          <p className="text-gray-400 text-sm">Play more matches to see history</p>
+                        )}
+                        <div className="mt-4 space-y-2">
+                          {financeHistory.slice(-5).reverse().map((f, i) => (
+                            <div key={i} className="flex justify-between text-sm">
+                              <span className="text-gray-400">{formatDate(f.date)}</span>
+                              <span className="text-white font-semibold">{formatCurrency(f.balance)}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {next && (
+                  <div className="fixed bottom-0 left-0 right-0 p-4 bg-gray-900">
+                    <button onClick={() => setState('formation')} className="w-full bg-green-600 text-white py-4 rounded-lg font-bold">Continue</button>
+                  </div>
+                )}
+              </div>
+            );
+          }
+
+          if (state === 'formation') {
+            const next = getNext();
+            const opp = next ? (next.homeTeamId === team.id ? leagues[league].teams.find(t => t.id === next.awayTeamId) : leagues[league].teams.find(t => t.id === next.homeTeamId)) : null;
+            const inj = team.players.filter(p => p.injured);
+            const validPlayers = Object.values(startingXI).filter(pid => {
+              const p = team.players.find(pl => pl.id === pid);
+              return p && !p.injured;
+            });
+            const selectedCount = validPlayers.length;
+            const validXI = selectedCount === 11;
+
+            return (
+              <div className="min-h-screen bg-gray-900 p-4">
+                <div className="max-w-2xl mx-auto">
+                  <h1 className="text-white font-bold text-2xl mb-4">Pre-Match Setup</h1>
+                  <div className="bg-gray-800 rounded-lg p-4 mb-4">
+                    <p className="text-white">{team.name} vs {opp?.name}</p>
+                    <p className="text-gray-400 text-sm">{next?.homeTeamId === team.id ? 'Home' : 'Away'}</p>
+                  </div>
+                  {inj.length > 0 && (
+                    <div className="bg-red-900/20 rounded-lg p-4 mb-4">
+                      <h3 className="text-red-400 font-bold mb-2">⚕️ Injured Players</h3>
+                      {inj.map(p => {
+                        const w = getWeeksUntil(p.injuryUntil);
+                        return <p key={p.id} className="text-red-300 text-sm">{p.name} - {w > 0 ? `${w} week${w > 1 ? 's' : ''} remaining` : 'Returning soon'}</p>;
+                      })}
+                    </div>
+                  )}
+                  <div className="bg-gray-800 rounded-lg p-4 mb-4">
+                    <h3 className="text-white font-bold mb-2">Formation: {formation}</h3>
+                    <p className="text-gray-400 text-sm mb-3">{validXI ? '✅ Starting XI selected' : `⚠️ Select ${11 - selectedCount} more player${11 - selectedCount !== 1 ? 's' : ''}`}</p>
+                    <button onClick={() => { setPage('starting-xi'); setState('info-page'); }} className="w-full bg-orange-600 text-white py-3 rounded-lg font-semibold hover:bg-orange-700">Edit Starting XI</button>
+                  </div>
+                  <button onClick={playMatch} disabled={!validXI} className={`w-full py-4 rounded-lg font-bold text-xl ${validXI ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-gray-700 text-gray-500 cursor-not-allowed'}`}>{validXI ? 'Start Match' : 'Select Starting XI First'}</button>
+                </div>
+              </div>
+            );
+          }
+
+          if (state === 'match-result') {
+            const rt = match.ps > match.os ? 'VICTORY!' : match.ps < match.os ? 'DEFEAT' : 'DRAW';
+            const rc = match.ps > match.os ? 'text-green-400' : match.ps < match.os ? 'text-red-400' : 'text-yellow-400';
+            return (
+              <div className="min-h-screen bg-gray-900 p-4">
+                <div className="max-w-4xl mx-auto">
+                  <div className="bg-gray-800 rounded-lg p-6 mb-4">
+                    <h1 className={`text-4xl font-bold text-center mb-4 ${rc}`}>{rt}</h1>
+                    <div className="text-center text-white text-3xl font-bold">
+                      {match.home ? team.name : match.opp} {match.home ? match.ps : match.os} - {match.home ? match.os : match.ps} {match.home ? match.opp : team.name}
+                    </div>
+                  </div>
+                  <div className="bg-gray-800 rounded-lg p-6 mb-4 max-h-96 overflow-y-auto">
+                    <h2 className="text-white font-bold mb-4">Commentary</h2>
+                    {commentary.map((c, i) => <p key={i} className="text-gray-300 mb-2 text-sm">{c}</p>)}
+                  </div>
+                  <button onClick={() => { setPage('home'); setState('info-page'); }} className="w-full bg-green-600 text-white py-4 rounded-lg font-bold text-xl">Continue</button>
+                </div>
+              </div>
+            );
+          }
+
+          return null;
+        };
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+</body>
+</html>
