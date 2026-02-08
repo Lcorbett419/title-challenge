@@ -352,6 +352,28 @@
 
           if (!db) return <div className="min-h-screen bg-gray-900 flex items-center justify-center"><div className="text-white">Loading...</div></div>;
 
+          const renderShirt = (teamObj, size) => {
+            const s = teamObj?.shirtStyle || 'plain';
+            const c1 = teamObj?.primaryColor || '#1a1a2e';
+            const c2 = teamObj?.secondaryColor || '#FFFFFF';
+            const clipId = `hsc-${teamObj?.id}-${Math.random().toString(36).substr(2,5)}`;
+            return (
+              <svg viewBox="0 0 60 55" style={{ width: size || '80px', height: size ? undefined : '72px' }}>
+                <defs><clipPath id={clipId}><path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" /></clipPath></defs>
+                <path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" fill={c1} />
+                <g clipPath={`url(#${clipId})`}>
+                  {s === 'stripes' && <>{[4,14,24,34,44,54].map(x => <rect key={x} x={x} y="0" width="5" height="55" fill={c2} />)}</>}
+                  {s === 'hoops' && <>{[5,15,25,35,45].map(y => <rect key={y} x="0" y={y} width="60" height="5" fill={c2} />)}</>}
+                  {s === 'quarters' && <><rect x="30" y="0" width="30" height="25" fill={c2} /><rect x="0" y="25" width="30" height="30" fill={c2} /></>}
+                  {s === 'sleeves' && <><path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} /><path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c2} /></>}
+                  {s === 'sash' && <><path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} /><path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c2} /><polygon points="5,50 15,50 55,10 55,0 50,0 45,0 0,45 0,50" fill={c2} opacity="0.9" /></>}
+                  {s === 'halves' && <><rect x="30" y="0" width="30" height="55" fill={c2} /><path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} /><path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c1} /></>}
+                </g>
+                <path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="0.8" />
+              </svg>
+            );
+          };
+
           if (state === 'main-menu') {
             return (
               <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center p-4">
@@ -410,11 +432,11 @@
 
             return (
               <div className="min-h-screen bg-gray-900">
-                <div className="bg-orange-600 p-4 flex justify-between items-center">
-                  <button onClick={() => setMenuOpen(!menuOpen)} className="text-white"><Menu /></button>
-                  <div className="text-center">
-                    <div className="text-white text-sm">Season {getSeasonNumber()}</div>
-                    <div className="text-white font-bold">{getSeasonDisplay()}</div>
+                <div className="p-4 flex justify-between items-center" style={{ backgroundColor: team.primaryColor || '#ea580c' }}>
+                  <button onClick={() => setMenuOpen(!menuOpen)} style={{ color: ['#FFFFFF','#FFE114','#FDE100','#FDB913','#FCDD09','#FFD700','#8AC3EE','#87CEEB','#6CABDD','#95BFE5','#99D6EA','#65B32E'].includes(team.primaryColor) ? '#000' : '#fff' }}><Menu /></button>
+                  <div className="text-center" style={{ color: ['#FFFFFF','#FFE114','#FDE100','#FDB913','#FCDD09','#FFD700','#8AC3EE','#87CEEB','#6CABDD','#95BFE5','#99D6EA','#65B32E'].includes(team.primaryColor) ? '#000' : '#fff' }}>
+                    <div className="text-sm opacity-80">Season {getSeasonNumber()}</div>
+                    <div className="font-bold">{getSeasonDisplay()}</div>
                   </div>
                   <div className="w-10"></div>
                 </div>
@@ -454,11 +476,13 @@
                         <div className="text-gray-400 text-sm mb-2">NEXT FIXTURE</div>
                         <div className="flex items-center justify-between">
                           <div className="text-center flex-1">
+                            <div className="flex justify-center mb-2">{renderShirt(next.homeTeamId === team.id ? team : opp, '70px')}</div>
                             <div className="text-white font-bold text-lg">{next.homeTeamId === team.id ? team.name : opp.name}</div>
                             <div className="text-gray-500 text-sm">{next.homeTeamId === team.id ? pos + 1 : tbl.findIndex(t => t.teamId === opp.id) + 1}th</div>
                           </div>
-                          <div className="text-gray-400 font-bold px-4">vs</div>
+                          <div className="text-gray-400 font-bold px-4 text-xl">vs</div>
                           <div className="text-center flex-1">
+                            <div className="flex justify-center mb-2">{renderShirt(next.awayTeamId === team.id ? team : opp, '70px')}</div>
                             <div className="text-white font-bold text-lg">{next.awayTeamId === team.id ? team.name : opp.name}</div>
                             <div className="text-gray-500 text-sm">{next.awayTeamId === team.id ? pos + 1 : tbl.findIndex(t => t.teamId === opp.id) + 1}th</div>
                           </div>
