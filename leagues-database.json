@@ -596,12 +596,12 @@
           { "id": 34, "name": "Granit Xhaka", "positions": ["CDM", "CM"], "dob": "1992-09-27", "rating": 16 },
           { "id": 36, "name": "Ian Poveda", "positions": ["CAM", "LW", "RW"], "dob": "2000-02-09", "rating": 11 },
           { "id": 9, "name": "Brian Brobbey", "positions": ["ST"], "dob": "2002-02-01", "rating": 14 },
+          { "id": 10, "name": "Nilson Angulo", "positions": ["LW"], "dob": "2003-06-19", "rating": 13 },
           { "id": 12, "name": "Eliezer Mayenda", "positions": ["LW", "ST", "RW"], "dob": "2005-05-08", "rating": 12 },
           { "id": 14, "name": "Romaine Mundle", "positions": ["LW", "RW"], "dob": "2003-04-24", "rating": 12 },
           { "id": 18, "name": "Wilson Isidor", "positions": ["ST"], "dob": "2000-08-27", "rating": 14 },
           { "id": 29, "name": "Ahmed Abdullahi", "positions": ["LW", "RW"], "dob": "2004-06-19", "rating": 10 },
-          { "id": 37, "name": "Jocelin Ta Bi", "positions": ["LW", "RW"], "dob": "2005-02-09", "rating": 11 },
-          { "id": 10, "name": "Nilson Angulo", "positions": ["LW"], "dob": "2003-06-19", "rating": 13 }
+          { "id": 37, "name": "Jocelin Ta Bi", "positions": ["LW", "RW"], "dob": "2005-02-09", "rating": 11 }
         ]
       },
       {
@@ -709,6 +709,33 @@
       }
     ]
   },
+  "england_championship": {
+  "name": "EFL Championship",
+  "country": "England",
+  "teams": [
+    {
+      "id": 21,
+      "name": "Birmingham",
+      "shirtStyle": "stripes",
+      "primaryColor": "#0033A0",
+      "secondaryColor": "#FFFFFF",
+      "budget": 25000000,
+      "players": [
+        { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
+        { "id": 2, "name": "Tom Williams", "positions": ["LB"], "dob": "1997-06-20", "rating": 12 },
+        { "id": 3, "name": "Sam Taylor", "positions": ["CB"], "dob": "1996-09-10", "rating": 13 },
+        { "id": 4, "name": "Jack Davies", "positions": ["CB"], "dob": "1998-01-25", "rating": 12 },
+        { "id": 5, "name": "Ryan Mitchell", "positions": ["RB"], "dob": "1999-04-12", "rating": 11 },
+        { "id": 6, "name": "Luke Roberts", "positions": ["CDM", "CM"], "dob": "1996-07-30", "rating": 13 },
+        { "id": 7, "name": "Ben Clarke", "positions": ["CM"], "dob": "1997-11-05", "rating": 12 },
+        { "id": 8, "name": "Charlie Ward", "positions": ["CAM", "CM"], "dob": "1998-02-18", "rating": 12 },
+        { "id": 9, "name": "Jake Thompson", "positions": ["ST"], "dob": "1998-08-22", "rating": 13 },
+        { "id": 10, "name": "Matt Hughes", "positions": ["LW", "RW"], "dob": "1999-12-14", "rating": 12 },
+        { "id": 11, "name": "Dan Wilson", "positions": ["RW"], "dob": "1997-05-08", "rating": 12 }
+      ]
+    }
+  ]
+},
   "germany": {
     "name": "Bundesliga",
     "country": "Germany",
