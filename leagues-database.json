@@ -149,7 +149,7 @@
       },
       {
         "id": 5,
-        "name": "Brighton",
+        "name": "Brighton and Hove Albion",
         "shirtStyle": "stripes",
         "primaryColor": "#0057B8",
         "secondaryColor": "#FFFFFF",
@@ -377,7 +377,7 @@
       },
       {
         "id": 11,
-        "name": "Leeds",
+        "name": "Leeds United",
         "shirtStyle": "plain",
         "primaryColor": "#FFFFFF",
         "secondaryColor": "#1D428A",
@@ -525,7 +525,7 @@
       },
       {
         "id": 15,
-        "name": "Newcastle",
+        "name": "Newcastle United",
         "shirtStyle": "stripes",
         "primaryColor": "#241F20",
         "secondaryColor": "#FFFFFF",
@@ -680,7 +680,7 @@
       },
       {
         "id": 19,
-        "name": "West Ham",
+        "name": "West Ham United",
         "shirtStyle": "sleeves",
         "primaryColor": "#7A263A",
         "secondaryColor": "#1BB1E7",
@@ -755,10 +755,541 @@
   "teams": [
     {
       "id": 21,
-      "name": "Birmingham",
+      "name": "Birmingham City",
       "shirtStyle": "stripes",
       "primaryColor": "#0033A0",
       "secondaryColor": "#FFFFFF",
+      "stadiumName": "St Andrew's",
+      "stadiumCapacity": "30,000",
+      "budget": 25000000,
+      "players": [
+        { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
+        { "id": 2, "name": "Tom Williams", "positions": ["LB"], "dob": "1997-06-20", "rating": 12 },
+        { "id": 3, "name": "Sam Taylor", "positions": ["CB"], "dob": "1996-09-10", "rating": 13 },
+        { "id": 4, "name": "Jack Davies", "positions": ["CB"], "dob": "1998-01-25", "rating": 12 },
+        { "id": 5, "name": "Ryan Mitchell", "positions": ["RB"], "dob": "1999-04-12", "rating": 11 },
+        { "id": 6, "name": "Luke Roberts", "positions": ["CDM", "CM"], "dob": "1996-07-30", "rating": 13 },
+        { "id": 7, "name": "Ben Clarke", "positions": ["CM"], "dob": "1997-11-05", "rating": 12 },
+        { "id": 8, "name": "Charlie Ward", "positions": ["CAM", "CM"], "dob": "1998-02-18", "rating": 12 },
+        { "id": 9, "name": "Jake Thompson", "positions": ["ST"], "dob": "1998-08-22", "rating": 13 },
+        { "id": 10, "name": "Matt Hughes", "positions": ["LW", "RW"], "dob": "1999-12-14", "rating": 12 },
+        { "id": 11, "name": "Dan Wilson", "positions": ["RW"], "dob": "1997-05-08", "rating": 12 }
+      ]
+    }
+    {
+      "id": 22,
+      "name": "Blackburn Rovers",
+      "shirtStyle": "stripes",
+      "primaryColor": "#0033A0",
+      "secondaryColor": "#FFFFFF",
+      "stadiumName": "St Andrew's",
+      "stadiumCapacity": "30,000",
+      "budget": 25000000,
+      "players": [
+        { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
+        { "id": 2, "name": "Tom Williams", "positions": ["LB"], "dob": "1997-06-20", "rating": 12 },
+        { "id": 3, "name": "Sam Taylor", "positions": ["CB"], "dob": "1996-09-10", "rating": 13 },
+        { "id": 4, "name": "Jack Davies", "positions": ["CB"], "dob": "1998-01-25", "rating": 12 },
+        { "id": 5, "name": "Ryan Mitchell", "positions": ["RB"], "dob": "1999-04-12", "rating": 11 },
+        { "id": 6, "name": "Luke Roberts", "positions": ["CDM", "CM"], "dob": "1996-07-30", "rating": 13 },
+        { "id": 7, "name": "Ben Clarke", "positions": ["CM"], "dob": "1997-11-05", "rating": 12 },
+        { "id": 8, "name": "Charlie Ward", "positions": ["CAM", "CM"], "dob": "1998-02-18", "rating": 12 },
+        { "id": 9, "name": "Jake Thompson", "positions": ["ST"], "dob": "1998-08-22", "rating": 13 },
+        { "id": 10, "name": "Matt Hughes", "positions": ["LW", "RW"], "dob": "1999-12-14", "rating": 12 },
+        { "id": 11, "name": "Dan Wilson", "positions": ["RW"], "dob": "1997-05-08", "rating": 12 }
+      ]
+    }
+    {
+      "id": 23,
+      "name": "Bristol City",
+      "shirtStyle": "stripes",
+      "primaryColor": "#0033A0",
+      "secondaryColor": "#FFFFFF",
+      "stadiumName": "St Andrew's",
+      "stadiumCapacity": "30,000",
+      "budget": 25000000,
+      "players": [
+        { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
+        { "id": 2, "name": "Tom Williams", "positions": ["LB"], "dob": "1997-06-20", "rating": 12 },
+        { "id": 3, "name": "Sam Taylor", "positions": ["CB"], "dob": "1996-09-10", "rating": 13 },
+        { "id": 4, "name": "Jack Davies", "positions": ["CB"], "dob": "1998-01-25", "rating": 12 },
+        { "id": 5, "name": "Ryan Mitchell", "positions": ["RB"], "dob": "1999-04-12", "rating": 11 },
+        { "id": 6, "name": "Luke Roberts", "positions": ["CDM", "CM"], "dob": "1996-07-30", "rating": 13 },
+        { "id": 7, "name": "Ben Clarke", "positions": ["CM"], "dob": "1997-11-05", "rating": 12 },
+        { "id": 8, "name": "Charlie Ward", "positions": ["CAM", "CM"], "dob": "1998-02-18", "rating": 12 },
+        { "id": 9, "name": "Jake Thompson", "positions": ["ST"], "dob": "1998-08-22", "rating": 13 },
+        { "id": 10, "name": "Matt Hughes", "positions": ["LW", "RW"], "dob": "1999-12-14", "rating": 12 },
+        { "id": 11, "name": "Dan Wilson", "positions": ["RW"], "dob": "1997-05-08", "rating": 12 }
+      ]
+    }
+    {
+      "id": 24,
+      "name": "Charlton Athletic",
+      "shirtStyle": "stripes",
+      "primaryColor": "#0033A0",
+      "secondaryColor": "#FFFFFF",
+      "stadiumName": "St Andrew's",
+      "stadiumCapacity": "30,000",
+      "budget": 25000000,
+      "players": [
+        { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
+        { "id": 2, "name": "Tom Williams", "positions": ["LB"], "dob": "1997-06-20", "rating": 12 },
+        { "id": 3, "name": "Sam Taylor", "positions": ["CB"], "dob": "1996-09-10", "rating": 13 },
+        { "id": 4, "name": "Jack Davies", "positions": ["CB"], "dob": "1998-01-25", "rating": 12 },
+        { "id": 5, "name": "Ryan Mitchell", "positions": ["RB"], "dob": "1999-04-12", "rating": 11 },
+        { "id": 6, "name": "Luke Roberts", "positions": ["CDM", "CM"], "dob": "1996-07-30", "rating": 13 },
+        { "id": 7, "name": "Ben Clarke", "positions": ["CM"], "dob": "1997-11-05", "rating": 12 },
+        { "id": 8, "name": "Charlie Ward", "positions": ["CAM", "CM"], "dob": "1998-02-18", "rating": 12 },
+        { "id": 9, "name": "Jake Thompson", "positions": ["ST"], "dob": "1998-08-22", "rating": 13 },
+        { "id": 10, "name": "Matt Hughes", "positions": ["LW", "RW"], "dob": "1999-12-14", "rating": 12 },
+        { "id": 11, "name": "Dan Wilson", "positions": ["RW"], "dob": "1997-05-08", "rating": 12 }
+      ]
+    }
+    {
+      "id": 25,
+      "name": "Coventry City",
+      "shirtStyle": "stripes",
+      "primaryColor": "#0033A0",
+      "secondaryColor": "#FFFFFF",
+      "stadiumName": "St Andrew's",
+      "stadiumCapacity": "30,000",
+      "budget": 25000000,
+      "players": [
+        { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
+        { "id": 2, "name": "Tom Williams", "positions": ["LB"], "dob": "1997-06-20", "rating": 12 },
+        { "id": 3, "name": "Sam Taylor", "positions": ["CB"], "dob": "1996-09-10", "rating": 13 },
+        { "id": 4, "name": "Jack Davies", "positions": ["CB"], "dob": "1998-01-25", "rating": 12 },
+        { "id": 5, "name": "Ryan Mitchell", "positions": ["RB"], "dob": "1999-04-12", "rating": 11 },
+        { "id": 6, "name": "Luke Roberts", "positions": ["CDM", "CM"], "dob": "1996-07-30", "rating": 13 },
+        { "id": 7, "name": "Ben Clarke", "positions": ["CM"], "dob": "1997-11-05", "rating": 12 },
+        { "id": 8, "name": "Charlie Ward", "positions": ["CAM", "CM"], "dob": "1998-02-18", "rating": 12 },
+        { "id": 9, "name": "Jake Thompson", "positions": ["ST"], "dob": "1998-08-22", "rating": 13 },
+        { "id": 10, "name": "Matt Hughes", "positions": ["LW", "RW"], "dob": "1999-12-14", "rating": 12 },
+        { "id": 11, "name": "Dan Wilson", "positions": ["RW"], "dob": "1997-05-08", "rating": 12 }
+      ]
+    }
+    {
+      "id": 26,
+      "name": "Derby County",
+      "shirtStyle": "plain",
+      "primaryColor": "#FFFFFF",
+      "secondaryColor": "#000000",
+      "stadiumName": "St Andrew's",
+      "stadiumCapacity": "30,000",
+      "budget": 25000000,
+      "players": [
+        { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
+        { "id": 2, "name": "Tom Williams", "positions": ["LB"], "dob": "1997-06-20", "rating": 12 },
+        { "id": 3, "name": "Sam Taylor", "positions": ["CB"], "dob": "1996-09-10", "rating": 13 },
+        { "id": 4, "name": "Jack Davies", "positions": ["CB"], "dob": "1998-01-25", "rating": 12 },
+        { "id": 5, "name": "Ryan Mitchell", "positions": ["RB"], "dob": "1999-04-12", "rating": 11 },
+        { "id": 6, "name": "Luke Roberts", "positions": ["CDM", "CM"], "dob": "1996-07-30", "rating": 13 },
+        { "id": 7, "name": "Ben Clarke", "positions": ["CM"], "dob": "1997-11-05", "rating": 12 },
+        { "id": 8, "name": "Charlie Ward", "positions": ["CAM", "CM"], "dob": "1998-02-18", "rating": 12 },
+        { "id": 9, "name": "Jake Thompson", "positions": ["ST"], "dob": "1998-08-22", "rating": 13 },
+        { "id": 10, "name": "Matt Hughes", "positions": ["LW", "RW"], "dob": "1999-12-14", "rating": 12 },
+        { "id": 11, "name": "Dan Wilson", "positions": ["RW"], "dob": "1997-05-08", "rating": 12 }
+      ]
+    }
+    {
+      "id": 27,
+      "name": "Hull City",
+      "shirtStyle": "stripes",
+      "primaryColor": "#0033A0",
+      "secondaryColor": "#FFFFFF",
+      "stadiumName": "St Andrew's",
+      "stadiumCapacity": "30,000",
+      "budget": 25000000,
+      "players": [
+        { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
+        { "id": 2, "name": "Tom Williams", "positions": ["LB"], "dob": "1997-06-20", "rating": 12 },
+        { "id": 3, "name": "Sam Taylor", "positions": ["CB"], "dob": "1996-09-10", "rating": 13 },
+        { "id": 4, "name": "Jack Davies", "positions": ["CB"], "dob": "1998-01-25", "rating": 12 },
+        { "id": 5, "name": "Ryan Mitchell", "positions": ["RB"], "dob": "1999-04-12", "rating": 11 },
+        { "id": 6, "name": "Luke Roberts", "positions": ["CDM", "CM"], "dob": "1996-07-30", "rating": 13 },
+        { "id": 7, "name": "Ben Clarke", "positions": ["CM"], "dob": "1997-11-05", "rating": 12 },
+        { "id": 8, "name": "Charlie Ward", "positions": ["CAM", "CM"], "dob": "1998-02-18", "rating": 12 },
+        { "id": 9, "name": "Jake Thompson", "positions": ["ST"], "dob": "1998-08-22", "rating": 13 },
+        { "id": 10, "name": "Matt Hughes", "positions": ["LW", "RW"], "dob": "1999-12-14", "rating": 12 },
+        { "id": 11, "name": "Dan Wilson", "positions": ["RW"], "dob": "1997-05-08", "rating": 12 }
+      ]
+    }
+    {
+      "id": 28,
+      "name": "Ipswich Town",
+      "shirtStyle": "stripes",
+      "primaryColor": "#0033A0",
+      "secondaryColor": "#FFFFFF",
+      "stadiumName": "St Andrew's",
+      "stadiumCapacity": "30,000",
+      "budget": 25000000,
+      "players": [
+        { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
+        { "id": 2, "name": "Tom Williams", "positions": ["LB"], "dob": "1997-06-20", "rating": 12 },
+        { "id": 3, "name": "Sam Taylor", "positions": ["CB"], "dob": "1996-09-10", "rating": 13 },
+        { "id": 4, "name": "Jack Davies", "positions": ["CB"], "dob": "1998-01-25", "rating": 12 },
+        { "id": 5, "name": "Ryan Mitchell", "positions": ["RB"], "dob": "1999-04-12", "rating": 11 },
+        { "id": 6, "name": "Luke Roberts", "positions": ["CDM", "CM"], "dob": "1996-07-30", "rating": 13 },
+        { "id": 7, "name": "Ben Clarke", "positions": ["CM"], "dob": "1997-11-05", "rating": 12 },
+        { "id": 8, "name": "Charlie Ward", "positions": ["CAM", "CM"], "dob": "1998-02-18", "rating": 12 },
+        { "id": 9, "name": "Jake Thompson", "positions": ["ST"], "dob": "1998-08-22", "rating": 13 },
+        { "id": 10, "name": "Matt Hughes", "positions": ["LW", "RW"], "dob": "1999-12-14", "rating": 12 },
+        { "id": 11, "name": "Dan Wilson", "positions": ["RW"], "dob": "1997-05-08", "rating": 12 }
+      ]
+    }
+    {
+      "id": 29,
+      "name": "Leicester City",
+      "shirtStyle": "stripes",
+      "primaryColor": "#0033A0",
+      "secondaryColor": "#FFFFFF",
+      "stadiumName": "St Andrew's",
+      "stadiumCapacity": "30,000",
+      "budget": 25000000,
+      "players": [
+        { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
+        { "id": 2, "name": "Tom Williams", "positions": ["LB"], "dob": "1997-06-20", "rating": 12 },
+        { "id": 3, "name": "Sam Taylor", "positions": ["CB"], "dob": "1996-09-10", "rating": 13 },
+        { "id": 4, "name": "Jack Davies", "positions": ["CB"], "dob": "1998-01-25", "rating": 12 },
+        { "id": 5, "name": "Ryan Mitchell", "positions": ["RB"], "dob": "1999-04-12", "rating": 11 },
+        { "id": 6, "name": "Luke Roberts", "positions": ["CDM", "CM"], "dob": "1996-07-30", "rating": 13 },
+        { "id": 7, "name": "Ben Clarke", "positions": ["CM"], "dob": "1997-11-05", "rating": 12 },
+        { "id": 8, "name": "Charlie Ward", "positions": ["CAM", "CM"], "dob": "1998-02-18", "rating": 12 },
+        { "id": 9, "name": "Jake Thompson", "positions": ["ST"], "dob": "1998-08-22", "rating": 13 },
+        { "id": 10, "name": "Matt Hughes", "positions": ["LW", "RW"], "dob": "1999-12-14", "rating": 12 },
+        { "id": 11, "name": "Dan Wilson", "positions": ["RW"], "dob": "1997-05-08", "rating": 12 }
+      ]
+    }
+    {
+      "id": 30,
+      "name": "Middlesbrough",
+      "shirtStyle": "stripes",
+      "primaryColor": "#0033A0",
+      "secondaryColor": "#FFFFFF",
+      "stadiumName": "St Andrew's",
+      "stadiumCapacity": "30,000",
+      "budget": 25000000,
+      "players": [
+        { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
+        { "id": 2, "name": "Tom Williams", "positions": ["LB"], "dob": "1997-06-20", "rating": 12 },
+        { "id": 3, "name": "Sam Taylor", "positions": ["CB"], "dob": "1996-09-10", "rating": 13 },
+        { "id": 4, "name": "Jack Davies", "positions": ["CB"], "dob": "1998-01-25", "rating": 12 },
+        { "id": 5, "name": "Ryan Mitchell", "positions": ["RB"], "dob": "1999-04-12", "rating": 11 },
+        { "id": 6, "name": "Luke Roberts", "positions": ["CDM", "CM"], "dob": "1996-07-30", "rating": 13 },
+        { "id": 7, "name": "Ben Clarke", "positions": ["CM"], "dob": "1997-11-05", "rating": 12 },
+        { "id": 8, "name": "Charlie Ward", "positions": ["CAM", "CM"], "dob": "1998-02-18", "rating": 12 },
+        { "id": 9, "name": "Jake Thompson", "positions": ["ST"], "dob": "1998-08-22", "rating": 13 },
+        { "id": 10, "name": "Matt Hughes", "positions": ["LW", "RW"], "dob": "1999-12-14", "rating": 12 },
+        { "id": 11, "name": "Dan Wilson", "positions": ["RW"], "dob": "1997-05-08", "rating": 12 }
+      ]
+    }
+    {
+      "id": 31,
+      "name": "Millwall",
+      "shirtStyle": "stripes",
+      "primaryColor": "#0033A0",
+      "secondaryColor": "#FFFFFF",
+      "stadiumName": "St Andrew's",
+      "stadiumCapacity": "30,000",
+      "budget": 25000000,
+      "players": [
+        { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
+        { "id": 2, "name": "Tom Williams", "positions": ["LB"], "dob": "1997-06-20", "rating": 12 },
+        { "id": 3, "name": "Sam Taylor", "positions": ["CB"], "dob": "1996-09-10", "rating": 13 },
+        { "id": 4, "name": "Jack Davies", "positions": ["CB"], "dob": "1998-01-25", "rating": 12 },
+        { "id": 5, "name": "Ryan Mitchell", "positions": ["RB"], "dob": "1999-04-12", "rating": 11 },
+        { "id": 6, "name": "Luke Roberts", "positions": ["CDM", "CM"], "dob": "1996-07-30", "rating": 13 },
+        { "id": 7, "name": "Ben Clarke", "positions": ["CM"], "dob": "1997-11-05", "rating": 12 },
+        { "id": 8, "name": "Charlie Ward", "positions": ["CAM", "CM"], "dob": "1998-02-18", "rating": 12 },
+        { "id": 9, "name": "Jake Thompson", "positions": ["ST"], "dob": "1998-08-22", "rating": 13 },
+        { "id": 10, "name": "Matt Hughes", "positions": ["LW", "RW"], "dob": "1999-12-14", "rating": 12 },
+        { "id": 11, "name": "Dan Wilson", "positions": ["RW"], "dob": "1997-05-08", "rating": 12 }
+      ]
+    }
+    {
+      "id": 32,
+      "name": "Norwich City",
+      "shirtStyle": "stripes",
+      "primaryColor": "#0033A0",
+      "secondaryColor": "#FFFFFF",
+      "stadiumName": "St Andrew's",
+      "stadiumCapacity": "30,000",
+      "budget": 25000000,
+      "players": [
+        { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
+        { "id": 2, "name": "Tom Williams", "positions": ["LB"], "dob": "1997-06-20", "rating": 12 },
+        { "id": 3, "name": "Sam Taylor", "positions": ["CB"], "dob": "1996-09-10", "rating": 13 },
+        { "id": 4, "name": "Jack Davies", "positions": ["CB"], "dob": "1998-01-25", "rating": 12 },
+        { "id": 5, "name": "Ryan Mitchell", "positions": ["RB"], "dob": "1999-04-12", "rating": 11 },
+        { "id": 6, "name": "Luke Roberts", "positions": ["CDM", "CM"], "dob": "1996-07-30", "rating": 13 },
+        { "id": 7, "name": "Ben Clarke", "positions": ["CM"], "dob": "1997-11-05", "rating": 12 },
+        { "id": 8, "name": "Charlie Ward", "positions": ["CAM", "CM"], "dob": "1998-02-18", "rating": 12 },
+        { "id": 9, "name": "Jake Thompson", "positions": ["ST"], "dob": "1998-08-22", "rating": 13 },
+        { "id": 10, "name": "Matt Hughes", "positions": ["LW", "RW"], "dob": "1999-12-14", "rating": 12 },
+        { "id": 11, "name": "Dan Wilson", "positions": ["RW"], "dob": "1997-05-08", "rating": 12 }
+      ]
+    }
+    {
+      "id": 33,
+      "name": "Oxford United",
+      "shirtStyle": "stripes",
+      "primaryColor": "#0033A0",
+      "secondaryColor": "#FFFFFF",
+      "stadiumName": "St Andrew's",
+      "stadiumCapacity": "30,000",
+      "budget": 25000000,
+      "players": [
+        { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
+        { "id": 2, "name": "Tom Williams", "positions": ["LB"], "dob": "1997-06-20", "rating": 12 },
+        { "id": 3, "name": "Sam Taylor", "positions": ["CB"], "dob": "1996-09-10", "rating": 13 },
+        { "id": 4, "name": "Jack Davies", "positions": ["CB"], "dob": "1998-01-25", "rating": 12 },
+        { "id": 5, "name": "Ryan Mitchell", "positions": ["RB"], "dob": "1999-04-12", "rating": 11 },
+        { "id": 6, "name": "Luke Roberts", "positions": ["CDM", "CM"], "dob": "1996-07-30", "rating": 13 },
+        { "id": 7, "name": "Ben Clarke", "positions": ["CM"], "dob": "1997-11-05", "rating": 12 },
+        { "id": 8, "name": "Charlie Ward", "positions": ["CAM", "CM"], "dob": "1998-02-18", "rating": 12 },
+        { "id": 9, "name": "Jake Thompson", "positions": ["ST"], "dob": "1998-08-22", "rating": 13 },
+        { "id": 10, "name": "Matt Hughes", "positions": ["LW", "RW"], "dob": "1999-12-14", "rating": 12 },
+        { "id": 11, "name": "Dan Wilson", "positions": ["RW"], "dob": "1997-05-08", "rating": 12 }
+      ]
+    }
+    {
+      "id": 34,
+      "name": "Portsmouth",
+      "shirtStyle": "stripes",
+      "primaryColor": "#0033A0",
+      "secondaryColor": "#FFFFFF",
+      "stadiumName": "St Andrew's",
+      "stadiumCapacity": "30,000",
+      "budget": 25000000,
+      "players": [
+        { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
+        { "id": 2, "name": "Tom Williams", "positions": ["LB"], "dob": "1997-06-20", "rating": 12 },
+        { "id": 3, "name": "Sam Taylor", "positions": ["CB"], "dob": "1996-09-10", "rating": 13 },
+        { "id": 4, "name": "Jack Davies", "positions": ["CB"], "dob": "1998-01-25", "rating": 12 },
+        { "id": 5, "name": "Ryan Mitchell", "positions": ["RB"], "dob": "1999-04-12", "rating": 11 },
+        { "id": 6, "name": "Luke Roberts", "positions": ["CDM", "CM"], "dob": "1996-07-30", "rating": 13 },
+        { "id": 7, "name": "Ben Clarke", "positions": ["CM"], "dob": "1997-11-05", "rating": 12 },
+        { "id": 8, "name": "Charlie Ward", "positions": ["CAM", "CM"], "dob": "1998-02-18", "rating": 12 },
+        { "id": 9, "name": "Jake Thompson", "positions": ["ST"], "dob": "1998-08-22", "rating": 13 },
+        { "id": 10, "name": "Matt Hughes", "positions": ["LW", "RW"], "dob": "1999-12-14", "rating": 12 },
+        { "id": 11, "name": "Dan Wilson", "positions": ["RW"], "dob": "1997-05-08", "rating": 12 }
+      ]
+    }
+    {
+      "id": 35,
+      "name": "Preston North End",
+      "shirtStyle": "stripes",
+      "primaryColor": "#0033A0",
+      "secondaryColor": "#FFFFFF",
+      "stadiumName": "St Andrew's",
+      "stadiumCapacity": "30,000",
+      "budget": 25000000,
+      "players": [
+        { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
+        { "id": 2, "name": "Tom Williams", "positions": ["LB"], "dob": "1997-06-20", "rating": 12 },
+        { "id": 3, "name": "Sam Taylor", "positions": ["CB"], "dob": "1996-09-10", "rating": 13 },
+        { "id": 4, "name": "Jack Davies", "positions": ["CB"], "dob": "1998-01-25", "rating": 12 },
+        { "id": 5, "name": "Ryan Mitchell", "positions": ["RB"], "dob": "1999-04-12", "rating": 11 },
+        { "id": 6, "name": "Luke Roberts", "positions": ["CDM", "CM"], "dob": "1996-07-30", "rating": 13 },
+        { "id": 7, "name": "Ben Clarke", "positions": ["CM"], "dob": "1997-11-05", "rating": 12 },
+        { "id": 8, "name": "Charlie Ward", "positions": ["CAM", "CM"], "dob": "1998-02-18", "rating": 12 },
+        { "id": 9, "name": "Jake Thompson", "positions": ["ST"], "dob": "1998-08-22", "rating": 13 },
+        { "id": 10, "name": "Matt Hughes", "positions": ["LW", "RW"], "dob": "1999-12-14", "rating": 12 },
+        { "id": 11, "name": "Dan Wilson", "positions": ["RW"], "dob": "1997-05-08", "rating": 12 }
+      ]
+    }
+    {
+      "id": 36,
+      "name": "QPR",
+      "shirtStyle": "hoops",
+      "primaryColor": "#0033A0",
+      "secondaryColor": "#FFFFFF",
+      "stadiumName": "St Andrew's",
+      "stadiumCapacity": "30,000",
+      "budget": 25000000,
+      "players": [
+        { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
+        { "id": 2, "name": "Tom Williams", "positions": ["LB"], "dob": "1997-06-20", "rating": 12 },
+        { "id": 3, "name": "Sam Taylor", "positions": ["CB"], "dob": "1996-09-10", "rating": 13 },
+        { "id": 4, "name": "Jack Davies", "positions": ["CB"], "dob": "1998-01-25", "rating": 12 },
+        { "id": 5, "name": "Ryan Mitchell", "positions": ["RB"], "dob": "1999-04-12", "rating": 11 },
+        { "id": 6, "name": "Luke Roberts", "positions": ["CDM", "CM"], "dob": "1996-07-30", "rating": 13 },
+        { "id": 7, "name": "Ben Clarke", "positions": ["CM"], "dob": "1997-11-05", "rating": 12 },
+        { "id": 8, "name": "Charlie Ward", "positions": ["CAM", "CM"], "dob": "1998-02-18", "rating": 12 },
+        { "id": 9, "name": "Jake Thompson", "positions": ["ST"], "dob": "1998-08-22", "rating": 13 },
+        { "id": 10, "name": "Matt Hughes", "positions": ["LW", "RW"], "dob": "1999-12-14", "rating": 12 },
+        { "id": 11, "name": "Dan Wilson", "positions": ["RW"], "dob": "1997-05-08", "rating": 12 }
+      ]
+    }
+    {
+      "id": 37,
+      "name": "Sheffield United",
+      "shirtStyle": "stripes",
+      "primaryColor": "#0033A0",
+      "secondaryColor": "#FFFFFF",
+      "stadiumName": "St Andrew's",
+      "stadiumCapacity": "30,000",
+      "budget": 25000000,
+      "players": [
+        { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
+        { "id": 2, "name": "Tom Williams", "positions": ["LB"], "dob": "1997-06-20", "rating": 12 },
+        { "id": 3, "name": "Sam Taylor", "positions": ["CB"], "dob": "1996-09-10", "rating": 13 },
+        { "id": 4, "name": "Jack Davies", "positions": ["CB"], "dob": "1998-01-25", "rating": 12 },
+        { "id": 5, "name": "Ryan Mitchell", "positions": ["RB"], "dob": "1999-04-12", "rating": 11 },
+        { "id": 6, "name": "Luke Roberts", "positions": ["CDM", "CM"], "dob": "1996-07-30", "rating": 13 },
+        { "id": 7, "name": "Ben Clarke", "positions": ["CM"], "dob": "1997-11-05", "rating": 12 },
+        { "id": 8, "name": "Charlie Ward", "positions": ["CAM", "CM"], "dob": "1998-02-18", "rating": 12 },
+        { "id": 9, "name": "Jake Thompson", "positions": ["ST"], "dob": "1998-08-22", "rating": 13 },
+        { "id": 10, "name": "Matt Hughes", "positions": ["LW", "RW"], "dob": "1999-12-14", "rating": 12 },
+        { "id": 11, "name": "Dan Wilson", "positions": ["RW"], "dob": "1997-05-08", "rating": 12 }
+      ]
+    }
+    {
+      "id": 38,
+      "name": "Sheffield Wednesday",
+      "shirtStyle": "stripes",
+      "primaryColor": "#0033A0",
+      "secondaryColor": "#FFFFFF",
+      "stadiumName": "St Andrew's",
+      "stadiumCapacity": "30,000",
+      "budget": 25000000,
+      "players": [
+        { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
+        { "id": 2, "name": "Tom Williams", "positions": ["LB"], "dob": "1997-06-20", "rating": 12 },
+        { "id": 3, "name": "Sam Taylor", "positions": ["CB"], "dob": "1996-09-10", "rating": 13 },
+        { "id": 4, "name": "Jack Davies", "positions": ["CB"], "dob": "1998-01-25", "rating": 12 },
+        { "id": 5, "name": "Ryan Mitchell", "positions": ["RB"], "dob": "1999-04-12", "rating": 11 },
+        { "id": 6, "name": "Luke Roberts", "positions": ["CDM", "CM"], "dob": "1996-07-30", "rating": 13 },
+        { "id": 7, "name": "Ben Clarke", "positions": ["CM"], "dob": "1997-11-05", "rating": 12 },
+        { "id": 8, "name": "Charlie Ward", "positions": ["CAM", "CM"], "dob": "1998-02-18", "rating": 12 },
+        { "id": 9, "name": "Jake Thompson", "positions": ["ST"], "dob": "1998-08-22", "rating": 13 },
+        { "id": 10, "name": "Matt Hughes", "positions": ["LW", "RW"], "dob": "1999-12-14", "rating": 12 },
+        { "id": 11, "name": "Dan Wilson", "positions": ["RW"], "dob": "1997-05-08", "rating": 12 }
+      ]
+    }
+    {
+      "id": 39,
+      "name": "Southampton",
+      "shirtStyle": "stripes",
+      "primaryColor": "#0033A0",
+      "secondaryColor": "#FFFFFF",
+      "stadiumName": "St Andrew's",
+      "stadiumCapacity": "30,000",
+      "budget": 25000000,
+      "players": [
+        { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
+        { "id": 2, "name": "Tom Williams", "positions": ["LB"], "dob": "1997-06-20", "rating": 12 },
+        { "id": 3, "name": "Sam Taylor", "positions": ["CB"], "dob": "1996-09-10", "rating": 13 },
+        { "id": 4, "name": "Jack Davies", "positions": ["CB"], "dob": "1998-01-25", "rating": 12 },
+        { "id": 5, "name": "Ryan Mitchell", "positions": ["RB"], "dob": "1999-04-12", "rating": 11 },
+        { "id": 6, "name": "Luke Roberts", "positions": ["CDM", "CM"], "dob": "1996-07-30", "rating": 13 },
+        { "id": 7, "name": "Ben Clarke", "positions": ["CM"], "dob": "1997-11-05", "rating": 12 },
+        { "id": 8, "name": "Charlie Ward", "positions": ["CAM", "CM"], "dob": "1998-02-18", "rating": 12 },
+        { "id": 9, "name": "Jake Thompson", "positions": ["ST"], "dob": "1998-08-22", "rating": 13 },
+        { "id": 10, "name": "Matt Hughes", "positions": ["LW", "RW"], "dob": "1999-12-14", "rating": 12 },
+        { "id": 11, "name": "Dan Wilson", "positions": ["RW"], "dob": "1997-05-08", "rating": 12 }
+      ]
+    }
+    {
+      "id": 40,
+      "name": "Stoke City",
+      "shirtStyle": "stripes",
+      "primaryColor": "#0033A0",
+      "secondaryColor": "#FFFFFF",
+      "stadiumName": "St Andrew's",
+      "stadiumCapacity": "30,000",
+      "budget": 25000000,
+      "players": [
+        { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
+        { "id": 2, "name": "Tom Williams", "positions": ["LB"], "dob": "1997-06-20", "rating": 12 },
+        { "id": 3, "name": "Sam Taylor", "positions": ["CB"], "dob": "1996-09-10", "rating": 13 },
+        { "id": 4, "name": "Jack Davies", "positions": ["CB"], "dob": "1998-01-25", "rating": 12 },
+        { "id": 5, "name": "Ryan Mitchell", "positions": ["RB"], "dob": "1999-04-12", "rating": 11 },
+        { "id": 6, "name": "Luke Roberts", "positions": ["CDM", "CM"], "dob": "1996-07-30", "rating": 13 },
+        { "id": 7, "name": "Ben Clarke", "positions": ["CM"], "dob": "1997-11-05", "rating": 12 },
+        { "id": 8, "name": "Charlie Ward", "positions": ["CAM", "CM"], "dob": "1998-02-18", "rating": 12 },
+        { "id": 9, "name": "Jake Thompson", "positions": ["ST"], "dob": "1998-08-22", "rating": 13 },
+        { "id": 10, "name": "Matt Hughes", "positions": ["LW", "RW"], "dob": "1999-12-14", "rating": 12 },
+        { "id": 11, "name": "Dan Wilson", "positions": ["RW"], "dob": "1997-05-08", "rating": 12 }
+      ]
+    }
+    {
+      "id": 41,
+      "name": "Swansea City",
+      "shirtStyle": "plain",
+      "primaryColor": "#FFFFFF",
+      "secondaryColor": "#000000",
+      "stadiumName": "St Andrew's",
+      "stadiumCapacity": "30,000",
+      "budget": 25000000,
+      "players": [
+        { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
+        { "id": 2, "name": "Tom Williams", "positions": ["LB"], "dob": "1997-06-20", "rating": 12 },
+        { "id": 3, "name": "Sam Taylor", "positions": ["CB"], "dob": "1996-09-10", "rating": 13 },
+        { "id": 4, "name": "Jack Davies", "positions": ["CB"], "dob": "1998-01-25", "rating": 12 },
+        { "id": 5, "name": "Ryan Mitchell", "positions": ["RB"], "dob": "1999-04-12", "rating": 11 },
+        { "id": 6, "name": "Luke Roberts", "positions": ["CDM", "CM"], "dob": "1996-07-30", "rating": 13 },
+        { "id": 7, "name": "Ben Clarke", "positions": ["CM"], "dob": "1997-11-05", "rating": 12 },
+        { "id": 8, "name": "Charlie Ward", "positions": ["CAM", "CM"], "dob": "1998-02-18", "rating": 12 },
+        { "id": 9, "name": "Jake Thompson", "positions": ["ST"], "dob": "1998-08-22", "rating": 13 },
+        { "id": 10, "name": "Matt Hughes", "positions": ["LW", "RW"], "dob": "1999-12-14", "rating": 12 },
+        { "id": 11, "name": "Dan Wilson", "positions": ["RW"], "dob": "1997-05-08", "rating": 12 }
+      ]
+    }
+    {
+      "id": 42,
+      "name": "Watford",
+      "shirtStyle": "stripes",
+      "primaryColor": "#0033A0",
+      "secondaryColor": "#FFFFFF",
+      "stadiumName": "St Andrew's",
+      "stadiumCapacity": "30,000",
+      "budget": 25000000,
+      "players": [
+        { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
+        { "id": 2, "name": "Tom Williams", "positions": ["LB"], "dob": "1997-06-20", "rating": 12 },
+        { "id": 3, "name": "Sam Taylor", "positions": ["CB"], "dob": "1996-09-10", "rating": 13 },
+        { "id": 4, "name": "Jack Davies", "positions": ["CB"], "dob": "1998-01-25", "rating": 12 },
+        { "id": 5, "name": "Ryan Mitchell", "positions": ["RB"], "dob": "1999-04-12", "rating": 11 },
+        { "id": 6, "name": "Luke Roberts", "positions": ["CDM", "CM"], "dob": "1996-07-30", "rating": 13 },
+        { "id": 7, "name": "Ben Clarke", "positions": ["CM"], "dob": "1997-11-05", "rating": 12 },
+        { "id": 8, "name": "Charlie Ward", "positions": ["CAM", "CM"], "dob": "1998-02-18", "rating": 12 },
+        { "id": 9, "name": "Jake Thompson", "positions": ["ST"], "dob": "1998-08-22", "rating": 13 },
+        { "id": 10, "name": "Matt Hughes", "positions": ["LW", "RW"], "dob": "1999-12-14", "rating": 12 },
+        { "id": 11, "name": "Dan Wilson", "positions": ["RW"], "dob": "1997-05-08", "rating": 12 }
+      ]
+    }
+    {
+      "id": 43,
+      "name": "West Bromwich Albion",
+      "shirtStyle": "stripes",
+      "primaryColor": "#0033A0",
+      "secondaryColor": "#FFFFFF",
+      "stadiumName": "St Andrew's",
+      "stadiumCapacity": "30,000",
+      "budget": 25000000,
+      "players": [
+        { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
+        { "id": 2, "name": "Tom Williams", "positions": ["LB"], "dob": "1997-06-20", "rating": 12 },
+        { "id": 3, "name": "Sam Taylor", "positions": ["CB"], "dob": "1996-09-10", "rating": 13 },
+        { "id": 4, "name": "Jack Davies", "positions": ["CB"], "dob": "1998-01-25", "rating": 12 },
+        { "id": 5, "name": "Ryan Mitchell", "positions": ["RB"], "dob": "1999-04-12", "rating": 11 },
+        { "id": 6, "name": "Luke Roberts", "positions": ["CDM", "CM"], "dob": "1996-07-30", "rating": 13 },
+        { "id": 7, "name": "Ben Clarke", "positions": ["CM"], "dob": "1997-11-05", "rating": 12 },
+        { "id": 8, "name": "Charlie Ward", "positions": ["CAM", "CM"], "dob": "1998-02-18", "rating": 12 },
+        { "id": 9, "name": "Jake Thompson", "positions": ["ST"], "dob": "1998-08-22", "rating": 13 },
+        { "id": 10, "name": "Matt Hughes", "positions": ["LW", "RW"], "dob": "1999-12-14", "rating": 12 },
+        { "id": 11, "name": "Dan Wilson", "positions": ["RW"], "dob": "1997-05-08", "rating": 12 }
+      ]
+    }
+    {
+      "id": 44,
+      "name": "Wrexham",
+      "shirtStyle": "stripes",
+      "primaryColor": "#0033A0",
+      "secondaryColor": "#FFFFFF",
+      "stadiumName": "St Andrew's",
+      "stadiumCapacity": "30,000",
       "budget": 25000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
