@@ -55,6 +55,7 @@
           const [selectedSlot, setSelectedSlot] = useState(null);
           const [showBench, setShowBench] = useState(false);
           const [country, setCountry] = useState(null);
+          const [facilities, setFacilities] = useState({ stadiumLevel: 3, devLevel: 1 });
 
           const formations = {
             '4-3-3': { positions: ['GK','LB','CB','CB','RB','CDM','CM','CM','LW','RW','ST'], labels: ['GK','LB','CB','CB','RB','CDM','CM','CM','LW','RW','ST'] },
@@ -106,6 +107,7 @@
             setLeagues(JSON.parse(JSON.stringify(db)));
             setFixtures({}); setDate(new Date('2025-08-01'));
             setFinanceHistory([]);
+            setFacilities({ stadiumLevel: 3, devLevel: 1 });
             localStorage.removeItem('footballManagerSave');
             setState('country-select');
           };
@@ -123,6 +125,7 @@
                   setFormation(data.gameData.formation || '4-3-3');
                   setFinanceHistory(data.gameData.financeHistory || []);
                   setStartingXI(data.gameData.startingXI || {});
+                  setFacilities(data.gameData.facilities || { stadiumLevel: 3, devLevel: 1 });
                   setState('info-page');
                 }
               } catch (e) { alert('Error loading game'); }
@@ -139,10 +142,10 @@
 
           useEffect(() => {
             if (team && state === 'info-page') {
-              const gameData = { league, team, country, leagues, fixtures, date: date.toISOString(), formation, financeHistory, startingXI };
+              const gameData = { league, team, country, leagues, fixtures, date: date.toISOString(), formation, financeHistory, startingXI, facilities };
               localStorage.setItem('footballManagerSave', JSON.stringify({ gameData }));
             }
-          }, [team, leagues, fixtures, date, state]);
+          }, [team, leagues, fixtures, date, state, facilities]);
 
           const selectCountry = (c) => { setCountry(c); setState('league-select'); };
 
@@ -157,6 +160,8 @@
               if (eligible.length > 0) xi[`pos${idx}`] = eligible.sort((a, b) => b.rating - a.rating)[0].id;
             });
             setStartingXI(xi);
+            const stadLvl = t.stadiumCapacity ? Math.round(t.stadiumCapacity / 10000) : 3;
+            setFacilities({ stadiumLevel: Math.max(1, Math.min(10, stadLvl)), devLevel: 1 });
             setState('info-page');
           };
 
@@ -239,12 +244,9 @@
             if (newLeague !== league) {
               const oldLeague = leagues[league];
               const newLeagueData = leagues[newLeague];
-              
               oldLeague.teams = oldLeague.teams.filter(t => t.id !== team.id);
-              
               const replaceIdx = Math.floor(Math.random() * newLeagueData.teams.length);
               newLeagueData.teams[replaceIdx] = team;
-              
               setLeague(newLeague);
             }
             
@@ -252,6 +254,23 @@
             const newDate = new Date(`${seasonYear}-08-01`);
             setDate(newDate);
             
+            // Apply youth development to YOUR team's players
+            team.players.forEach(p => {
+              const age = calcAge(p.dob);
+              if (age <= 27 && p.rating < 20) {
+                const growthChance = 0.15 + (facilities.devLevel - 1) * 0.05;
+                if (Math.random() < growthChance) {
+                  p.rating = Math.min(20, p.rating + 1);
+                }
+              }
+              if (age >= 32) {
+                const declineChance = 0.15 + (age - 32) * 0.1;
+                if (Math.random() < declineChance && p.rating > 5) {
+                  p.rating -= 1;
+                }
+              }
+            });
+
             Object.keys(leagues).forEach(lk => {
               leagues[lk].teams.forEach(tm => {
                 tm.players.forEach(p => {
@@ -388,7 +407,6 @@
             }
 
             setDate(nd);
-
             healInjuredPlayers(nd);
 
             if (nd.getDate() === 1 || financeHistory.length === 0 || new Date(financeHistory[financeHistory.length - 1].date).getMonth() !== nd.getMonth()) {
@@ -404,9 +422,7 @@
           };
 
           const getSeasonDisplay = () => {
-            if (date.getMonth() >= 7) {
-              return `${date.getFullYear()}/${date.getFullYear() + 1}`;
-            }
+            if (date.getMonth() >= 7) return `${date.getFullYear()}/${date.getFullYear() + 1}`;
             return `${date.getFullYear() - 1}/${date.getFullYear()}`;
           };
 
@@ -550,6 +566,7 @@
                           { key: 'starting-xi', label: 'Tactics' },
                           { key: 'transfers', label: 'Transfers' },
                           { key: 'finances', label: 'Finances' },
+                          { key: 'facilities', label: 'Facilities' },
                           { key: 'table', label: 'League Table' },
                           { key: 'fixtures', label: 'Fixtures' },
                           { key: 'scorers', label: 'Stats Tables' },
@@ -712,46 +729,15 @@
                       const txtCol = isGK ? '#FFFFFF' : dark ? '#FFFFFF' : light ? '#000000' : '#FFFFFF';
                       return (
                         <svg viewBox="0 0 60 55" style={{ width: '100%', height: '100%' }}>
-                          <defs>
-                            <clipPath id={clipId}>
-                              <path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" />
-                            </clipPath>
-                          </defs>
+                          <defs><clipPath id={clipId}><path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" /></clipPath></defs>
                           <path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" fill={c1} />
                           <g clipPath={`url(#${clipId})`}>
-                            {s === 'stripes' && <>
-                              <rect x="4" y="0" width="5" height="55" fill={c2} />
-                              <rect x="14" y="0" width="5" height="55" fill={c2} />
-                              <rect x="24" y="0" width="5" height="55" fill={c2} />
-                              <rect x="34" y="0" width="5" height="55" fill={c2} />
-                              <rect x="44" y="0" width="5" height="55" fill={c2} />
-                              <rect x="54" y="0" width="5" height="55" fill={c2} />
-                            </>}
-                            {s === 'hoops' && <>
-                              <rect x="0" y="5" width="60" height="5" fill={c2} />
-                              <rect x="0" y="15" width="60" height="5" fill={c2} />
-                              <rect x="0" y="25" width="60" height="5" fill={c2} />
-                              <rect x="0" y="35" width="60" height="5" fill={c2} />
-                              <rect x="0" y="45" width="60" height="5" fill={c2} />
-                            </>}
-                            {s === 'quarters' && <>
-                              <rect x="30" y="0" width="30" height="25" fill={c2} />
-                              <rect x="0" y="25" width="30" height="30" fill={c2} />
-                            </>}
-                            {s === 'sleeves' && <>
-                              <path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} />
-                              <path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c2} />
-                            </>}
-                            {s === 'sash' && <>
-                              <path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} />
-                              <path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c2} />
-                              <polygon points="5,50 15,50 55,10 55,0 50,0 45,0 0,45 0,50" fill={c2} opacity="0.9" />
-                            </>}
-                            {s === 'halves' && <>
-                              <rect x="30" y="0" width="30" height="55" fill={c2} />
-                              <path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} />
-                              <path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c1} />
-                            </>}
+                            {s === 'stripes' && <>{[4,14,24,34,44,54].map(x => <rect key={x} x={x} y="0" width="5" height="55" fill={c2} />)}</>}
+                            {s === 'hoops' && <>{[5,15,25,35,45].map(y => <rect key={y} x="0" y={y} width="60" height="5" fill={c2} />)}</>}
+                            {s === 'quarters' && <><rect x="30" y="0" width="30" height="25" fill={c2} /><rect x="0" y="25" width="30" height="30" fill={c2} /></>}
+                            {s === 'sleeves' && <><path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} /><path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c2} /></>}
+                            {s === 'sash' && <><path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} /><path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c2} /><polygon points="5,50 15,50 55,10 55,0 50,0 45,0 0,45 0,50" fill={c2} opacity="0.9" /></>}
+                            {s === 'halves' && <><rect x="30" y="0" width="30" height="55" fill={c2} /><path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} /><path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c1} /></>}
                           </g>
                           <path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="1" />
                           <text x="30" y="36" textAnchor="middle" fill={txtCol} fontSize="18" fontWeight="bold" fontFamily="Arial" stroke={txtCol === '#FFFFFF' ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.3)'} strokeWidth="0.5">{number}</text>
@@ -766,9 +752,7 @@
                             <h2 className="text-white font-bold text-lg">{team.name}</h2>
                             <p className="text-gray-400 text-xs">Tactics</p>
                           </div>
-                          <button onClick={() => setShowBench(!showBench)} className={`px-4 py-2 rounded-lg text-sm font-bold ${showBench ? 'bg-orange-600 text-white' : 'bg-gray-700 text-gray-300'}`}>
-                            Subs
-                          </button>
+                          <button onClick={() => setShowBench(!showBench)} className={`px-4 py-2 rounded-lg text-sm font-bold ${showBench ? 'bg-orange-600 text-white' : 'bg-gray-700 text-gray-300'}`}>Subs</button>
                         </div>
 
                         <div className="bg-gray-800 p-3 border-b border-gray-700">
@@ -836,31 +820,14 @@
                               const surname = player ? player.name.split(' ').pop() : requiredPos;
 
                               return (
-                                <div
-                                  key={idx}
-                                  onClick={() => handleSlotClick(idx)}
-                                  className="absolute flex flex-col items-center cursor-pointer"
-                                  style={{
-                                    left: `${pos.x}%`,
-                                    top: `${pos.y / 140 * 100}%`,
-                                    transform: 'translate(-50%, -50%)',
-                                    zIndex: isSelected ? 20 : 10,
-                                    width: '18%'
-                                  }}
-                                >
+                                <div key={idx} onClick={() => handleSlotClick(idx)} className="absolute flex flex-col items-center cursor-pointer" style={{ left: `${pos.x}%`, top: `${pos.y / 140 * 100}%`, transform: 'translate(-50%, -50%)', zIndex: isSelected ? 20 : 10, width: '18%' }}>
                                   <div className={`relative transition-transform ${isSelected ? 'scale-110' : ''}`} style={{ width: '42px', height: '38px' }}>
                                     <ShirtSvg number={shirtNum} isGK={isGK} isOOP={isOutOfPosition && !!player} />
                                     {isSelected && <div className="absolute inset-0 rounded" style={{ boxShadow: '0 0 12px rgba(249,115,22,0.8)' }}></div>}
                                   </div>
-                                  <div className="text-white text-center font-bold leading-tight mt-0.5" style={{ fontSize: '8px', textShadow: '0 1px 3px rgba(0,0,0,0.9)' }}>
-                                    {surname}
-                                  </div>
-                                  <div className="text-gray-300 text-center leading-tight" style={{ fontSize: '7px', textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}>
-                                    {player ? posAbbrevs : ''}
-                                  </div>
-                                  {isOutOfPosition && player && (
-                                    <div style={{ fontSize: '8px' }} className="text-yellow-400">⚠️</div>
-                                  )}
+                                  <div className="text-white text-center font-bold leading-tight mt-0.5" style={{ fontSize: '8px', textShadow: '0 1px 3px rgba(0,0,0,0.9)' }}>{surname}</div>
+                                  <div className="text-gray-300 text-center leading-tight" style={{ fontSize: '7px', textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}>{player ? posAbbrevs : ''}</div>
+                                  {isOutOfPosition && player && (<div style={{ fontSize: '8px' }} className="text-yellow-400">⚠️</div>)}
                                 </div>
                               );
                             })}
@@ -881,13 +848,7 @@
                                 const bestSlot = selectedSlot !== null ? formations[formation].positions[selectedSlot] : null;
                                 const fitsSelected = bestSlot && p.positions.includes(bestSlot);
                                 return (
-                                  <div key={p.id} onClick={() => handleBenchClick(p.id)}
-                                    className={`rounded p-2 flex items-center gap-3 transition-all ${
-                                      selectedSlot !== null
-                                        ? fitsSelected ? 'bg-green-900/40 cursor-pointer ring-1 ring-green-500' : 'bg-gray-700 cursor-pointer hover:bg-gray-600'
-                                        : 'bg-gray-700'
-                                    }`}
-                                  >
+                                  <div key={p.id} onClick={() => handleBenchClick(p.id)} className={`rounded p-2 flex items-center gap-3 transition-all ${selectedSlot !== null ? fitsSelected ? 'bg-green-900/40 cursor-pointer ring-1 ring-green-500' : 'bg-gray-700 cursor-pointer hover:bg-gray-600' : 'bg-gray-700'}`}>
                                     <div style={{ width: '32px', height: '28px', flexShrink: 0 }}>
                                       <ShirtSvg number={p.rating} isGK={p.positions.includes('GK')} isOOP={false} />
                                     </div>
@@ -912,6 +873,7 @@
                       </div>
                     );
                   })()}
+
                   {page === 'squad' && (
                     <div className="bg-gray-800 rounded-lg p-4">
                       <h2 className="text-white font-bold mb-4">Squad</h2>
@@ -945,15 +907,10 @@
                             let zoneBg = '';
                             if (i < 2) zoneBg = 'bg-green-900/40';
                             else if (i >= tbl.length - 3) zoneBg = 'bg-red-900/40';
-                            
                             const isPlayer = t.teamId === team.id;
                             return (
                               <tr key={t.teamId} className={`border-b border-gray-700 ${isPlayer ? 'ring-2 ring-orange-500' : zoneBg}`}>
-                                <td className="text-white p-2">
-                                  {i + 1}
-                                  {i < 2 && <span className="ml-1 text-green-400">↑</span>}
-                                  {i >= tbl.length - 3 && <span className="ml-1 text-red-400">↓</span>}
-                                </td>
+                                <td className="text-white p-2">{i + 1}{i < 2 && <span className="ml-1 text-green-400">↑</span>}{i >= tbl.length - 3 && <span className="ml-1 text-red-400">↓</span>}</td>
                                 <td className="text-white p-2">{t.name}</td>
                                 <td className="text-center text-gray-400 p-2">{t.played}</td>
                                 <td className="text-center text-gray-400 p-2">{t.won}</td>
@@ -966,14 +923,8 @@
                         </tbody>
                       </table>
                       <div className="mt-4 space-y-2 text-xs">
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 bg-green-900/40 rounded"></div>
-                          <span className="text-gray-400">Promotion zone (Top 2)</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 bg-red-900/40 rounded"></div>
-                          <span className="text-gray-400">Relegation zone (Bottom 3)</span>
-                        </div>
+                        <div className="flex items-center gap-2"><div className="w-4 h-4 bg-green-900/40 rounded"></div><span className="text-gray-400">Promotion zone (Top 2)</span></div>
+                        <div className="flex items-center gap-2"><div className="w-4 h-4 bg-red-900/40 rounded"></div><span className="text-gray-400">Relegation zone (Bottom 3)</span></div>
                       </div>
                     </div>
                   )}
@@ -1051,6 +1002,126 @@
                       </div>
                     </div>
                   )}
+
+                  {page === 'facilities' && (() => {
+                    const getStadiumUpgradeCost = (lvl) => Math.round((lvl + 1) * (lvl + 1) * 1200000);
+                    const getDevUpgradeCost = (lvl) => Math.round((lvl + 1) * (lvl + 1) * 600000);
+                    const stadCost = facilities.stadiumLevel < 10 ? getStadiumUpgradeCost(facilities.stadiumLevel) : null;
+                    const devCost = facilities.devLevel < 10 ? getDevUpgradeCost(facilities.devLevel) : null;
+
+                    const upgradeStadium = () => {
+                      if (facilities.stadiumLevel >= 10) return;
+                      const cost = getStadiumUpgradeCost(facilities.stadiumLevel);
+                      if (team.budget < cost) { alert('Insufficient funds!'); return; }
+                      team.budget -= cost;
+                      setFacilities({ ...facilities, stadiumLevel: facilities.stadiumLevel + 1 });
+                      setFinanceHistory([...financeHistory, { date: date.toISOString(), balance: team.budget }]);
+                    };
+
+                    const upgradeDev = () => {
+                      if (facilities.devLevel >= 10) return;
+                      const cost = getDevUpgradeCost(facilities.devLevel);
+                      if (team.budget < cost) { alert('Insufficient funds!'); return; }
+                      team.budget -= cost;
+                      setFacilities({ ...facilities, devLevel: facilities.devLevel + 1 });
+                      setFinanceHistory([...financeHistory, { date: date.toISOString(), balance: team.budget }]);
+                    };
+
+                    const ProgressBar = ({ level, color }) => (
+                      <div className="w-full bg-gray-600 rounded-full h-5 overflow-hidden">
+                        <div className="h-full rounded-full transition-all duration-500 flex items-center justify-end pr-2" style={{ width: `${level * 10}%`, background: `linear-gradient(90deg, ${color}88, ${color})`, minWidth: level > 0 ? '2rem' : '0' }}>
+                          <span className="text-white text-xs font-bold">{level}/10</span>
+                        </div>
+                      </div>
+                    );
+
+                    return (
+                      <div>
+                        <div className="bg-gray-800 rounded-lg p-4 mb-4">
+                          <h2 className="text-white font-bold text-xl mb-1">🏟️ Facilities</h2>
+                          <p className="text-gray-400 text-sm mb-4">Balance: {formatCurrency(team.budget)}</p>
+
+                          <div className="bg-gray-700 rounded-lg p-4 mb-4">
+                            <div className="flex justify-between items-center mb-2">
+                              <div>
+                                <h3 className="text-white font-bold">🏟️ Stadium</h3>
+                                <p className="text-gray-400 text-xs">{team.stadiumName || 'Stadium'} — {(facilities.stadiumLevel * 10000).toLocaleString()} seats</p>
+                              </div>
+                              <div className="text-right">
+                                <span className="text-white font-bold text-2xl">{facilities.stadiumLevel}</span>
+                                <span className="text-gray-400 text-sm">/10</span>
+                              </div>
+                            </div>
+                            <div className="mb-3"><ProgressBar level={facilities.stadiumLevel} color="#22c55e" /></div>
+                            {facilities.stadiumLevel < 10 ? (
+                              <div className="flex justify-between items-center">
+                                <div>
+                                  <p className="text-gray-300 text-xs">Expand to {((facilities.stadiumLevel + 1) * 10000).toLocaleString()} seats</p>
+                                  <p className="text-orange-400 text-sm font-bold">{formatCurrency(stadCost)}</p>
+                                </div>
+                                <button onClick={upgradeStadium} disabled={team.budget < stadCost} className={`px-4 py-2 rounded-lg font-bold text-sm ${team.budget >= stadCost ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-gray-600 text-gray-400 cursor-not-allowed'}`}>Upgrade</button>
+                              </div>
+                            ) : (
+                              <p className="text-green-400 text-sm font-bold text-center">✅ Fully upgraded!</p>
+                            )}
+                          </div>
+
+                          <div className="bg-gray-700 rounded-lg p-4">
+                            <div className="flex justify-between items-center mb-2">
+                              <div>
+                                <h3 className="text-white font-bold">⚽ Youth Development</h3>
+                                <p className="text-gray-400 text-xs">Improves player growth rate each season</p>
+                              </div>
+                              <div className="text-right">
+                                <span className="text-white font-bold text-2xl">{facilities.devLevel}</span>
+                                <span className="text-gray-400 text-sm">/10</span>
+                              </div>
+                            </div>
+                            <div className="mb-3"><ProgressBar level={facilities.devLevel} color="#3b82f6" /></div>
+                            <div className="mb-3 bg-gray-800 rounded p-2">
+                              <p className="text-gray-400 text-xs text-center">
+                                Growth bonus: <span className="text-blue-400 font-bold">+{((facilities.devLevel - 1) * 5)}%</span>
+                                {facilities.devLevel === 1 && <span className="text-gray-500"> (no bonus yet)</span>}
+                              </p>
+                            </div>
+                            {facilities.devLevel < 10 ? (
+                              <div className="flex justify-between items-center">
+                                <div>
+                                  <p className="text-gray-300 text-xs">Level {facilities.devLevel} → {facilities.devLevel + 1}</p>
+                                  <p className="text-orange-400 text-sm font-bold">{formatCurrency(devCost)}</p>
+                                </div>
+                                <button onClick={upgradeDev} disabled={team.budget < devCost} className={`px-4 py-2 rounded-lg font-bold text-sm ${team.budget >= devCost ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-600 text-gray-400 cursor-not-allowed'}`}>Upgrade</button>
+                              </div>
+                            ) : (
+                              <p className="text-blue-400 text-sm font-bold text-center">✅ Fully upgraded!</p>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="bg-gray-800 rounded-lg p-4">
+                          <h3 className="text-white font-bold mb-3">💰 Upgrade Costs</h3>
+                          <table className="w-full text-xs">
+                            <thead>
+                              <tr className="text-gray-500 border-b border-gray-700">
+                                <th className="text-left p-1">Level</th>
+                                <th className="text-right p-1">Stadium</th>
+                                <th className="text-right p-1">Development</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {[1,2,3,4,5,6,7,8,9].map(lvl => (
+                                <tr key={lvl} className={`border-b border-gray-700/50 ${lvl === facilities.stadiumLevel || lvl === facilities.devLevel ? 'bg-gray-700/50' : ''}`}>
+                                  <td className="text-gray-400 p-1">{lvl} → {lvl+1}</td>
+                                  <td className={`text-right p-1 ${lvl === facilities.stadiumLevel ? 'text-green-400 font-bold' : lvl < facilities.stadiumLevel ? 'text-gray-600 line-through' : 'text-gray-400'}`}>{formatCurrency(getStadiumUpgradeCost(lvl))}</td>
+                                  <td className={`text-right p-1 ${lvl === facilities.devLevel ? 'text-blue-400 font-bold' : lvl < facilities.devLevel ? 'text-gray-600 line-through' : 'text-gray-400'}`}>{formatCurrency(getDevUpgradeCost(lvl))}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    );
+                  })()}
                 </div>
 
                 {next && (
