@@ -10,7 +10,7 @@
         "primaryColor": "#EF0107",
         "secondaryColor": "#FFFFFF",
         "stadiumName": "Emirates Stadium",
-        "stadiumCapacity": "60,000",
+        "stadiumCapacity": 60,000,
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "David Raya", "positions": ["GK"], "dob": "1995-09-15", "rating": 16 },
@@ -46,7 +46,7 @@
         "primaryColor": "#670E36",
         "secondaryColor": "#95BFE5",
         "stadiumName": "Villa Park",
-        "stadiumCapacity": "43,000",
+        "stadiumCapacity": 43,000,
         "budget": 50000000,
         "players": [
           { "id": 23, "name": "Emiliano Martínez", "positions": ["GK"], "dob": "1992-09-02", "rating": 17 },
@@ -83,7 +83,7 @@
         "primaryColor": "#DA291C",
         "secondaryColor": "#000000",
         "stadiumName": "Vitality Stadium",
-        "stadiumCapacity": "11,000",
+        "stadiumCapacity": 11,000,
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Đorđe Petrović", "positions": ["GK"], "dob": "1999-10-08", "rating": 14 },
@@ -121,7 +121,7 @@
         "primaryColor": "#e30613",
         "secondaryColor": "#FFFFFF",
         "stadiumName": "Brentford Community Stadium",
-        "stadiumCapacity": "17,000",
+        "stadiumCapacity": 17,000,
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Caoimhín Kelleher", "positions": ["GK"], "dob": "1998-11-23", "rating": 15 },
@@ -154,7 +154,7 @@
         "primaryColor": "#0057B8",
         "secondaryColor": "#FFFFFF",
         "stadiumName": "AMEX Stadium",
-        "stadiumCapacity": "32,000",
+        "stadiumCapacity": 32,000,
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Bart Verbruggen", "positions": ["GK"], "dob": "2002-08-18", "rating": 16 },
@@ -192,7 +192,7 @@
         "primaryColor": "#6C1D45",
         "secondaryColor": "#99D6EA",
         "stadiumName": "Turf Moor",
-        "stadiumCapacity": "21,000",
+        "stadiumCapacity": 21,000,
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Martin Dúbravka", "positions": ["GK"], "dob": "1989-01-15", "rating": 15 },
@@ -234,7 +234,7 @@
         "primaryColor": "#034694",
         "secondaryColor": "#FFFFFF",
         "stadiumName": "Stamford Bridge",
-        "stadiumCapacity": "42,000",
+        "stadiumCapacity": 42,000,
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Robert Sánchez", "positions": ["GK"], "dob": "1997-11-18", "rating": 16 },
@@ -271,7 +271,7 @@
         "primaryColor": "#1B458F",
         "secondaryColor": "#C4122E",
         "stadiumName": "Selhurst Park",
-        "stadiumCapacity": "26,000",
+        "stadiumCapacity": 26,000,
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Dean Henderson", "positions": ["GK"], "dob": "1997-03-12", "rating": 16 },
@@ -309,7 +309,7 @@
         "primaryColor": "#003399",
         "secondaryColor": "#FFFFFF",
         "stadiumName": "Hill Dickinson Stadium",
-        "stadiumCapacity": "53,000",
+        "stadiumCapacity": 53,000,
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Jordan Pickford", "positions": ["GK"], "dob": "1994-03-07", "rating": 16 },
@@ -346,7 +346,7 @@
         "primaryColor": "#FFFFFF",
         "secondaryColor": "#000000",
         "stadiumName": "Craven Cottage",
-        "stadiumCapacity": "30,000",
+        "stadiumCapacity": 30,000,
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Bernd Leno", "positions": ["GK"], "dob": "1992-03-04", "rating": 15 },
@@ -382,7 +382,7 @@
         "primaryColor": "#FFFFFF",
         "secondaryColor": "#1D428A",
         "stadiumName": "Elland Road",
-        "stadiumCapacity": "38,000",
+        "stadiumCapacity": 38,000,
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Lucas Perri", "positions": ["GK"], "dob": "1997-12-10", "rating": 13 },
@@ -418,7 +418,7 @@
         "primaryColor": "#C8102E",
         "secondaryColor": "#FFFFFF",
         "stadiumName": "Anfield",
-        "stadiumCapacity": "61,000",
+        "stadiumCapacity": 61,000,
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Allison Becker", "positions": ["GK"], "dob": "1992-10-02", "rating": 18 },
@@ -456,7 +456,7 @@
         "primaryColor": "#6CABDD",
         "secondaryColor": "#FFFFFF",
         "stadiumName": "Etihad Stadium",
-        "stadiumCapacity": "55,000",
+        "stadiumCapacity": 55,000,
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "James Trafford", "positions": ["GK"], "dob": "2002-10-10", "rating": 14 },
@@ -495,7 +495,7 @@
         "primaryColor": "#DA291C",
         "secondaryColor": "#FFFFFF",
         "stadiumName": "Old Trafford",
-        "stadiumCapacity": "76,000",
+        "stadiumCapacity": 76,000,
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Altay Bayındır", "positions": ["GK"], "dob": "1998-04-14", "rating": 13 },
@@ -530,7 +530,7 @@
         "primaryColor": "#241F20",
         "secondaryColor": "#FFFFFF",
         "stadiumName": "St James' Park",
-        "stadiumCapacity": "52,000",
+        "stadiumCapacity": 52,000,
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Nick Pope", "positions": ["GK"], "dob": "1992-04-19", "rating": 15 },
@@ -568,7 +568,7 @@
         "primaryColor": "#DD0000",
         "secondaryColor": "#FFFFFF",
         "stadiumName": "City Ground Stadium",
-        "stadiumCapacity": "30,000",
+        "stadiumCapacity": 30,000,
         "budget": 50000000,
         "players": [
           { "id": 13, "name": "John Victor", "positions": ["GK"], "dob": "1996-02-13", "rating": 13 },
@@ -607,7 +607,7 @@
         "primaryColor": "#EB172B",
         "secondaryColor": "#FFFFFF",
         "stadiumName": "Stadium of Light",
-        "stadiumCapacity": "48,000",
+        "stadiumCapacity": 48,000,
         "budget": 50000000,
         "players": [
           { "id": 21, "name": "Simon Moore", "positions": ["GK"], "dob": "1990-05-19", "rating": 10 },
@@ -645,7 +645,7 @@
         "primaryColor": "#FFFFFF",
         "secondaryColor": "#132257",
         "stadiumName": "Tottenham Hotspur Stadium",
-        "stadiumCapacity": "63,000",
+        "stadiumCapacity": 63,000,
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Guglielmo Vicario", "positions": ["GK"], "dob": "1996-10-07", "rating": 16 },
@@ -685,7 +685,7 @@
         "primaryColor": "#7A263A",
         "secondaryColor": "#1BB1E7",
         "stadiumName": "London Stadium",
-        "stadiumCapacity": "63,000",
+        "stadiumCapacity": 63,000,
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Mads Hermansen", "positions": ["GK"], "dob": "2000-07-11", "rating": 14 },
@@ -718,7 +718,7 @@
         "primaryColor": "#FDB913",
         "secondaryColor": "#231F20",
         "stadiumName": "Molineux",
-        "stadiumCapacity": "32,000",
+        "stadiumCapacity": 32,000,
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "José Sá", "positions": ["GK"], "dob": "1993-01-17", "rating": 14 },
@@ -760,7 +760,7 @@
       "primaryColor": "#0033A0",
       "secondaryColor": "#FFFFFF",
       "stadiumName": "St Andrew's",
-      "stadiumCapacity": "30,000",
+      "stadiumCapacity": 30,000,
       "budget": 25000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -783,7 +783,7 @@
       "primaryColor": "#0033A0",
       "secondaryColor": "#FFFFFF",
       "stadiumName": "St Andrew's",
-      "stadiumCapacity": "30,000",
+      "stadiumCapacity": 30,000,
       "budget": 25000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -806,7 +806,7 @@
       "primaryColor": "#0033A0",
       "secondaryColor": "#FFFFFF",
       "stadiumName": "St Andrew's",
-      "stadiumCapacity": "30,000",
+      "stadiumCapacity": 30,000,
       "budget": 25000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -829,7 +829,7 @@
       "primaryColor": "#0033A0",
       "secondaryColor": "#FFFFFF",
       "stadiumName": "St Andrew's",
-      "stadiumCapacity": "30,000",
+      "stadiumCapacity": 30,000,
       "budget": 25000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -852,7 +852,7 @@
       "primaryColor": "#0033A0",
       "secondaryColor": "#FFFFFF",
       "stadiumName": "St Andrew's",
-      "stadiumCapacity": "30,000",
+      "stadiumCapacity": 30,000,
       "budget": 25000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -875,7 +875,7 @@
       "primaryColor": "#FFFFFF",
       "secondaryColor": "#000000",
       "stadiumName": "St Andrew's",
-      "stadiumCapacity": "30,000",
+      "stadiumCapacity": 30,000,
       "budget": 25000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -898,7 +898,7 @@
       "primaryColor": "#0033A0",
       "secondaryColor": "#FFFFFF",
       "stadiumName": "St Andrew's",
-      "stadiumCapacity": "30,000",
+      "stadiumCapacity": 30,000,
       "budget": 25000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -921,7 +921,7 @@
       "primaryColor": "#0033A0",
       "secondaryColor": "#FFFFFF",
       "stadiumName": "St Andrew's",
-      "stadiumCapacity": "30,000",
+      "stadiumCapacity": 30,000,
       "budget": 25000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -944,7 +944,7 @@
       "primaryColor": "#0033A0",
       "secondaryColor": "#FFFFFF",
       "stadiumName": "St Andrew's",
-      "stadiumCapacity": "30,000",
+      "stadiumCapacity": 30,000,
       "budget": 25000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -967,7 +967,7 @@
       "primaryColor": "#0033A0",
       "secondaryColor": "#FFFFFF",
       "stadiumName": "St Andrew's",
-      "stadiumCapacity": "30,000",
+      "stadiumCapacity": 30,000,
       "budget": 25000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -990,7 +990,7 @@
       "primaryColor": "#0033A0",
       "secondaryColor": "#FFFFFF",
       "stadiumName": "St Andrew's",
-      "stadiumCapacity": "30,000",
+      "stadiumCapacity": 30,000,
       "budget": 25000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -1013,7 +1013,7 @@
       "primaryColor": "#0033A0",
       "secondaryColor": "#FFFFFF",
       "stadiumName": "St Andrew's",
-      "stadiumCapacity": "30,000",
+      "stadiumCapacity": 30,000,
       "budget": 25000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -1036,7 +1036,7 @@
       "primaryColor": "#0033A0",
       "secondaryColor": "#FFFFFF",
       "stadiumName": "St Andrew's",
-      "stadiumCapacity": "30,000",
+      "stadiumCapacity": 30,000,
       "budget": 25000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -1059,7 +1059,7 @@
       "primaryColor": "#0033A0",
       "secondaryColor": "#FFFFFF",
       "stadiumName": "St Andrew's",
-      "stadiumCapacity": "30,000",
+      "stadiumCapacity": 30,000,
       "budget": 25000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -1082,7 +1082,7 @@
       "primaryColor": "#0033A0",
       "secondaryColor": "#FFFFFF",
       "stadiumName": "St Andrew's",
-      "stadiumCapacity": "30,000",
+      "stadiumCapacity": 30,000,
       "budget": 25000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -1105,7 +1105,7 @@
       "primaryColor": "#0033A0",
       "secondaryColor": "#FFFFFF",
       "stadiumName": "St Andrew's",
-      "stadiumCapacity": "30,000",
+      "stadiumCapacity": 30,000,
       "budget": 25000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -1128,7 +1128,7 @@
       "primaryColor": "#0033A0",
       "secondaryColor": "#FFFFFF",
       "stadiumName": "St Andrew's",
-      "stadiumCapacity": "30,000",
+      "stadiumCapacity": 30,000,
       "budget": 25000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -1151,7 +1151,7 @@
       "primaryColor": "#0033A0",
       "secondaryColor": "#FFFFFF",
       "stadiumName": "St Andrew's",
-      "stadiumCapacity": "30,000",
+      "stadiumCapacity": 30,000,
       "budget": 25000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -1174,7 +1174,7 @@
       "primaryColor": "#0033A0",
       "secondaryColor": "#FFFFFF",
       "stadiumName": "St Andrew's",
-      "stadiumCapacity": "30,000",
+      "stadiumCapacity": 30,000,
       "budget": 25000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -1197,7 +1197,7 @@
       "primaryColor": "#0033A0",
       "secondaryColor": "#FFFFFF",
       "stadiumName": "St Andrew's",
-      "stadiumCapacity": "30,000",
+      "stadiumCapacity": 30,000,
       "budget": 25000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -1220,7 +1220,7 @@
       "primaryColor": "#FFFFFF",
       "secondaryColor": "#000000",
       "stadiumName": "St Andrew's",
-      "stadiumCapacity": "30,000",
+      "stadiumCapacity": 30,000,
       "budget": 25000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -1243,7 +1243,7 @@
       "primaryColor": "#0033A0",
       "secondaryColor": "#FFFFFF",
       "stadiumName": "St Andrew's",
-      "stadiumCapacity": "30,000",
+      "stadiumCapacity": 30,000,
       "budget": 25000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -1266,7 +1266,7 @@
       "primaryColor": "#0033A0",
       "secondaryColor": "#FFFFFF",
       "stadiumName": "St Andrew's",
-      "stadiumCapacity": "30,000",
+      "stadiumCapacity": 30,000,
       "budget": 25000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -1289,7 +1289,7 @@
       "primaryColor": "#0033A0",
       "secondaryColor": "#FFFFFF",
       "stadiumName": "St Andrew's",
-      "stadiumCapacity": "30,000",
+      "stadiumCapacity": 30,000,
       "budget": 25000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
