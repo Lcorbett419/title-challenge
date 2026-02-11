@@ -1366,7 +1366,7 @@
     {
       "id": 46,
       "name": "Barnsley",
-      "shirtStyle": "stripes",
+      "shirtStyle": "plain",
       "primaryColor": "#E32221",
       "secondaryColor": "#FFFFFF",
       "stadiumName": "Oakwell",
