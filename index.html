@@ -84,20 +84,31 @@
           };
 
           const healInjuredPlayers = (currentDate) => {
-            if (!leagues) return;
-            Object.keys(leagues).forEach(lk => {
-              leagues[lk].teams.forEach(tm => {
-                tm.players.forEach(p => {
-                  if (p.injured && p.injuryUntil) {
-                    if (new Date(p.injuryUntil) <= currentDate) {
-                      p.injured = false;
-                      p.injuryUntil = null;
-                    }
-                  }
-                });
-              });
-            });
-          };
+  if (!leagues) return;
+  Object.keys(leagues).forEach(lk => {
+    leagues[lk].teams.forEach(tm => {
+      tm.players.forEach(p => {
+        if (p.injured && p.injuryUntil) {
+          if (new Date(p.injuryUntil) <= currentDate) {
+            p.injured = false;
+            p.injuryUntil = null;
+          }
+        }
+      });
+    });
+  });
+  // Heals the team directly (in case team object isn't in leagues)
+  if (team) {
+    team.players.forEach(p => {
+      if (p.injured && p.injuryUntil) {
+        if (new Date(p.injuryUntil) <= currentDate) {
+          p.injured = false;
+          p.injuryUntil = null;
+        }
+      }
+    });
+  }
+};
 
           const formatCurrency = (amt) => '£' + (amt / 1000000).toFixed(1) + 'M';
           const formatDate = (d) => new Date(d).toLocaleDateString('en-GB');
