@@ -784,7 +784,7 @@
         { "id": 24, "name": "Tomoki Iwata", "positions": ["CDM", "CM"], "dob": "1997-04-07", "rating": 12 },
         { "id": 27, "name": "Kanya Fujimoto", "positions": ["CAM", "CM"], "dob": "1999-07-01", "rating": 11 },
         { "id": 9, "name": "Kyōgo Furuhashi", "positions": ["ST"], "dob": "1995-01-20", "rating": 13 },
-        { "id": 28, "name": "Jay Stansfield", "positions": ["ST"], "dob": "2002-11-44", "rating": 13 },
+        { "id": 28, "name": "Jay Stansfield", "positions": ["ST"], "dob": "2002-11-24", "rating": 13 },
         { "id": 29, "name": "August Priske", "positions": ["ST"], "dob": "2004-03-23", "rating": 11 },
         { "id": 33, "name": "Marvin Ducksch", "positions": ["ST", "CAM"], "dob": "1994-03-07", "rating": 13 }
       ]
