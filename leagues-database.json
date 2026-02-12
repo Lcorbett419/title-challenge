@@ -143,7 +143,7 @@
           { "id": 27, "name": "Vitaly Janelt", "positions": ["CM"], "dob": "1998-05-10", "rating": 14 },
           { "id": 7, "name": "Kevin Schade", "positions": ["LW", "RW"], "dob": "2001-11-27", "rating": 16 },
           { "id": 9, "name": "Igor Thiago", "positions": ["ST"], "dob": "2001-06-26", "rating": 16 },
-          { "id": 11, "name": "Reiss Nelson", "positions": ["LW", "RW"], "dob": "1999-12-10", "rating": 13 },
+          { "id": 11, "name": "Reiss Nelson", "positions": ["LW", "RW", "ST"], "dob": "1999-12-10", "rating": 13 },
           { "id": 19, "name": "Dango Ouattara", "positions": ["RW", "LW"], "dob": "2002-02-11", "rating": 14 }
         ]
       },
