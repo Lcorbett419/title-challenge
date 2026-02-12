@@ -419,7 +419,7 @@ if (newLeague !== league) {
             setCommentary(res.commentary);
 
             const nd = new Date(date);
-            nd.setDate(nd.getDate() + 3 + Math.floor(Math.random() * 2));
+            nd.setDate(nd.getDate() + 7);
 
             const seasonEndYear = date.getMonth() >= 7 ? date.getFullYear() + 1 : date.getFullYear();
             const seasonEnd = new Date(`${seasonEndYear}-07-31`);
