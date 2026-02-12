@@ -55,6 +55,8 @@
           const [selectedSlot, setSelectedSlot] = useState(null);
           const [showBench, setShowBench] = useState(false);
           const [country, setCountry] = useState(null);
+            const [selectedPlayer, setSelectedPlayer] = useState(null);
+            const [playerHistories, setPlayerHistories] = useState({});
           const [facilities, setFacilities] = useState({ stadiumLevel: 3, devLevel: 1 });
 
           const formations = {
@@ -153,7 +155,7 @@
 
           useEffect(() => {
             if (team && state === 'info-page') {
-              const gameData = { league, team, country, leagues, fixtures, date: date.toISOString(), formation, financeHistory, startingXI, facilities };
+              const gameData = { league, team, country, leagues, fixtures, date: date.toISOString(), formation, financeHistory, startingXI, facilities, playerHistories };
               localStorage.setItem('footballManagerSave', JSON.stringify({ gameData }));
             }
           }, [team, leagues, fixtures, date, state, facilities]);
