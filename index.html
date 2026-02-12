@@ -359,10 +359,10 @@ if (newLeague !== league) {
                 };
                 if (Math.random() < 0.5) {
                   const sc = pickScorer(homePlayers);
-                  if (sc && Math.random() < 0.4) { hs++; comm.push(`${min}' GOAL! ${sc.name}! ${hs}-${as}`); if (track) scorers.push({ playerId: sc.id, teamId: h.id }); }
+                  if (sc && Math.random() < (0.2 + sc.effectiveRating * 0.02)) { hs++; comm.push(`${min}' GOAL! ${sc.name}! ${hs}-${as}`); if (track) scorers.push({ playerId: sc.id, teamId: h.id }); }
                 } else {
                   const sc = pickScorer(awayPlayers);
-                  if (sc && Math.random() < 0.4) { as++; comm.push(`${min}' GOAL! ${sc.name}! ${hs}-${as}`); if (track) scorers.push({ playerId: sc.id, teamId: a.id }); }
+                  if (sc && Math.random() < (0.2 + sc.effectiveRating * 0.02)) { as++; comm.push(`${min}' GOAL! ${sc.name}! ${hs}-${as}`); if (track) scorers.push({ playerId: sc.id, teamId: a.id }); }
                 }
               }
             }
