@@ -240,59 +240,37 @@
             }
             
             alert(message);
-            
-            if (newLeague !== league) {
-  const oldLeagueData = leagues[league];
-  const newLeagueData = leagues[newLeague];
-  const oldTbl = tbl;
-  const newTbl = getTable(newLeague);
+
+            // Handle ALL promotion/relegation swaps in the country's pyramid
+for (let tier = 0; tier < pyramid.length - 1; tier++) {
+  const upperKey = pyramid[tier];
+  const lowerKey = pyramid[tier + 1];
+  if (!leagues[upperKey] || !leagues[lowerKey]) continue;
   
-  // Determine if promoted or relegated
-  const isPromotion = playerPos < 2;
+  const upperTbl = getTable(upperKey);
+  const lowerTbl = getTable(lowerKey);
   
-  if (isPromotion) {
-    // Get bottom 3 from the league above (where we're going)
-    const demotedTeams = newTbl.slice(-3).map(t => newLeagueData.teams.find(tm => tm.id === t.teamId));
-    // Get top 2 from current league (us + possibly another)
-    const promotedTeams = oldTbl.slice(0, 2).map(t => oldLeagueData.teams.find(tm => tm.id === t.teamId));
-    
-    // Remove promoted teams from old league
-    promotedTeams.forEach(pt => {
-      if (pt) oldLeagueData.teams = oldLeagueData.teams.filter(t => t.id !== pt.id);
-    });
-    // Remove demoted teams from new league (pick same count as promoted)
-    const demotedToSwap = demotedTeams.slice(-promotedTeams.length);
-    demotedToSwap.forEach(dt => {
-      if (dt) newLeagueData.teams = newLeagueData.teams.filter(t => t.id !== dt.id);
-    });
-    // Add promoted teams to upper league
-    promotedTeams.forEach(pt => { if (pt) newLeagueData.teams.push(pt); });
-    // Add demoted teams to lower league
-    demotedToSwap.forEach(dt => { if (dt) oldLeagueData.teams.push(dt); });
-  } else {
-    // Relegated
-    // Get top 2 from the league below (where we're going)
-    const promotedTeams = newTbl.slice(0, 2).map(t => newLeagueData.teams.find(tm => tm.id === t.teamId));
-    // Get bottom 3 from current league
-    const relegatedTeams = oldTbl.slice(-3).map(t => oldLeagueData.teams.find(tm => tm.id === t.teamId));
-    
-    // Remove relegated teams from old league
-    relegatedTeams.forEach(rt => {
-      if (rt) oldLeagueData.teams = oldLeagueData.teams.filter(t => t.id !== rt.id);
-    });
-    // Remove promoted teams from new league (pick same count as relegated)
-    const promotedToSwap = promotedTeams.slice(0, relegatedTeams.length);
-    promotedToSwap.forEach(pt => {
-      if (pt) newLeagueData.teams = newLeagueData.teams.filter(t => t.id !== pt.id);
-    });
-    // Add relegated teams to lower league
-    relegatedTeams.forEach(rt => { if (rt) newLeagueData.teams.push(rt); });
-    // Add promoted teams to upper league
-    promotedToSwap.forEach(pt => { if (pt) oldLeagueData.teams.push(pt); });
-  }
+  // Bottom 3 of upper league go down
+  const relegatedIds = upperTbl.slice(-3).map(t => t.teamId);
+  // Top 3 of lower league go up
+  const promotedIds = lowerTbl.slice(0, 3).map(t => t.teamId);
   
+  const relegatedTeams = relegatedIds.map(id => leagues[upperKey].teams.find(t => t.id === id)).filter(Boolean);
+  const promotedTeams = promotedIds.map(id => leagues[lowerKey].teams.find(t => t.id === id)).filter(Boolean);
+  
+  // Remove from current leagues
+  leagues[upperKey].teams = leagues[upperKey].teams.filter(t => !relegatedIds.includes(t.id));
+  leagues[lowerKey].teams = leagues[lowerKey].teams.filter(t => !promotedIds.includes(t.id));
+  
+  // Add to new leagues
+  promotedTeams.forEach(t => leagues[upperKey].teams.push(t));
+  relegatedTeams.forEach(t => leagues[lowerKey].teams.push(t));
+}
+
+// Update player's league if promoted or relegated
+if (newLeague !== league) {
   setLeague(newLeague);
-}            
+}
             const seasonYear = date.getMonth() >= 7 ? date.getFullYear() + 1 : date.getFullYear();
             const newDate = new Date(`${seasonYear}-08-01`);
             setDate(newDate);
