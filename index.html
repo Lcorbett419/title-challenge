@@ -1162,8 +1162,8 @@ if (newLeague !== league) {
                             <ShirtLarge />
                             <div>
                               <h2 className="text-white font-bold text-xl">{p.name}</h2>
-                              <p className={"text-orange-400 font-semibold text-sm">{p.positions.join(', ')}</p>
-                              <p className={`text-sm font-semibold ${getStarRating(p.rating).color}`}>
+                              <p className="text-orange-400 font-semibold text-sm">{p.positions.join(', ')}</p>
+                                <p className={`text-sm font-semibold ${getStarRating(p.rating).color}`}>
                           {getStarRating(p.rating).label} {p.rating >= 20 && '⭐'}
                       </p>
                           <StarDisplay rating={p.rating} />
