@@ -990,15 +990,6 @@ if (newLeague !== league) {
     return 'Avoid relegation';
   };
 
-  const getRatingLabel = (r) => {
-    if (r >= 18) return { label: 'World Class', color: 'text-yellow-400', stars: 5 };
-    if (r >= 16) return { label: 'Excellent', color: 'text-green-400', stars: 4 };
-    if (r >= 14) return { label: 'Good', color: 'text-blue-400', stars: 3 };
-    if (r >= 12) return { label: 'Average', color: 'text-gray-400', stars: 2 };
-    if (r >= 10) return { label: 'Below Average', color: 'text-orange-400', stars: 1 };
-    return { label: 'Poor', color: 'text-red-400', stars: 0 };
-  };
-
   return (
     <div>
       {/* Header */}
