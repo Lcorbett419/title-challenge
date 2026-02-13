@@ -116,7 +116,7 @@
           const formatCurrency = (amt) => '£' + (amt / 1000000).toFixed(1) + 'M';
           const formatDate = (d) => new Date(d).toLocaleDateString('en-GB');
 
-        const getStarRating = (rating) => {
+        const get = (rating) => {
           if (rating >= 20) return { stars: 5, half: false, label: 'World Class', color: 'text-yellow-400' };
           if (rating >= 18) return { stars: 5, half: false, label: '5 Star', color: 'text-yellow-400' };
           if (rating >= 16) return { stars: 4, half: true, label: '4.5 Star', color: 'text-green-400' };
@@ -1114,10 +1114,7 @@ if (newLeague !== league) {
                         });
   
                       const currentSeason = allSeasons.find(h => h.season === season) || { apps: 0, goals: 0 };
-                      <p className={`text-sm font-semibold ${getStarRating(p.rating).color}`}>
-                          {getStarRating(p.rating).label} {rating >= 20 && '⭐'}
-                      </p>
-                          <StarDisplay rating={p.rating} />
+                      
                           
                       const ShirtLarge = () => {
                         const style = team.shirtStyle || 'plain';
@@ -1165,9 +1162,11 @@ if (newLeague !== league) {
                             <ShirtLarge />
                             <div>
                               <h2 className="text-white font-bold text-xl">{p.name}</h2>
-                              <p className="text-orange-400 font-semibold text-sm">{p.positions.join(', ')}</p>
-                              <p className="text-white font-bold text-lg mt-1">{formatCurrency(value)}</p>
-                              <p className={`text-sm font-semibold ${rl.color}`}>{rl.label} {rl.star && '⭐'}</p>
+                              <p className={"text-orange-400 font-semibold text-sm">{p.positions.join(', ')}</p>
+                              <p className={`text-sm font-semibold ${getStarRating(p.rating).color}`}>
+                          {getStarRating(p.rating).label} {p.rating >= 20 && '⭐'}
+                      </p>
+                          <StarDisplay rating={p.rating} />
                             </div>
                           </div>
                     
