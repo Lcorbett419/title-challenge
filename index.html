@@ -1114,9 +1114,8 @@ if (newLeague !== league) {
                         });
   
                       const currentSeason = allSeasons.find(h => h.season === season) || { apps: 0, goals: 0 };
-                      
                       <p className={`text-sm font-semibold ${getStarRating(p.rating).color}`}>
-                          {getStarRating(p.rating).label} {p.rating >= 20 && '⭐'}
+                          {getStarRating(p.rating).label} {rating >= 20 && '⭐'}
                       </p>
                           <StarDisplay rating={p.rating} />
                           
