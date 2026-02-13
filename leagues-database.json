@@ -1252,7 +1252,7 @@
         { "id": 3, "name": "Aaron Cresswell", "positions": ["LB"], "dob": "1989-12-15", "rating": 12 },
         { "id": 16, "name": "Ben Wilmot", "positions": ["CB"], "dob": "1999-11-04", "rating": 13 },
         { "id": 17, "name": "Eric Bocat", "positions": ["LB"], "dob": "1999-07-16", "rating": 11 },
-        { "id": 22, "name": "Junior Tchamadeu", "positions": ["RB"], "dob": "2003-12-22 "rating": 11 },
+        { "id": 22, "name": "Junior Tchamadeu", "positions": ["RB"], "dob": "2003-12-22", "rating": 11 },
         { "id": 23, "name": "Ben Gibson", "positions": ["CB"], "dob": "1993-01-15", "rating": 12 },
         { "id": 26, "name": "Ashley Phillips", "positions": ["CB"], "dob": "2005-06-26", "rating": 11 },
         { "id": 40, "name": "Maksym Talovierov", "positions": ["CB"], "dob": "2000-06-28", "rating": 11 },
