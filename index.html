@@ -116,6 +116,29 @@
           const formatCurrency = (amt) => '£' + (amt / 1000000).toFixed(1) + 'M';
           const formatDate = (d) => new Date(d).toLocaleDateString('en-GB');
 
+        const getStarRating = (rating) => {
+          if (rating >= 20) return { stars: 5, half: false, label: 'World Class', color: 'text-yellow-400' };
+          if (rating >= 18) return { stars: 5, half: false, label: '5 Star', color: 'text-yellow-400' };
+          if (rating >= 16) return { stars: 4, half: true, label: '4.5 Star', color: 'text-green-400' };
+          if (rating >= 14) return { stars: 4, half: false, label: '4 Star', color: 'text-green-400' };
+          if (rating >= 12) return { stars: 3, half: true, label: '3.5 Star', color: 'text-blue-400' };
+          if (rating >= 10) return { stars: 3, half: false, label: '3 Star', color: 'text-blue-400' };
+          if (rating >= 8) return { stars: 2, half: true, label: '2.5 Star', color: 'text-gray-400' };
+          if (rating >= 6) return { stars: 2, half: false, label: '2 Star', color: 'text-gray-400' };
+          if (rating >= 4) return { stars: 1, half: true, label: '1.5 Star', color: 'text-orange-400' };
+          if (rating >= 2) return { stars: 1, half: false, label: '1 Star', color: 'text-orange-400' };
+          return { stars: 0, half: true, label: '0.5 Star', color: 'text-red-400' };
+        };
+        
+        const StarDisplay = ({ rating }) => {
+          const sr = getStarRating(rating);
+          return (
+            <span className={sr.color}>
+              {'★'.repeat(sr.stars)}{sr.half ? '½' : ''}{'☆'.repeat(5 - sr.stars - (sr.half ? 1 : 0))}
+            </span>
+          );
+        };
+
           const newGame = () => {
             setTeam(null); setLeague(null); setCountry(null);
             setLeagues(JSON.parse(JSON.stringify(db)));
@@ -938,7 +961,7 @@ if (newLeague !== league) {
   const isMyTeam = tp.id === team.id;
 
   // Star player = highest rated
-  const starPlayer = [...tp.players].sort((a, b) => b.rating - a.rating)[0];
+  <StarDisplay rating={starPlayer.rating} />
 
   // Last result
   const teamFixtures = (fixtures[lk] || []).filter(f => (f.homeTeamId === tp.id || f.awayTeamId === tp.id) && f.played);
@@ -1101,17 +1124,11 @@ if (newLeague !== league) {
   
                       const currentSeason = allSeasons.find(h => h.season === season) || { apps: 0, goals: 0 };
                       
-                      // Rating label
-                      const getRatingLabel = (r) => {
-                        if (r >= 18) return { label: 'World Class', color: 'text-yellow-400', star: true };
-                        if (r >= 16) return { label: 'Excellent', color: 'text-green-400', star: false };
-                        if (r >= 14) return { label: 'Good', color: 'text-blue-400', star: false };
-                        if (r >= 12) return { label: 'Average', color: 'text-gray-400', star: false };
-                        if (r >= 10) return { label: 'Below Average', color: 'text-orange-400', star: false };
-                        return { label: 'Poor', color: 'text-red-400', star: false };
-                      };
-                      const rl = getRatingLabel(p.rating);
-                      
+                      <p className={`text-sm font-semibold ${getStarRating(p.rating).color}`}>
+                          {getStarRating(p.rating).label} {rating >= 20 && '⭐'}
+                      </p>
+                          <StarDisplay rating={p.rating} />
+                          
                       const ShirtLarge = () => {
                         const style = team.shirtStyle || 'plain';
                         const c1 = team.primaryColor || '#1a1a2e';
