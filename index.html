@@ -122,7 +122,7 @@
 
          const generateTransferList = () => {
           const available = [];
-          Object.keys(leagues).filter(lk => lk.startsWith(country)).forEach(lk => {
+          Object.keys(leagues).forEach(lk => {
             leagues[lk].teams.forEach(tm => {
               if (tm.id === team.id) return;
               tm.players.forEach(p => {
@@ -143,7 +143,8 @@
           if (!confirm) return;
           team.budget -= listing.askingPrice;
           listing.team.players = listing.team.players.filter(p => p.id !== listing.player.id);
-          const newPlayer = { ...listing.player, goals: 0, injured: false, injuryUntil: null };
+          const maxId = Math.max(...team.players.map(p => p.id), 0);
+          const newPlayer = { ...listing.player, id: maxId + 1, goals: 0, injured: false, injuryUntil: null };
           team.players.push(newPlayer);
           setTransferList(transferList.filter(l => l.player.id !== listing.player.id || l.team.id !== listing.team.id));
           setFinanceHistory([...financeHistory, { date: date.toISOString(), balance: team.budget }]);
@@ -382,36 +383,40 @@
             
             alert(message);
 
-            // Handle ALL promotion/relegation swaps in the country's pyramid
-for (let tier = 0; tier < pyramid.length - 1; tier++) {
-  const upperKey = pyramid[tier];
-  const lowerKey = pyramid[tier + 1];
-  if (!leagues[upperKey] || !leagues[lowerKey]) continue;
-  
-  const upperTbl = getTable(upperKey);
-  const lowerTbl = getTable(lowerKey);
-  
-  // Bottom 3 of upper league go down
-  const relegatedIds = upperTbl.slice(-3).map(t => t.teamId);
-  // Top 3 of lower league go up
-  const promotedIds = lowerTbl.slice(0, 3).map(t => t.teamId);
-  
-  const relegatedTeams = relegatedIds.map(id => leagues[upperKey].teams.find(t => t.id === id)).filter(Boolean);
-  const promotedTeams = promotedIds.map(id => leagues[lowerKey].teams.find(t => t.id === id)).filter(Boolean);
-  
-  // Remove from current leagues
-  leagues[upperKey].teams = leagues[upperKey].teams.filter(t => !relegatedIds.includes(t.id));
-  leagues[lowerKey].teams = leagues[lowerKey].teams.filter(t => !promotedIds.includes(t.id));
-  
-  // Add to new leagues
-  promotedTeams.forEach(t => leagues[upperKey].teams.push(t));
-  relegatedTeams.forEach(t => leagues[lowerKey].teams.push(t));
-}
-
-// Update player's league if promoted or relegated
-if (newLeague !== league) {
-  setLeague(newLeague);
-}
+            // Compute ALL tables BEFORE any swaps happen
+            const allTables = {};
+            pyramid.forEach(key => {
+              if (leagues[key]) allTables[key] = getTable(key);
+            });
+            
+            // Now process all swaps using pre-computed tables
+            const swaps = [];
+            for (let tier = 0; tier < pyramid.length - 1; tier++) {
+              const upperKey = pyramid[tier];
+              const lowerKey = pyramid[tier + 1];
+              if (!allTables[upperKey] || !allTables[lowerKey]) continue;
+            
+              const relegatedIds = allTables[upperKey].slice(-3).map(t => t.teamId);
+              const promotedIds = allTables[lowerKey].slice(0, 3).map(t => t.teamId);
+            
+              swaps.push({ upperKey, lowerKey, relegatedIds, promotedIds });
+            }
+            
+            // Apply all swaps at once
+            swaps.forEach(({ upperKey, lowerKey, relegatedIds, promotedIds }) => {
+              const relegatedTeams = relegatedIds.map(id => leagues[upperKey].teams.find(t => t.id === id)).filter(Boolean);
+              const promotedTeams = promotedIds.map(id => leagues[lowerKey].teams.find(t => t.id === id)).filter(Boolean);
+            
+              leagues[upperKey].teams = leagues[upperKey].teams.filter(t => !relegatedIds.includes(t.id));
+              leagues[lowerKey].teams = leagues[lowerKey].teams.filter(t => !promotedIds.includes(t.id));
+            
+              promotedTeams.forEach(t => leagues[upperKey].teams.push(t));
+              relegatedTeams.forEach(t => leagues[lowerKey].teams.push(t));
+            });
+            
+            if (newLeague !== league) {
+              setLeague(newLeague);
+            }
             const seasonYear = date.getMonth() >= 7 ? date.getFullYear() + 1 : date.getFullYear();
             const newDate = new Date(`${seasonYear}-08-01`);
             setDate(newDate);
@@ -1578,18 +1583,107 @@ if (newLeague !== league) {
                   );
                 })()}
 
-                  {page === 'finances' && (
+                  {page === 'finances' && (() => {
+                  // Group finances by month
+                  const monthlyData = [];
+                  const seen = {};
+                  financeHistory.forEach(f => {
+                    const d = new Date(f.date);
+                    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+                    seen[key] = f.balance;
+                  });
+                  // Add current balance for current month
+                  const nowKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                  seen[nowKey] = team.budget;
+                
+                  const sortedKeys = Object.keys(seen).sort();
+                  sortedKeys.forEach(k => {
+                    const [y, m] = k.split('-');
+                    const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+                    monthlyData.push({ label: `${monthNames[parseInt(m) - 1]} ${y.slice(2)}`, value: seen[k] });
+                  });
+                
+                  // Chart dimensions
+                  const chartW = 320;
+                  const chartH = 150;
+                  const padL = 50;
+                  const padR = 10;
+                  const padT = 10;
+                  const padB = 30;
+                  const graphW = chartW - padL - padR;
+                  const graphH = chartH - padT - padB;
+                
+                  const values = monthlyData.map(d => d.value);
+                  const maxVal = Math.max(...values, 1);
+                  const minVal = Math.min(...values, 0);
+                  const range = maxVal - minVal || 1;
+                
+                  const points = monthlyData.map((d, i) => {
+                    const x = padL + (monthlyData.length > 1 ? (i / (monthlyData.length - 1)) * graphW : graphW / 2);
+                    const y = padT + graphH - ((d.value - minVal) / range) * graphH;
+                    return { x, y, ...d };
+                  });
+                
+                  const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x},${p.y}`).join(' ');
+                  const areaPath = linePath + ` L${points[points.length - 1].x},${padT + graphH} L${points[0].x},${padT + graphH} Z`;
+                
+                  return (
                     <div className="bg-gray-800 rounded-lg p-4">
                       <h2 className="text-white font-bold mb-4">💰 Finances</h2>
                       <div className="mb-6">
                         <div className="text-gray-400 text-sm mb-1">Current Balance</div>
                         <div className="text-white font-bold text-4xl">{formatCurrency(team.budget)}</div>
                       </div>
+                
+                      {/* Line Graph */}
+                      {monthlyData.length > 1 && (
+                        <div className="bg-gray-700 rounded-lg p-4 mb-4">
+                          <h3 className="text-white font-semibold mb-3">Balance Over Time</h3>
+                          <svg viewBox={`0 0 ${chartW} ${chartH}`} className="w-full">
+                            {/* Grid lines */}
+                            {[0, 0.25, 0.5, 0.75, 1].map((pct, i) => {
+                              const y = padT + graphH - pct * graphH;
+                              const val = minVal + pct * range;
+                              return (
+                                <g key={i}>
+                                  <line x1={padL} y1={y} x2={padL + graphW} y2={y} stroke="rgba(255,255,255,0.1)" strokeWidth="0.5" />
+                                  <text x={padL - 5} y={y + 3} textAnchor="end" fill="#9CA3AF" fontSize="7">{formatCurrency(val)}</text>
+                                </g>
+                              );
+                            })}
+                
+                            {/* Area fill */}
+                            <path d={areaPath} fill="url(#finGrad)" opacity="0.3" />
+                            <defs>
+                              <linearGradient id="finGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stopColor="#22c55e" />
+                                <stop offset="100%" stopColor="#22c55e" stopOpacity="0" />
+                              </linearGradient>
+                            </defs>
+                
+                            {/* Line */}
+                            <path d={linePath} fill="none" stroke="#22c55e" strokeWidth="2" strokeLinejoin="round" />
+                
+                            {/* Data points */}
+                            {points.map((p, i) => (
+                              <g key={i}>
+                                <circle cx={p.x} cy={p.y} r="3" fill="#22c55e" stroke="#1f2937" strokeWidth="1.5" />
+                                {/* X-axis labels - show every other if many */}
+                                {(monthlyData.length <= 6 || i % 2 === 0) && (
+                                  <text x={p.x} y={chartH - 5} textAnchor="middle" fill="#9CA3AF" fontSize="6">{p.label}</text>
+                                )}
+                              </g>
+                            ))}
+                          </svg>
+                        </div>
+                      )}
+                
+                      {/* Balance History */}
                       <div className="bg-gray-700 rounded-lg p-4">
                         <h3 className="text-white font-semibold mb-4">Balance History</h3>
                         {financeHistory.length > 1 ? (
                           <div className="mt-4 space-y-2">
-                            {financeHistory.slice(-5).reverse().map((f, i) => (
+                            {financeHistory.slice(-10).reverse().map((f, i) => (
                               <div key={i} className="flex justify-between text-sm">
                                 <span className="text-gray-400">{formatDate(f.date)}</span>
                                 <span className="text-white font-semibold">{formatCurrency(f.balance)}</span>
@@ -1601,8 +1695,8 @@ if (newLeague !== league) {
                         )}
                       </div>
                     </div>
-                  )}
-
+                  );
+                })()}
                   {page === 'facilities' && (() => {
                     const getStadiumUpgradeCost = (lvl) => Math.round((lvl + 1) * (lvl + 1) * 1200000);
                     const getDevUpgradeCost = (lvl) => Math.round((lvl + 1) * (lvl + 1) * 600000);
