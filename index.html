@@ -116,7 +116,7 @@
           const formatCurrency = (amt) => '£' + (amt / 1000000).toFixed(1) + 'M';
           const formatDate = (d) => new Date(d).toLocaleDateString('en-GB');
 
-        const get = (rating) => {
+        const getStarRating = (rating) => {
           if (rating >= 20) return { stars: 5, half: false, label: 'World Class', color: 'text-yellow-400' };
           if (rating >= 18) return { stars: 5, half: false, label: '5 Star', color: 'text-yellow-400' };
           if (rating >= 16) return { stars: 4, half: true, label: '4.5 Star', color: 'text-green-400' };
@@ -131,7 +131,7 @@
         };
         
         const StarDisplay = ({ rating }) => {
-          const sr = getStarRating(rating);
+        const sr = getStarRating(rating);
           return (
             <span className={sr.color}>
               {'★'.repeat(sr.stars)}{sr.half ? '½' : ''}{'☆'.repeat(5 - sr.stars - (sr.half ? 1 : 0))}
