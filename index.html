@@ -1276,7 +1276,7 @@
                         <div>
                           {/* Header */}
                           <div className="bg-gray-800 rounded-t-lg p-3 flex items-center gap-3 border-b border-gray-700">
-                            <button onClick={() => { if (selectedPlayerTeam && selectedPlayerTeam.id !== team.id) setPage('team-profile'); else setPage('squad'); }} className="text-gray-400 hover:text-white">← Back</button>
+                            <button onClick={() => { if (selectedPlayerTeam && selectedPlayerTeam.id !== team.id) { const cameFromTransfers = transferList.some(l => l.player.id === selectedPlayer.id && l.team.id === selectedPlayerTeam.id); setPage(cameFromTransfers ? 'transfers' : 'team-profile'); } else setPage('squad'); }} className="text-gray-400 hover:text-white">← Back</button>
                             <h2 className="text-white font-bold">Player Details</h2>
                           </div>
                     
