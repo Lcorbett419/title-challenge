@@ -56,6 +56,7 @@
           const [showBench, setShowBench] = useState(false);
           const [country, setCountry] = useState(null);
           const [selectedPlayer, setSelectedPlayer] = useState(null);
+          const [selectedPlayerTeam, setSelectedPlayerTeam] = useState(null);
           const [playerHistories, setPlayerHistories] = useState({});
           const [selectedTeamProfile, setSelectedTeamProfile] = useState(null);
           const [transferList, setTransferList] = useState([]);
@@ -163,6 +164,60 @@
           setFinanceHistory([...financeHistory, { date: date.toISOString(), balance: team.budget }]);
           alert(`${p.name} has been sold for ${formatCurrency(offer)}!`);
         };   
+
+        const processAITransfers = () => {
+        const countryLeagues = Object.keys(leagues).filter(lk => lk.startsWith(country));
+        const allTeams = [];
+        countryLeagues.forEach(lk => {
+            leagues[lk].teams.forEach(tm => {
+              if (tm.id !== team.id) allTeams.push({ team: tm, leagueKey: lk });
+            });
+          });
+        
+          // Each AI team attempts 1-3 transfers
+          allTeams.forEach(({ team: aiTeam }) => {
+            const numTransfers = Math.floor(Math.random() * 3) + 1;
+            for (let i = 0; i < numTransfers; i++) {
+              if (aiTeam.players.length <= 11) break;
+        
+              // Pick a random position to improve
+              const positions = ['GK','CB','LB','RB','CDM','CM','CAM','LW','RW','ST'];
+              const targetPos = positions[Math.floor(Math.random() * positions.length)];
+        
+              // Find weakest player in that position to sell
+              const posPlayers = aiTeam.players.filter(p => p.positions.includes(targetPos));
+              if (posPlayers.length <= 1) continue;
+              const weakest = posPlayers.sort((a, b) => a.rating - b.rating)[0];
+        
+              // Find a better player from another AI team
+              let bestBuy = null;
+              let bestBuyTeam = null;
+              allTeams.forEach(({ team: otherTeam }) => {
+                if (otherTeam.id === aiTeam.id) return;
+                if (otherTeam.players.length <= 11) return;
+                otherTeam.players.forEach(p => {
+                  if (!p.positions.includes(targetPos)) return;
+                  if (p.rating <= weakest.rating) return;
+                  if (Math.random() > 0.15) return; // Low chance to keep it rare
+                  if (!bestBuy || p.rating > bestBuy.rating) {
+                    bestBuy = p;
+                    bestBuyTeam = otherTeam;
+                  }
+                });
+              });
+        
+              if (bestBuy && bestBuyTeam) {
+                // Swap: sell weakest, buy bestBuy
+                bestBuyTeam.players = bestBuyTeam.players.filter(p => p.id !== bestBuy.id);
+                aiTeam.players = aiTeam.players.filter(p => p.id !== weakest.id);
+                bestBuy.goals = 0; bestBuy.injured = false; bestBuy.injuryUntil = null;
+                weakest.goals = 0; weakest.injured = false; weakest.injuryUntil = null;
+                aiTeam.players.push(bestBuy);
+                bestBuyTeam.players.push(weakest);
+              }
+            }
+          });
+        };
 
         const getStarRating = (rating) => {
           if (rating >= 20) return { stars: 5, half: false, label: 'World Class', color: 'text-yellow-400' };
@@ -388,6 +443,7 @@ if (newLeague !== league) {
               });
             });
             
+            processAITransfers();
             setTransferList([]);
             generateFixtures();
           };
@@ -959,7 +1015,7 @@ if (newLeague !== league) {
                                     <ShirtSvg number={shirtNum} isGK={isGK} isOOP={isOutOfPosition && !!player} />
                                     {isSelected && <div className="absolute inset-0 rounded" style={{ boxShadow: '0 0 12px rgba(249,115,22,0.8)' }}></div>}
                                   </div>
-                                  <div className="text-white text-center font-bold leading-tight mt-0.5 cursor-pointer" style={{ fontSize: '8px', textShadow: '0 1px 3px rgba(0,0,0,0.9)' }} onClick={(e) => { if (player) { e.stopPropagation(); setSelectedPlayer(player); setPage('player-profile'); }}}>{surname}</div>
+                                  <div className="text-white text-center font-bold leading-tight mt-0.5 cursor-pointer" style={{ fontSize: '8px', textShadow: '0 1px 3px rgba(0,0,0,0.9)' }} onClick={(e) => { if (player) { e.stopPropagation(); setSelectedPlayer(player); setSelectedPlayerTeam(team); setPage('player-profile'); }}}>{surname}</div>
                                   <div className="text-gray-300 text-center leading-tight" style={{ fontSize: '7px', textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}>{player ? posAbbrevs : ''}</div>
                                   {isOutOfPosition && player && (<div style={{ fontSize: '8px' }} className="text-yellow-400">⚠️</div>)}
                                 </div>
@@ -1111,7 +1167,7 @@ if (newLeague !== league) {
         <div className="bg-gray-800 border-t border-gray-700 p-4 rounded-b-lg">
           <h3 className="text-gray-500 text-xs mb-2">Star Player</h3>
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => {
-            if (isMyTeam) { setSelectedPlayer(starPlayer); setPage('player-profile'); }
+           setSelectedPlayer(starPlayer); setSelectedPlayerTeam(tp); setPage('player-profile');
           }}>
             <div className="flex-shrink-0">{renderShirt(tp, '50px')}</div>
             <div className="flex-1">
@@ -1136,7 +1192,26 @@ if (newLeague !== league) {
           </div>
         </div>
       )}
-
+        
+        {/* Squad list */}
+        <div className="bg-gray-800 border-t border-gray-700 p-4">
+          <h3 className="text-gray-500 text-xs mb-2">Squad ({tp.players.length} players)</h3>
+          <div className="space-y-1 max-h-64 overflow-y-auto">
+            {[...tp.players].sort((a, b) => b.rating - a.rating).map(p => (
+              <div key={p.id} className="flex items-center justify-between py-1 cursor-pointer hover:bg-gray-700 rounded px-2" onClick={() => { setSelectedPlayer(p); setSelectedPlayerTeam(tp); setPage('player-profile'); }}>
+                <div className="flex-1 min-w-0">
+                  <span className="text-white text-sm">{p.name}</span>
+                  <span className="text-gray-500 text-xs ml-2">{p.positions.join('/')}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <StarDisplay rating={p.rating} />
+                  <span className="text-gray-400 text-xs">Age {calcAge(p.dob)}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        
       {/* View Squad button for own team */}
       {isMyTeam && (
         <div className="mt-4">
@@ -1149,6 +1224,7 @@ if (newLeague !== league) {
                     
                     {page === 'player-profile' && selectedPlayer && (() => {
                     const p = selectedPlayer;
+                    const profileTeam = selectedPlayerTeam || team;
                     const age = calcAge(p.dob);
                     const value = calculatePlayerValue(p, date);
                     const season = getSeasonDisplay();
@@ -1166,9 +1242,9 @@ if (newLeague !== league) {
                       
                           
                       const ShirtLarge = () => {
-                        const style = team.shirtStyle || 'plain';
-                        const c1 = team.primaryColor || '#1a1a2e';
-                        const c2 = team.secondaryColor || '#FFFFFF';
+                        const style = profileTeam.shirtStyle || 'plain';
+                        const c1 = profileTeam.primaryColor || '#1a1a2e';
+                        const c2 = profileTeam.secondaryColor || '#FFFFFF';
                         const clipId = `profile-${Math.random().toString(36).substr(2,5)}`;
                         const dark = ['#000000','#00205B','#1a1a2e','#1B458F','#034694','#003399','#1D428A','#132257','#231F20','#241F20','#012B4A','#00225C','#122336','#0A2452','#1A2F6B','#10274f','#022663','#6D2C34','#7A263A','#670E36','#6C1D45','#5B2D8E','#781D2A','#004D98','#012C57','#99022C','#00205B','#003DA5','#004FA3','#0054A6','#0055A4','#245701','#2B6303','#1D2CCF','#00296B','#003D7C','#DD0000','#DC052D','#ED1C24','#E2001A','#E32221','#CB3524','#E20613','#D91A2A','#C8102E','#DA291C','#e30613','#EB172B','#EE2523','#E7192F','#E1000F','#ED0000','#6B3524','#c22538','#1B2A4A','#0068A8','#FB090B','#1E71B8','#A31E2D','#A50044','#D40027','#CD2534','#00954C','#12A0D7','#F47920','#E2001A','#6A2382','#00843D'].includes(c1);
                         const light = ['#FFFFFF','#FFE114','#FDE100','#FDB913','#FCDD09','#FFD700','#8AC3EE','#87CEEB','#6CABDD','#95BFE5','#99D6EA','#65B32E'].includes(c1);
@@ -1195,7 +1271,7 @@ if (newLeague !== league) {
                         <div>
                           {/* Header */}
                           <div className="bg-gray-800 rounded-t-lg p-3 flex items-center gap-3 border-b border-gray-700">
-                            <button onClick={() => setPage('squad')} className="text-gray-400 hover:text-white">← Back</button>
+                            <button onClick={() => { if (selectedPlayerTeam && selectedPlayerTeam.id !== team.id) setPage('team-profile'); else setPage('squad'); }} className="text-gray-400 hover:text-white">← Back</button>
                             <h2 className="text-white font-bold">Player Details</h2>
                           </div>
                     
@@ -1224,7 +1300,7 @@ if (newLeague !== league) {
                             <div className="grid grid-cols-2 gap-4">
                               <div>
                                 <p className="text-gray-500 text-xs">Club</p>
-                                <p className="text-white font-bold">{team.name}</p>
+                                <p className="text-white font-bold">{profileTeam.name}</p>
                               </div>
                               <div>
                                 <p className="text-gray-500 text-xs">Age</p>
@@ -1297,8 +1373,7 @@ if (newLeague !== league) {
                         <div key={p.id} className={`rounded p-3 mb-2 ${p.injured ? 'bg-red-900/20' : 'bg-gray-700'}`}>
                           <div className="flex justify-between">
                             <div>
-                              <div className="text-white font-semibold cursor-pointer hover:text-orange-400" onClick={(e) => { e.stopPropagation(); setSelectedPlayer(p); setPage('player-profile'); }}>{p.name} {p.injured && '⚕️'}</div>
-                              <div className="text-gray-400 text-sm">
+                              <div className="text-white font-semibold cursor-pointer hover:text-orange-400" onClick={(e) => { e.stopPropagation(); setSelectedPlayer(p); setSelectedPlayerTeam(team); setPage('player-profile'); }}>{p.name} {p.injured && '⚕️'}</div>                              <div className="text-gray-400 text-sm">
                                 {p.positions.join('/')} • Age {calcAge(p.dob)} {p.goals > 0 && `• ⚽ ${p.goals}`}
                                 {p.injured && p.injuryUntil && (() => {
                                   const w = getWeeksUntil(p.injuryUntil);
@@ -1452,7 +1527,7 @@ if (newLeague !== league) {
                                   <div className="flex items-center gap-3">
                                     <div className="flex-shrink-0" style={{ width: '36px', height: '32px' }}>{renderShirt(l.team, '36px')}</div>
                                     <div className="flex-1 min-w-0">
-                                      <div className="text-white font-semibold text-sm truncate">{l.player.name}</div>
+                                      <div className="text-white font-semibold text-sm truncate cursor-pointer hover:text-orange-400" onClick={(e) => { e.stopPropagation(); setSelectedPlayer(l.player); setSelectedPlayerTeam(l.team); setPage('player-profile'); }}>{l.player.name}</div>
                                       <div className="text-gray-400 text-xs">{l.player.positions.join('/')} • Age {calcAge(l.player.dob)} • <StarDisplay rating={l.player.rating} /></div>
                                       <div className="text-gray-500 text-xs">{l.team.name} • {leagues[l.leagueKey].name}</div>
                                     </div>
