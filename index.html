@@ -134,7 +134,7 @@
         const sr = getStarRating(rating);
           return (
             <span className={sr.color}>
-              {'★'.repeat(sr.stars)}{sr.half ? '½' : ''}{'☆'.repeat(5 - sr.stars - (sr.half ? 1 : 0))}
+              {'★'.repeat(sr.stars)}{sr.half ? '⯪' : ''}{'☆'.repeat(5 - sr.stars - (sr.half ? 1 : 0))}
             </span>
           );
         };
