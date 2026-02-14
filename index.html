@@ -960,8 +960,8 @@ if (newLeague !== league) {
   const posLabel = posIdx >= 0 ? `${posIdx + 1}${posIdx === 0 ? 'st' : posIdx === 1 ? 'nd' : posIdx === 2 ? 'rd' : 'th'}` : '-';
   const isMyTeam = tp.id === team.id;
 
-  // Star player = highest rated
-  <StarDisplay rating={starPlayer.rating} />
+   // Star player = highest rated
+  const starPlayer = [...tp.players].sort((a, b) => b.rating - a.rating)[0];
 
   // Last result
   const teamFixtures = (fixtures[lk] || []).filter(f => (f.homeTeamId === tp.id || f.awayTeamId === tp.id) && f.played);
@@ -1076,7 +1076,7 @@ if (newLeague !== league) {
                 <span className="text-white font-bold text-sm">{formatCurrency(calculatePlayerValue(starPlayer, date))}</span>
               </div>
               <div className="mt-1">
-                <span className="text-yellow-400">{'★'.repeat(getRatingLabel(starPlayer.rating).stars)}{'☆'.repeat(5 - getRatingLabel(starPlayer.rating).stars)}</span>
+                <StarDisplay rating={starPlayer.rating} />
               </div>
               <div className="grid grid-cols-3 gap-2 mt-1 text-center">
                 <div><p className="text-gray-500" style={{ fontSize: '9px' }}>App</p><p className="text-white text-xs font-bold">{starPlayer.goals !== undefined ? (tblRow?.played || 0) : 0}</p></div>
