@@ -62,6 +62,8 @@
           const [transferList, setTransferList] = useState([]);
           const [transferFilter, setTransferFilter] = useState('all');
           const [transferSearch, setTransferSearch] = useState('');
+          const [transferNegotiation, setTransferNegotiation] = useState(null);
+          const [incomingOffers, setIncomingOffers] = useState([]);
           const [facilities, setFacilities] = useState({ stadiumLevel: 3, devLevel: 1 });
 
           const formations = {
@@ -91,31 +93,31 @@
           };
 
           const healInjuredPlayers = (currentDate) => {
-  if (!leagues) return;
-  Object.keys(leagues).forEach(lk => {
-    leagues[lk].teams.forEach(tm => {
-      tm.players.forEach(p => {
-        if (p.injured && p.injuryUntil) {
-          if (new Date(p.injuryUntil) <= currentDate) {
-            p.injured = false;
-            p.injuryUntil = null;
+          if (!leagues) return;
+          Object.keys(leagues).forEach(lk => {
+            leagues[lk].teams.forEach(tm => {
+              tm.players.forEach(p => {
+                if (p.injured && p.injuryUntil) {
+                  if (new Date(p.injuryUntil) <= currentDate) {
+                    p.injured = false;
+                    p.injuryUntil = null;
+                  }
+                }
+              });
+            });
+          });
+          // Heals the team directly (in case team object isn't in leagues)
+          if (team) {
+            team.players.forEach(p => {
+              if (p.injured && p.injuryUntil) {
+                if (new Date(p.injuryUntil) <= currentDate) {
+                  p.injured = false;
+                  p.injuryUntil = null;
+                }
+              }
+            });
           }
-        }
-      });
-    });
-  });
-  // Heals the team directly (in case team object isn't in leagues)
-  if (team) {
-    team.players.forEach(p => {
-      if (p.injured && p.injuryUntil) {
-        if (new Date(p.injuryUntil) <= currentDate) {
-          p.injured = false;
-          p.injuryUntil = null;
-        }
-      }
-    });
-  }
-};
+        };
 
           const formatCurrency = (amt) => '£' + (amt / 1000000).toFixed(1) + 'M';
           const formatDate = (d) => new Date(d).toLocaleDateString('en-GB');
@@ -136,90 +138,227 @@
           setTransferList(available);
         };
         
-        const buyPlayer = (listing) => {
+          const buyPlayer = (listing) => {
           if (team.budget < listing.askingPrice) { alert('Insufficient funds!'); return; }
           if (team.players.length >= 30) { alert('Squad is full! (max 30) Sell a player first.'); return; }
-          const confirm = window.confirm(`Buy ${listing.player.name} (${listing.player.positions.join('/')}) rated ${listing.player.rating} from ${listing.team.name} for ${formatCurrency(listing.askingPrice)}?`);
-          if (!confirm) return;
-          team.budget -= listing.askingPrice;
-          listing.team.players = listing.team.players.filter(p => p.id !== listing.player.id);
-          const maxId = Math.max(...team.players.map(p => p.id), 0);
-          const newPlayer = { ...listing.player, id: maxId + 1, goals: 0, injured: false, injuryUntil: null };
-          team.players.push(newPlayer);
-          setTransferList(transferList.filter(l => l.player.id !== listing.player.id || l.team.id !== listing.team.id));
-          setFinanceHistory([...financeHistory, { date: date.toISOString(), balance: team.budget }]);
-          alert(`${listing.player.name} has joined ${team.name}!`);
-        };
+          setState('negotiation');    
         
-        const sellPlayer = (p) => {
-          if (team.players.length <= 11) { alert('Cannot sell! You need at least 11 players.'); return; }
-          const value = calculatePlayerValue(p, date);
-          const offer = Math.round(value * (0.7 + Math.random() * 0.3));
-          const confirm = window.confirm(`Sell ${p.name} for ${formatCurrency(offer)}?`);
-          if (!confirm) return;
-          team.budget += offer;
-          team.players = team.players.filter(pl => pl.id !== p.id);
-          const xi = { ...startingXI };
-          Object.keys(xi).forEach(k => { if (xi[k] === p.id) delete xi[k]; });
-          setStartingXI(xi);
-          setFinanceHistory([...financeHistory, { date: date.toISOString(), balance: team.budget }]);
-          alert(`${p.name} has been sold for ${formatCurrency(offer)}!`);
-        };   
-
-        const processAITransfers = () => {
-        const countryLeagues = Object.keys(leagues).filter(lk => lk.startsWith(country));
-        const allTeams = [];
-        countryLeagues.forEach(lk => {
-            leagues[lk].teams.forEach(tm => {
-              if (tm.id !== team.id) allTeams.push({ team: tm, leagueKey: lk });
-            });
+          // Start negotiation screen
+          setTransferNegotiation({
+            type: 'buy',
+            player: listing.player,
+            fromTeam: listing.team,
+            price: listing.askingPrice,
+            stage: 'bidding', // bidding -> negotiating -> result
+            result: null,
+            message: ''
           });
         
-          // Each AI team attempts 1-3 transfers
-          allTeams.forEach(({ team: aiTeam }) => {
-            const numTransfers = Math.floor(Math.random() * 3) + 1;
-            for (let i = 0; i < numTransfers; i++) {
-              if (aiTeam.players.length <= 11) break;
+          // Simulate negotiation after a moment
+          setTimeout(() => {
+            setTransferNegotiation(prev => {
+              if (!prev) return null;
+              return { ...prev, stage: 'negotiating', message: `${listing.team.name} have accepted your bid.` };
+            });
         
-              // Pick a random position to improve
-              const positions = ['GK','CB','LB','RB','CDM','CM','CAM','LW','RW','ST'];
-              const targetPos = positions[Math.floor(Math.random() * positions.length)];
+            setTimeout(() => {
+              // Player decision based on team strength comparison
+              const myStrength = getTeamStrength(team);
+              const theirStrength = getTeamStrength(listing.team);
+              const playerRating = listing.player.rating;
+              const strengthDiff = myStrength - theirStrength;
         
-              // Find weakest player in that position to sell
-              const posPlayers = aiTeam.players.filter(p => p.positions.includes(targetPos));
-              if (posPlayers.length <= 1) continue;
-              const weakest = posPlayers.sort((a, b) => a.rating - b.rating)[0];
+              // Base acceptance chance
+              let acceptChance = 0.5;
         
-              // Find a better player from another AI team
-              let bestBuy = null;
-              let bestBuyTeam = null;
-              allTeams.forEach(({ team: otherTeam }) => {
-                if (otherTeam.id === aiTeam.id) return;
-                if (otherTeam.players.length <= 11) return;
-                otherTeam.players.forEach(p => {
-                  if (!p.positions.includes(targetPos)) return;
-                  if (p.rating <= weakest.rating) return;
-                  if (Math.random() > 0.15) return; // Low chance to keep it rare
-                  if (!bestBuy || p.rating > bestBuy.rating) {
-                    bestBuy = p;
-                    bestBuyTeam = otherTeam;
-                  }
+              // Better team = more likely to accept
+              acceptChance += strengthDiff * 0.15;
+        
+              // Star players (high rating) are harder to convince for a step down
+              if (playerRating >= 17 && strengthDiff < 0) acceptChance -= 0.3;
+              if (playerRating >= 15 && strengthDiff < -1) acceptChance -= 0.2;
+        
+              // Players from weaker teams are easier to sign
+              if (strengthDiff > 2) acceptChance += 0.3;
+        
+              // Clamp between 5% and 95%
+              acceptChance = Math.max(0.05, Math.min(0.95, acceptChance));
+        
+              const accepted = Math.random() < acceptChance;
+        
+              setTransferNegotiation(prev => {
+                if (!prev) return null;
+                return {
+                  ...prev,
+                  stage: 'result',
+                  result: accepted,
+                  message: accepted
+                    ? `${listing.player.name} has agreed to join your club!`
+                    : `${listing.player.name} has rejected your offer. The player prefers to stay at ${listing.team.name}.`
+                };
+              });
+            }, 1500);
+          }, 1000);
+        };
+        
+        const confirmBuy = () => {
+          if (!transferNegotiation || !transferNegotiation.result) return;
+          const { player, fromTeam, price } = transferNegotiation;
+          team.budget -= price;
+          fromTeam.players = fromTeam.players.filter(p => p.id !== player.id);
+          const maxId = Math.max(...team.players.map(p => p.id), 0);
+          const newPlayer = { ...player, id: maxId + 1, goals: 0, injured: false, injuryUntil: null };
+          team.players.push(newPlayer);
+          setTransferList(transferList.filter(l => !(l.player.id === player.id && l.team.id === fromTeam.id)));
+          setFinanceHistory([...financeHistory, { date: date.toISOString(), balance: team.budget }]);
+          setTransferNegotiation(null);
+        };
+                
+                  const sellPlayer = (p) => {
+                  if (team.players.length <= 11) { alert('Cannot sell! You need at least 11 players.'); return; }
+                  const value = calculatePlayerValue(p, date);
+                  const offer = Math.round(value * (0.7 + Math.random() * 0.3));
+                  setState('negotiation');
+                
+                  setTransferNegotiation({
+                    type: 'sell',
+                    player: p,
+                    fromTeam: team,
+                    buyingClub: 'An interested club',
+                    price: offer,
+                    stage: 'result',
+                    result: true,
+                    message: `A club has offered ${formatCurrency(offer)} for ${p.name}. Do you want to accept?`
+                  });
+                };
+                
+                const confirmSell = () => {
+                  if (!transferNegotiation) return;
+                  const { player, price } = transferNegotiation;
+                  team.budget += price;
+                  team.players = team.players.filter(pl => pl.id !== player.id);
+                  const xi = { ...startingXI };
+                  Object.keys(xi).forEach(k => { if (xi[k] === player.id) delete xi[k]; });
+                  setStartingXI(xi);
+                  setFinanceHistory([...financeHistory, { date: date.toISOString(), balance: team.budget }]);
+                  setTransferNegotiation(null);
+                };
+        
+                const processAITransfers = () => {
+                const countryLeagues = Object.keys(leagues).filter(lk => lk.startsWith(country));
+                const allTeams = [];
+                countryLeagues.forEach(lk => {
+                    leagues[lk].teams.forEach(tm => {
+                      if (tm.id !== team.id) allTeams.push({ team: tm, leagueKey: lk });
+                    });
+                  });
+                
+                  // Each AI team attempts 1-3 transfers
+                  allTeams.forEach(({ team: aiTeam }) => {
+                    const numTransfers = Math.floor(Math.random() * 3) + 1;
+                    for (let i = 0; i < numTransfers; i++) {
+                      if (aiTeam.players.length <= 11) break;
+                
+                      // Pick a random position to improve
+                      const positions = ['GK','CB','LB','RB','CDM','CM','CAM','LW','RW','ST'];
+                      const targetPos = positions[Math.floor(Math.random() * positions.length)];
+                
+                      // Find weakest player in that position to sell
+                      const posPlayers = aiTeam.players.filter(p => p.positions.includes(targetPos));
+                      if (posPlayers.length <= 1) continue;
+                      const weakest = posPlayers.sort((a, b) => a.rating - b.rating)[0];
+                
+                      // Find a better player from another AI team
+                      let bestBuy = null;
+                      let bestBuyTeam = null;
+                      allTeams.forEach(({ team: otherTeam }) => {
+                        if (otherTeam.id === aiTeam.id) return;
+                        if (otherTeam.players.length <= 11) return;
+                        otherTeam.players.forEach(p => {
+                          if (!p.positions.includes(targetPos)) return;
+                          if (p.rating <= weakest.rating) return;
+                          if (Math.random() > 0.15) return; // Low chance to keep it rare
+                          if (!bestBuy || p.rating > bestBuy.rating) {
+                            bestBuy = p;
+                            bestBuyTeam = otherTeam;
+                          }
+                        });
+                      });
+                
+                      if (bestBuy && bestBuyTeam) {
+                        // Swap: sell weakest, buy bestBuy
+                        bestBuyTeam.players = bestBuyTeam.players.filter(p => p.id !== bestBuy.id);
+                        aiTeam.players = aiTeam.players.filter(p => p.id !== weakest.id);
+                        bestBuy.goals = 0; bestBuy.injured = false; bestBuy.injuryUntil = null;
+                        weakest.goals = 0; weakest.injured = false; weakest.injuryUntil = null;
+                        aiTeam.players.push(bestBuy);
+                        bestBuyTeam.players.push(weakest);
+                      }
+                    }
+                  });
+                };
+
+          const generateIncomingOffers = () => {
+          const offers = [];
+          team.players.forEach(p => {
+            if (Math.random() < 0.1) {
+              const value = calculatePlayerValue(p, date);
+              const offerAmount = Math.round(value * (0.6 + Math.random() * 0.5));
+              const allTeams = [];
+              Object.keys(leagues).forEach(lk => {
+                leagues[lk].teams.forEach(tm => {
+                  if (tm.id !== team.id) allTeams.push(tm);
                 });
               });
-        
-              if (bestBuy && bestBuyTeam) {
-                // Swap: sell weakest, buy bestBuy
-                bestBuyTeam.players = bestBuyTeam.players.filter(p => p.id !== bestBuy.id);
-                aiTeam.players = aiTeam.players.filter(p => p.id !== weakest.id);
-                bestBuy.goals = 0; bestBuy.injured = false; bestBuy.injuryUntil = null;
-                weakest.goals = 0; weakest.injured = false; weakest.injuryUntil = null;
-                aiTeam.players.push(bestBuy);
-                bestBuyTeam.players.push(weakest);
+              const biddingTeam = allTeams[Math.floor(Math.random() * allTeams.length)];
+              if (biddingTeam) {
+                offers.push({ player: p, biddingTeam, offerAmount });
               }
             }
           });
+          setIncomingOffers(offers);
         };
-
+        
+        const acceptOffer = (offer) => {
+          if (team.players.length <= 11) { alert('Cannot sell! You need at least 11 players.'); return; }
+          setTransferNegotiation({
+            type: 'incoming',
+            player: offer.player,
+            fromTeam: team,
+            buyingClub: offer.biddingTeam.name,
+            buyingTeamObj: offer.biddingTeam,
+            price: offer.offerAmount,
+            stage: 'result',
+            result: true,
+            message: `${offer.biddingTeam.name} have bid ${formatCurrency(offer.offerAmount)} for ${offer.player.name}. Do you want to accept?`
+          });
+            setState('negotiation');
+        };
+        
+        const confirmIncomingSale = () => {
+          if (!transferNegotiation) return;
+          const { player, price, buyingTeamObj } = transferNegotiation;
+          team.budget += price;
+          team.players = team.players.filter(pl => pl.id !== player.id);
+          if (buyingTeamObj) {
+            const sold = { ...player, goals: 0, injured: false, injuryUntil: null };
+            buyingTeamObj.players.push(sold);
+          }
+          const xi = { ...startingXI };
+          Object.keys(xi).forEach(k => { if (xi[k] === player.id) delete xi[k]; });
+          setStartingXI(xi);
+          setFinanceHistory([...financeHistory, { date: date.toISOString(), balance: team.budget }]);
+          setIncomingOffers(incomingOffers.filter(o => o.player.id !== player.id));
+          setTransferNegotiation(null);
+        };
+            
+        const getTeamStrength = (tm) => {
+          if (!tm || !tm.players || tm.players.length === 0) return 0;
+          const sorted = [...tm.players].sort((a, b) => b.rating - a.rating);
+          const best11 = sorted.slice(0, 11);
+          return best11.reduce((s, p) => s + p.rating, 0) / best11.length;
+        };
+            
         const getStarRating = (rating) => {
           if (rating >= 20) return { stars: 5, half: false, label: 'World Class', color: 'text-yellow-400' };
           if (rating >= 18) return { stars: 5, half: false, label: '5 Star', color: 'text-yellow-400' };
@@ -449,6 +588,7 @@
             });
             
             processAITransfers();
+            setIncomingOffers([]);
             setTransferList([]);
             generateFixtures();
           };
@@ -582,6 +722,8 @@
                   newHistories[key].goals += 1;
               });
               setPlayerHistories(newHistories);
+              // Random chance of incoming offer each match
+              if (Math.random() < 0.15) generateIncomingOffers();
 
             const nd = new Date(date);
             nd.setDate(nd.getDate() + 7);
@@ -1499,7 +1641,30 @@
                         <span className="text-gray-400 text-sm">Budget:</span>
                         <span className="text-white font-bold text-lg">{formatCurrency(team.budget)}</span>
                       </div>
-                
+                        
+                        {/* Incoming Offers */}
+                        {incomingOffers.length > 0 && (
+                          <div className="bg-yellow-900/30 p-3 border-b border-yellow-700/50">
+                            <h3 className="text-yellow-400 font-bold text-sm mb-2">📨 Incoming Offers ({incomingOffers.length})</h3>
+                            <div className="space-y-2">
+                              {incomingOffers.map((o, i) => (
+                                <div key={i} className="bg-gray-700 rounded-lg p-3 flex items-center gap-3">
+                                  <div className="flex-shrink-0" style={{ width: '36px' }}>{renderShirt(o.biddingTeam, '36px')}</div>
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-white font-semibold text-sm truncate">{o.player.name}</p>
+                                    <p className="text-gray-400 text-xs">{o.biddingTeam.name} bid {formatCurrency(o.offerAmount)}</p>
+                                    <p className="text-gray-500 text-xs">Value: {formatCurrency(calculatePlayerValue(o.player, date))}</p>
+                                  </div>
+                                  <div className="flex gap-2">
+                                    <button onClick={() => setIncomingOffers(incomingOffers.filter((_, idx) => idx !== i))} className="px-2 py-1 rounded text-xs font-bold bg-red-600 text-white">✕</button>
+                                    <button onClick={() => acceptOffer(o)} className="px-2 py-1 rounded text-xs font-bold bg-green-600 text-white">✓</button>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        
                       {transferFilter !== 'sell' ? (
                         <>
                           {/* Search and filter */}
@@ -1826,6 +1991,97 @@
               </div>
             );
           }
+
+          if (state === 'negotiation') {
+          const neg = transferNegotiation;
+          if (!neg) { setState('info-page'); return null; }
+          return (
+            <div className="min-h-screen bg-gray-900 flex flex-col">
+              {/* Top section with illustration area */}
+              <div className="flex-1 flex items-center justify-center p-8" style={{ background: 'linear-gradient(180deg, #2a1a0a 0%, #1a1a2e 100%)' }}>
+                <div className="text-center">
+                  <div className="text-8xl mb-4">{neg.stage === 'bidding' ? '📞' : neg.stage === 'negotiating' ? '🤝' : neg.result ? '✅' : '❌'}</div>
+                  {neg.stage === 'bidding' && (
+                    <div className="animate-pulse">
+                      <p className="text-gray-400 text-lg">Contacting {neg.type === 'buy' ? neg.fromTeam.name : ''}...</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+        
+              {/* Bottom info panel */}
+              <div className="bg-white rounded-t-3xl p-6 text-center">
+                <h2 className="text-black font-bold text-xl mb-3">
+                  {neg.type === 'buy' ? 'Contract Negotiations' : neg.type === 'sell' ? 'Transfer Offer' : 'Incoming Bid'}
+                </h2>
+        
+                {neg.stage === 'bidding' && (
+                  <p className="text-gray-600">Submitting bid of {formatCurrency(neg.price)}...</p>
+                )}
+        
+                {neg.stage === 'negotiating' && (
+                  <div>
+                    <p className="text-gray-600 mb-2">{neg.message}</p>
+                    <p className="text-gray-500 animate-pulse">Contract negotiations are now taking place...</p>
+                  </div>
+                )}
+        
+                {neg.stage === 'result' && neg.type === 'buy' && (
+                  <div>
+                    <p className="text-gray-600 mb-2">{neg.fromTeam.name} have accepted your bid.</p>
+                    {neg.result ? (
+                      <>
+                        <p className="text-gray-600 mb-2">Contract negotiations are now taking place...</p>
+                        <p className="text-green-600 font-bold mb-2">{neg.player.name} has agreed to join your club!</p>
+                        <p className="text-gray-600">Do you want to sign him for a fee of {formatCurrency(neg.price)}?</p>
+                      </>
+                    ) : (
+                      <p className="text-red-600 font-bold">{neg.message}</p>
+                    )}
+                  </div>
+                )}
+        
+                {neg.stage === 'result' && (neg.type === 'sell' || neg.type === 'incoming') && (
+                  <div>
+                    <p className="text-gray-600 mb-2">{neg.message}</p>
+                  </div>
+                )}
+              </div>
+        
+              {/* Action buttons */}
+              {neg.stage === 'result' && (
+                <div className="flex">
+                  <button
+                    onClick={() => { setTransferNegotiation(null); setState('info-page'); setPage('transfers'); }}
+                    className="flex-1 py-4 bg-red-500 text-white font-bold text-lg"
+                  >
+                    {neg.result ? (neg.type === 'buy' ? 'Do not buy' : 'Reject') : 'Back'}
+                  </button>
+                  {neg.result && (
+                    <button
+                      onClick={() => {
+                        if (neg.type === 'buy') confirmBuy();
+                        else if (neg.type === 'sell') confirmSell();
+                        else if (neg.type === 'incoming') confirmIncomingSale();
+                        setState('info-page'); setPage('transfers');
+                      }}
+                      className="flex-1 py-4 bg-green-600 text-white font-bold text-lg"
+                    >
+                      {neg.type === 'buy' ? 'Buy' : 'Accept'}
+                    </button>
+                  )}
+                </div>
+              )}
+        
+              {/* Loading state - no buttons */}
+              {neg.stage !== 'result' && (
+                <div className="py-4 bg-gray-800 text-center">
+                  <p className="text-gray-400 animate-pulse">Please wait...</p>
+                </div>
+              )}
+            </div>
+          );
+        }  
 
           if (state === 'formation') {
             const next = getNext();
