@@ -2597,26 +2597,99 @@
                         </tr>
                       </thead>
                       <tbody>
-                        {Array.from({ length: Math.max(homePlayers.length, awayPlayers.length) }).map((_, i) => {
-                          const hp = homePlayers[i];
-                          const ap = awayPlayers[i];
-                          const hPos = hp ? hp.positions[0] : '';
-                          const aPos = ap ? ap.positions[0] : '';
+                
+                        {(() => {
+                          // Compute icons from live commentary events
+                          const getPlayerIcons = (playerId, isHome) => {
+                            const icons = [];
+                            liveCommentary.forEach(ev => {
+                              if (ev.isGoal && ev.isHome === isHome) {
+                                // Check if this player scored by matching name in goal text
+                                const player = isHome ? homePlayers.find(p => p.id === playerId) : awayPlayers.find(p => p.id === playerId);
+                                if (player && ev.text.includes(player.name)) {
+                                  icons.push({ type: 'goal', min: ev.min });
+                                }
+                              }
+                              if (ev.type === 'assist' && ev.isHome === isHome) {
+                                const player = isHome ? homePlayers.find(p => p.id === playerId) : awayPlayers.find(p => p.id === playerId);
+                                if (player && ev.text.includes(player.name)) {
+                                  icons.push({ type: 'assist', min: ev.min });
+                                }
+                              }
+                              if (ev.type === 'yellowCard' && ev.playerId === playerId) {
+                                icons.push({ type: 'yellow', min: ev.min });
+                              }
+                              if (ev.type === 'redCard' && ev.playerId === playerId) {
+                                icons.push({ type: 'red', min: ev.min });
+                              }
+                            });
+                            return icons;
+                          };
+                        
+                          // Determine MOTM for each side (only show when match ended)
+                          let homeMotmId = null, awayMotmId = null;
+                          if (matchEnded) {
+                            let hBest = 0, aBest = 0;
+                            homePlayers.forEach(p => { if (p.matchRating > hBest) { hBest = p.matchRating; homeMotmId = p.id; } });
+                            awayPlayers.forEach(p => { if (p.matchRating > aBest) { aBest = p.matchRating; awayMotmId = p.id; } });
+                          }
+                        
                           const posMap = { 'GK':'GK', 'LB':'DL', 'RB':'DR', 'CB':'DC', 'CDM':'MC', 'CM':'MC', 'CAM':'AMC', 'LW':'AML', 'RW':'AMR', 'ST':'AC' };
-                          return (
-                            <tr key={i} className={`border-b border-gray-700/50 ${i >= 11 ? 'opacity-50' : ''}`}>
-                              <td className="py-2 text-white font-bold">{hp ? hp.matchRating.toFixed(0) : ''}</td>
-                              <td className="py-2 text-white text-right pr-2 text-xs">{hp ? hp.name.split(' ').pop() : ''}</td>
-                              <td className="py-2 text-center">
-                                <span className="text-gray-400 text-xs">{hp ? (posMap[hPos] || hPos) : ''}</span>
-                                {(hp || ap) && <span className="text-gray-600 text-xs"> </span>}
-                                <span className="text-gray-400 text-xs">{ap ? (posMap[aPos] || aPos) : ''}</span>
-                              </td>
-                              <td className="py-2 text-white text-left pl-2 text-xs">{ap ? ap.name.split(' ').pop() : ''}</td>
-                              <td className="py-2 text-white font-bold text-right">{ap ? ap.matchRating.toFixed(0) : ''}</td>
-                            </tr>
-                          );
-                        })}
+                        
+                          return Array.from({ length: Math.max(homePlayers.length, awayPlayers.length) }).map((_, i) => {
+                            const hp = homePlayers[i];
+                            const ap = awayPlayers[i];
+                            const hPos = hp ? hp.positions[0] : '';
+                            const aPos = ap ? ap.positions[0] : '';
+                            const hIcons = hp ? getPlayerIcons(hp.id, true) : [];
+                            const aIcons = ap ? getPlayerIcons(ap.id, false) : [];
+                            const hIsMotm = hp && hp.id === homeMotmId;
+                            const aIsMotm = ap && ap.id === awayMotmId;
+                        
+                            const renderIcons = (icons) => (
+                              <span className="ml-1">
+                                {icons.map((ic, j) => (
+                                  <span key={j} className="text-xs" title={`${ic.min}'`}>
+                                    {ic.type === 'goal' && <span>⚽</span>}
+                                    {ic.type === 'assist' && <span className="text-green-400">🅰️</span>}
+                                    {ic.type === 'yellow' && <span>🟨</span>}
+                                    {ic.type === 'red' && <span>🟥</span>}
+                                  </span>
+                                ))}
+                              </span>
+                            );
+                        
+                            return (
+                              <tr key={i} className={`border-b border-gray-700/50 ${i >= 11 ? 'opacity-50' : ''} ${hIsMotm || aIsMotm ? 'bg-yellow-900/20' : ''}`}>
+                                <td className="py-2 text-white font-bold">{hp ? hp.matchRating.toFixed(0) : ''}</td>
+                                <td className="py-2 text-white text-right pr-1 text-xs">
+                                  {hp && (
+                                    <span>
+                                      {hIsMotm && <span className="text-yellow-400">⭐ </span>}
+                                      {hp.name.split(' ').pop()}
+                                      {renderIcons(hIcons)}
+                                    </span>
+                                  )}
+                                </td>
+                                <td className="py-2 text-center">
+                                  <span className="text-gray-400 text-xs">{hp ? (posMap[hPos] || hPos) : ''}</span>
+                                  {(hp || ap) && <span className="text-gray-600 text-xs"> </span>}
+                                  <span className="text-gray-400 text-xs">{ap ? (posMap[aPos] || aPos) : ''}</span>
+                                </td>
+                                <td className="py-2 text-white text-left pl-1 text-xs">
+                                  {ap && (
+                                    <span>
+                                      {ap.name.split(' ').pop()}
+                                      {renderIcons(aIcons)}
+                                      {aIsMotm && <span className="text-yellow-400"> ⭐</span>}
+                                    </span>
+                                  )}
+                                </td>
+                                <td className="py-2 text-white font-bold text-right">{ap ? ap.matchRating.toFixed(0) : ''}</td>
+                              </tr>
+                            );
+                          });
+                        })()}
                       </tbody>
                     </table>
                   </div>
