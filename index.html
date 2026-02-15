@@ -86,7 +86,9 @@
           const [matchTab, setMatchTab] = useState('commentary');
           const [matchPlayerRatings, setMatchPlayerRatings] = useState({ home: [], away: [] });
           const [goalFlash, setGoalFlash] = useState(false);
-          const [matchEnded, setMatchEnded] = useState(false);   
+          const [matchEnded, setMatchEnded] = useState(false);
+          const clockPausedRef = useRef(false);
+          const matchIntRef = useRef(null);
 
           const formations = {
             '4-3-3': { positions: ['GK','LB','CB','CB','RB','CDM','CM','CM','LW','RW','ST'], labels: ['GK','LB','CB','CB','RB','CDM','CM','CM','LW','RW','ST'] },
@@ -915,51 +917,73 @@
           setMatchTab('commentary');
           setState('live-match');
         
-        // Schedule events — clock syncs to events, not independent
+        // Smooth clock that counts 0-90 over ~60s, but pauses on action
             const baseDuration = 60000;
             const msPerMinute = baseDuration / 90;
-            let cumulativeDelay = 0;
-            let lastMin = 0;
             
-            // Sort events by minute
+            clockPausedRef.current = false;
+            setMatchEnded(false);
+            
+            // Smooth clock interval
+            matchIntRef.current = setInterval(() => {
+              if (clockPausedRef.current) return;
+              setLiveMinute(prev => {
+                if (prev >= 90) {
+                  clearInterval(matchIntRef.current);
+                  return 90;
+                }
+                return prev + 1;
+              });
+            }, msPerMinute);
+            
+            // Schedule events based on their minute
             events.sort((a, b) => a.min - b.min);
             
+            let cumulativeDelay = 0;
+            
             events.forEach((ev, idx) => {
-              // Base delay from minute
               const baseDelay = ev.min * msPerMinute;
-              
-              // Add extra pause AFTER chance or goal events
+            
+              // Add pause after previous chance/goal
               const prevEv = idx > 0 ? events[idx - 1] : null;
               if (prevEv && prevEv.type === 'chance') {
-                cumulativeDelay += 2500; // 2.5s pause after a chance
+                cumulativeDelay += 2500;
               } else if (prevEv && prevEv.type === 'goal') {
-                cumulativeDelay += 3500; // 3.5s pause after a goal
+                cumulativeDelay += 3500;
               }
             
               const delay = baseDelay + cumulativeDelay + Math.random() * 150;
             
               setTimeout(() => {
                 setLiveCommentary(prev => [ev, ...prev]);
-                setLiveMinute(ev.min); // Clock always syncs to events
+            
+                if (ev.type === 'chance') {
+                  clockPausedRef.current = true;
+                  setTimeout(() => { clockPausedRef.current = false; }, 2500);
+                }
             
                 if (ev.isGoal && ev.score) {
                   setLiveScore(ev.score);
                   setGoalFlash(true);
                   setTimeout(() => setGoalFlash(false), 3600);
+                  clockPausedRef.current = true;
+                  setTimeout(() => { clockPausedRef.current = false; }, 3500);
                 }
             
-                // When final event fires, mark match as ended
                 if (ev.type === 'end') {
+                  clearInterval(matchIntRef.current);
                   setLiveMinute(90);
                   setMatchEnded(true);
                 }
               }, delay);
             });
             
-            // Safety fallback — ensure match ends
+            // Safety fallback
             const maxDelay = 90 * msPerMinute + cumulativeDelay + 5000;
             setTimeout(() => {
+              clearInterval(matchIntRef.current);
               setLiveMinute(90);
+              setMatchEnded(true);
             }, maxDelay);
           };
 
