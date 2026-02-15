@@ -10,13 +10,27 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
     <style>
         body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+        @keyframes goalFlashAnim {
+          0% { background: #FFD700; color: #000; }
+          20% { background: #000; color: #FFD700; }
+          40% { background: #FFD700; color: #000; }
+          60% { background: #000; color: #FFD700; }
+          80% { background: #FFD700; color: #000; }
+          100% { background: #000; color: #FFD700; }
+        }
+        .goal-flash-active {
+          animation: goalFlashAnim 0.6s ease-in-out 3;
+        }
+        .goal-flash-active p, .goal-flash-active div {
+          color: inherit !important;
+        }
     </style>
 </head>
 <body>
     <div id="root"></div>
     
     <script type="text/babel">
-        const { useState, useEffect } = React;
+        const { useState, useEffect, useRef } = React;
 
         const Menu = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>;
         const Trophy = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>;
@@ -71,6 +85,9 @@
           const [liveScore, setLiveScore] = useState({ home: 0, away: 0 });
           const [matchTab, setMatchTab] = useState('commentary');
           const [matchPlayerRatings, setMatchPlayerRatings] = useState({ home: [], away: [] });
+          const [goalFlash, setGoalFlash] = useState(false);
+          const clockPausedRef = useRef(false);
+          const matchIntRef = useRef(null);  
 
           const formations = {
             '4-3-3': { positions: ['GK','LB','CB','CB','RB','CDM','CM','CM','LW','RW','ST'], labels: ['GK','LB','CB','CB','RB','CDM','CM','CM','LW','RW','ST'] },
@@ -161,6 +178,23 @@
                 "That's a poor pass from {player}. This could be dangerous.",
                 "{player} drives forward with the ball."
               ],
+                yellowCard: [
+                  "🟨 {player} is booked for that challenge.",
+                  "🟨 Yellow card for {player}. He's been warned.",
+                  "🟨 {player} goes into the book after a reckless tackle.",
+                  "🟨 The referee shows {player} a yellow card.",
+                  "🟨 {player} picks up a booking for persistent fouling."
+                ],
+                redCard: [
+                  "🟥 RED CARD! {player} is sent off!",
+                  "🟥 That's a straight red for {player}! He's off!",
+                  "🟥 Second yellow for {player}! He has to go!"
+                ],
+                assist: [
+                  "Assisted by {player} with a brilliant pass.",
+                  "Great vision from {player} to set up the chance.",
+                  "{player} with the key pass to create the goal."
+                ],
               foul: [
                 "Free kick awarded after a foul on {player}.",
                 "{player} is brought down on the edge of the box.",
@@ -501,7 +535,13 @@
             const newFix = {};
             Object.keys(leagues).forEach(lk => {
               const lg = leagues[lk]; const teams = lg.teams;
-              teams.forEach(tm => { tm.players.forEach(p => { if (!p.goals) p.goals = 0; if (!p.injured) p.injured = false; }); });
+              teams.forEach(tm => { tm.players.forEach(p => {
+                  if (!p.goals) p.goals = 0;
+                  if (!p.assists) p.assists = 0;
+                  if (!p.yellowCards) p.yellowCards = 0;
+                  if (!p.redCards) p.redCards = 0;
+                  if (!p.injured) p.injured = false;
+                }); });
               const n = teams.length; const fix = [];
               for (let r = 0; r < (n - 1) * 2; r++) {
                 const first = r < n - 1; const base = first ? r : r - (n - 1);
@@ -632,6 +672,9 @@
               leagues[lk].teams.forEach(tm => {
                 tm.players.forEach(p => {
                   p.goals = 0;
+                  p.assists = 0;
+                  p.yellowCards = 0;
+                  p.redCards = 0;  
                   p.injured = false;
                   p.injuryUntil = null;
                 });
@@ -757,52 +800,88 @@
           let hs = 0, as = 0;
           const scorers = [];
         
-          for (let min = 1; min <= 90; min++) {
-            if (Math.random() < 0.08) {
-              const isHome = Math.random() < 0.5;
-              const players = isHome ? homePlayers : awayPlayers;
-              const defPlayers = isHome ? awayPlayers : homePlayers;
-              const evTeam = isHome ? h : a;
-        
-              const pickPlayer = (ps) => {
-                const r = Math.random();
-                if (r < 0.70) { const fwd = ps.filter(p => p.positions.some(pos => ['ST','LW','RW','CAM'].includes(pos))); if (fwd.length > 0) return fwd[Math.floor(Math.random() * fwd.length)]; }
-                if (r < 0.90) { const mid = ps.filter(p => p.positions.some(pos => ['CDM','CM'].includes(pos))); if (mid.length > 0) return mid[Math.floor(Math.random() * mid.length)]; }
-                const def = ps.filter(p => p.positions.some(pos => ['LB','CB','RB'].includes(pos))); if (def.length > 0) return def[Math.floor(Math.random() * def.length)];
-                return ps[0];
-              };
-        
-              const attacker = pickPlayer(players);
-              const defender = defPlayers[Math.floor(Math.random() * defPlayers.length)];
-              if (!attacker) continue;
-        
-              // Build-up event
-              const midfielder = players.filter(p => p.positions.some(pos => ['CDM','CM','CAM'].includes(pos)))[0] || attacker;
-              events.push({ min, type: 'midfield', text: pickTemplate('midfield').replace('{player}', midfielder.name), isHome, isGoal: false });
-        
-              const scoreChance = 0.2 + attacker.effectiveRating * 0.02;
-              if (Math.random() < scoreChance) {
-                // Goal
-                if (isHome) hs++; else as++;
-                events.push({ min, type: 'goal', text: pickTemplate('goal').replace('{player}', attacker.name), isHome, isGoal: true, score: { home: hs, away: as } });
-                scorers.push({ playerId: attacker.id, teamId: evTeam.id });
-                attacker.matchRating = Math.min(10, attacker.matchRating + 1.0 + Math.random() * 0.5);
-              } else {
-                // Chance saved/missed
-                events.push({ min, type: 'chance', text: pickTemplate('chance').replace('{player}', attacker.name), isHome, isGoal: false });
-                if (defender) {
-                  events.push({ min, type: 'defend', text: pickTemplate('defend').replace('{player}', defender.name), isHome: !isHome, isGoal: false });
-                  defender.matchRating = Math.min(10, defender.matchRating + 0.3);
+          // Track cards per player for double-yellow logic
+            const matchCards = {};
+            
+            for (let min = 1; min <= 90; min++) {
+              if (Math.random() < 0.08) {
+                const isHome = Math.random() < 0.5;
+                const players = isHome ? homePlayers : awayPlayers;
+                const defPlayers = isHome ? awayPlayers : homePlayers;
+                const evTeam = isHome ? h : a;
+            
+                const pickPlayer = (ps) => {
+                  const r = Math.random();
+                  if (r < 0.70) { const fwd = ps.filter(p => p.positions.some(pos => ['ST','LW','RW','CAM'].includes(pos))); if (fwd.length > 0) return fwd[Math.floor(Math.random() * fwd.length)]; }
+                  if (r < 0.90) { const mid = ps.filter(p => p.positions.some(pos => ['CDM','CM'].includes(pos))); if (mid.length > 0) return mid[Math.floor(Math.random() * mid.length)]; }
+                  const def = ps.filter(p => p.positions.some(pos => ['LB','CB','RB'].includes(pos))); if (def.length > 0) return def[Math.floor(Math.random() * def.length)];
+                  return ps[0];
+                };
+            
+                const attacker = pickPlayer(players);
+                const defender = defPlayers[Math.floor(Math.random() * defPlayers.length)];
+                if (!attacker) continue;
+            
+                // Build-up
+                const midfielder = players.filter(p => p.positions.some(pos => ['CDM','CM','CAM'].includes(pos)))[0] || attacker;
+                events.push({ min, type: 'midfield', text: pickTemplate('midfield').replace('{player}', midfielder.name), isHome, isGoal: false });
+            
+                const scoreChance = 0.2 + attacker.effectiveRating * 0.02;
+                if (Math.random() < scoreChance) {
+                  // GOAL
+                  if (isHome) hs++; else as++;
+            
+                  // Pick assister (different player, prefer midfielders/attackers)
+                  const possibleAssisters = players.filter(p => p.id !== attacker.id);
+                  let assister = null;
+                  if (possibleAssisters.length > 0) {
+                    const midAtk = possibleAssisters.filter(p => p.positions.some(pos => ['CAM','CM','LW','RW','ST'].includes(pos)));
+                    assister = midAtk.length > 0 ? midAtk[Math.floor(Math.random() * midAtk.length)] : possibleAssisters[Math.floor(Math.random() * possibleAssisters.length)];
+                  }
+            
+                  events.push({ min, type: 'goal', text: pickTemplate('goal').replace('{player}', attacker.name), isHome, isGoal: true, score: { home: hs, away: as } });
+                  if (assister) {
+                    events.push({ min, type: 'assist', text: pickTemplate('assist').replace('{player}', assister.name), isHome, isGoal: false });
+                    scorers.push({ playerId: attacker.id, teamId: evTeam.id, assisterId: assister.id });
+                  } else {
+                    scorers.push({ playerId: attacker.id, teamId: evTeam.id, assisterId: null });
+                  }
+                  attacker.matchRating = Math.min(10, attacker.matchRating + 1.0 + Math.random() * 0.5);
+                  if (assister) assister.matchRating = Math.min(10, assister.matchRating + 0.5 + Math.random() * 0.3);
+                } else {
+                  // Chance missed/saved
+                  events.push({ min, type: 'chance', text: pickTemplate('chance').replace('{player}', attacker.name), isHome, isGoal: false });
+                  if (defender) {
+                    events.push({ min, type: 'defend', text: pickTemplate('defend').replace('{player}', defender.name), isHome: !isHome, isGoal: false });
+                    defender.matchRating = Math.min(10, defender.matchRating + 0.3);
+                  }
+                }
+              } else if (Math.random() < 0.04) {
+                // FOUL with possible card
+                const isHome = Math.random() < 0.5;
+                const players = isHome ? homePlayers : awayPlayers;
+                const p = players[Math.floor(Math.random() * players.length)];
+                if (p) {
+                  events.push({ min, type: 'foul', text: pickTemplate('foul').replace('{player}', p.name), isHome, isGoal: false });
+            
+                  // Yellow card chance (~40% of fouls)
+                  if (Math.random() < 0.4) {
+                    const cardKey = `${p.id}`;
+                    if (!matchCards[cardKey]) matchCards[cardKey] = 0;
+                    matchCards[cardKey]++;
+            
+                    if (matchCards[cardKey] >= 2) {
+                      // Second yellow = red
+                      events.push({ min, type: 'redCard', text: pickTemplate('redCard').replace('{player}', p.name), isHome, isGoal: false, playerId: p.id, teamId: isHome ? h.id : a.id, cardType: 'red' });
+                    } else {
+                      events.push({ min, type: 'yellowCard', text: pickTemplate('yellowCard').replace('{player}', p.name), isHome, isGoal: false, playerId: p.id, teamId: isHome ? h.id : a.id, cardType: 'yellow' });
+                    }
+                    p.matchRating = Math.max(1, p.matchRating - 0.5);
+                  }
                 }
               }
-            } else if (Math.random() < 0.03) {
-              // Random foul
-              const isHome = Math.random() < 0.5;
-              const players = isHome ? homePlayers : awayPlayers;
-              const p = players[Math.floor(Math.random() * players.length)];
-              if (p) events.push({ min, type: 'foul', text: pickTemplate('foul').replace('{player}', p.name), isHome, isGoal: false });
             }
-          }
+          
         
           // Kickoff event
           events.unshift({ min: 0, type: 'start', text: 'Kick off!', isHome: true, isGoal: false });
@@ -836,39 +915,53 @@
           setMatchTab('commentary');
           setState('live-match');
         
-          // Animate events over ~60 seconds
-          let eventIdx = 0;
-          const totalDuration = 60000; // 60 seconds
-          const msPerMinute = totalDuration / 90;
-        
-          const interval = setInterval(() => {
-            setLiveMinute(prev => {
-              const newMin = prev + 1;
-              if (newMin > 90) {
-                clearInterval(interval);
-                return 90;
-              }
-              return newMin;
+         // Animate with clock pausing on action
+            let eventIdx = 0;
+            const totalDuration = 60000;
+            const msPerMinute = totalDuration / 90;
+            
+            clockPausedRef.current = false;
+            
+            matchIntRef.current = setInterval(() => {
+              if (clockPausedRef.current) return; // Skip tick if paused
+              setLiveMinute(prev => {
+                const nm = prev + 1;
+                if (nm > 90) {
+                  clearInterval(matchIntRef.current);
+                  return 90;
+                }
+                return nm;
+              });
+            }, msPerMinute);
+            
+            // Schedule events with pause logic
+            events.forEach(ev => {
+              const delay = ev.min * msPerMinute + Math.random() * 200;
+              setTimeout(() => {
+                setLiveCommentary(prev => [ev, ...prev]);
+            
+                if (ev.isGoal && ev.score) {
+                  setLiveScore(ev.score);
+                  // Goal flash
+                  setGoalFlash(true);
+                  setTimeout(() => setGoalFlash(false), 3600);
+                  // Pause clock for 4 seconds on goal
+                  clockPausedRef.current = true;
+                  setTimeout(() => { clockPausedRef.current = false; }, 4000);
+                } else if (ev.type === 'chance') {
+                  // Pause clock for 2.5 seconds on chance (builds anticipation)
+                  clockPausedRef.current = true;
+                  setTimeout(() => { clockPausedRef.current = false; }, 2500);
+                }
+              }, delay);
             });
-          }, msPerMinute);
-        
-          // Schedule each event
-          events.forEach(ev => {
-            const delay = ev.min * msPerMinute + Math.random() * 200;
+            
+            // Finalize at end
             setTimeout(() => {
-              setLiveCommentary(prev => [ev, ...prev]);
-              if (ev.isGoal && ev.score) {
-                setLiveScore(ev.score);
-              }
-            }, delay);
-          });
-        
-          // After 90 "minutes" (60 real seconds), finalize
-          setTimeout(() => {
-            clearInterval(interval);
-            setLiveMinute(90);
-          }, totalDuration + 500);
-        };
+              clearInterval(matchIntRef.current);
+              setLiveMinute(90);
+            }, totalDuration + 5000); // Extra buffer for pauses
+          };
 
           const finishLiveMatch = () => {
           if (!liveMatch) return;
@@ -882,12 +975,33 @@
             uf[league][idx].homeScore = finalScore.home;
             uf[league][idx].awayScore = finalScore.away;
             uf[league][idx].scorers = scorers;
-            scorers.forEach(sc => {
+              scorers.forEach(sc => {
               const lg = leagues[league];
               const t = lg.teams.find(tm => tm.id === sc.teamId);
-              if (t) { const p = t.players.find(pl => pl.id === sc.playerId); if (p) p.goals = (p.goals || 0) + 1; }
+              if (t) {
+                const p = t.players.find(pl => pl.id === sc.playerId);
+                if (p) p.goals = (p.goals || 0) + 1;
+                if (sc.assisterId) {
+                  const a = t.players.find(pl => pl.id === sc.assisterId);
+                  if (a) a.assists = (a.assists || 0) + 1;
+                }
+              }
             });
-          }
+            
+            // Credit cards from events
+            const allEvents = liveMatch.events || [];
+            allEvents.filter(ev => ev.cardType).forEach(ev => {
+              const lg = leagues[league];
+              const t = lg.teams.find(tm => tm.id === ev.teamId);
+              if (t) {
+                const p = t.players.find(pl => pl.id === ev.playerId);
+                if (p) {
+                  if (ev.cardType === 'yellow') p.yellowCards = (p.yellowCards || 0) + 1;
+                  if (ev.cardType === 'red') p.redCards = (p.redCards || 0) + 1;
+                }
+              }
+            });
+                      }
         
           // Sim other matches
           Object.keys(leagues).forEach(lk => {
@@ -909,21 +1023,65 @@
         
           // Track player stats
           const matchPlayers = Object.values(startingXI).filter(pid => {
-            const p = team.players.find(pl => pl.id === pid);
-            return p && !p.injured;
-          });
-          const season = getSeasonDisplay();
-          const newHistories = { ...playerHistories };
-          matchPlayers.forEach(pid => {
-            const key = `${pid}-${season}`;
-            if (!newHistories[key]) newHistories[key] = { playerId: pid, season, apps: 0, goals: 0, team: team.name };
-            newHistories[key].apps += 1;
-          });
-          scorers.filter(sc => sc.teamId === team.id).forEach(sc => {
-            const key = `${sc.playerId}-${season}`;
-            if (!newHistories[key]) newHistories[key] = { playerId: sc.playerId, season, apps: 0, goals: 0, team: team.name };
-            newHistories[key].goals += 1;
-          });
+          const p = team.players.find(pl => pl.id === pid);
+          return p && !p.injured;
+            });
+            const season = getSeasonDisplay();
+            const newHistories = { ...playerHistories };
+            
+            // Find match ratings for our players
+            const allMatchPlayers = [...(liveMatch.homePlayers || []), ...(liveMatch.awayPlayers || [])];
+            const ourMatchPlayers = allMatchPlayers.filter(mp => matchPlayers.includes(mp.id));
+            
+            // Determine MOTM from our team
+            let motmId = null;
+            let motmRating = 0;
+            ourMatchPlayers.forEach(mp => {
+              if (mp.matchRating > motmRating) {
+                motmRating = mp.matchRating;
+                motmId = mp.id;
+              }
+            });
+            
+            matchPlayers.forEach(pid => {
+              const key = `${pid}-${season}`;
+              if (!newHistories[key]) newHistories[key] = { playerId: pid, season, apps: 0, goals: 0, assists: 0, yellowCards: 0, redCards: 0, totalRating: 0, matchCount: 0, motm: 0, team: team.name };
+              newHistories[key].apps += 1;
+            
+              // Add match rating
+              const mp = ourMatchPlayers.find(m => m.id === pid);
+              if (mp) {
+                newHistories[key].totalRating += mp.matchRating;
+                newHistories[key].matchCount += 1;
+              }
+            
+              // MOTM
+              if (pid === motmId) {
+                newHistories[key].motm += 1;
+              }
+            });
+            
+            // Track goals/assists/cards per player
+            scorers.filter(sc => sc.teamId === team.id).forEach(sc => {
+              const key = `${sc.playerId}-${season}`;
+              if (!newHistories[key]) newHistories[key] = { playerId: sc.playerId, season, apps: 0, goals: 0, assists: 0, yellowCards: 0, redCards: 0, totalRating: 0, matchCount: 0, motm: 0, team: team.name };
+              newHistories[key].goals += 1;
+            
+              if (sc.assisterId) {
+                const aKey = `${sc.assisterId}-${season}`;
+                if (!newHistories[aKey]) newHistories[aKey] = { playerId: sc.assisterId, season, apps: 0, goals: 0, assists: 0, yellowCards: 0, redCards: 0, totalRating: 0, matchCount: 0, motm: 0, team: team.name };
+                newHistories[aKey].assists += 1;
+              }
+            });
+            
+            // Track cards
+            allEvents.filter(ev => ev.cardType && ev.teamId === team.id).forEach(ev => {
+              const key = `${ev.playerId}-${season}`;
+              if (!newHistories[key]) newHistories[key] = { playerId: ev.playerId, season, apps: 0, goals: 0, assists: 0, yellowCards: 0, redCards: 0, totalRating: 0, matchCount: 0, motm: 0, team: team.name };
+              if (ev.cardType === 'yellow') newHistories[key].yellowCards += 1;
+              if (ev.cardType === 'red') newHistories[key].redCards += 1;
+            });
+
           setPlayerHistories(newHistories);
         
           if (Math.random() < 0.15) generateIncomingOffers();
@@ -1711,18 +1869,34 @@
                           {/* Current season stats */}
                           <div className="bg-gray-800 border-t border-gray-700 p-4">
                             <h3 className="text-gray-500 text-xs mb-3">Current Season</h3>
-                            <div className="grid grid-cols-3 gap-4 text-center">
+                            <div className="grid grid-cols-7 gap-1 text-center">
                               <div>
                                 <p className="text-gray-500 text-xs">Apps</p>
-                                <p className="text-white font-bold text-3xl">{currentSeason.apps}</p>
+                                <p className="text-white font-bold text-2xl">{currentSeason.apps}</p>
                               </div>
                               <div>
-                                <p className="text-gray-500 text-xs">Goals</p>
-                                <p className="text-white font-bold text-3xl">{p.goals || 0}</p>
+                                <p className="text-gray-500 text-xs">Gls</p>
+                                <p className="text-white font-bold text-2xl">{p.goals || 0}</p>
                               </div>
                               <div>
-                                <p className="text-gray-500 text-xs">Rating</p>
-                                <p className="text-white font-bold text-3xl">{p.rating}</p>
+                                <p className="text-gray-500 text-xs">Ast</p>
+                                <p className="text-white font-bold text-2xl">{p.assists || 0}</p>
+                              </div>
+                              <div>
+                                <p className="text-gray-500 text-xs">Yel</p>
+                                <p className="text-yellow-400 font-bold text-2xl">{p.yellowCards || 0}</p>
+                              </div>
+                              <div>
+                                <p className="text-gray-500 text-xs">Red</p>
+                                <p className="text-red-400 font-bold text-2xl">{p.redCards || 0}</p>
+                              </div>
+                              <div>
+                                <p className="text-gray-500 text-xs">MoM</p>
+                                <p className="text-orange-400 font-bold text-2xl">{currentSeason.motm || 0}</p>
+                              </div>
+                              <div>
+                                <p className="text-gray-500 text-xs">Avg R</p>
+                                <p className="text-green-400 font-bold text-2xl">{currentSeason.matchCount > 0 ? (currentSeason.totalRating / currentSeason.matchCount).toFixed(2) : '-'}</p>
                               </div>
                             </div>
                           </div>
@@ -1734,19 +1908,29 @@
                               <table className="w-full text-sm">
                                 <thead>
                                   <tr className="text-gray-500 border-b border-gray-700 text-xs">
-                                    <th className="text-left p-2">S</th>
-                                    <th className="text-left p-2">Club</th>
-                                    <th className="text-center p-2">App</th>
-                                    <th className="text-center p-2">Gls</th>
-                                  </tr>
+                                  <th className="text-left p-1">S</th>
+                                  <th className="text-left p-1">Club</th>
+                                  <th className="text-center p-1">App</th>
+                                  <th className="text-center p-1">Gls</th>
+                                  <th className="text-center p-1">Ast</th>
+                                  <th className="text-center p-1">Yel</th>
+                                  <th className="text-center p-1">Red</th>
+                                  <th className="text-center p-1">MoM</th>
+                                  <th className="text-center p-1">Avg</th>
+                                </tr>
                                 </thead>
                                 <tbody>
                                   {allSeasons.map((h, i) => (
                                     <tr key={i} className={`border-b border-gray-700/50 ${h.season === season ? 'bg-green-900/20' : ''}`}>
-                                      <td className="text-gray-400 p-2">{i + 1}</td>
-                                      <td className="text-white p-2">{h.team}</td>
-                                      <td className="text-center text-gray-400 p-2">{h.apps}</td>
-                                      <td className="text-center text-gray-400 p-2">{h.goals}</td>
+                                      <td className="text-gray-400 p-1">{i + 1}</td>
+                                      <td className="text-white p-1 text-xs">{h.team}</td>
+                                      <td className="text-center text-gray-400 p-1">{h.apps}</td>
+                                      <td className="text-center text-gray-400 p-1">{h.goals}</td>
+                                      <td className="text-center text-gray-400 p-1">{h.assists || 0}</td>
+                                      <td className="text-center text-yellow-400 p-1">{h.yellowCards || 0}</td>
+                                      <td className="text-center text-red-400 p-1">{h.redCards || 0}</td>
+                                      <td className="text-center text-orange-400 p-1">{h.motm || 0}</td>
+                                      <td className="text-center text-green-400 p-1">{h.matchCount > 0 ? (h.totalRating / h.matchCount).toFixed(2) : '-'}</td>
                                     </tr>
                                   ))}
                                 </tbody>
@@ -2333,7 +2517,7 @@
           return (
             <div className="min-h-screen bg-gray-900 flex flex-col">
               {/* Scoreboard */}
-              <div className="p-4" style={{ background: 'linear-gradient(180deg, #1a3a1a 0%, #0a1a0a 100%)' }}>
+              <div className={`p-4 ${goalFlash ? 'goal-flash-active' : ''}`} style={goalFlash ? {} : { background: 'linear-gradient(180deg, #1a3a1a 0%, #0a1a0a 100%)' }}>
                 <div className="flex justify-between items-center mb-1">
                   <div className="flex-1">
                     <p className="text-yellow-400 font-bold text-lg" style={{ fontFamily: 'monospace' }}>{homeTeam.name.toUpperCase()}</p>
