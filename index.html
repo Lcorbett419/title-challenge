@@ -964,6 +964,27 @@
 
                       <div className="bg-gray-800 rounded-lg p-4 mb-4">
                         <div className="text-gray-400 text-sm mb-1">Finances: Balance</div>
+                          <div className="bg-gray-800 rounded-lg p-4 mb-4">
+                          <div className="text-gray-400 text-sm mb-1">Board Objective</div>
+                          <div className="text-white font-bold text-xl">{(() => {
+                            const myStrength = getTeamStrength(team);
+                            const leagueTeams = leagues[league].teams.map(t => ({
+                              id: t.id,
+                              strength: getTeamStrength(t)
+                            })).sort((a, b) => b.strength - a.strength);
+                            const rank = leagueTeams.findIndex(t => t.id === team.id) + 1;
+                            const total = leagueTeams.length;
+                            const pct = rank / total;
+                            if (pct <= 0.1) return '🏆 Win the league';
+                            if (pct <= 0.2) return '🥇 Challenge for the title';
+                            if (pct <= 0.3) return '⭐ Top 4 finish';
+                            if (pct <= 0.5) return '📈 Top half finish';
+                            if (pct <= 0.7) return '📊 Mid-table finish';
+                            if (pct <= 0.85) return '⚠️ Avoid relegation';
+                            return '🔴 Survival';
+                          })()}</div>
+                          <div className="text-gray-500 text-xs mt-1">Based on squad strength ranking in {leagues[league].name}</div>
+                        </div>
                         <div className="text-white font-bold text-3xl cursor-pointer hover:text-orange-500 transition" onClick={() => setPage('finances')}>{formatCurrency(team.budget)}</div>
                       </div>
                     </>
