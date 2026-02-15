@@ -1235,12 +1235,23 @@
 
   // Board objective
   const getBoardObjective = () => {
-    const avgRating = tp.players.reduce((sum, p) => sum + p.rating, 0) / tp.players.length;
-    if (avgRating >= 17) return 'Win the league';
-    if (avgRating >= 15) return 'Top 4 finish';
-    if (avgRating >= 13) return 'Mid-table finish';
-    return 'Avoid relegation';
-  };
+  const teamStrength = getTeamStrength(tp);
+  const leagueTeams = leagues[lk].teams.map(t => ({
+    id: t.id,
+    strength: getTeamStrength(t)
+  })).sort((a, b) => b.strength - a.strength);
+  const rank = leagueTeams.findIndex(t => t.id === tp.id) + 1;
+  const total = leagueTeams.length;
+  const pct = rank / total;
+
+  if (pct <= 0.1) return 'Win the league';
+  if (pct <= 0.2) return 'Challenge for the title';
+  if (pct <= 0.3) return 'Top 4 finish';
+  if (pct <= 0.5) return 'Top half finish';
+  if (pct <= 0.7) return 'Mid-table finish';
+  if (pct <= 0.85) return 'Avoid relegation';
+  return 'Survival';
+};
 
   return (
     <div>
