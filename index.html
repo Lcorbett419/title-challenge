@@ -2626,13 +2626,15 @@
                             return icons;
                           };
                         
-                          // Determine MOTM for each side (only show when match ended)
-                          let homeMotmId = null, awayMotmId = null;
-                          if (matchEnded) {
-                            let hBest = 0, aBest = 0;
-                            homePlayers.forEach(p => { if (p.matchRating > hBest) { hBest = p.matchRating; homeMotmId = p.id; } });
-                            awayPlayers.forEach(p => { if (p.matchRating > aBest) { aBest = p.matchRating; awayMotmId = p.id; } });
-                          }
+                          // Determine single MOTM across both teams (only show when match ended)
+                            let homeMotmId = null, awayMotmId = null;
+                            if (matchEnded) {
+                              let bestRating = 0, bestId = null, bestSide = null;
+                              homePlayers.forEach(p => { if (p.matchRating > bestRating) { bestRating = p.matchRating; bestId = p.id; bestSide = 'home'; } });
+                              awayPlayers.forEach(p => { if (p.matchRating > bestRating) { bestRating = p.matchRating; bestId = p.id; bestSide = 'away'; } });
+                              if (bestSide === 'home') homeMotmId = bestId;
+                              else awayMotmId = bestId;
+                            }
                         
                           const posMap = { 'GK':'GK', 'LB':'DL', 'RB':'DR', 'CB':'DC', 'CDM':'MC', 'CM':'MC', 'CAM':'AMC', 'LW':'AML', 'RW':'AMR', 'ST':'AC' };
                         
