@@ -990,6 +990,7 @@
           const finishLiveMatch = () => {
           if (!liveMatch) return;
           const { homeTeam, awayTeam, scorers, finalScore, fixture } = liveMatch;
+             const allEvents = liveMatch.events || [];
         
           // Update fixtures
           const uf = JSON.parse(JSON.stringify(fixtures));
@@ -1013,7 +1014,6 @@
             });
             
             // Credit cards from events
-            const allEvents = liveMatch.events || [];
             allEvents.filter(ev => ev.cardType).forEach(ev => {
               const lg = leagues[league];
               const t = lg.teams.find(tm => tm.id === ev.teamId);
@@ -2565,7 +2565,7 @@
               </div>
         
               {/* Content */}
-              <div className="flex-1 overflow-y-auto" style={{ background: 'linear-gradient(180deg, #2d4a2d 0%, #1a3a1a 100%)' }}>
+              <div className="flex-1 overflow-y-auto pb-24" style={{ background: 'linear-gradient(180deg, #2d4a2d 0%, #1a3a1a 100%)' }}>
                 {matchTab === 'commentary' && (
                   <div className="p-3 space-y-2">
                     {liveCommentary.map((ev, i) => (
