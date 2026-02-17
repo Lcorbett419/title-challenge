@@ -3007,6 +3007,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#FFFFFF",
         "secondaryColor": "#BA3733",
+        "stadiumName": "WWK Arena",
+        "stadiumCapacity": 31000,        
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Finn Dahmen", "positions": ["GK"], "dob": "1998-03-27", "rating": 14 },
@@ -3042,6 +3044,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#000000",
         "secondaryColor": "#E32221",
+        "stadiumName": "BayArena",
+        "stadiumCapacity": 31000,
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Mark Flekken", "positions": ["GK"], "dob": "1993-06-13", "rating": 15 },
@@ -3080,6 +3084,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#DC052D",
         "secondaryColor": "#FFFFFF",
+        "stadiumName": "Allianz Arena",
+        "stadiumCapacity": 75000,
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Manuel Neuer", "positions": ["GK"], "dob": "1986-03-27", "rating": 17 },
@@ -3113,6 +3119,8 @@
         "shirtStyle": "sleeves",
         "primaryColor": "#FDE100",
         "secondaryColor": "#000000",
+        "stadiumName": "Signal Iduna Park",
+        "stadiumCapacity": 81000,
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Gregor Kobel", "positions": ["GK"], "dob": "1997-12-06", "rating": 17 },
@@ -3146,6 +3154,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#FFFFFF",
         "secondaryColor": "#000000",
+        "stadiumName": "Borussia-Park",
+        "stadiumCapacity": 54000,
         "budget": 50000000,
         "players": [
           { "id": 33, "name": "Moritz Nicolas", "positions": ["GK"], "dob": "1997-10-21", "rating": 14 },
@@ -3183,6 +3193,8 @@
         "shirtStyle": "stripes",
         "primaryColor": "#000000",
         "secondaryColor": "#E1000F",
+        "stadiumName": "Deutsche Bank Park",
+        "stadiumCapacity": 58000,
         "budget": 50000000,
         "players": [
           { "id": 23, "name": "Michael Zetterer", "positions": ["GK"], "dob": "1995-07-12", "rating": 14 },
@@ -3221,6 +3233,8 @@
         "shirtStyle": "stripes",
         "primaryColor": "#FFFFFF",
         "secondaryColor": "#E2001A",
+        "stadiumName": "Europa-Park Stadion",
+        "stadiumCapacity": 35000,
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Noah Atubolu", "positions": ["GK"], "dob": "2002-05-25", "rating": 14 },
@@ -3256,6 +3270,8 @@
         "shirtStyle": "sleeves",
         "primaryColor": "#FFFFFF",
         "secondaryColor": "#00296B",
+        "stadiumName": "Volksparkstadion",
+        "stadiumCapacity": 57000,
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Daniel Heuer Fernandes", "positions": ["GK"], "dob": "1992-11-13", "rating": 14 },
@@ -3292,6 +3308,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#ED1C24",
         "secondaryColor": "#003D7C",
+        "stadiumName": "Voith-Arena",
+        "stadiumCapacity": 15000,
         "budget": 50000000,
         "players": [
           { "id": 41, "name": "Diant Ramaj", "positions": ["GK"], "dob": "2001-09-19", "rating": 14 },
@@ -3328,6 +3346,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#122336",
         "secondaryColor": "#1961B5",
+        "stadiumName": "PreZero Arena",
+        "stadiumCapacity": 31000,
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Oliver Baumann", "positions": ["GK"], "dob": "1990-06-02", "rating": 16 },
@@ -3365,6 +3385,8 @@
         "shirtStyle": "stripes",
         "primaryColor": "#FFFFFF",
         "secondaryColor": "#ED1C24",
+        "stadiumName": "RheinEnergieStadion",
+        "stadiumCapacity": 50000,
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Marvin Schwäbe", "positions": ["GK"], "dob": "1995-04-25", "rating": 15 },
@@ -3402,6 +3424,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#FFFFFF",
         "secondaryColor": "#DD0741",
+        "stadiumName": "Red Bull Arena",
+        "stadiumCapacity": 48000,
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Péter Gulácsi", "positions": ["GK"], "dob": "1990-05-06", "rating": 16 },
@@ -3439,6 +3463,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#ED1C24",
         "secondaryColor": "#FFFFFF",
+        "stadiumName": "Mewa Arena",
+        "stadiumCapacity": 33000,
         "budget": 50000000,
         "players": [
           { "id": 27, "name": "Robin Zentner", "positions": ["GK"], "dob": "1994-10-28", "rating": 14 },
@@ -3476,6 +3502,8 @@
         "shirtStyle": "stripes",
         "primaryColor": "#6B3524",
         "secondaryColor": "#FFFFFF",
+        "stadiumName": "Millerntor-Stadion",
+        "stadiumCapacity": 30000,
         "budget": 50000000,
         "players": [
           { "id": 22, "name": "Nikola Vasilj", "positions": ["GK"], "dob": "1995-12-02", "rating": 14 },
@@ -3517,6 +3545,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#FFFFFF",
         "secondaryColor": "#E32219",
+        "stadiumName": "MHPArena",
+        "stadiumCapacity": 60000,
         "budget": 50000000,
         "players": [
           { "id": 33, "name": "Alexander Nübel", "positions": ["GK"], "dob": "1996-09-30", "rating": 15 },
@@ -3558,6 +3588,8 @@
         "shirtStyle": "hoops",
         "primaryColor": "#EB1923",
         "secondaryColor": "#FFFFFF",
+        "stadiumName": "Stadion An der Alten Försterei",
+        "stadiumCapacity": 22000,
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Frederik Rønnow", "positions": ["GK"], "dob": "1992-08-04", "rating": 15 },
@@ -3594,6 +3626,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#2B6303",
         "secondaryColor": "#FFFFFF",
+        "stadiumName": "Weserstadion",
+        "stadiumCapacity": 42000,
         "budget": 50000000,
         "players": [
           { "id": 13, "name": "Karl Hein", "positions": ["GK"], "dob": "2002-04-13", "rating": 13 },
@@ -3634,6 +3668,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#245701",
         "secondaryColor": "#65B32E",
+        "stadiumName": "Volkswagen Arena",
+        "stadiumCapacity": 29000,
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "Kamil Grabara", "positions": ["GK"], "dob": "1999-01-08", "rating": 15 },
