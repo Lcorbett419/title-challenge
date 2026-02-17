@@ -1322,7 +1322,7 @@
         { "id": 25, "name": "Makenzie Kirk", "positions": ["ST"], "dob": "2003-12-11", "rating": 10 },
         { "id": 27, "name": "Millenic Alli", "positions": ["LW", "ST"], "dob": "2000-02-06", "rating": 11 },
         { "id": 29, "name": "Harvey Blair", "positions": ["RW", "LW"], "dob": "2003-09-14", "rating": 11 },
-        { "id": 36, "name": "Conor Chaplin", "positions": ["ST", "CAM"], "dob": "1997-02-16", "rating": 13 },
+        { "id": 36, "name": "Conor Chaplin", "positions": ["ST", "CAM"], "dob": "1997-02-16", "rating": 12 },
         { "id": 37, "name": "Keshi Anderson", "positions": ["LW", "CAM"], "dob": "1995-04-06", "rating": 12 },
         { "id": 40, "name": "Jacob Brown", "positions": ["ST", "RW"], "dob": "1998-04-10", "rating": 12 },
         { "id": 46, "name": "Olutayo Singerr", "positions": ["ST"], "dob": "2005-01-01", "rating": 9 },
@@ -3718,6 +3718,8 @@
         "shirtStyle": "stripes",
         "primaryColor": "#0054A6",
         "secondaryColor": "#FFFFFF",
+        "stadiumName": "Mendizorrotza",
+        "stadiumCapacity": 20000,
         "budget": 50000000,
         "players": [
           { "id": 201, "name": "Carlos Hernández", "positions": ["GK"], "dob": "1996-03-18", "rating": 17 },
@@ -3739,6 +3741,8 @@
         "shirtStyle": "stripes",
         "primaryColor": "#EE2523",
         "secondaryColor": "#FFFFFF",
+        "stadiumName": "San Mamés",
+        "stadiumCapacity": 53000,
         "budget": 50000000,
         "players": [
           { "id": 212, "name": "Juan Torres", "positions": ["GK"], "dob": "1995-08-14", "rating": 17 },
@@ -3760,6 +3764,8 @@
         "shirtStyle": "stripes",
         "primaryColor": "#CB3524",
         "secondaryColor": "#FFFFFF",
+        "stadiumName": "Metropolitano Stadium",
+        "stadiumCapacity": 70000,
         "budget": 50000000,
         "players": [
           { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -3781,6 +3787,8 @@
         "shirtStyle": "stripes",
         "primaryColor": "#99022C",
         "secondaryColor": "#012C57",
+        "stadiumName": "Camp Nou",
+        "stadiumCapacity": 105000,
         "budget": 50000000,
         "players": [
           { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -3802,6 +3810,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#8AC3EE",
         "secondaryColor": "#000000",
+        "stadiumName": "Balaídos",
+        "stadiumCapacity": 25000,
         "budget": 50000000,
         "players": [
           { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -3823,6 +3833,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#FFFFFF",
         "secondaryColor": "#006633",
+        "stadiumName": "Estadio Martínez Valero",
+        "stadiumCapacity": 31000,
         "budget": 50000000,
         "players": [
           { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -3844,6 +3856,8 @@
         "shirtStyle": "stripes",
         "primaryColor": "#007FC8",
         "secondaryColor": "#FFFFFF",
+        "stadiumName": "Estadio Cornellà-El Prat",
+        "stadiumCapacity": 40000,
         "budget": 50000000,
         "players": [
           { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -3865,6 +3879,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#004FA3",
         "secondaryColor": "#FFFFFF",
+        "stadiumName": "Estadio Coliseum",
+        "stadiumCapacity": 17000,
         "budget": 50000000,
         "players": [
           { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -3886,6 +3902,8 @@
         "shirtStyle": "stripes",
         "primaryColor": "#FFFFFF",
         "secondaryColor": "#CD2534",
+        "stadiumName": "Estadi Montilivi",
+        "stadiumCapacity": 15000,
         "budget": 50000000,
         "players": [
           { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -3906,7 +3924,9 @@
         "name": "Levante",
         "shirtStyle": "stripes",
         "primaryColor": "#0A2452", 
-        "secondaryColor": "#700D11", 
+        "secondaryColor": "#700D11",
+        "stadiumName": "Estadi Ciutat de València",
+        "stadiumCapacity": 26000,
         "budget": 50000000,
         "players": [
           { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -3928,6 +3948,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#E20613",
         "secondaryColor": "#000000",
+        "stadiumName": "Estadi Mallorca Son Moix",
+        "stadiumCapacity": 23000,
         "budget": 50000000,
         "players": [
           { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -3949,6 +3971,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#D91A2A",
         "secondaryColor": "#00205B",
+        "stadiumName": "El Sadar",
+        "stadiumCapacity": 24000,
         "budget": 50000000,
         "players": [
           { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -3970,6 +3994,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#1D2CCF",
         "secondaryColor": "#D6B504",
+        "stadiumName": "Estadio Carlos Tartiere",
+        "stadiumCapacity": 31000,
         "budget": 50000000,
         "players": [
           { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -3991,6 +4017,8 @@
         "shirtStyle": "sash",
         "primaryColor": "#FFFFFF",
         "secondaryColor": "#E4002B",
+        "stadiumName": "Campo de Fútbol de Vallecas",
+        "stadiumCapacity": 15000,
         "budget": 50000000,
         "players": [
           { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -4012,6 +4040,8 @@
         "shirtStyle": "stripes",
         "primaryColor": "#00954C",
         "secondaryColor": "#FFFFFF",
+        "stadiumName": "Estadio de La Cartuja",
+        "stadiumCapacity": 70000,
         "budget": 50000000,
         "players": [
           { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -4033,6 +4063,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#FFFFFF",
         "secondaryColor": "#000000",
+        "stadiumName": "Santiago Bernabéu",
+        "stadiumCapacity": 84000,
         "budget": 50000000,
         "players": [
           { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -4054,6 +4086,8 @@
         "shirtStyle": "stripes",
         "primaryColor": "#003DA5",
         "secondaryColor": "#FFFFFF",
+        "stadiumName": "Reale Arena",
+        "stadiumCapacity": 40000,
         "budget": 50000000,
         "players": [
           { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -4075,6 +4109,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#FFFFFF",
         "secondaryColor": "#D40027",
+        "stadiumName": "Ramón Sánchez Pizjuán",
+        "stadiumCapacity": 43000,
         "budget": 50000000,
         "players": [
           { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -4096,6 +4132,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#FFFFFF",
         "secondaryColor": "#000000",
+        "stadiumName": "Mestalla",
+        "stadiumCapacity": 49000,
         "budget": 50000000,
         "players": [
           { "id": 223, "name": "José Vargas", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -4117,6 +4155,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#FFE114",
         "secondaryColor": "#012D52",
+        "stadiumName": "Estadio de la Cerámica",
+        "stadiumCapacity": 23000,
         "budget": 50000000,
         "players": [
           { "id": 234, "name": "Tomás Serrano", "positions": ["GK"], "dob": "1995-07-20", "rating": 16 },
@@ -4144,6 +4184,8 @@
         "shirtStyle": "stripes",
         "primaryColor": "#000000",
         "secondaryColor": "#FFFFFF",
+        "stadiumName": "Stade Raymond Kopa",
+        "stadiumCapacity": 20000,
         "budget": 50000000,
         "players": [
           { "id": 301, "name": "Pierre Dubois", "positions": ["GK"], "dob": "1996-04-16", "rating": 17 },
@@ -4165,6 +4207,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#FFFFFF",
         "secondaryColor": "#0055A4",
+        "stadiumName": "Stade de l'Abbé-Deschamps",
+        "stadiumCapacity": 19000,
         "budget": 50000000,
         "players": [
           { "id": 312, "name": "Claude Mercier", "positions": ["GK"], "dob": "1995-09-14", "rating": 16 },
@@ -4186,6 +4230,8 @@
         "shirtStyle": "sleeves",
         "primaryColor": "#ED1C24",
         "secondaryColor": "#FFFFFF",
+        "stadiumName": "Stade Francis-Le Blé",
+        "stadiumCapacity": 16000,
         "budget": 50000000,
         "players": [
           { "id": 312, "name": "Claude Mercier", "positions": ["GK"], "dob": "1995-09-14", "rating": 16 },
@@ -4207,6 +4253,8 @@
         "shirtStyle": "halves",
         "primaryColor": "#87CEEB",
         "secondaryColor": "#1B2A4A",
+        "stadiumName": "Stade Océane",
+        "stadiumCapacity": 25000,
         "budget": 50000000,
         "players": [
           { "id": 312, "name": "Claude Mercier", "positions": ["GK"], "dob": "1995-09-14", "rating": 16 },
@@ -4228,6 +4276,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#FFD700",
         "secondaryColor": "#ED1C24",
+        "stadiumName": "Stade Bollaert-Delelis",
+        "stadiumCapacity": 38000,
         "budget": 50000000,
         "players": [
           { "id": 312, "name": "Claude Mercier", "positions": ["GK"], "dob": "1995-09-14", "rating": 16 },
@@ -4249,6 +4299,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#E2001A",
         "secondaryColor": "#FFFFFF",
+        "stadiumName": "Stade Pierre-Mauroy",
+        "stadiumCapacity": 50000,
         "budget": 50000000,
         "players": [
           { "id": 312, "name": "Claude Mercier", "positions": ["GK"], "dob": "1995-09-14", "rating": 16 },
@@ -4270,6 +4322,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#F47920",
         "secondaryColor": "#000000",
+        "stadiumName": "Stade du Moustoir",
+        "stadiumCapacity": 18000,
         "budget": 50000000,
         "players": [
           { "id": 312, "name": "Claude Mercier", "positions": ["GK"], "dob": "1995-09-14", "rating": 16 },
@@ -4291,6 +4345,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#FFFFFF",
         "secondaryColor": "#DA291C",
+        "stadiumName": "Parc Olympique Lyonnais",
+        "stadiumCapacity": 59000,
         "budget": 50000000,
         "players": [
           { "id": 312, "name": "Claude Mercier", "positions": ["GK"], "dob": "1995-09-14", "rating": 16 },
@@ -4312,6 +4368,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#FFFFFF",
         "secondaryColor": "#2FAEE0",
+        "stadiumName": "Stade Vélodrome",
+        "stadiumCapacity": 67000,
         "budget": 50000000,
         "players": [
           { "id": 312, "name": "Claude Mercier", "positions": ["GK"], "dob": "1995-09-14", "rating": 16 },
@@ -4333,6 +4391,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#6D2C34",
         "secondaryColor": "#FFFFFF",
+        "stadiumName": "Stade Saint-Symphorien",
+        "stadiumCapacity": 29000,
         "budget": 50000000,
         "players": [
           { "id": 312, "name": "Claude Mercier", "positions": ["GK"], "dob": "1995-09-14", "rating": 16 },
@@ -4354,6 +4414,8 @@
         "shirtStyle": "halves",
         "primaryColor": "#E7192F",
         "secondaryColor": "#FFFFFF",
+        "stadiumName": "Stade Louis II",
+        "stadiumCapacity": 16000,
         "budget": 50000000,
         "players": [
           { "id": 312, "name": "Claude Mercier", "positions": ["GK"], "dob": "1995-09-14", "rating": 16 },
@@ -4375,6 +4437,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#FCDD09",
         "secondaryColor": "#00843D",
+        "stadiumName": "Stade de la Beaujoire",
+        "stadiumCapacity": 35000,
         "budget": 50000000,
         "players": [
           { "id": 312, "name": "Claude Mercier", "positions": ["GK"], "dob": "1995-09-14", "rating": 16 },
@@ -4396,6 +4460,8 @@
         "shirtStyle": "stripes",
         "primaryColor": "#000000",
         "secondaryColor": "#ED1C24",
+        "stadiumName": "Allianz Riviera",
+        "stadiumCapacity": 36000,
         "budget": 50000000,
         "players": [
           { "id": 312, "name": "Claude Mercier", "positions": ["GK"], "dob": "1995-09-14", "rating": 16 },
@@ -4417,6 +4483,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#00225C",
         "secondaryColor": "#FFFFFF",
+        "stadiumName": "Stade Jean-Bouin",
+        "stadiumCapacity": 20000,
         "budget": 50000000,
         "players": [
           { "id": 312, "name": "Claude Mercier", "positions": ["GK"], "dob": "1995-09-14", "rating": 16 },
@@ -4438,6 +4506,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#012B4A",
         "secondaryColor": "#DA291C",
+        "stadiumName": "Parc des Princes",
+        "stadiumCapacity": 48000,
         "budget": 50000000,
         "players": [
           { "id": 312, "name": "Claude Mercier", "positions": ["GK"], "dob": "1995-09-14", "rating": 16 },
@@ -4459,6 +4529,8 @@
         "shirtStyle": "sleeves",
         "primaryColor": "#ED1C24",
         "secondaryColor": "#000000",
+        "stadiumName": "Roazhon Park",
+        "stadiumCapacity": 30000,
         "budget": 50000000,
         "players": [
           { "id": 312, "name": "Claude Mercier", "positions": ["GK"], "dob": "1995-09-14", "rating": 16 },
@@ -4480,6 +4552,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#0055A4",
         "secondaryColor": "#FFFFFF",
+        "stadiumName": "Stade de la Meinau",
+        "stadiumCapacity": 26000,
         "budget": 50000000,
         "players": [
           { "id": 323, "name": "Jacques Morel", "positions": ["GK"], "dob": "1996-06-18", "rating": 16 },
@@ -4501,6 +4575,8 @@
         "shirtStyle": "halves",
         "primaryColor": "#FFFFFF",
         "secondaryColor": "#6A2382",
+        "stadiumName": "Stadium de Toulouse",
+        "stadiumCapacity": 33000,
         "budget": 50000000,
         "players": [
           { "id": 334, "name": "Julien Renaud", "positions": ["GK"], "dob": "1995-10-25", "rating": 16 },
@@ -4528,6 +4604,8 @@
         "shirtStyle": "stripes",
         "primaryColor": "#FB090B",
         "secondaryColor": "#000000",
+        "stadiumName": "San Siro",
+        "stadiumCapacity": 80000,
         "budget": 50000000,
         "players": [
           { "id": 401, "name": "Marco Rossi", "positions": ["GK"], "dob": "1996-03-20", "rating": 17 },
@@ -4549,6 +4627,8 @@
         "shirtStyle": "stripes",
         "primaryColor": "#1E71B8",
         "secondaryColor": "#000000",
+        "stadiumName": "Stadio Atleti Azzurri d'Italia",
+        "stadiumCapacity": 23000,
         "budget": 50000000,
         "players": [
           { "id": 412, "name": "Antonio Conti", "positions": ["GK"], "dob": "1995-08-14", "rating": 17 },
@@ -4570,6 +4650,8 @@
         "shirtStyle": "stripes",
         "primaryColor": "#1A2F6B",
         "secondaryColor": "#A31E2D",
+        "stadiumName": "Stadio Renato Dall'Ara",
+        "stadiumCapacity": 38000,
         "budget": 50000000,
         "players": [
           { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -4591,6 +4673,8 @@
         "shirtStyle": "halves",
         "primaryColor": "#c22538",
         "secondaryColor": "#10274f",
+        "stadiumName": "Sardegna Arena",
+        "stadiumCapacity": 16000,
         "budget": 50000000,
         "players": [
           { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -4612,6 +4696,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#0055A4",
         "secondaryColor": "#FFFFFF",
+        "stadiumName": "Stadio Giuseppe Sinigaglia",
+        "stadiumCapacity": 14000,
         "budget": 50000000,
         "players": [
           { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -4633,6 +4719,8 @@
         "shirtStyle": "stripes",
         "primaryColor": "#6E6E6E",
         "secondaryColor": "#ED1C24",
+        "stadiumName": "Stadio Giovanni Zini",
+        "stadiumCapacity": 21000,
         "budget": 50000000,
         "players": [
           { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -4654,6 +4742,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#5B2D8E",
         "secondaryColor": "#FFFFFF",
+        "stadiumName": "Stadio Artemio Franchi",
+        "stadiumCapacity": 43000,
         "budget": 50000000,
         "players": [
           { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -4675,6 +4765,8 @@
         "shirtStyle": "halves",
         "primaryColor": "#ED1C24",
         "secondaryColor": "#00205B",
+        "stadiumName": "Stadio Luigi Ferraris",
+        "stadiumCapacity": 37000,
         "budget": 50000000,
         "players": [
           { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -4696,6 +4788,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#022663",
         "secondaryColor": "#FFD700",
+        "stadiumName": "Marcantonio Bentegodi",
+        "stadiumCapacity": 39000,
         "budget": 50000000,
         "players": [
           { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -4717,6 +4811,8 @@
         "shirtStyle": "stripes",
         "primaryColor": "#0068A8",
         "secondaryColor": "#000000",
+        "stadiumName": "San Siro",
+        "stadiumCapacity": 80000,
         "budget": 50000000,
         "players": [
           { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -4736,8 +4832,10 @@
         "id": 411,
         "name": "Juventus",
         "shirtStyle": "stripes",
-        "primaryColor": "#000000",
-        "secondaryColor": "#FFFFFF",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#000000",
+        "stadiumName": "Allianz Stadium",
+        "stadiumCapacity": 42000,
         "budget": 50000000,
         "players": [
           { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -4759,6 +4857,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#87CEEB",
         "secondaryColor": "#FFFFFF",
+        "stadiumName": "Stadio Olimpico",
+        "stadiumCapacity": 71000,
         "budget": 50000000,
         "players": [
           { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -4780,6 +4880,8 @@
         "shirtStyle": "stripes",
         "primaryColor": "#FFD700",
         "secondaryColor": "#ED1C24",
+        "stadiumName": "Stadio Via del Mare",
+        "stadiumCapacity": 32000,
         "budget": 50000000,
         "players": [
           { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -4801,6 +4903,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#12A0D7",
         "secondaryColor": "#FFFFFF",
+        "stadiumName": "Stadio Diego Armando Maradona",
+        "stadiumCapacity": 55000,
         "budget": 50000000,
         "players": [
           { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -4822,6 +4926,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#FFFFFF",
         "secondaryColor": "#000000",
+        "stadiumName": "Stadio Ennio Tardini",
+        "stadiumCapacity": 28000,
         "budget": 50000000,
         "players": [
           { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -4843,6 +4949,8 @@
         "shirtStyle": "stripes",
         "primaryColor": "#000000",
         "secondaryColor": "#003DA5",
+        "stadiumName": "Arena Garibaldi",
+        "stadiumCapacity": 18000,
         "budget": 50000000,
         "players": [
           { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -4864,6 +4972,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#781D2A",
         "secondaryColor": "#F5A623",
+        "stadiumName": "Stadio Olimpico",
+        "stadiumCapacity": 71000,
         "budget": 50000000,
         "players": [
           { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -4885,6 +4995,8 @@
         "shirtStyle": "stripes",
         "primaryColor": "#00A556",
         "secondaryColor": "#000000",
+        "stadiumName": "MAPEI Stadium",
+        "stadiumCapacity": 22000,
         "budget": 50000000,
         "players": [
           { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -4906,6 +5018,8 @@
         "shirtStyle": "plain",
         "primaryColor": "#6D2C34",
         "secondaryColor": "#FFFFFF",
+        "stadiumName": "Stadio Olimpico Grande Torino",
+        "stadiumCapacity": 28000,
         "budget": 50000000,
         "players": [
           { "id": 423, "name": "Emanuele De Luca", "positions": ["GK"], "dob": "1996-01-25", "rating": 16 },
@@ -4927,6 +5041,8 @@
         "shirtStyle": "stripes",
         "primaryColor": "#000000",
         "secondaryColor": "#FFFFFF",
+        "stadiumName": "Stadio Friuli",
+        "stadiumCapacity": 25000,
         "budget": 50000000,
         "players": [
           { "id": 434, "name": "Fabrizio Ferri", "positions": ["GK"], "dob": "1995-07-20", "rating": 16 },
