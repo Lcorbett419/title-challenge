@@ -800,13 +800,28 @@
           const events = [];
           let hs = 0, as = 0;
           const scorers = [];
+             // Calculate dominance based on squad strength
+            const homeStrength = homePlayers.reduce((s, p) => s + p.effectiveRating, 0) / Math.max(homePlayers.length, 1);
+            const awayStrength = awayPlayers.reduce((s, p) => s + p.effectiveRating, 0) / Math.max(awayPlayers.length, 1);
+            const totalStrength = homeStrength + awayStrength;
+            
+            // Chance of an event happening each minute (scales with combined quality)
+            // Weak vs weak = fewer chances (~5%), strong vs strong = more chances (~12%)
+            const baseChanceRate = 0.04 + (totalStrength / 40) * 0.08;
+            
+            // Who gets the chance — stronger team gets more
+            // e.g. 15 vs 10 strength = 60% home, 40% away
+            const homeDominance = homeStrength / totalStrength;
+            
+            // Home advantage — small 5% boost
+            const homeChancePct = Math.min(0.75, homeDominance + 0.05);
         
           // Track cards per player for double-yellow logic
             const matchCards = {};
             
             for (let min = 1; min <= 90; min++) {
-              if (Math.random() < 0.08) {
-                const isHome = Math.random() < 0.5;
+                if (Math.random() < baseChanceRate) {
+                const isHome = Math.random() < homeChancePct;
                 const players = isHome ? homePlayers : awayPlayers;
                 const defPlayers = isHome ? awayPlayers : homePlayers;
                 const evTeam = isHome ? h : a;
@@ -857,7 +872,7 @@
                     defender.matchRating = Math.min(10, defender.matchRating + 0.3);
                   }
                 }
-              } else if (Math.random() < 0.04) {
+              } else if (Math.random() < 0.03 + (totalStrength / 40) * 0.02) {
                 // FOUL with possible card
                 const isHome = Math.random() < 0.5;
                 const players = isHome ? homePlayers : awayPlayers;
