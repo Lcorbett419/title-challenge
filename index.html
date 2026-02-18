@@ -2112,7 +2112,7 @@
                           <div key={lk} className={`bg-gray-800 rounded-lg p-4 mb-4 ${isCurrentLeague ? 'ring-2 ring-orange-500' : ''}`}>
                               <h2 className="text-white font-bold mb-4">{leagues[lk].name}</h2>
                               <table className="w-full text-sm">
-                                  <thead><tr className="text-gray-400 border-b border-gray-700"><th className="text-left p-2">Pos</th><th className="text-left p-2">Team</th><th className="text-center p-2">P</th><th className="text-center p-2">W</th><th className="text-center p-2">D</th><th className="text-center p-2">L</th><th className="text-center p-2">Pts</th></tr></thead>
+                                  <thead><tr className="text-gray-400 border-b border-gray-700"><th className="text-left p-2">Pos</th><th className="text-left p-2">Team</th><th className="text-center p-2">P</th><th className="text-center p-2">W</th><th className="text-center p-2">D</th><th className="text-center p-2">L</th><th className="text-center p-2">GF</th><th className="text-center p-2">GA</th><th className="text-center p-2">GD</th><th className="text-center p-2">Pts</th></tr></thead>
                                   <tbody>
                                       {t.map((row, i) => {
                               let zoneBg = '';
@@ -2130,6 +2130,9 @@
                                       <td className="text-center text-gray-400 p-2">{row.won}</td>
                                       <td className="text-center text-gray-400 p-2">{row.drawn}</td>
                                       <td className="text-center text-gray-400 p-2">{row.lost}</td>
+                                      <td className="text-center text-gray-400 p-2">{row.goalsFor}</td>
+                                      <td className="text-center text-gray-400 p-2">{row.goalsAgainst}</td>
+                                      <td className="text-center text-gray-400 p-2">{row.goalsFor - row.goalsAgainst}</td>
                                       <td className="text-center text-white font-bold p-2">{row.points}</td>
                                   </tr>
                               );
