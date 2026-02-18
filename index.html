@@ -833,12 +833,27 @@
         
           // Track cards per player for double-yellow logic
             const matchCards = {};
+              const sentOff = { home: [], away: [] };
             
             for (let min = 1; min <= 90; min++) {
-                if (Math.random() < baseChanceRate) {
-                const isHome = Math.random() < homeChancePct;
-                const players = isHome ? homePlayers : awayPlayers;
-                const defPlayers = isHome ? awayPlayers : homePlayers;
+              // Filter out sent-off players
+              const activeHome = homePlayers.filter(p => !sentOff.home.includes(p.id));
+              const activeAway = awayPlayers.filter(p => !sentOff.away.includes(p.id));
+            
+              // Reduce chance rate for teams with fewer players
+              const homeManPenalty = activeHome.length < 11 ? 0.7 : 1.0;
+              const awayManPenalty = activeAway.length < 11 ? 0.7 : 1.0;
+              const adjustedRate = baseChanceRate * Math.max(homeManPenalty, awayManPenalty);
+            
+              // Shift dominance toward team with more players
+              let adjHomePct = homeChancePct;
+              if (activeHome.length < activeAway.length) adjHomePct = Math.max(0.25, homeChancePct - 0.15);
+              else if (activeAway.length < activeHome.length) adjHomePct = Math.min(0.75, homeChancePct + 0.15);
+            
+              if (Math.random() < adjustedRate) {
+                const isHome = Math.random() < adjHomePct;
+                const players = isHome ? activeHome : activeAway;
+                const defPlayers = isHome ? activeAway : activeHome;
                 const evTeam = isHome ? h : a;
             
                 const pickPlayer = (ps) => {
@@ -902,13 +917,20 @@
                     matchCards[cardKey]++;
             
                     if (matchCards[cardKey] >= 2) {
-                      // Second yellow = red
+                      // Second yellow = red — player sent off
                       events.push({ min, type: 'redCard', text: pickTemplate('redCard').replace('{player}', p.name), isHome, isGoal: false, playerId: p.id, teamId: isHome ? h.id : a.id, cardType: 'red' });
-                    } else {
+                      if (isHome) { sentOff.home.push(p.id); } else { sentOff.away.push(p.id); }
+                    }
+                    else {
                       events.push({ min, type: 'yellowCard', text: pickTemplate('yellowCard').replace('{player}', p.name), isHome, isGoal: false, playerId: p.id, teamId: isHome ? h.id : a.id, cardType: 'yellow' });
                     }
                     p.matchRating = Math.max(1, p.matchRating - 0.5);
-                  }
+                      } else if (Math.random() < 0.03) {
+                        // Straight red (~3% of fouls that aren't already carded)
+                        events.push({ min, type: 'redCard', text: pickTemplate('redCard').replace('{player}', p.name), isHome, isGoal: false, playerId: p.id, teamId: isHome ? h.id : a.id, cardType: 'red' });
+                        if (isHome) { sentOff.home.push(p.id); } else { sentOff.away.push(p.id); }
+                        p.matchRating = Math.max(1, p.matchRating - 2.0);
+                      }
                 }
               }
             }
