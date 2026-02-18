@@ -1097,68 +1097,60 @@
         
           setFixtures(uf);
         
-          // Track player stats
-          const matchPlayers = Object.values(startingXI).filter(pid => {
-          const p = team.players.find(pl => pl.id === pid);
-          return p && !p.injured;
-            });
+         // --- PLAYER STATS TRACKING ---
             const season = getSeasonDisplay();
             const newHistories = { ...playerHistories };
             
-            // Find match ratings for our players
-            const allMatchPlayers = [...(liveMatch.homePlayers || []), ...(liveMatch.awayPlayers || [])];
-            const ourMatchPlayers = allMatchPlayers.filter(mp => matchPlayers.includes(mp.id));
+            const matchPlayers = [...new Set(Object.values(startingXI))].filter(pid => {
+              const p = team.players.find(pl => pl.id === pid);
+              return p && !p.injured;
+            });
             
-            // Determine MOTM from our team
-            let motmId = null;
-            let motmRating = 0;
-            ourMatchPlayers.forEach(mp => {
-              if (mp.matchRating > motmRating) {
-                motmRating = mp.matchRating;
-                motmId = mp.id;
-              }
+            const allMatchPlayers = [...(liveMatch.homePlayers || []), ...(liveMatch.awayPlayers || [])];
+            
+            let motmId = null, motmRating = 0;
+            allMatchPlayers.filter(mp => matchPlayers.includes(mp.id)).forEach(mp => {
+              if (mp.matchRating > motmRating) { motmRating = mp.matchRating; motmId = mp.id; }
             });
             
             matchPlayers.forEach(pid => {
               const key = `${pid}-${season}`;
-              if (!newHistories[key]) newHistories[key] = { playerId: pid, season, apps: 0, goals: 0, assists: 0, yellowCards: 0, redCards: 0, totalRating: 0, matchCount: 0, motm: 0, team: team.name };
+              if (!newHistories[key]) newHistories[key] = {
+                playerId: pid, season, apps: 0, goals: 0, assists: 0,
+                yellowCards: 0, redCards: 0, totalRating: 0, matchCount: 0, motm: 0,
+                team: team.name
+              };
               newHistories[key].apps += 1;
+              newHistories[key].team = team.name;
             
-              // Add match rating
-              const mp = ourMatchPlayers.find(m => m.id === pid);
+              const mp = allMatchPlayers.find(m => m.id === pid);
               if (mp) {
                 newHistories[key].totalRating += mp.matchRating;
                 newHistories[key].matchCount += 1;
               }
-            
-              // MOTM
-              if (pid === motmId) {
-                newHistories[key].motm += 1;
-              }
+              if (pid === motmId) newHistories[key].motm += 1;
             });
             
-            // Track goals/assists/cards per player
             scorers.filter(sc => sc.teamId === team.id).forEach(sc => {
               const key = `${sc.playerId}-${season}`;
-              if (!newHistories[key]) newHistories[key] = { playerId: sc.playerId, season, apps: 0, goals: 0, assists: 0, yellowCards: 0, redCards: 0, totalRating: 0, matchCount: 0, motm: 0, team: team.name };
-              newHistories[key].goals += 1;
+              if (newHistories[key]) newHistories[key].goals += 1;
             
               if (sc.assisterId) {
                 const aKey = `${sc.assisterId}-${season}`;
-                if (!newHistories[aKey]) newHistories[aKey] = { playerId: sc.assisterId, season, apps: 0, goals: 0, assists: 0, yellowCards: 0, redCards: 0, totalRating: 0, matchCount: 0, motm: 0, team: team.name };
-                newHistories[aKey].assists += 1;
+                if (newHistories[aKey]) newHistories[aKey].assists += 1;
               }
             });
             
-            // Track cards
             allEvents.filter(ev => ev.cardType && ev.teamId === team.id).forEach(ev => {
               const key = `${ev.playerId}-${season}`;
-              if (!newHistories[key]) newHistories[key] = { playerId: ev.playerId, season, apps: 0, goals: 0, assists: 0, yellowCards: 0, redCards: 0, totalRating: 0, matchCount: 0, motm: 0, team: team.name };
-              if (ev.cardType === 'yellow') newHistories[key].yellowCards += 1;
-              if (ev.cardType === 'red') newHistories[key].redCards += 1;
+              if (newHistories[key]) {
+                if (ev.cardType === 'yellow') newHistories[key].yellowCards += 1;
+                if (ev.cardType === 'red') newHistories[key].redCards += 1;
+              }
             });
-
-          setPlayerHistories(newHistories);
+            
+            setPlayerHistories(newHistories);
+            // --- END PLAYER STATS TRACKING ---
         
           if (Math.random() < 0.15) generateIncomingOffers();
         
