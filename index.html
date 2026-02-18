@@ -2687,7 +2687,7 @@
               </div>
         
               {/* Content */}
-              <div className="flex-1 overflow-y-auto pb-24" style={{ background: 'linear-gradient(180deg, #2d4a2d 0%, #1a3a1a 100%)' }}>
+              <div className="flex-1 overflow-y-auto pb-20" style={{ background: 'linear-gradient(180deg, #2d4a2d 0%, #1a3a1a 100%)' }}>
                 {matchTab === 'commentary' && (
                   <div className="p-3 space-y-2">
                     {liveCommentary.map((ev, i) => (
@@ -3046,7 +3046,7 @@
         
               {/* Live indicator */}
               {!isFinished && !isHalfTime && !tacticsPaused && (
-              <div className="p-4 bg-gray-900 flex items-center justify-between">
+              div className="fixed bottom-0 left-0 right-0 p-4 bg-gray-900 z-40 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
                   <p className="text-gray-400 text-sm">LIVE — {matchHalf === 1 ? '1st Half' : '2nd Half'}</p>
