@@ -1749,7 +1749,6 @@
       "stadiumCapacity": 10000,
       "budget": 10000000,
       "players": [
-        "players": [
         { "id": 1, "name": "Nathan Bishop", "positions": ["GK"], "dob": "1999-10-15", "rating": 11 },
         { "id": 20, "name": "Joe McDonnell", "positions": ["GK"], "dob": "1994-05-19", "rating": 10 },
         { "id": 6, "name": "Ryan Johnson", "positions": ["CB"], "dob": "1996-10-02", "rating": 11 },
