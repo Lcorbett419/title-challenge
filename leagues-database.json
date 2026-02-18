@@ -1971,7 +1971,6 @@
       "stadiumCapacity": 33000,
       "budget": 10000000,
       "players": [
-       "players": [
         { "id": 13, "name": "Nathan Trott", "positions": ["GK"], "dob": "1998-11-21", "rating": 11 },
         { "id": 30, "name": "Harry Tyrer", "positions": ["GK"], "dob": "2001-12-06", "rating": 10 },
         { "id": 41, "name": "Matthew Turner", "positions": ["GK"], "dob": "2002-03-27", "rating": 9 },
