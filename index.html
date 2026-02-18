@@ -94,6 +94,7 @@
           const [transferNegotiation, setTransferNegotiation] = useState(null);
           const [incomingOffers, setIncomingOffers] = useState([]);
           const [facilities, setFacilities] = useState({ stadiumLevel: 3, devLevel: 1 });
+          const [preMatchXI, setPreMatchXI] = useState({});  
           const [liveMatch, setLiveMatch] = useState(null);
           const [liveMinute, setLiveMinute] = useState(0);
           const [liveCommentary, setLiveCommentary] = useState([]);
@@ -1094,6 +1095,7 @@
             
             firstHalf.events.sort((a, b) => a.min - b.min);
             
+            setPreMatchXI({ ...startingXI });
             setLiveMatch({ homeTeam: h, awayTeam: a, events: firstHalf.events, scorers: firstHalf.scorers, finalScore: firstHalf.score, homePlayers, awayPlayers, fixture: next });
             setLiveMinute(0);
             setMatchEnded(false);
@@ -1249,6 +1251,7 @@
           });
           setCommentary(liveCommentary.reverse().map(e => `${e.min}' ${e.text}`));
         
+          setStartingXI({ ...preMatchXI });
           setLiveMatch(null);
           setPage('home');
           setState('info-page');
@@ -2817,28 +2820,92 @@
                 )}
               </div>
 
-                {(isHalfTime || tacticsPaused) && (
-                  <div className="fixed inset-0 bg-black/80 z-50 flex flex-col">
-                    <div className="p-4 text-center" style={{ background: 'linear-gradient(180deg, #1a3a1a 0%, #0a1a0a 100%)' }}>
-                      <p className="text-yellow-400 font-bold text-lg" style={{ fontFamily: 'monospace' }}>
-                        {isHalfTime ? 'HALF TIME' : `TACTICS — ${liveMinute}'`}
-                      </p>
-                      <p className="text-yellow-400 text-3xl font-bold" style={{ fontFamily: 'monospace' }}>{liveScore.home} - {liveScore.away}</p>
-                      <p className="text-yellow-600 text-xs mt-1">Subs remaining: {matchSubs.max - matchSubs.made}</p>
-                    </div>
+                {(isHalfTime || tacticsPaused) && (() => {
+                  const formationLayouts = {
+                    '4-3-3': [
+                      { x: 50, y: 92 },
+                      { x: 12, y: 74 }, { x: 37, y: 77 }, { x: 63, y: 77 }, { x: 88, y: 74 },
+                      { x: 50, y: 56 }, { x: 25, y: 50 }, { x: 75, y: 50 },
+                      { x: 15, y: 28 }, { x: 85, y: 28 }, { x: 50, y: 22 }
+                    ],
+                    '4-4-2': [
+                      { x: 50, y: 92 },
+                      { x: 12, y: 74 }, { x: 37, y: 77 }, { x: 63, y: 77 }, { x: 88, y: 74 },
+                      { x: 15, y: 50 }, { x: 40, y: 53 }, { x: 60, y: 53 }, { x: 85, y: 50 },
+                      { x: 35, y: 22 }, { x: 65, y: 22 }
+                    ],
+                    '4-2-3-1': [
+                      { x: 50, y: 92 },
+                      { x: 12, y: 74 }, { x: 37, y: 77 }, { x: 63, y: 77 }, { x: 88, y: 74 },
+                      { x: 35, y: 58 }, { x: 65, y: 58 },
+                      { x: 15, y: 38 }, { x: 50, y: 40 }, { x: 85, y: 38 },
+                      { x: 50, y: 20 }
+                    ],
+                    '3-5-2': [
+                      { x: 50, y: 92 },
+                      { x: 25, y: 77 }, { x: 50, y: 77 }, { x: 75, y: 77 },
+                      { x: 10, y: 53 }, { x: 90, y: 53 },
+                      { x: 30, y: 48 }, { x: 50, y: 45 }, { x: 70, y: 48 },
+                      { x: 35, y: 22 }, { x: 65, y: 22 }
+                    ]
+                  };
                 
-                    {team.players.filter(p => p.injured && Object.values(startingXI).includes(p.id)).length > 0 && (
-                      <div className="bg-red-900/60 p-3 border-b border-red-500/50">
-                        <p className="text-red-300 font-bold text-sm">⚠️ Injured players in your XI!</p>
-                        {team.players.filter(p => p.injured && Object.values(startingXI).includes(p.id)).map(p => (
-                          <p key={p.id} className="text-red-400 text-xs">⚕️ {p.name} — {p.positions.join('/')}</p>
-                        ))}
+                  const layout = formationLayouts[formation];
+                  const benchPlayers = team.players.filter(p => !Object.values(startingXI).includes(p.id) && !p.injured).sort((a, b) => b.rating - a.rating);
+                
+                  const style = team.shirtStyle || 'plain';
+                  const pc = team.primaryColor || '#1a1a2e';
+                  const sc2 = team.secondaryColor || '#FFFFFF';
+                  const gkColor = '#2d8a4e';
+                
+                  const ShirtSvg = ({ number, isGK, isOOP }) => {
+                    const clipId = `tc${number}-${Math.random().toString(36).substr(2,5)}`;
+                    const c1 = isGK ? gkColor : isOOP ? '#b45309' : pc;
+                    const c2 = isGK ? '#1a6b30' : isOOP ? '#92400e' : sc2;
+                    const s = isGK ? 'plain' : isOOP ? 'plain' : style;
+                    const dark = ['#000000','#00205B','#1a1a2e','#1B458F','#034694','#003399','#1D428A','#132257','#231F20','#241F20','#012B4A','#00225C','#122336','#0A2452','#1A2F6B','#10274f','#022663','#6D2C34','#7A263A','#670E36','#6C1D45','#5B2D8E','#781D2A','#004D98','#012C57','#99022C','#003DA5','#004FA3','#0054A6','#0055A4','#245701','#2B6303','#1D2CCF','#00296B','#003D7C','#DD0000','#DC052D','#ED1C24','#E2001A','#E32221','#CB3524','#E20613','#D91A2A','#C8102E','#DA291C','#e30613','#EB172B','#EE2523','#E7192F','#E1000F','#ED0000','#6B3524','#c22538','#1B2A4A','#0068A8','#FB090B','#1E71B8','#A31E2D','#A50044','#D40027','#CD2534','#00954C','#12A0D7','#F47920','#E2001A','#6A2382','#00843D'].includes(c1);
+                    const light = ['#FFFFFF','#FFE114','#FDE100','#FDB913','#FCDD09','#FFD700','#8AC3EE','#87CEEB','#6CABDD','#95BFE5','#99D6EA','#65B32E'].includes(c1);
+                    const txtCol = isGK ? '#FFFFFF' : dark ? '#FFFFFF' : light ? '#000000' : '#FFFFFF';
+                    return (
+                      <svg viewBox="0 0 60 55" style={{ width: '100%', height: '100%' }}>
+                        <defs><clipPath id={clipId}><path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" /></clipPath></defs>
+                        <path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" fill={c1} />
+                        <g clipPath={`url(#${clipId})`}>
+                          {s === 'stripes' && <>{[4,14,24,34,44,54].map(x => <rect key={x} x={x} y="0" width="5" height="55" fill={c2} />)}</>}
+                          {s === 'hoops' && <>{[5,15,25,35,45].map(y => <rect key={y} x="0" y={y} width="60" height="5" fill={c2} />)}</>}
+                          {s === 'quarters' && <><rect x="30" y="0" width="30" height="25" fill={c2} /><rect x="0" y="25" width="30" height="30" fill={c2} /></>}
+                          {s === 'sleeves' && <><path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} /><path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c2} /></>}
+                          {s === 'sash' && <><path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} /><path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c2} /><polygon points="5,50 15,50 55,10 55,0 50,0 45,0 0,45 0,50" fill={c2} opacity="0.9" /></>}
+                          {s === 'halves' && <><rect x="30" y="0" width="30" height="55" fill={c2} /><path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} /><path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c1} /></>}
+                        </g>
+                        <path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="1" />
+                        <text x="30" y="36" textAnchor="middle" fill={txtCol} fontSize="18" fontWeight="bold" fontFamily="Arial" stroke={txtCol === '#FFFFFF' ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.3)'} strokeWidth="0.5">{number}</text>
+                      </svg>
+                    );
+                  };
+                
+                  return (
+                    <div className="fixed inset-0 bg-black/90 z-50 flex flex-col">
+                      {/* Score header */}
+                      <div className="p-3 text-center" style={{ background: team.primaryColor || '#ea580c' }}>
+                        <p className="text-white font-bold text-lg">
+                          {isHalfTime ? 'Half Time' : 'Tactics'} — {liveScore.home} – {liveScore.away}
+                        </p>
+                        <p className="text-white/70 text-xs">{liveMinute}th minute</p>
                       </div>
-                    )}
                 
-                    <div className="bg-gray-800 p-3 border-b border-gray-700">
-                      <p className="text-gray-400 text-xs mb-2">Formation</p>
-                      <div className="flex gap-2">
+                      {/* Match info bar */}
+                      <div className="bg-green-900/80 px-3 py-2 text-center">
+                        <p className="text-green-300 text-xs font-semibold">
+                          Subs: {matchSubs.made}/{matchSubs.max} used
+                          {team.players.filter(p => p.injured && Object.values(startingXI).includes(p.id)).length > 0 &&
+                            <span className="text-red-400 ml-2">⚠️ Injured players in XI!</span>
+                          }
+                        </p>
+                      </div>
+                
+                      {/* Formation selector */}
+                      <div className="bg-gray-800 p-2 flex gap-2 justify-center border-b border-gray-700">
                         {Object.keys(formations).map(f => (
                           <button key={f} onClick={() => {
                             setFormation(f);
@@ -2860,76 +2927,115 @@
                           }} className={`px-3 py-1.5 rounded text-xs font-bold ${formation === f ? 'bg-orange-600 text-white' : 'bg-gray-700 text-gray-400'}`}>{f}</button>
                         ))}
                       </div>
-                    </div>
                 
-                    <div className="flex-1 overflow-y-auto bg-gray-900 p-3">
-                      <p className="text-white font-bold text-sm mb-2">Starting XI</p>
-                      <div className="space-y-1 mb-4">
-                        {formations[formation].positions.map((pos, idx) => {
-                          const pid = startingXI[`pos${idx}`];
-                          const player = pid ? team.players.find(p => p.id === pid) : null;
-                          const isInjured = player && player.injured;
-                          const isOOP = player && !player.positions.includes(pos);
-                          return (
-                            <div key={idx} className={`flex items-center gap-2 p-2 rounded ${isInjured ? 'bg-red-900/40 ring-1 ring-red-500' : isOOP ? 'bg-yellow-900/20' : 'bg-gray-800'} ${selectedSlot === idx ? 'ring-2 ring-orange-500' : ''}`}
-                              onClick={() => setSelectedSlot(selectedSlot === idx ? null : idx)}>
-                              <span className="text-gray-500 text-xs w-8">{pos}</span>
-                              <span className={`flex-1 text-sm font-semibold ${isInjured ? 'text-red-400' : 'text-white'}`}>
-                                {player ? player.name : '—'}{isInjured && ' ⚕️'}{isOOP && ' ⚠️'}
-                              </span>
-                              <span className="text-gray-400 text-xs">{player ? player.rating : ''}</span>
-                            </div>
-                          );
-                        })}
-                      </div>
+                      {/* Pitch with shirts */}
+                      <div className="flex-1 overflow-y-auto">
+                        <div className="relative w-full" style={{ paddingBottom: '140%', background: 'linear-gradient(180deg, #2d5a1e 0%, #357a24 8%, #2d5a1e 16%, #357a24 24%, #2d5a1e 32%, #357a24 40%, #2d5a1e 48%, #357a24 56%, #2d5a1e 64%, #357a24 72%, #2d5a1e 80%, #357a24 88%, #2d5a1e 100%)' }}>
+                          <div className="absolute inset-0">
+                            <svg viewBox="0 0 100 140" className="absolute inset-0 w-full h-full">
+                              <rect x="2" y="2" width="96" height="136" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.4" />
+                              <line x1="2" y1="70" x2="98" y2="70" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                              <circle cx="50" cy="70" r="10" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                              <circle cx="50" cy="70" r="0.6" fill="rgba(255,255,255,0.2)" />
+                              <rect x="25" y="2" width="50" height="18" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                              <rect x="35" y="2" width="30" height="7" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                              <rect x="25" y="120" width="50" height="18" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                              <rect x="35" y="131" width="30" height="7" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                              <path d="M 35 20 A 12 12 0 0 0 65 20" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                              <path d="M 35 120 A 12 12 0 0 1 65 120" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                            </svg>
                 
-                      {selectedSlot !== null && (
-                        <div className="mb-2 bg-orange-900/30 p-2 rounded">
-                          <p className="text-orange-300 text-xs font-bold">Select replacement for {formations[formation].positions[selectedSlot]}:</p>
+                            {layout.map((pos, idx) => {
+                              const playerId = startingXI[`pos${idx}`];
+                              const player = playerId ? team.players.find(p => p.id === playerId) : null;
+                              const requiredPos = formations[formation].positions[idx];
+                              const isGK = requiredPos === 'GK';
+                              const isInjured = player && player.injured;
+                              const isOOP = player && !player.positions.includes(requiredPos);
+                              const isSelected = selectedSlot === idx;
+                              const surname = player ? player.name.split(' ').pop() : requiredPos;
+                
+                              // Get match rating if available
+                              const allMP = [...(liveMatch.homePlayers || []), ...(liveMatch.awayPlayers || [])];
+                              const mp = player ? allMP.find(m => m.id === player.id) : null;
+                              const rating = mp ? mp.matchRating.toFixed(0) : player ? player.rating : '?';
+                
+                              return (
+                                <div key={idx} onClick={() => setSelectedSlot(isSelected ? null : idx)}
+                                  className="absolute flex flex-col items-center cursor-pointer"
+                                  style={{ left: `${pos.x}%`, top: `${pos.y / 140 * 100}%`, transform: 'translate(-50%, -50%)', zIndex: isSelected ? 20 : 10, width: '18%' }}>
+                                  <div className={`relative transition-transform ${isSelected ? 'scale-125' : ''}`} style={{ width: '42px', height: '38px' }}>
+                                    <ShirtSvg number={player ? player.rating : '?'} isGK={isGK} isOOP={(isOOP || isInjured) && !!player} />
+                                    {isSelected && <div className="absolute inset-0 rounded" style={{ boxShadow: '0 0 15px rgba(249,115,22,0.9)' }}></div>}
+                                    {isInjured && <div className="absolute -top-1 -right-1 text-xs">🚑</div>}
+                                  </div>
+                                  <div className="text-white text-center font-bold leading-tight mt-0.5" style={{ fontSize: '8px', textShadow: '0 1px 3px rgba(0,0,0,0.9)' }}>{surname}</div>
+                                  <div className="text-gray-300 text-center leading-tight" style={{ fontSize: '7px', textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}>
+                                    {player ? `${player.positions.join(' ')} (${rating})` : ''}
+                                  </div>
+                                  {isOOP && !isInjured && <div style={{ fontSize: '8px' }} className="text-yellow-400">⚠️</div>}
+                                </div>
+                              );
+                            })}
+                          </div>
                         </div>
-                      )}
                 
-                      <p className="text-white font-bold text-sm mb-2">Bench</p>
-                      <div className="space-y-1 pb-24">
-                        {team.players.filter(p => !Object.values(startingXI).includes(p.id) && !p.injured).sort((a, b) => b.rating - a.rating).map(p => {
-                          const targetPos = selectedSlot !== null ? formations[formation].positions[selectedSlot] : null;
-                          const fits = targetPos && p.positions.includes(targetPos);
-                          return (
-                            <div key={p.id} className={`flex items-center gap-2 p-2 rounded cursor-pointer ${fits ? 'bg-green-900/40 ring-1 ring-green-500' : 'bg-gray-800 hover:bg-gray-700'}`}
-                              onClick={() => {
-                                if (selectedSlot !== null && matchSubs.made < matchSubs.max) {
-                                  const xi = { ...startingXI };
-                                  xi[`pos${selectedSlot}`] = p.id;
-                                  setStartingXI(xi);
-                                  setMatchSubs(prev => ({ ...prev, made: prev.made + 1 }));
-                                  setSelectedSlot(null);
-                                } else if (selectedSlot !== null) {
-                                  alert('No substitutions remaining!');
-                                }
-                              }}>
-                              <span className="text-gray-500 text-xs w-16">{p.positions.join('/')}</span>
-                              <span className="text-white text-sm font-semibold flex-1">{p.name}</span>
-                              <span className="text-gray-400 text-xs">Age {calcAge(p.dob)}</span>
-                              <span className="text-white text-xs font-bold ml-2">{p.rating}</span>
-                              {fits && <span className="text-green-400 text-xs">✓</span>}
-                            </div>
-                          );
-                        })}
+                        {/* Bench section below pitch */}
+                        {selectedSlot !== null && (
+                          <div className="bg-orange-900/40 px-3 py-2 text-center">
+                            <p className="text-orange-300 text-xs font-semibold">Select a bench player to sub into {formations[formation].positions[selectedSlot]}</p>
+                          </div>
+                        )}
+                
+                        <div className="bg-gray-800 p-3 pb-24">
+                          <h3 className="text-white font-bold text-sm mb-2">Substitutes</h3>
+                          <div className="space-y-1">
+                            {benchPlayers.map(p => {
+                              const targetPos = selectedSlot !== null ? formations[formation].positions[selectedSlot] : null;
+                              const fits = targetPos && p.positions.includes(targetPos);
+                              return (
+                                <div key={p.id} onClick={() => {
+                                  if (selectedSlot !== null && matchSubs.made < matchSubs.max) {
+                                    const xi = { ...startingXI };
+                                    xi[`pos${selectedSlot}`] = p.id;
+                                    setStartingXI(xi);
+                                    setMatchSubs(prev => ({ ...prev, made: prev.made + 1 }));
+                                    setSelectedSlot(null);
+                                  } else if (selectedSlot !== null) {
+                                    alert('No substitutions remaining!');
+                                  }
+                                }}
+                                  className={`rounded p-2 flex items-center gap-3 cursor-pointer transition-all ${selectedSlot !== null ? fits ? 'bg-green-900/40 ring-1 ring-green-500' : 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-700'}`}>
+                                  <div style={{ width: '32px', height: '28px', flexShrink: 0 }}>
+                                    <ShirtSvg number={p.rating} isGK={p.positions.includes('GK')} isOOP={false} />
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <div className="text-white font-semibold text-sm truncate">{p.name}</div>
+                                    <div className="text-gray-400 text-xs">{p.positions.join('/')} • Age {calcAge(p.dob)}</div>
+                                  </div>
+                                  {selectedSlot !== null && fits && <span className="text-green-400 text-xs font-bold">✓</span>}
+                                </div>
+                              );
+                            })}
+                            {benchPlayers.length === 0 && <p className="text-gray-500 text-sm">No available substitutes</p>}
+                          </div>
+                        </div>
+                      </div>
+                
+                      {/* Resume button */}
+                      <div className="fixed bottom-0 left-0 right-0 p-4 bg-gray-900 z-50">
+                        <button onClick={() => {
+                          setSelectedSlot(null);
+                          if (isHalfTime) { setIsHalfTime(false); }
+                          if (tacticsPaused) { setTacticsPaused(false); }
+                          resumeFromTactics();
+                        }} className="w-full bg-green-600 text-white py-4 rounded-lg font-bold text-lg">
+                          {isHalfTime ? 'Start Second Half →' : 'Resume Match →'}
+                        </button>
                       </div>
                     </div>
-                
-                    <div className="fixed bottom-0 left-0 right-0 p-4 bg-gray-900 z-50">
-                      <button onClick={() => {
-                        setSelectedSlot(null);
-                        if (isHalfTime) { setIsHalfTime(false); }
-                        if (tacticsPaused) { setTacticsPaused(false); }
-                        resumeFromTactics();
-                      }} className="w-full bg-green-600 text-white py-4 rounded-lg font-bold text-lg">
-                        {isHalfTime ? 'Start Second Half →' : 'Resume Match →'}
-                      </button>
-                    </div>
-                  </div>
-                )}
+                  );
+                })()}
         
               {/* Continue button - only when finished */}
               {isFinished && (
