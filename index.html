@@ -35,22 +35,21 @@
         const Menu = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>;
         const Trophy = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>;
 
-        const calculatePlayerValue = (player, asOfDate) => {
+        const calculatePlayerValue = (player, asOfDate, leagueTier) => {
           const { positions, rating, dob } = player;
-          const positionValues = { 'ST': 1.0, 'LW': 0.95, 'RW': 0.95, 'CAM': 0.85, 'CM': 0.70, 'CDM': 0.68, 'LB': 0.65, 'RB': 0.65, 'CB': 0.60, 'GK': 0.55 };
-          const maxMultiplier = Math.max(...positions.map(pos => positionValues[pos] || 0.5));
-          const birthDate = new Date(dob);
-          const checkDate = asOfDate || new Date();
-          let age = checkDate.getFullYear() - birthDate.getFullYear();
-          const monthDiff = checkDate.getMonth() - birthDate.getMonth();
-          if (monthDiff < 0 || (monthDiff === 0 && checkDate.getDate() < birthDate.getDate())) age--;
-          let ageMultiplier;
-          if (age >= 21 && age <= 29) ageMultiplier = 1.0;
-          else if (age < 21) ageMultiplier = rating >= 14 ? 0.6 + (age - 16) * 0.08 + (rating - 14) * 0.05 : 0.4 + (age - 16) * 0.12;
-          else ageMultiplier = Math.max(0.2, 1.0 - ((age - 29) * 0.08));
-          return Math.min(Math.round(Math.pow(rating, 2) * maxMultiplier * ageMultiplier * 250000), 100000000);
+          const pv = { 'ST':1.0,'LW':0.95,'RW':0.95,'CAM':0.85,'CM':0.70,'CDM':0.68,'LB':0.65,'RB':0.65,'CB':0.60,'GK':0.55 };
+          const mx = Math.max(...positions.map(p => pv[p]||0.5));
+          const bd = new Date(dob), cd = asOfDate||new Date();
+          let age = cd.getFullYear()-bd.getFullYear();
+          if(cd.getMonth()-bd.getMonth()<0||(cd.getMonth()===bd.getMonth()&&cd.getDate()<bd.getDate())) age--;
+          let am; if(age>=21&&age<=29) am=1.0; else if(age<21) am=rating>=14?0.6+(age-16)*0.08+(rating-14)*0.05:0.4+(age-16)*0.12; else am=Math.max(0.2,1.0-((age-29)*0.08));
+        
+          // League tier multiplier: tier 0 (top) = 1.0, tier 1 = 0.6, tier 2 = 0.35, tier 3 = 0.2
+          const tierMultipliers = [1.0, 0.6, 0.35, 0.2];
+          const tm = tierMultipliers[leagueTier !== undefined ? Math.min(leagueTier, 3) : 0];
+        
+          return Math.min(Math.round(Math.pow(rating,2)*mx*am*tm*250000),100000000);
         };
-
         const App = () => {
           const [db, setDb] = useState(null);
           const [state, setState] = useState('main-menu');
