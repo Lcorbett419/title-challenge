@@ -91,6 +91,9 @@
           const [transferList, setTransferList] = useState([]);
           const [transferFilter, setTransferFilter] = useState('all');
           const [transferSearch, setTransferSearch] = useState('');
+          const [transferAgeFilter, setTransferAgeFilter] = useState('any');
+          const [transferSpecialFilter, setTransferSpecialFilter] = useState('all');
+          const [transferSortBy, setTransferSortBy] = useState('rating');  
           const [transferNegotiation, setTransferNegotiation] = useState(null);
           const [incomingOffers, setIncomingOffers] = useState([]);
           const [facilities, setFacilities] = useState({ stadiumLevel: 3, devLevel: 1 });
@@ -2240,8 +2243,8 @@
                         )}
                         
                       {transferFilter !== 'sell' ? (
-                        <>
-                          {/* Search and filter */}
+                       <>
+                          {/* Search */}
                           <div className="bg-gray-800 p-3 border-b border-gray-700">
                             <input
                               type="text"
@@ -2250,44 +2253,149 @@
                               onChange={(e) => setTransferSearch(e.target.value)}
                               className="w-full bg-gray-700 text-white rounded-lg px-3 py-2 text-sm mb-2 outline-none focus:ring-2 focus:ring-orange-500"
                             />
-                            <div className="flex gap-1 flex-wrap">
+                        
+                            {/* Position filter */}
+                            <p className="text-gray-500 text-xs mb-1">Position</p>
+                            <div className="flex gap-1 flex-wrap mb-3">
                               {positions.map(pos => (
                                 <button key={pos} onClick={() => setTransferFilter(pos)} className={`px-2 py-1 rounded text-xs font-bold ${transferFilter === pos ? 'bg-orange-600 text-white' : 'bg-gray-700 text-gray-400'}`}>{pos === 'all' ? 'All' : pos}</button>
                               ))}
                             </div>
-                          </div>
-                
-                          {/* Refresh button */}
-                          <div className="bg-gray-800 p-3 border-b border-gray-700">
-                            <button onClick={generateTransferList} className="w-full bg-gray-700 text-gray-300 py-2 rounded-lg text-sm font-bold hover:bg-gray-600">🔄 Refresh Transfer List</button>
-                          </div>
-                
-                          {/* Player listings */}
-                          <div className="bg-gray-800 rounded-b-lg p-3">
-                            <p className="text-gray-500 text-xs mb-2">{filtered.length} players available</p>
-                            <div className="space-y-2 max-h-96 overflow-y-auto">
-                              {filtered.slice(0, 50).map((l, i) => (
-                                <div key={`${l.team.id}-${l.player.id}`} className="bg-gray-700 rounded-lg p-3">
-                                  <div className="flex items-center gap-3">
-                                    <div className="flex-shrink-0" style={{ width: '36px', height: '32px' }}>{renderShirt(l.team, '36px')}</div>
-                                    <div className="flex-1 min-w-0">
-                                      <div className="text-white font-semibold text-sm truncate cursor-pointer hover:text-orange-400" onClick={(e) => { e.stopPropagation(); setSelectedPlayer(l.player); setSelectedPlayerTeam(l.team); setPage('player-profile'); }}>{l.player.name}</div>
-                                      <div className="text-gray-400 text-xs">{l.player.positions.join('/')} • Age {calcAge(l.player.dob)} • <StarDisplay rating={l.player.rating} /></div>
-                                      <div className="text-gray-500 text-xs">{l.team.name} • {leagues[l.leagueKey].name}</div>
-                                    </div>
-                                    <div className="text-right flex-shrink-0">
-                                      <p className="text-orange-400 font-bold text-sm">{formatCurrency(l.askingPrice)}</p>
-                                      <button onClick={() => buyPlayer(l)} disabled={team.budget < l.askingPrice} className={`mt-1 px-3 py-1 rounded text-xs font-bold ${team.budget >= l.askingPrice ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-gray-600 text-gray-400 cursor-not-allowed'}`}>Buy</button>
-                                    </div>
-                                  </div>
-                                </div>
+                        
+                            {/* Age filter */}
+                            <p className="text-gray-500 text-xs mb-1">Age</p>
+                            <div className="flex gap-1 flex-wrap mb-3">
+                              {[
+                                { key: 'any', label: 'Any' },
+                                { key: 'u21', label: 'U21' },
+                                { key: '21-25', label: '21-25' },
+                                { key: '26-29', label: '26-29' },
+                                { key: '30+', label: '30+' }
+                              ].map(a => (
+                                <button key={a.key} onClick={() => setTransferAgeFilter(a.key)} className={`px-2 py-1 rounded text-xs font-bold ${transferAgeFilter === a.key ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-400'}`}>{a.label}</button>
                               ))}
-                              {filtered.length === 0 && <p className="text-gray-500 text-sm text-center py-4">No players match your filters</p>}
+                            </div>
+                        
+                            {/* Special filters */}
+                            <p className="text-gray-500 text-xs mb-1">Filter</p>
+                            <div className="flex gap-1 flex-wrap mb-3">
+                              {[
+                                { key: 'all', label: 'All' },
+                                { key: 'affordable', label: '💰 Affordable' },
+                                { key: 'bargain', label: '🏷️ Bargains' },
+                                { key: 'worldclass', label: '⭐ World Class' },
+                                { key: 'wonderkid', label: '🌟 Wonderkids' },
+                                { key: 'experienced', label: '🎖️ Experienced' },
+                                { key: 'upgrade', label: '📈 Upgrades' }
+                              ].map(f => (
+                                <button key={f.key} onClick={() => setTransferSpecialFilter(f.key)} className={`px-2 py-1 rounded text-xs font-bold ${transferSpecialFilter === f.key ? 'bg-green-600 text-white' : 'bg-gray-700 text-gray-400'}`}>{f.label}</button>
+                              ))}
+                            </div>
+                        
+                            {/* Sort */}
+                            <p className="text-gray-500 text-xs mb-1">Sort by</p>
+                            <div className="flex gap-1 flex-wrap">
+                              {[
+                                { key: 'rating', label: 'Rating ↓' },
+                                { key: 'price-low', label: 'Price ↑' },
+                                { key: 'price-high', label: 'Price ↓' },
+                                { key: 'age-young', label: 'Youngest' },
+                                { key: 'age-old', label: 'Oldest' },
+                                { key: 'value', label: 'Best Value' }
+                              ].map(s => (
+                                <button key={s.key} onClick={() => setTransferSortBy(s.key)} className={`px-2 py-1 rounded text-xs font-bold ${transferSortBy === s.key ? 'bg-purple-600 text-white' : 'bg-gray-700 text-gray-400'}`}>{s.label}</button>
+                              ))}
                             </div>
                           </div>
+                        
+                          {/* Refresh */}
+                          <div className="bg-gray-800 p-3 border-b border-gray-700 flex gap-2">
+                            <button onClick={generateTransferList} className="flex-1 bg-gray-700 text-gray-300 py-2 rounded-lg text-sm font-bold hover:bg-gray-600">🔄 Refresh List</button>
+                            <button onClick={() => { setTransferFilter('all'); setTransferAgeFilter('any'); setTransferSpecialFilter('all'); setTransferSortBy('rating'); setTransferSearch(''); }} className="bg-gray-700 text-gray-300 py-2 px-3 rounded-lg text-sm font-bold hover:bg-gray-600">✕ Clear</button>
+                          </div>
+                        
+                          {/* Player listings */}
+                          <div className="bg-gray-800 rounded-b-lg p-3">
+                            {(() => {
+                              // Apply all filters
+                              let results = transferList.filter(l => {
+                                const posMatch = transferFilter === 'all' || l.player.positions.includes(transferFilter);
+                                const nameMatch = transferSearch === '' || l.player.name.toLowerCase().includes(transferSearch.toLowerCase());
+                                const age = calcAge(l.player.dob);
+                        
+                                // Age filter
+                                let ageMatch = true;
+                                if (transferAgeFilter === 'u21') ageMatch = age < 21;
+                                else if (transferAgeFilter === '21-25') ageMatch = age >= 21 && age <= 25;
+                                else if (transferAgeFilter === '26-29') ageMatch = age >= 26 && age <= 29;
+                                else if (transferAgeFilter === '30+') ageMatch = age >= 30;
+                        
+                                // Special filters
+                                let specialMatch = true;
+                                if (transferSpecialFilter === 'affordable') specialMatch = l.askingPrice <= team.budget;
+                                else if (transferSpecialFilter === 'bargain') specialMatch = l.askingPrice <= team.budget * 0.15;
+                                else if (transferSpecialFilter === 'worldclass') specialMatch = l.player.rating >= 17;
+                                else if (transferSpecialFilter === 'wonderkid') specialMatch = age <= 21 && l.player.rating >= 14;
+                                else if (transferSpecialFilter === 'experienced') specialMatch = age >= 28 && l.player.rating >= 15;
+                                else if (transferSpecialFilter === 'upgrade') {
+                                  // Find best player in same position on your team
+                                  const bestOwn = team.players
+                                    .filter(p => p.positions.some(pos => l.player.positions.includes(pos)))
+                                    .sort((a, b) => b.rating - a.rating)[0];
+                                  specialMatch = bestOwn ? l.player.rating > bestOwn.rating : true;
+                                }
+                        
+                                return posMatch && nameMatch && ageMatch && specialMatch;
+                              });
+                        
+                              // Sort
+                              if (transferSortBy === 'rating') results.sort((a, b) => b.player.rating - a.player.rating);
+                              else if (transferSortBy === 'price-low') results.sort((a, b) => a.askingPrice - b.askingPrice);
+                              else if (transferSortBy === 'price-high') results.sort((a, b) => b.askingPrice - a.askingPrice);
+                              else if (transferSortBy === 'age-young') results.sort((a, b) => calcAge(a.player.dob) - calcAge(b.player.dob));
+                              else if (transferSortBy === 'age-old') results.sort((a, b) => calcAge(b.player.dob) - calcAge(a.player.dob));
+                              else if (transferSortBy === 'value') results.sort((a, b) => (b.player.rating / b.askingPrice) - (a.player.rating / a.askingPrice));
+                        
+                              return (
+                                <>
+                                  <div className="flex justify-between items-center mb-2">
+                                    <p className="text-gray-500 text-xs">{results.length} players found</p>
+                                    {transferSpecialFilter === 'affordable' && <p className="text-green-400 text-xs">Within budget: {formatCurrency(team.budget)}</p>}
+                                  </div>
+                                  <div className="space-y-2 max-h-96 overflow-y-auto">
+                                    {results.slice(0, 50).map((l, i) => {
+                                      const age = calcAge(l.player.dob);
+                                      const canAfford = team.budget >= l.askingPrice;
+                                      const isWonderkid = age <= 21 && l.player.rating >= 14;
+                                      const isWorldClass = l.player.rating >= 17;
+                                      return (
+                                        <div key={`${l.team.id}-${l.player.id}`} className={`rounded-lg p-3 ${isWorldClass ? 'bg-yellow-900/20 border border-yellow-700/30' : isWonderkid ? 'bg-purple-900/20 border border-purple-700/30' : 'bg-gray-700'}`}>
+                                          <div className="flex items-center gap-3">
+                                            <div className="flex-shrink-0" style={{ width: '36px', height: '32px' }}>{renderShirt(l.team, '36px')}</div>
+                                            <div className="flex-1 min-w-0">
+                                              <div className="flex items-center gap-1">
+                                                <span className="text-white font-semibold text-sm truncate cursor-pointer hover:text-orange-400" onClick={(e) => { e.stopPropagation(); setSelectedPlayer(l.player); setSelectedPlayerTeam(l.team); setPage('player-profile'); }}>{l.player.name}</span>
+                                                {isWorldClass && <span className="text-xs">⭐</span>}
+                                                {isWonderkid && !isWorldClass && <span className="text-xs">🌟</span>}
+                                              </div>
+                                              <div className="text-gray-400 text-xs">{l.player.positions.join('/')} • Age {age} • <StarDisplay rating={l.player.rating} /></div>
+                                              <div className="text-gray-500 text-xs">{l.team.name} • {leagues[l.leagueKey].name}</div>
+                                            </div>
+                                            <div className="text-right flex-shrink-0">
+                                              <p className="text-orange-400 font-bold text-sm">{formatCurrency(l.askingPrice)}</p>
+                                              <button onClick={() => buyPlayer(l)} disabled={!canAfford} className={`mt-1 px-3 py-1 rounded text-xs font-bold ${canAfford ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-gray-600 text-gray-400 cursor-not-allowed'}`}>Buy</button>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      );
+                                    })}
+                                    {results.length === 0 && <p className="text-gray-500 text-sm text-center py-4">No players match your filters</p>}
+                                  </div>
+                                </>
+                              );
+                            })()}
+                          </div>
                         </>
-                      ) : (
-                        <>
                           {/* Sell players */}
                           <div className="bg-gray-800 rounded-b-lg p-3">
                             <p className="text-gray-500 text-xs mb-2">Your squad ({team.players.length} players)</p>
