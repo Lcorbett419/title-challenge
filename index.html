@@ -837,8 +837,8 @@
                   if (!attacker) continue;
             
                   const midfielder = players.filter(p => p.positions.some(pos => ['CDM','CM','CAM'].includes(pos)))[0] || attacker;
-                  events.push({ min, type: 'midfield', text: pickTemplate('midfield').replace('{player}', midfielder.name), isHome, isGoal: false });
-            
+                  events.push({ min, type: 'midfield', text: pickTemplate('midfield').replace('{player}', midfielder.name), isHome, isGoal: false, playerId: midfielder.id });
+                  
                   const scoreChance = 0.2 + attacker.effectiveRating * 0.02;
                   if (Math.random() < scoreChance) {
                     if (isHome) hs++; else as++;
@@ -848,20 +848,17 @@
                       const midAtk = possibleAssisters.filter(p => p.positions.some(pos => ['CAM','CM','LW','RW','ST'].includes(pos)));
                       assister = midAtk.length > 0 ? midAtk[Math.floor(Math.random() * midAtk.length)] : possibleAssisters[Math.floor(Math.random() * possibleAssisters.length)];
                     }
-                    events.push({ min, type: 'goal', text: pickTemplate('goal').replace('{player}', attacker.name), isHome, isGoal: true, score: { home: hs, away: as } });
+                    events.push({ min, type: 'goal', text: pickTemplate('goal').replace('{player}', attacker.name), isHome, isGoal: true, score: { home: hs, away: as }, playerId: attacker.id });
                     if (assister) {
-                      events.push({ min, type: 'assist', text: pickTemplate('assist').replace('{player}', assister.name), isHome, isGoal: false });
+                      events.push({ min, type: 'assist', text: pickTemplate('assist').replace('{player}', assister.name), isHome, isGoal: false, playerId: assister.id });
                       scorers.push({ playerId: attacker.id, teamId: evTeam.id, assisterId: assister.id });
                     } else {
                       scorers.push({ playerId: attacker.id, teamId: evTeam.id, assisterId: null });
                     }
-                    attacker.matchRating = Math.min(10, attacker.matchRating + 1.0 + Math.random() * 0.5);
-                    if (assister) assister.matchRating = Math.min(10, assister.matchRating + 0.5 + Math.random() * 0.3);
                   } else {
-                    events.push({ min, type: 'chance', text: pickTemplate('chance').replace('{player}', attacker.name), isHome, isGoal: false });
+                    events.push({ min, type: 'chance', text: pickTemplate('chance').replace('{player}', attacker.name), isHome, isGoal: false, playerId: attacker.id });
                     if (defender) {
-                      events.push({ min, type: 'defend', text: pickTemplate('defend').replace('{player}', defender.name), isHome: !isHome, isGoal: false });
-                      defender.matchRating = Math.min(10, defender.matchRating + 0.3);
+                      events.push({ min, type: 'defend', text: pickTemplate('defend').replace('{player}', defender.name), isHome: !isHome, isGoal: false, playerId: defender.id });
                     }
                   }
                 } else if (Math.random() < 0.03 + (totalStrength / 40) * 0.02) {
@@ -880,11 +877,9 @@
                       } else {
                         events.push({ min, type: 'yellowCard', text: pickTemplate('yellowCard').replace('{player}', p.name), isHome, isGoal: false, playerId: p.id, teamId: isHome ? h.id : a.id, cardType: 'yellow' });
                       }
-                      p.matchRating = Math.max(1, p.matchRating - 0.5);
                     } else if (Math.random() < 0.03) {
                       events.push({ min, type: 'redCard', text: pickTemplate('redCard').replace('{player}', p.name), isHome, isGoal: false, playerId: p.id, teamId: isHome ? h.id : a.id, cardType: 'red' });
                       if (isHome) { sentOff.home.push(p.id); } else { sentOff.away.push(p.id); }
-                      p.matchRating = Math.max(1, p.matchRating - 2.0);
                     }
                   }
                 }
@@ -978,13 +973,20 @@
                     const posIdx = parseInt(key.replace('pos', ''));
                     const requiredPos = formations[formation].positions[posIdx];
                     const inPosition = player.positions.includes(requiredPos);
-                    const existing = [...(liveMatch.homePlayers || []), ...(liveMatch.awayPlayers || [])].find(p => p.id === playerId);
-                    const baseRating = existing ? existing.matchRating : 6.0 + Math.random() * 1.0;
+                    const computed = computeLiveRatings(
+                    [...(liveMatch.homePlayers || []), ...(liveMatch.awayPlayers || [])],
+                    liveCommentary,
+                    liveMatch.homeTeam.players.find(pl => pl.id === playerId) ? true : false
+                    ).find(p => p.id === playerId);
                     return { ...player, effectiveRating: inPosition ? player.rating : Math.max(1, player.rating - 5), matchRating: baseRating };
                   }).filter(p => p !== null);
                 } else {
                   return tm.players.filter(p => !p.injured).sort((a, b) => b.rating - a.rating).slice(0, 11).map(p => {
-                    const existing = [...(liveMatch.homePlayers || []), ...(liveMatch.awayPlayers || [])].find(ep => ep.id === p.id);
+                    const computed = computeLiveRatings(
+                      [...(liveMatch.homePlayers || []), ...(liveMatch.awayPlayers || [])],
+                      liveCommentary,
+                      liveMatch.homeTeam.players.find(pl => pl.id === playerId) ? true : false
+                    ).find(cp => cp.id === p.id);
                     return { ...p, effectiveRating: p.rating, matchRating: existing ? existing.matchRating : 6.0 + Math.random() * 1.0 };
                   });
                 }
@@ -1044,6 +1046,49 @@
               const minutesLeft = endMin - currentMin;
               scheduleEvents(remaining.events, currentMin, minutesLeft);
             };
+            
+          const computeLiveRatings = (players, commentary, isHomeTeam) => {
+          return players.map(p => {
+            let rating = 6.0;
+        
+            commentary.forEach(ev => {
+              if (!ev.playerId || ev.playerId !== p.id) return;
+              // Only count events for the correct team
+              if (ev.isHome !== isHomeTeam && ev.type !== 'defend') return;
+              // Defend events have flipped isHome, so check opposite
+              if (ev.type === 'defend' && ev.isHome !== isHomeTeam) return;
+        
+              switch (ev.type) {
+                case 'goal':
+                  rating += 1.0 + Math.random() * 0.3;
+                  break;
+                case 'assist':
+                  rating += 0.6 + Math.random() * 0.2;
+                  break;
+                case 'chance':
+                  rating += 0.15;
+                  break;
+                case 'defend':
+                  rating += 0.3;
+                  break;
+                case 'midfield':
+                  rating += 0.1;
+                  break;
+                case 'yellowCard':
+                  rating -= 1;
+                  break;
+                case 'redCard':
+                  rating -= 5.0;
+                  break;
+              }
+            });
+        
+            // Clamp between 1 and 10
+            rating = Math.max(1, Math.min(10, rating));
+        
+            return { ...p, matchRating: rating };
+          });
+        };
             
           const playMatch = () => {
           const next = getNext();
@@ -1183,7 +1228,9 @@
               return p && !p.injured;
             });
             
-            const allMatchPlayers = [...(liveMatch.homePlayers || []), ...(liveMatch.awayPlayers || [])];
+            const finalHome = computeLiveRatings(liveMatch.homePlayers || [], liveCommentary, true);
+            const finalAway = computeLiveRatings(liveMatch.awayPlayers || [], liveCommentary, false);
+            const allMatchPlayers = [...finalHome, ...finalAway];
             
             let motmId = null, motmRating = 0;
             allMatchPlayers.filter(mp => matchPlayers.includes(mp.id)).forEach(mp => {
@@ -2832,19 +2879,22 @@
                       <tbody>
                 
                         {(() => {
+                      const liveHomePlayers = computeLiveRatings(homePlayers, liveCommentary, true);
+                      const liveAwayPlayers = computeLiveRatings(awayPlayers, liveCommentary, false);
+                      
                           // Compute icons from live commentary events
                           const getPlayerIcons = (playerId, isHome) => {
                             const icons = [];
                             liveCommentary.forEach(ev => {
                               if (ev.isGoal && ev.isHome === isHome) {
                                 // Check if this player scored by matching name in goal text
-                                const player = isHome ? homePlayers.find(p => p.id === playerId) : awayPlayers.find(p => p.id === playerId);
+                                const player = isHome ? liveHomePlayers.find(p => p.id === playerId) : liveAwayPlayers.find(p => p.id === playerId);
                                 if (player && ev.text.includes(player.name)) {
                                   icons.push({ type: 'goal', min: ev.min });
                                 }
                               }
                               if (ev.type === 'assist' && ev.isHome === isHome) {
-                                const player = isHome ? homePlayers.find(p => p.id === playerId) : awayPlayers.find(p => p.id === playerId);
+                                const player = isHome ? liveHomePlayers.find(p => p.id === playerId) : liveAwayPlayers.find(p => p.id === playerId);
                                 if (player && ev.text.includes(player.name)) {
                                   icons.push({ type: 'assist', min: ev.min });
                                 }
@@ -2863,17 +2913,17 @@
                             let homeMotmId = null, awayMotmId = null;
                             if (matchEnded) {
                               let bestRating = 0, bestId = null, bestSide = null;
-                              homePlayers.forEach(p => { if (p.matchRating > bestRating) { bestRating = p.matchRating; bestId = p.id; bestSide = 'home'; } });
-                              awayPlayers.forEach(p => { if (p.matchRating > bestRating) { bestRating = p.matchRating; bestId = p.id; bestSide = 'away'; } });
+                             liveHomePlayers.forEach(p => { if (p.matchRating > bestRating) { bestRating = p.matchRating; bestId = p.id; bestSide = 'home'; } });
+                              liveAwayPlayers.forEach(p => { if (p.matchRating > bestRating) { bestRating = p.matchRating; bestId = p.id; bestSide = 'away'; } });
                               if (bestSide === 'home') homeMotmId = bestId;
                               else awayMotmId = bestId;
                             }
                         
                           const posMap = { 'GK':'GK', 'LB':'DL', 'RB':'DR', 'CB':'DC', 'CDM':'MC', 'CM':'MC', 'CAM':'AMC', 'LW':'AML', 'RW':'AMR', 'ST':'AC' };
                         
-                          return Array.from({ length: Math.max(homePlayers.length, awayPlayers.length) }).map((_, i) => {
-                            const hp = homePlayers[i];
-                            const ap = awayPlayers[i];
+                          return Array.from({ length: Math.max(liveHomePlayers.length, liveAwayPlayers.length) }).map((_, i) => {
+                            const hp = liveHomePlayers[i];
+                            const ap = liveAwayPlayers[i];
                             const hPos = hp ? hp.positions[0] : '';
                             const aPos = ap ? ap.positions[0] : '';
                             const hIcons = hp ? getPlayerIcons(hp.id, true) : [];
