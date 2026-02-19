@@ -959,12 +959,16 @@
               setSelectedSlot(null);
             };
             
-            const resumeFromTactics = () => {
+           const resumeFromTactics = () => {
               if (!liveMatch) return;
               const { homeTeam, awayTeam } = liveMatch;
               const currentMin = liveMinute;
             
-              // Rebuild players with subs applied
+              // Compute ratings ONCE up front
+              const ratedHome = computeLiveRatings(liveMatch.homePlayers || [], liveCommentary, true);
+              const ratedAway = computeLiveRatings(liveMatch.awayPlayers || [], liveCommentary, false);
+              const allRated = [...ratedHome, ...ratedAway];
+            
               const getUpdatedPlayers = (tm) => {
                 if (tm.id === team.id && Object.keys(startingXI).length > 0) {
                   return Object.entries(startingXI).map(([key, playerId]) => {
@@ -973,21 +977,15 @@
                     const posIdx = parseInt(key.replace('pos', ''));
                     const requiredPos = formations[formation].positions[posIdx];
                     const inPosition = player.positions.includes(requiredPos);
-                    const computed = computeLiveRatings(
-                    [...(liveMatch.homePlayers || []), ...(liveMatch.awayPlayers || [])],
-                    liveCommentary,
-                    liveMatch.homeTeam.players.find(pl => pl.id === playerId) ? true : false
-                    ).find(p => p.id === playerId);
+                    const rated = allRated.find(r => r.id === playerId);
+                    const baseRating = rated ? rated.matchRating : 6.0;
                     return { ...player, effectiveRating: inPosition ? player.rating : Math.max(1, player.rating - 5), matchRating: baseRating };
                   }).filter(p => p !== null);
                 } else {
                   return tm.players.filter(p => !p.injured).sort((a, b) => b.rating - a.rating).slice(0, 11).map(p => {
-                    const computed = computeLiveRatings(
-                      [...(liveMatch.homePlayers || []), ...(liveMatch.awayPlayers || [])],
-                      liveCommentary,
-                      liveMatch.homeTeam.players.find(pl => pl.id === playerId) ? true : false
-                    ).find(cp => cp.id === p.id);
-                    return { ...p, effectiveRating: p.rating, matchRating: existing ? existing.matchRating : 6.0 + Math.random() * 1.0 };
+                    const rated = allRated.find(r => r.id === p.id);
+                    const baseRating = rated ? rated.matchRating : 6.0;
+                    return { ...p, effectiveRating: p.rating, matchRating: baseRating };
                   });
                 }
               };
