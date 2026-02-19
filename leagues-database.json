@@ -5548,7 +5548,7 @@
           { "id": 14, "name": "Tino Anjorin", "positions": ["CAM", "CM"], "dob": "2001-11-23", "rating": 13 },
           { "id": 79, "name": "Zanos Savva", "positions": ["RW", "ST"], "dob": "2005-11-26", "rating": 12 },
           { "id": 10, "name": "Nikola Vlašić", "positions": ["CAM", "LW", "RW"], "dob": "1997-10-04", "rating": 16 },
-          { "id": 83, "name": "Sergiu Perciun", "positions": ["CAM", "CM", "LW"], "dob": "2006-04-23", "rating": 13 }
+          { "id": 83, "name": "Sergiu Perciun", "positions": ["CAM", "CM", "LW"], "dob": "2006-04-23", "rating": 13 },
           { "id": 7, "name": "Zakaria Aboukhlal", "positions": ["RW", "LW", "ST"], "dob": "2000-02-18", "rating": 15 },
           { "id": 91, "name": "Duván Zapata", "positions": ["ST"], "dob": "1991-04-01", "rating": 15 },
           { "id": 18, "name": "Giovanni Simeone", "positions": ["ST"], "dob": "1995-07-05", "rating": 15 },
