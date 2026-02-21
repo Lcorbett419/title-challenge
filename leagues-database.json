@@ -5227,7 +5227,7 @@
           { "id": 7, "name": "Khvicha Kvaratskhelia", "positions": ["LW", "RW"], "dob": "2001-02-12", "rating": 18 },
           { "id": 10, "name": "Ousmane Dembélé", "positions": ["RW", "ST"], "dob": "1997-05-15", "rating": 19 },
           { "id": 29, "name": "Bradley Barcola", "positions": ["LW", "RW"], "dob": "2002-09-02", "rating": 16 },
-          { "id": 14, "name": "Désiré Doué", "positions": ["LW", "CAM"], "dob": "2005-06-03", "rating": 17 },
+          { "id": 14, "name": "Désiré Doué", "positions": ["LW", "CAM", "RW"], "dob": "2005-06-03", "rating": 17 },
           { "id": 9, "name": "Gonçalo Ramos", "positions": ["ST"], "dob": "2001-06-20", "rating": 16 },
           { "id": 49, "name": "Ibrahim Mbaye", "positions": ["RW", "LW"], "dob": "2008-01-24", "rating": 13 },
           { "id": 47, "name": "Quentin Ndjantou", "positions": ["LW", "ST"], "dob": "2007-07-23", "rating": 12 }
