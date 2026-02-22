@@ -97,7 +97,9 @@
           const [transferNegotiation, setTransferNegotiation] = useState(null);
           const [incomingOffers, setIncomingOffers] = useState([]);
           const [facilities, setFacilities] = useState({ stadiumLevel: 3, devLevel: 1 });
-          const [preMatchXI, setPreMatchXI] = useState({});  
+          const [preMatchXI, setPreMatchXI] = useState({});
+          const [postMatchNews, setPostMatchNews] = useState([]);
+          const [suspensions, setSuspensions] = useState({});  
           const [liveMatch, setLiveMatch] = useState(null);
           const [liveMinute, setLiveMinute] = useState(0);
           const [liveCommentary, setLiveCommentary] = useState([]);
@@ -565,6 +567,9 @@
                   if (!p.assists) p.assists = 0;
                   if (!p.yellowCards) p.yellowCards = 0;
                   if (!p.redCards) p.redCards = 0;
+                  if (!p.suspended) p.suspended = false;
+                  if (!p.suspendedUntil) p.suspendedUntil = 0;
+                  if (!p.matchesPlayed) p.matchesPlayed = 0;
                   if (!p.injured) p.injured = false;
                 }); });
               const n = teams.length; const fix = [];
@@ -581,7 +586,7 @@
             setFixtures(newFix);
           };
 
-          const startNewSeason = () => {
+            const startNewSeason = () => {
             const fix = fixtures[league] || [];
             const seasonComplete = fix.length > 0 && fix.every(f => f.played);
             
@@ -702,6 +707,9 @@
                   p.redCards = 0;  
                   p.injured = false;
                   p.injuryUntil = null;
+                  p.suspended = false;
+                  p.suspendedUntil = 0;
+                  p.matchesPlayed = 0;  
                 });
               });
             });
@@ -741,14 +749,14 @@
               if (tm.id === team.id && Object.keys(startingXI).length > 0) {
                 return Object.entries(startingXI).map(([key, playerId]) => {
                   const player = tm.players.find(p => p.id === playerId);
-                  if (!player || player.injured) return null;
+                  if (!player || player.injured || player.suspended) return null;
                   const posIdx = parseInt(key.replace('pos', ''));
                   const requiredPos = formations[formation].positions[posIdx];
                   const inPosition = player.positions.includes(requiredPos);
                   return { ...player, effectiveRating: inPosition ? player.rating : Math.max(1, player.rating - 5) };
                 }).filter(p => p !== null);
               } else {
-                return tm.players.filter(p => !p.injured).sort((a, b) => b.rating - a.rating).slice(0, 11).map(p => ({ ...p, effectiveRating: p.rating }));
+                return tm.players.filter(p => !p.injured && !p.suspended).sort((a, b) => b.rating - a.rating).slice(0, 11).map(p => ({ ...p, effectiveRating: p.rating }));
               }
             };
             const homePlayers = getMatchPlayers(h); const awayPlayers = getMatchPlayers(a);
@@ -1087,6 +1095,16 @@
             return { ...p, matchRating: rating };
           });
         };
+
+        const injuryTypes = [
+          'Hamstring strain', 'Twisted ankle', 'Knee ligament damage',
+          'Groin strain', 'Calf injury', 'Fractured metatarsal',
+          'Dislocated shoulder', 'Bruised ribs', 'Torn ACL',
+          'Hip flexor strain', 'Achilles tendon issue', 'Concussion',
+          'Muscle tear', 'Shin splints', 'Back spasm'
+        ];
+
+        const getInjuryType = () => injuryTypes[Math.floor(Math.random() * injuryTypes.length)];    
             
           const playMatch = () => {
           const next = getNext();
@@ -1299,10 +1317,168 @@
           });
           setCommentary(liveCommentary.reverse().map(e => `${e.min}' ${e.text}`));
         
+                  // === POST-MATCH NEWS GENERATION ===
+        const news = [];
+        
+        // 1. INJURIES (white) — check who got injured this match
+        const matchEvents = liveMatch.events || [];
+        matchEvents.filter(ev => ev.type === 'injury').forEach(ev => {
+          // Find the player
+          const injuredPlayer = team.players.find(p => ev.text.includes(p.name));
+          if (injuredPlayer && injuredPlayer.injured) {
+            const weeksOut = getWeeksUntil(injuredPlayer.injuryUntil);
+            news.push({
+              type: 'injury',
+              icon: '🏥',
+              color: 'bg-white',
+              textColor: 'text-gray-800',
+              title: 'The following player has picked up an injury:',
+              playerName: injuredPlayer.name,
+              detail: `${weeksOut} week${weeksOut !== 1 ? 's' : ''} (${getInjuryType()})`
+            });
+          }
+        });
+        
+        // 2. SUSPENSIONS (red) — check for red cards
+        allEvents.filter(ev => ev.cardType === 'red' && ev.teamId === team.id).forEach(ev => {
+          const player = team.players.find(p => p.id === ev.playerId);
+          if (player) {
+            const banLength = 1 + Math.floor(Math.random() * 3); // 1-3 match ban
+            player.suspended = true;
+            player.suspendedUntil = banLength;
+            news.push({
+              type: 'suspension',
+              icon: '🟥',
+              color: 'bg-red-600',
+              textColor: 'text-white',
+              title: 'The following player has been suspended following their recent misconduct:',
+              playerName: player.name,
+              detail: `${banLength} match${banLength !== 1 ? 'es' : ''} (Red Card)`
+            });
+          }
+        });
+        
+        // Yellow card accumulation — 5 yellows = 1 match ban
+        team.players.forEach(p => {
+          if ((p.yellowCards || 0) > 0 && (p.yellowCards % 5) === 0 && !p.suspended) {
+            p.suspended = true;
+            p.suspendedUntil = 1;
+            news.push({
+              type: 'suspension',
+              icon: '🟨',
+              color: 'bg-red-600',
+              textColor: 'text-white',
+              title: 'The following player has been suspended due to yellow card accumulation:',
+              playerName: p.name,
+              detail: '1 match (5 Yellow Cards)'
+            });
+          }
+        });
+        
+        // 3. RETURNING PLAYERS (blue) — decrement suspensions and check returns
+        team.players.forEach(p => {
+          if (p.suspended && p.suspendedUntil > 0 && !allEvents.some(ev => ev.cardType === 'red' && ev.playerId === p.id)) {
+            p.suspendedUntil -= 1;
+            if (p.suspendedUntil <= 0) {
+              p.suspended = false;
+              p.suspendedUntil = 0;
+              news.push({
+                type: 'available',
+                icon: '✅',
+                color: 'bg-blue-500',
+                textColor: 'text-white',
+                title: 'The following player is available again:',
+                playerName: p.name,
+                detail: 'Suspension served'
+              });
+            }
+          }
+        });
+        
+        // Check for players returning from injury
+        team.players.forEach(p => {
+          if (p.injured && p.injuryUntil) {
+            const nd = new Date(date);
+            nd.setDate(nd.getDate() + 7);
+            if (new Date(p.injuryUntil) <= nd && new Date(p.injuryUntil) > date) {
+              news.push({
+                type: 'available',
+                icon: '✅',
+                color: 'bg-blue-500',
+                textColor: 'text-white',
+                title: 'The following player is available again:',
+                playerName: p.name,
+                detail: 'Returned from injury'
+              });
+            }
+          }
+        });
+        
+        // 4. DEVELOPMENT (orange) — random chance of training improvement
+        team.players.forEach(p => {
+          if (!p.injured && !p.suspended) {
+            p.matchesPlayed = (p.matchesPlayed || 0) + (matchPlayers.includes(p.id) ? 1 : 0);
+            const age = calcAge(p.dob);
+            if (age <= 25 && p.rating < 20) {
+              const devChance = 0.03 + (facilities.devLevel - 1) * 0.01;
+              if (Math.random() < devChance) {
+                p.rating = Math.min(20, p.rating + 1);
+                news.push({
+                  type: 'development',
+                  icon: '📈',
+                  color: 'bg-orange-500',
+                  textColor: 'text-white',
+                  title: 'The following player has been training well and improved:',
+                  playerName: p.name,
+                  detail: `Rating increased to ${p.rating}/20`
+                });
+              }
+            }
+            // Decline for older players
+            if (age >= 33 && Math.random() < 0.02) {
+              p.rating = Math.max(1, p.rating - 1);
+              news.push({
+                type: 'decline',
+                icon: '📉',
+                color: 'bg-orange-800',
+                textColor: 'text-white',
+                title: 'The following player is showing signs of decline:',
+                playerName: p.name,
+                detail: `Rating decreased to ${p.rating}/20`
+              });
+            }
+          }
+        });
+        
+        // 5. NEEDS REST (light orange) — players who've played many consecutive games
+        team.players.forEach(p => {
+          if (matchPlayers.includes(p.id)) {
+            const consecutive = p.matchesPlayed || 0;
+            if (consecutive >= 8 && consecutive % 4 === 0 && !p.injured) {
+              news.push({
+                type: 'rest',
+                icon: '😴',
+                color: 'bg-amber-400',
+                textColor: 'text-gray-900',
+                title: 'The following player is in need of a rest:',
+                playerName: p.name,
+                detail: `${consecutive} consecutive appearances — performance may suffer`
+              });
+            }
+          }
+        });
+        
+        // Sort news: injuries first, then suspensions, available, development, rest
+        const typeOrder = { injury: 0, suspension: 1, decline: 2, development: 3, available: 4, rest: 5 };
+        news.sort((a, b) => (typeOrder[a.type] || 99) - (typeOrder[b.type] || 99));
+        
+        setPostMatchNews(news);
+        // === END POST-MATCH NEWS ===
+              
           setStartingXI({ ...preMatchXI });
           setLiveMatch(null);
           setPage('home');
-          setState('info-page');
+          setState('post-match');
         };
             const getScorers = (lk) => {
             const sc = [];
@@ -2136,10 +2312,10 @@
                     <div className="bg-gray-800 rounded-lg p-4">
                       <h2 className="text-white font-bold mb-4">Squad</h2>
                       {team.players.map(p => (
-                        <div key={p.id} className={`rounded p-3 mb-2 ${p.injured ? 'bg-red-900/20' : 'bg-gray-700'}`}>
+                        <div key={p.id} className={`rounded p-3 mb-2 ${p.injured ? 'bg-red-900/20' : p.suspended ? 'bg-red-900/10' : 'bg-gray-700'}`}>
                           <div className="flex justify-between">
                             <div>
-                              <div className="text-white font-semibold cursor-pointer hover:text-orange-400" onClick={(e) => { e.stopPropagation(); setSelectedPlayer(p); setSelectedPlayerTeam(team); setPage('player-profile'); }}>{p.name} {p.injured && '⚕️'}</div>                              <div className="text-gray-400 text-sm">
+                              <div className="text-white font-semibold cursor-pointer hover:text-orange-400" onClick={(e) => { e.stopPropagation(); setSelectedPlayer(p); setSelectedPlayerTeam(team); setPage('player-profile'); }}>{p.name} {p.injured && '⚕️'}{p.suspended && '🟥'}</div>                              <div className="text-gray-400 text-sm">
                                 {p.positions.join('/')} • Age {calcAge(p.dob)} {p.goals > 0 && `• ⚽ ${p.goals}`}
                                 {p.injured && p.injuryUntil && (() => {
                                   const w = getWeeksUntil(p.injuryUntil);
@@ -3220,6 +3396,73 @@
             </div>
           );
         }
+
+            if (state === 'post-match') {
+              const isHome = match?.home;
+              const won = match?.ps > match?.os;
+              const drew = match?.ps === match?.os;
+              const lost = match?.ps < match?.os;
+              const resultText = won ? 'Victory' : drew ? 'Draw' : 'Defeat';
+              const resultColor = won ? 'text-green-400' : drew ? 'text-yellow-400' : 'text-red-400';
+            
+              return (
+                <div className="min-h-screen bg-gray-900 flex flex-col">
+                  {/* Header */}
+                  <div className="p-4 text-center" style={{ background: team.primaryColor || '#ea580c' }}>
+                    <p className="text-white font-bold text-lg">Squad News</p>
+                    <p className="text-white/70 text-sm">{formatDate(date)}</p>
+                  </div>
+            
+                  {/* Match result summary */}
+                  <div className="bg-gray-800 p-4 text-center border-b border-gray-700">
+                    <p className={`font-bold text-2xl ${resultColor}`}>{resultText}</p>
+                    <p className="text-white text-lg">
+                      {match?.home ? team.name : match?.opp} {match?.home ? match?.ps : match?.os} - {match?.home ? match?.os : match?.ps} {match?.home ? match?.opp : team.name}
+                    </p>
+                  </div>
+            
+                  {/* News items */}
+                  <div className="flex-1 overflow-y-auto pb-24" style={{ background: 'linear-gradient(180deg, #2d4a2d 0%, #1a3a1a 100%)' }}>
+                    {postMatchNews.length > 0 ? (
+                      <div className="p-4 space-y-3">
+                        {postMatchNews.map((item, i) => (
+                          <div key={i} className="flex items-start gap-3 bg-gray-800/60 rounded-lg p-4">
+                            <div className={`${item.color} rounded-lg w-12 h-12 flex items-center justify-center flex-shrink-0`}>
+                              <span className="text-2xl">{item.icon}</span>
+                            </div>
+                            <div className="flex-1">
+                              <p className="text-gray-400 text-sm">{item.title}</p>
+                              <p className="text-white font-bold text-lg">{item.playerName}</p>
+                              <p className={`text-sm ${
+                                item.type === 'injury' ? 'text-gray-500' :
+                                item.type === 'suspension' ? 'text-red-400' :
+                                item.type === 'available' ? 'text-blue-400' :
+                                item.type === 'development' ? 'text-orange-400' :
+                                item.type === 'decline' ? 'text-orange-700' :
+                                item.type === 'rest' ? 'text-amber-400' :
+                                'text-gray-400'
+                              }`}>{item.detail}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="p-8 text-center">
+                        <p className="text-4xl mb-3">✅</p>
+                        <p className="text-white font-bold text-lg">No Squad News</p>
+                        <p className="text-gray-400 text-sm">All players fit and available</p>
+                      </div>
+                    )}
+                  </div>
+            
+                  {/* Continue button */}
+                  <div className="fixed bottom-0 left-0 right-0 p-4 bg-gray-900 z-50">
+                    <button onClick={() => { setPage('home'); setState('info-page'); }} className="w-full bg-green-600 text-white py-4 rounded-lg font-bold text-lg">Continue</button>
+                  </div>
+                </div>
+              );
+            }
+            
           if (state === 'formation') {
             const next = getNext();
             const opp = next ? (next.homeTeamId === team.id ? leagues[league].teams.find(t => t.id === next.awayTeamId) : leagues[league].teams.find(t => t.id === next.homeTeamId)) : null;
