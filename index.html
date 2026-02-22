@@ -807,7 +807,7 @@
               const homeStrength = homePlayers.reduce((s, p) => s + p.effectiveRating, 0) / Math.max(homePlayers.length, 1);
               const awayStrength = awayPlayers.reduce((s, p) => s + p.effectiveRating, 0) / Math.max(awayPlayers.length, 1);
               const totalStrength = homeStrength + awayStrength;
-              const baseChanceRate = 0.04 + (totalStrength / 40) * 0.08;
+              const baseChanceRate = 0.03 + (totalStrength / 40) * 0.06;
               const homeDominance = homeStrength / totalStrength;
               const homeChancePct = Math.min(0.75, homeDominance + 0.05);
             
@@ -847,7 +847,7 @@
                   const midfielder = players.filter(p => p.positions.some(pos => ['CDM','CM','CAM'].includes(pos)))[0] || attacker;
                   events.push({ min, type: 'midfield', text: pickTemplate('midfield').replace('{player}', midfielder.name), isHome, isGoal: false, playerId: midfielder.id });
                   
-                  const scoreChance = 0.2 + attacker.effectiveRating * 0.02;
+                  const scoreChance = 0.12 + attacker.effectiveRating * 0.015;
                   if (Math.random() < scoreChance) {
                     if (isHome) hs++; else as++;
                     const possibleAssisters = players.filter(p => p.id !== attacker.id);
