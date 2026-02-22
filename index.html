@@ -111,6 +111,7 @@
           const [isHalfTime, setIsHalfTime] = useState(false);
           const [matchSubs, setMatchSubs] = useState({ made: 0, max: 5 });
           const [matchHalf, setMatchHalf] = useState(1);
+          const [sentOffPlayers, setSentOffPlayers] = useState([]);  
           const [tacticsPaused, setTacticsPaused] = useState(false);
           const pendingTimeoutsRef = useRef([]);  
           const clockPausedRef = useRef(false);
@@ -940,6 +941,24 @@
                     clockPausedRef.current = true;
                     setTimeout(() => { clockPausedRef.current = false; }, 3500);
                   }
+                    
+                    if (ev.type === 'redCard' && ev.playerId) {
+                      setSentOffPlayers(prev => [...prev, ev.playerId]);
+                      // If it's our goalkeeper, force tactics open
+                      if (ev.teamId === team.id) {
+                        const player = team.players.find(p => p.id === ev.playerId);
+                        if (player && player.positions.includes('GK')) {
+                          // Pause for forced GK substitution
+                          clearInterval(matchIntRef.current);
+                          pendingTimeoutsRef.current.forEach(tid => clearTimeout(tid));
+                          pendingTimeoutsRef.current = [];
+                          clockPausedRef.current = true;
+                          setTacticsPaused(true);
+                          setSelectedSlot(null);
+                        }
+                      }
+                    }
+                    
                   if (ev.type === 'halftime') {
                     clearInterval(matchIntRef.current);
                     setLiveMinute(45);
@@ -1158,6 +1177,30 @@
             });
             
             firstHalf.events.sort((a, b) => a.min - b.min);
+
+            // Remove suspended players from starting XI
+                const cleanXI = { ...startingXI };
+                let removedSuspended = false;
+                Object.entries(cleanXI).forEach(([key, pid]) => {
+                  const p = team.players.find(pl => pl.id === pid);
+                  if (p && p.suspended) {
+                    delete cleanXI[key];
+                    removedSuspended = true;
+                  }
+                });
+                
+                // Auto-fill gaps left by suspended players
+                if (removedSuspended) {
+                  formations[formation].positions.forEach((pos, idx) => {
+                    if (!cleanXI[`pos${idx}`]) {
+                      const eligible = team.players.filter(p =>
+                        p.positions.includes(pos) && !p.injured && !p.suspended && !Object.values(cleanXI).includes(p.id)
+                      );
+                      if (eligible.length > 0) cleanXI[`pos${idx}`] = eligible.sort((a, b) => b.rating - a.rating)[0].id;
+                    }
+                  });
+                  setStartingXI(cleanXI);
+                }  
             
             setPreMatchXI({ ...startingXI });
             setLiveMatch({ homeTeam: h, awayTeam: a, events: firstHalf.events, scorers: firstHalf.scorers, finalScore: firstHalf.score, homePlayers, awayPlayers, fixture: next });
@@ -1167,6 +1210,7 @@
             setTacticsPaused(false);
             setMatchHalf(1);
             setMatchSubs({ made: 0, max: 5 });
+            setSentOffPlayers([]);  
             setLiveCommentary([]);
             setLiveScore({ home: 0, away: 0 });
             setMatchPlayerRatings({ home: homePlayers, away: awayPlayers });
@@ -1316,6 +1360,17 @@
             home: isHome
           });
           setCommentary(liveCommentary.reverse().map(e => `${e.min}' ${e.text}`));
+
+              // Decrement ALL suspensions each match
+                team.players.forEach(p => {
+                  if (p.suspended && p.suspendedUntil > 0) {
+                    p.suspendedUntil -= 1;
+                    if (p.suspendedUntil <= 0) {
+                      p.suspended = false;
+                      p.suspendedUntil = 0;
+                    }
+                  }
+                });
         
                   // === POST-MATCH NEWS GENERATION ===
         const news = [];
@@ -1375,25 +1430,20 @@
           }
         });
         
-        // 3. RETURNING PLAYERS (blue) — decrement suspensions and check returns
-        team.players.forEach(p => {
-          if (p.suspended && p.suspendedUntil > 0 && !allEvents.some(ev => ev.cardType === 'red' && ev.playerId === p.id)) {
-            p.suspendedUntil -= 1;
-            if (p.suspendedUntil <= 0) {
-              p.suspended = false;
-              p.suspendedUntil = 0;
-              news.push({
-                type: 'available',
-                icon: '✅',
-                color: 'bg-blue-500',
-                textColor: 'text-white',
-                title: 'The following player is available again:',
-                playerName: p.name,
-                detail: 'Suspension served'
-              });
-            }
-          }
-        });
+       // 3. RETURNING PLAYERS (blue)
+            team.players.forEach(p => {
+              if (wasSuspended.includes(p.id) && !p.suspended) {
+                news.push({
+                  type: 'available',
+                  icon: '✅',
+                  color: 'bg-blue-500',
+                  textColor: 'text-white',
+                  title: 'The following player is available again:',
+                  playerName: p.name,
+                  detail: 'Suspension served'
+                });
+              }
+            });
         
         // Check for players returning from injury
         team.players.forEach(p => {
@@ -1770,8 +1820,8 @@
                     };
 
                     const layout = formationLayouts[formation];
-                    const availablePlayers = team.players.filter(p => !p.injured);
-                    const benchPlayers = availablePlayers.filter(p => !Object.values(startingXI).includes(p.id));
+                    const availablePlayers = team.players.filter(p => !p.injured && !p.suspended);
+                    const benchPlayers = availablePlayers.filter(p => !Object.values(startingXI).includes(p.id) && !p.suspended);
 
                     const handleSlotClick = (idx) => {
                       if (selectedSlot === idx) { setSelectedSlot(null); return; }
@@ -3186,7 +3236,7 @@
                   };
                 
                   const layout = formationLayouts[formation];
-                  const benchPlayers = team.players.filter(p => !Object.values(startingXI).includes(p.id) && !p.injured).sort((a, b) => b.rating - a.rating);
+                  const benchPlayers = team.players.filter(p => !Object.values(startingXI).includes(p.id) && !p.injured && !p.suspended && !sentOffPlayers.includes(p.id)).sort((a, b) => b.rating - a.rating);
                 
                   const style = team.shirtStyle || 'plain';
                   const pc = team.primaryColor || '#1a1a2e';
@@ -3286,6 +3336,7 @@
                               const requiredPos = formations[formation].positions[idx];
                               const isGK = requiredPos === 'GK';
                               const isInjured = player && player.injured;
+                              const isSentOff = player && sentOffPlayers.includes(player.id);
                               const isOOP = player && !player.positions.includes(requiredPos);
                               const isSelected = selectedSlot === idx;
                               const surname = player ? player.name.split(' ').pop() : requiredPos;
@@ -3296,19 +3347,20 @@
                               const rating = mp ? mp.matchRating.toFixed(0) : player ? player.rating : '?';
                 
                               return (
-                                <div key={idx} onClick={() => setSelectedSlot(isSelected ? null : idx)}
+                                <div key={idx} 
+                                  onClick={() => { if (!isSentOff) setSelectedSlot(isSelected ? null : idx); }}
                                   className="absolute flex flex-col items-center cursor-pointer"
                                   style={{ left: `${pos.x}%`, top: `${pos.y / 140 * 100}%`, transform: 'translate(-50%, -50%)', zIndex: isSelected ? 20 : 10, width: '18%' }}>
                                   <div className={`relative transition-transform ${isSelected ? 'scale-125' : ''}`} style={{ width: '42px', height: '38px' }}>
                                     <ShirtSvg number={player ? player.rating : '?'} isGK={isGK} isOOP={(isOOP || isInjured) && !!player} />
                                     {isSelected && <div className="absolute inset-0 rounded" style={{ boxShadow: '0 0 15px rgba(249,115,22,0.9)' }}></div>}
-                                    {isInjured && <div className="absolute -top-1 -right-1 text-xs">🚑</div>}
+                                    {isInjured && !isSentOff && <div className="absolute -top-1 -right-1 text-xs">🚑</div>}
+                                    {isSentOff && <div className="absolute -top-1 -right-1 text-xs">🟥</div>}
                                   </div>
-                                  <div className="text-white text-center font-bold leading-tight mt-0.5" style={{ fontSize: '8px', textShadow: '0 1px 3px rgba(0,0,0,0.9)' }}>{surname}</div>
-                                  <div className="text-gray-300 text-center leading-tight" style={{ fontSize: '7px', textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}>
+                                    <div className={`text-center font-bold leading-tight mt-0.5 ${isSentOff ? 'text-red-500 line-through' : 'text-white'}`} style={{ fontSize: '8px', textShadow: '0 1px 3px rgba(0,0,0,0.9)' }}>{isSentOff ? 'OFF' : surname}</div>                                  <div className="text-gray-300 text-center leading-tight" style={{ fontSize: '7px', textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}>
                                     {player ? `${player.positions.join(' ')} (${rating})` : ''}
                                   </div>
-                                  {isOOP && !isInjured && <div style={{ fontSize: '8px' }} className="text-yellow-400">⚠️</div>}
+                                  {isOOP && !isInjured && !isSentOff && <div style={{ fontSize: '8px' }} className="text-yellow-400">⚠️</div>}
                                 </div>
                               );
                             })}
@@ -3491,6 +3543,20 @@
                       })}
                     </div>
                   )}
+                    
+                    {(() => {
+                      const sus = team.players.filter(p => p.suspended);
+                      if (sus.length === 0) return null;
+                      return (
+                        <div className="bg-red-900/30 rounded-lg p-4 mb-4">
+                          <h3 className="text-red-400 font-bold mb-2">🟥 Suspended Players</h3>
+                          {sus.map(p => (
+                            <p key={p.id} className="text-red-300 text-sm">{p.name} - {p.suspendedUntil} match{p.suspendedUntil !== 1 ? 'es' : ''} remaining</p>
+                          ))}
+                        </div>
+                      );
+                    })()}
+                    
                   <div className="bg-gray-800 rounded-lg p-4 mb-4">
                     <h3 className="text-white font-bold mb-2">Formation: {formation}</h3>
                     <p className="text-gray-400 text-sm mb-3">{validXI ? '✅ Starting XI selected' : `⚠️ Select ${11 - selectedCount} more player${11 - selectedCount !== 1 ? 's' : ''}`}</p>
