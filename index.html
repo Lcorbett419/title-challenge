@@ -1373,7 +1373,18 @@
                 });
         
                   // === POST-MATCH NEWS GENERATION ===
-        const news = [];
+        const wasSuspended = team.players.filter(p => p.suspended).map(p => p.id);
+
+        team.players.forEach(p => {
+          if (p.suspended && p.suspendedUntil > 0) {
+            p.suspendedUntil -= 1;
+            if (p.suspendedUntil <= 0) {
+              p.suspended = false;
+              p.suspendedUntil = 0;
+            }
+          }
+        });
+          const news = [];
         
         // 1. INJURIES (white) — check who got injured this match
         const matchEvents = liveMatch.events || [];
