@@ -1543,7 +1543,7 @@
         team.players.forEach(p => {
           if (matchPlayers.includes(p.id)) {
             const consecutive = p.matchesPlayed || 0;
-            if (consecutive >= 8 && consecutive % 4 === 0 && !p.injured) {
+            if (consecutive >= 15 && consecutive % 4 === 0 && !p.injured) {
               news.push({
                 type: 'rest',
                 icon: '😴',
