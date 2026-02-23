@@ -1087,33 +1087,39 @@
             
           const computeLiveRatings = (players, commentary, isHomeTeam) => {
           return players.map(p => {
-            let rating = 6.0;
+            // Base rating varies by player ability (better players start higher)
+            // Rating 20 starts ~7.0, rating 10 starts ~6.0, rating 5 starts ~5.5
+            let rating = 5.0 + (p.effectiveRating || p.rating) * 0.1;
         
+            // Add some random personal variance per match (-0.5 to +0.5)
+            // Use player id as seed so it's consistent within a match
+            const seed = (p.id * 7 + commentary.length * 0) % 100;
+            rating += (seed / 100 - 0.5);
+        
+            // Event bonuses
             commentary.forEach(ev => {
               if (!ev.playerId || ev.playerId !== p.id) return;
-              // Only count events for the correct team
-              if (ev.isHome !== isHomeTeam && ev.type !== 'defend') return;
-              // Defend events have flipped isHome, so check opposite
               if (ev.type === 'defend' && ev.isHome !== isHomeTeam) return;
+              if (ev.type !== 'defend' && ev.isHome !== isHomeTeam) return;
         
               switch (ev.type) {
                 case 'goal':
-                  rating += 1.0 + Math.random() * 0.3;
+                  rating += 1.2 + Math.random() * 0.5;
                   break;
                 case 'assist':
-                  rating += 0.6 + Math.random() * 0.2;
+                  rating += 0.8 + Math.random() * 0.3;
                   break;
                 case 'chance':
-                  rating += 0.15;
-                  break;
-                case 'defend':
                   rating += 0.3;
                   break;
+                case 'defend':
+                  rating += 0.5;
+                  break;
                 case 'midfield':
-                  rating += 0.1;
+                  rating += 0.25;
                   break;
                 case 'yellowCard':
-                  rating -= 1;
+                  rating -= 1.8;
                   break;
                 case 'redCard':
                   rating -= 5.0;
@@ -1121,10 +1127,19 @@
               }
             });
         
+            // Check if player is on winning/drawing/losing side
+            const latestScore = [...commentary].find(ev => ev.score);
+            if (latestScore && latestScore.score) {
+              const teamGoals = isHomeTeam ? latestScore.score.home : latestScore.score.away;
+              const oppGoals = isHomeTeam ? latestScore.score.away : latestScore.score.home;
+              if (teamGoals > oppGoals) rating += 0.3;
+              else if (teamGoals < oppGoals) rating -= 0.2;
+            }
+        
             // Clamp between 1 and 10
             rating = Math.max(1, Math.min(10, rating));
         
-            return { ...p, matchRating: rating };
+            return { ...p, matchRating: Math.round(rating * 100) / 100 };
           });
         };
 
