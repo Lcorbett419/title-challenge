@@ -941,6 +941,19 @@
                     clockPausedRef.current = true;
                     setTimeout(() => { clockPausedRef.current = false; }, 3500);
                   }
+
+                    if (ev.type === 'injury') {
+                      // Check if it's one of our players
+                      const injuredPlayer = team.players.find(p => ev.text.includes(p.name));
+                      if (injuredPlayer && Object.values(startingXI).includes(injuredPlayer.id)) {
+                        clearInterval(matchIntRef.current);
+                        pendingTimeoutsRef.current.forEach(tid => clearTimeout(tid));
+                        pendingTimeoutsRef.current = [];
+                        clockPausedRef.current = true;
+                        setTacticsPaused(true);
+                        setSelectedSlot(null);
+                      }
+                    }
                     
                     if (ev.type === 'redCard' && ev.playerId) {
                       setSentOffPlayers(prev => [...prev, ev.playerId]);
