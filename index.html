@@ -113,6 +113,7 @@
           const [matchHalf, setMatchHalf] = useState(1);
           const [sentOffPlayers, setSentOffPlayers] = useState([]);  
           const [tacticsPaused, setTacticsPaused] = useState(false);
+          const [tacticsReason, setTacticsReason] = useState(null);  
           const pendingTimeoutsRef = useRef([]);  
           const clockPausedRef = useRef(false);
           const matchIntRef = useRef(null);
@@ -946,6 +947,7 @@
                       // Check if it's one of our players
                       const injuredPlayer = team.players.find(p => ev.text.includes(p.name));
                       if (injuredPlayer && Object.values(startingXI).includes(injuredPlayer.id)) {
+                        setTacticsReason({ type: 'injury', playerName: injuredPlayer.name, text: ev.text });  
                         clearInterval(matchIntRef.current);
                         pendingTimeoutsRef.current.forEach(tid => clearTimeout(tid));
                         pendingTimeoutsRef.current = [];
@@ -962,6 +964,7 @@
                         const player = team.players.find(p => p.id === ev.playerId);
                         if (player && player.positions.includes('GK')) {
                           // Pause for forced GK substitution
+                          setTacticsReason({ type: 'redCard', playerName: player.name, text: `🟥 ${player.name} has been sent off!` });  
                           clearInterval(matchIntRef.current);
                           pendingTimeoutsRef.current.forEach(tid => clearTimeout(tid));
                           pendingTimeoutsRef.current = [];
@@ -996,6 +999,7 @@
               pendingTimeoutsRef.current = [];
               clockPausedRef.current = true;
               setTacticsPaused(true);
+              setTacticsReason(null);  
               setSelectedSlot(null);
             };
             
@@ -3319,7 +3323,19 @@
                         </p>
                         <p className="text-white/70 text-xs">{liveMinute}th minute</p>
                       </div>
-                
+
+                        {tacticsReason && (
+                          <div className={`px-4 py-3 text-center ${tacticsReason.type === 'injury' ? 'bg-red-900/80 border-b border-red-500/50' : 'bg-red-700/80 border-b border-red-400/50'}`}>
+                            <p className="text-white font-bold text-sm">
+                              {tacticsReason.type === 'injury' ? '⚕️ INJURY' : '🟥 RED CARD'}
+                            </p>
+                            <p className="text-white text-lg font-bold">{tacticsReason.playerName}</p>
+                            <p className="text-red-200 text-xs mt-1">
+                              {tacticsReason.type === 'injury' ? 'You should substitute this player' : 'This player has been sent off and cannot be replaced'}
+                            </p>
+                          </div>
+                        )}
+                        
                       {/* Match info bar */}
                       <div className="bg-green-900/80 px-3 py-2 text-center">
                         <p className="text-green-300 text-xs font-semibold">
@@ -3454,10 +3470,12 @@
                       <div className="fixed bottom-0 left-0 right-0 p-4 bg-gray-900 z-50">
                         <button onClick={() => {
                           setSelectedSlot(null);
+                          setTacticsReason(null);
                           if (isHalfTime) { setIsHalfTime(false); }
                           if (tacticsPaused) { setTacticsPaused(false); }
                           resumeFromTactics();
-                        }} className="w-full bg-green-600 text-white py-4 rounded-lg font-bold text-lg">
+                        }} 
+                            className="w-full bg-green-600 text-white py-4 rounded-lg font-bold text-lg">
                           {isHalfTime ? 'Start Second Half →' : 'Resume Match →'}
                         </button>
                       </div>
