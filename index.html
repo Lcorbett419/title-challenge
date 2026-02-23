@@ -686,7 +686,7 @@
             team.players.forEach(p => {
               const age = calcAge(p.dob);
               if (age <= 27 && p.rating < 20) {
-                const growthChance = 0.15 + (facilities.devLevel - 1) * 0.05;
+                const growthChance = 0.08 + (facilities.devLevel - 1) * 0.025;
                 if (Math.random() < growthChance) {
                   p.rating = Math.min(20, p.rating + 1);
                 }
@@ -1509,7 +1509,7 @@
             p.matchesPlayed = (p.matchesPlayed || 0) + (matchPlayers.includes(p.id) ? 1 : 0);
             const age = calcAge(p.dob);
             if (age <= 25 && p.rating < 20) {
-              const devChance = 0.03 + (facilities.devLevel - 1) * 0.01;
+              const devChance = 0.005 + (facilities.devLevel - 1) * 0.01;
               if (Math.random() < devChance) {
                 p.rating = Math.min(20, p.rating + 1);
                 news.push({
