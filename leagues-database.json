@@ -1,4 +1,5 @@
-"england": {
+{
+    "england": {
     "name": "Premier League",
     "country": "England",
     "teams": [
@@ -7940,3 +7941,4 @@
     },
   ]
 },
+}
