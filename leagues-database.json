@@ -3936,11 +3936,34 @@
     ]
   },
   "germany_2": {
-  "name": "2. Bundesliga",
+  "name": "2 Bundesliga",
   "country": "Germany",
   "teams": [
     {
       "id": 119,
+      "name": "Arminia Bielefeld",
+      "shirtStyle": "stripes",
+      "primaryColor": "#E32221",
+      "secondaryColor": "#FFFFFF",
+      "stadiumName": "Schüco-Arena",
+      "stadiumCapacity": 27000,
+      "budget": 5000000,
+      "players": [
+        { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
+        { "id": 2, "name": "Tom Williams", "positions": ["LB"], "dob": "1997-06-20", "rating": 12 },
+        { "id": 3, "name": "Sam Taylor", "positions": ["CB"], "dob": "1996-09-10", "rating": 13 },
+        { "id": 4, "name": "Jack Davies", "positions": ["CB"], "dob": "1998-01-25", "rating": 12 },
+        { "id": 5, "name": "Ryan Mitchell", "positions": ["RB"], "dob": "1999-04-12", "rating": 11 },
+        { "id": 6, "name": "Luke Roberts", "positions": ["CDM", "CM"], "dob": "1996-07-30", "rating": 13 },
+        { "id": 7, "name": "Ben Clarke", "positions": ["CM"], "dob": "1997-11-05", "rating": 12 },
+        { "id": 8, "name": "Charlie Ward", "positions": ["CAM", "CM"], "dob": "1998-02-18", "rating": 12 },
+        { "id": 9, "name": "Jake Thompson", "positions": ["ST"], "dob": "1998-08-22", "rating": 13 },
+        { "id": 10, "name": "Matt Hughes", "positions": ["LW", "RW"], "dob": "1999-12-14", "rating": 12 },
+        { "id": 11, "name": "Dan Wilson", "positions": ["RW"], "dob": "1997-05-08", "rating": 12 }
+      ]
+    },
+    {
+      "id": 120,
       "name": "Eintracht Braunschweig",
       "shirtStyle": "sleeves",
       "primaryColor": "#E32221",
@@ -3963,7 +3986,7 @@
       ]
     },
     {
-      "id": 120,
+      "id": 121,
       "name": "Hertha Berlin SC",
       "shirtStyle": "stripes",
       "primaryColor": "#FA8E23",
@@ -3986,7 +4009,7 @@
       ]
     },
     {
-      "id": 121,
+      "id": 122,
       "name": "Darmstadt 98",
       "shirtStyle": "plain",
       "primaryColor": "#FFFFFF",
@@ -4009,36 +4032,13 @@
       ]
     },
     {
-      "id": 122,
-      "name": "Bristol Rovers",
-      "shirtStyle": "quarters",
+      "id": 123,
+      "name": "Dynamo Dresden",
+      "shirtStyle": "plain",
       "primaryColor": "#0055A4",
       "secondaryColor": "#FFFFFF",
-      "stadiumName": "Memorial Stadium",
-      "stadiumCapacity": 10000,
-      "budget": 5000000,
-      "players": [
-        { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
-        { "id": 2, "name": "Tom Williams", "positions": ["LB"], "dob": "1997-06-20", "rating": 12 },
-        { "id": 3, "name": "Sam Taylor", "positions": ["CB"], "dob": "1996-09-10", "rating": 13 },
-        { "id": 4, "name": "Jack Davies", "positions": ["CB"], "dob": "1998-01-25", "rating": 12 },
-        { "id": 5, "name": "Ryan Mitchell", "positions": ["RB"], "dob": "1999-04-12", "rating": 11 },
-        { "id": 6, "name": "Luke Roberts", "positions": ["CDM", "CM"], "dob": "1996-07-30", "rating": 13 },
-        { "id": 7, "name": "Ben Clarke", "positions": ["CM"], "dob": "1997-11-05", "rating": 12 },
-        { "id": 8, "name": "Charlie Ward", "positions": ["CAM", "CM"], "dob": "1998-02-18", "rating": 12 },
-        { "id": 9, "name": "Jake Thompson", "positions": ["ST"], "dob": "1998-08-22", "rating": 13 },
-        { "id": 10, "name": "Matt Hughes", "positions": ["LW", "RW"], "dob": "1999-12-14", "rating": 12 },
-        { "id": 11, "name": "Dan Wilson", "positions": ["RW"], "dob": "1997-05-08", "rating": 12 }
-      ]
-    },
-    {
-      "id": 123,
-      "name": "Bromley",
-      "shirtStyle": "sleeves",
-      "primaryColor": "#FFFFFF",
-      "secondaryColor": "#000000",
-      "stadiumName": "Hayes Lane",
-      "stadiumCapacity": 5000,
+      "stadiumName": "Rudolf-Harbig-Stadion",
+      "stadiumCapacity": 32000,
       "budget": 5000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -4056,12 +4056,12 @@
     },
     {
       "id": 124,
-      "name": "Cambridge United",
-      "shirtStyle": "stripes",
-      "primaryColor": "#F5A623",
-      "secondaryColor": "#000000",
-      "stadiumName": "Abbey Stadium",
-      "stadiumCapacity": 8000,
+      "name": "Fortuna Düsseldorf",
+      "shirtStyle": "quarters",
+      "primaryColor": "#0055A4",
+      "secondaryColor": "#FFFFFF",
+      "stadiumName": "Merkur Spiel-Arena",
+      "stadiumCapacity": 55000,
       "budget": 5000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -4079,12 +4079,12 @@
     },
     {
       "id": 125,
-      "name": "Cheltenham Town",
-      "shirtStyle": "stripes",
-      "primaryColor": "#E32221",
-      "secondaryColor": "#FFFFFF",
-      "stadiumName": "Whaddon Road",
-      "stadiumCapacity": 7000,
+      "name": "Elversberg",
+      "shirtStyle": "sleeves",
+      "primaryColor": "#FFFFFF",
+      "secondaryColor": "#000000",
+      "stadiumName": "Waldstadion an der Kaiserlinde",
+      "stadiumCapacity": 10000,
       "budget": 5000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -4102,12 +4102,12 @@
     },
     {
       "id": 126,
-      "name": "Chesterfield",
-      "shirtStyle": "plain",
-      "primaryColor": "#0055A4",
-      "secondaryColor": "#FFFFFF",
-      "stadiumName": "SMH Group Stadium",
-      "stadiumCapacity": 11000,
+      "name": "Greuther Fürth",
+      "shirtStyle": "stripes",
+      "primaryColor": "#F5A623",
+      "secondaryColor": "#000000",
+      "stadiumName": "Sportpark Ronhof Thomas Sommer",
+      "stadiumCapacity": 17000,
       "budget": 5000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -4125,12 +4125,12 @@
     },
     {
       "id": 127,
-      "name": "Colchester United",
+      "name": "Hannover 96",
       "shirtStyle": "stripes",
       "primaryColor": "#0055A4",
       "secondaryColor": "#FFFFFF",
-      "stadiumName": "Colchester Community Stadium",
-      "stadiumCapacity": 10000,
+      "stadiumName": "Heinz von Heiden Arena",
+      "stadiumCapacity": 49000,
       "budget": 5000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -4148,12 +4148,12 @@
     },
     {
       "id": 128,
-      "name": "Crawley Town",
+      "name": "Kaiserslautern",
       "shirtStyle": "plain",
       "primaryColor": "#E32221",
       "secondaryColor": "#FFFFFF",
-      "stadiumName": "Broadfield Stadium",
-      "stadiumCapacity": 6000,
+      "stadiumName": "Fritz-Walter-Stadion",
+      "stadiumCapacity": 49000,
       "budget": 5000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -4171,12 +4171,12 @@
     },
     {
       "id": 129,
-      "name": "Crewe Alexandra",
+      "name": "Karlsruher SC",
       "shirtStyle": "plain",
       "primaryColor": "#E32221",
       "secondaryColor": "#FFFFFF",
-      "stadiumName": "Gresty Road",
-      "stadiumCapacity": 10000,
+      "stadiumName": "BBBank Wildpark",
+      "stadiumCapacity": 34000,
       "budget": 5000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -4194,12 +4194,12 @@
     },
     {
       "id": 130,
-      "name": "Fleetwood Town",
+      "name": "Holstein Kiel",
       "shirtStyle": "sleeves",
       "primaryColor": "#E32221",
       "secondaryColor": "#FFFFFF",
-      "stadiumName": "Highbury Stadium",
-      "stadiumCapacity": 5000,
+      "stadiumName": "Holstein-Stadion",
+      "stadiumCapacity": 15000,
       "budget": 5000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -4217,12 +4217,12 @@
     },
     {
       "id": 131,
-      "name": "Gillingham",
+      "name": "Magdeburg",
       "shirtStyle": "plain",
       "primaryColor": "#0055A4",
       "secondaryColor": "#FFFFFF",
-      "stadiumName": "Priestfield Stadium",
-      "stadiumCapacity": 12000,
+      "stadiumName": "Avnet Arena",
+      "stadiumCapacity": 30000,
       "budget": 5000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -4240,12 +4240,12 @@
     },
     {
       "id": 132,
-      "name": "Grimsby Town",
+      "name": "Preußen Münster",
       "shirtStyle": "stripes",
       "primaryColor": "#000000",
       "secondaryColor": "#FFFFFF",
-      "stadiumName": "Blundell Park",
-      "stadiumCapacity": 9000,
+      "stadiumName": "LVM-Preußenstadion",
+      "stadiumCapacity": 14000,
       "budget": 5000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -4263,12 +4263,12 @@
     },
     {
       "id": 133,
-      "name": "Harrogate Town",
+      "name": "Nürnberg",
       "shirtStyle": "stripes",
       "primaryColor": "#FDE100",
       "secondaryColor": "#000000",
-      "stadiumName": "Wetherby Road",
-      "stadiumCapacity": 5000,
+      "stadiumName": "Max-Morlock-Stadion",
+      "stadiumCapacity": 50000,
       "budget": 5000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -4286,12 +4286,12 @@
     },
     {
       "id": 134,
-      "name": "Milton Keynes Dons",
+      "name": "SC Paderborn",
       "shirtStyle": "plain",
       "primaryColor": "#FFFFFF",
       "secondaryColor": "#FFD700",
-      "stadiumName": "Stadium MK",
-      "stadiumCapacity": 31000,
+      "stadiumName": "Home Deluxe Arena",
+      "stadiumCapacity": 15000,
       "budget": 5000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -4309,12 +4309,12 @@
     },
     {
       "id": 135,
-      "name": "Newport County",
+      "name": "Schalke 04",
       "shirtStyle": "halves",
       "primaryColor": "#000000",
       "secondaryColor": "#F5A623",
-      "stadiumName": "Rodney Parade",
-      "stadiumCapacity": 8000,
+      "stadiumName": "Veltins-Arena",
+      "stadiumCapacity": 62000,
       "budget": 5000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
@@ -4332,12 +4332,12 @@
     },
     {
       "id": 136,
-      "name": "Notts County",
+      "name": "VfL Bochum",
       "shirtStyle": "stripes",
       "primaryColor": "#000000",
       "secondaryColor": "#FFFFFF",
-      "stadiumName": "Meadow Lane",
-      "stadiumCapacity": 20000,
+      "stadiumName": "Vonovia Ruhrstadion",
+      "stadiumCapacity": 26000,
       "budget": 5000000,
       "players": [
         { "id": 1, "name": "James Cooper", "positions": ["GK"], "dob": "1995-03-15", "rating": 13 },
