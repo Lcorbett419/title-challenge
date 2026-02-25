@@ -298,7 +298,7 @@
           { "id": 12, "name": "Christantus Uche", "positions": ["LW", "RW", "ST"], "dob": "2003-05-19", "rating": 13 },
           { "id": 14, "name": "Jean-Philippe Mateta", "positions": ["ST"], "dob": "1997-06-28", "rating": 16 },
           { "id": 22, "name": "Jørgen Strand Larsen", "positions": ["ST"], "dob": "2000-02-06", "rating": 15 },
-          { "id": 28, "name": "Evann Guessand", "positions": ["RW", "LW"], "dob": "2001-07-01", "rating": 14 }
+          { "id": 29, "name": "Evann Guessand", "positions": ["RW", "LW"], "dob": "2001-07-01", "rating": 14 }
         ]
       },
       {
@@ -4448,7 +4448,7 @@
           { "id": 8, "name": "Pablo Barrios", "positions": ["CM", "CDM"], "dob": "2003-06-15", "rating": 15 },
           { "id": 10, "name": "Álex Baena", "positions": ["CAM", "LW"], "dob": "2001-07-20", "rating": 16 },
           { "id": 11, "name": "Thiago Almada", "positions": ["CAM", "LW", "RW"], "dob": "2001-04-26", "rating": 15 },
-          { "id": 23, "name": "Nico González", "positions": ["CM", "CDM"], "dob": "2002-01-03", "rating": 14 },
+          { "id": 23, "name": "Nico González", "positions": ["LW", "RW"], "dob": "1998-04-06", "rating": 14 },
           { "id": 4, "name": "Rodrigo Mendoza", "positions": ["CAM", "CM"], "dob": "2005-03-15", "rating": 12 },
           { "id": 21, "name": "Obed Vargas", "positions": ["CM", "CDM"], "dob": "2005-08-05", "rating": 12 },
           { "id": 7, "name": "Antoine Griezmann", "positions": ["RW", "CAM", "ST"], "dob": "1991-03-21", "rating": 17 },
@@ -6181,9 +6181,7 @@
           { "id": 48, "name": "Abdelhamid Aït Boudlal", "positions": ["CB"], "dob": "2006-03-16", "rating": 14 },
           { "id": 97, "name": "Jérémy Jacquet", "positions": ["CB"], "dob": "2005-07-13", "rating": 15 },
           { "id": 26, "name": "Quentin Merlin", "positions": ["LB", "LWB"], "dob": "2002-05-16", "rating": 15 },
-          { "id": 14, "name": "Hamari Traoré", "positions": ["RB"], "dob": "1992-01-27", "rating": 14 },
           { "id": 18, "name": "Aboubakar Nagida", "positions": ["LB"], "dob": "2005-06-28", "rating": 13 },
-          { "id": 15, "name": "Timothée Kolodziejczak", "positions": ["CB", "LB"], "dob": "1991-10-01", "rating": 13 },
           { "id": 95, "name": "Przemysław Frankowski", "positions": ["RM", "RB"], "dob": "1995-04-12", "rating": 15 },
           { "id": 21, "name": "Valentin Rongier", "positions": ["CDM", "CM"], "dob": "1994-12-07", "rating": 16 },
           { "id": 45, "name": "Mahdi Camara", "positions": ["CM"], "dob": "1998-06-30", "rating": 15 },
