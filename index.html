@@ -126,7 +126,27 @@
           };
 
           useEffect(() => {
-            fetch('./leagues-database.json').then(r => r.json()).then(data => setDb(data)).catch(() => alert('Failed to load database'));
+            fetch('./leagues-database.json')
+              .then(r => {
+                console.log('Fetch status:', r.status);
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                return r.text();
+              })
+              .then(text => {
+                console.log('File loaded, length:', text.length);
+                try {
+                  const data = JSON.parse(text);
+                  console.log('Parsed OK, leagues:', Object.keys(data));
+                  setDb(data);
+                } catch (e) {
+                  console.error('JSON parse error:', e.message);
+                  alert('JSON error: ' + e.message);
+                }
+              })
+              .catch(e => {
+                console.error('Fetch error:', e);
+                alert('Failed to load: ' + e.message);
+              });
           }, []);
 
           const calcAge = (dob) => {
