@@ -4350,7 +4350,7 @@
         { "id": 10, "name": "Matt Hughes", "positions": ["LW", "RW"], "dob": "1999-12-14", "rating": 12 },
         { "id": 11, "name": "Dan Wilson", "positions": ["RW"], "dob": "1997-05-08", "rating": 12 }
       ]
-    },
+    }
   ]
 },
   "spain": {
