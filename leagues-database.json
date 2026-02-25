@@ -89,7 +89,6 @@
           { "id": 1, "name": "Đorđe Petrović", "positions": ["GK"], "dob": "1999-10-08", "rating": 14 },
           { "id": 17, "name": "Fraser Forster", "positions": ["GK"], "dob": "1988-03-17", "rating": 10 },
           { "id": 29, "name": "Christos Mandas", "positions": ["GK"], "dob": "2001-09-17", "rating": 11 },
-          { "id": 40, "name": "Will Dennis", "positions": ["GK"], "dob": "2000-07-10", "rating": 10 },
           { "id": 3, "name": "Adrien Truffert", "positions": ["LB"], "dob": "2001-11-20", "rating": 15 },
           { "id": 5, "name": "Marcos Senesi", "positions": ["CB"], "dob": "1997-05-10", "rating": 15 },
           { "id": 6, "name": "Julio Soler", "positions": ["LB"], "dob": "2005-02-16", "rating": 12 },
@@ -1157,7 +1156,7 @@
         { "id": 1, "name": "Lukas Jensen", "positions": ["GK"], "dob": "1999-03-18", "rating": 11 },
         { "id": 13, "name": "Anthony Patterson", "positions": ["GK"], "dob": "2000-05-10", "rating": 12 },
         { "id": 15, "name": "Max Crocombe", "positions": ["GK"], "dob": "1993-08-12", "rating": 11 },
-        { "id": 41, "name": "George Evans", "positions": ["GK", "CB"], "dob": "1994-12-13", "rating": 10 },
+        { "id": 41, "name": "George Evans", "positions": ["GK"], "dob": "2005-05-16", "rating": 10 },
         { "id": 43, "name": "Joel Coleman", "positions": ["GK"], "dob": "1995-09-26", "rating": 10 },
         { "id": 2, "name": "Danny McNamara", "positions": ["RB", "RWB"], "dob": "1998-12-27", "rating": 12 },
         { "id": 3, "name": "Zak Sturge", "positions": ["LB"], "dob": "2004-06-15", "rating": 10 },
@@ -2097,7 +2096,6 @@
         { "id": 20, "name": "Josh Feeney", "positions": ["CB"], "dob": "2005-05-06", "rating": 10 },
         { "id": 2, "name": "Lasse Sørensen", "positions": ["RB", "RWB"], "dob": "1999-10-21", "rating": 11 },
         { "id": 7, "name": "Lynden Gooch", "positions": ["RB", "RW"], "dob": "1995-12-24", "rating": 11 },
-        { "id": 11, "name": "Ruben Roosken", "positions": ["LB"], "dob": "2000-03-02", "rating": 10 },
         { "id": 23, "name": "Sean Roughan", "positions": ["LB", "CB"], "dob": "2003-08-31", "rating": 10 },
         { "id": 4, "name": "Ryan Ledson", "positions": ["CDM", "CM"], "dob": "1997-08-19", "rating": 12 },
         { "id": 18, "name": "David Kasumu", "positions": ["CM", "CDM"], "dob": "1999-10-05", "rating": 11 },
@@ -7477,7 +7475,7 @@
   },
   "italy_serieb": {
   "name": "Serie B",
-  "country": "France",
+  "country": "Italy",
   "teams": [
     {
       "id": 421,
