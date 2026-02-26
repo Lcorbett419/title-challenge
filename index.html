@@ -1181,8 +1181,9 @@
                       }
                     }
                     
-                    if (ev.type === 'redCard' && ev.playerId) {
+                    if (ev.type === 'redCard' && ev.playerId && ev.teamId === team.id) {
                       setSentOffPlayers(prev => [...prev, ev.playerId]);
+                        
                       // If it's our goalkeeper, force tactics open
                       if (ev.teamId === team.id) {
                         const player = team.players.find(p => p.id === ev.playerId);
@@ -1327,8 +1328,9 @@
             // Event bonuses
             commentary.forEach(ev => {
               if (!ev.playerId || ev.playerId !== p.id) return;
-              if (ev.type === 'defend' && ev.isHome !== isHomeTeam) return;
-              if (ev.type !== 'defend' && ev.isHome !== isHomeTeam) return;
+              // Check team side — defend events are tagged to the defending team
+              const evSide = ev.isHome;
+              if (evSide !== isHomeTeam) return;
         
               switch (ev.type) {
                 case 'goal':
@@ -3394,12 +3396,12 @@
                                   icons.push({ type: 'assist', min: ev.min });
                                 }
                               }
-                              if (ev.type === 'yellowCard' && ev.playerId === playerId) {
-                                icons.push({ type: 'yellow', min: ev.min });
-                              }
-                              if (ev.type === 'redCard' && ev.playerId === playerId) {
-                                icons.push({ type: 'red', min: ev.min });
-                              }
+                              if (ev.type === 'yellowCard' && ev.playerId === playerId && ev.isHome === isHome) {
+                              icons.push({ type: 'yellow', min: ev.min });
+                            }
+                            if (ev.type === 'redCard' && ev.playerId === playerId && ev.isHome === isHome) {
+                              icons.push({ type: 'red', min: ev.min });
+                            }
                             });
                             return icons;
                           };
