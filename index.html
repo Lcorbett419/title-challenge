@@ -1022,7 +1022,7 @@
             
                     const possibleAssisters = attackers.filter(p => p.id !== attacker.id);
                     let assister = null;
-                    if (possibleAssisters.length > 0 && Math.random() < 0.75) {
+                    if (possibleAssisters.length > 0 && Math.random() < 0.85) {
                       const midAtk = possibleAssisters.filter(p => p.positions.some(pos => ['CAM','CM','LW','RW','ST'].includes(pos)));
                       assister = midAtk.length > 0 ? midAtk[Math.floor(Math.random() * midAtk.length)] : possibleAssisters[Math.floor(Math.random() * possibleAssisters.length)];
                     }
@@ -1057,7 +1057,13 @@
                       if (isHome) hs++; else as++;
                       const cornerScorer = attackers.filter(p => p.positions.some(pos => ['CB','ST','CAM'].includes(pos)))[0] || cornerTarget;
                       events.push({ min, type: 'goal', text: pickTemplate('corner_goal').replace('{player}', cornerScorer.name), isHome, isGoal: true, score: { home: hs, away: as }, playerId: cornerScorer.id });
-                      scorers.push({ playerId: cornerScorer.id, teamId: attTeam.id, assisterId: null });
+                      const cornerTaker = attackers.filter(p => p.id !== cornerScorer.id && p.positions.some(pos => ['CAM','CM','LW','RW'].includes(pos)))[0];
+                        if (cornerTaker) {
+                          events.push({ min, type: 'assist', text: pickTemplate('assist').replace('{player}', cornerTaker.name), isHome, isGoal: false, playerId: cornerTaker.id });
+                          scorers.push({ playerId: cornerScorer.id, teamId: attTeam.id, assisterId: cornerTaker.id });
+                        } else {
+                          scorers.push({ playerId: cornerScorer.id, teamId: attTeam.id, assisterId: null });
+                        }
                     } else if (cornerRoll < 0.35 && cornerTarget) {
                       // Chance from corner
                       events.push({ min, type: 'chance', text: pickTemplate('corner_result_good').replace('{player}', cornerTarget.name), isHome, isGoal: false, playerId: cornerTarget.id });
