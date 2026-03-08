@@ -9,6 +9,9 @@
         "shirtStyle": "sleeves",
         "primaryColor": "#EF0107",
         "secondaryColor": "#FFFFFF",
+        "awayShirtStyle": "plain",
+        "awayPrimaryColor": "#1B2A4A"
+        "awaySecondaryColor": "#000000" 
         "stadiumName": "Emirates Stadium",
         "stadiumCapacity": 60000,
         "budget": 50000000,
@@ -45,6 +48,9 @@
         "shirtStyle": "sleeves",
         "primaryColor": "#670E36",
         "secondaryColor": "#95BFE5",
+        "awayShirtStyle": "sleeves",
+        "awayPrimaryColor": "#000000"
+        "awaySecondaryColor": "#323233"  
         "stadiumName": "Villa Park",
         "stadiumCapacity": 43000,
         "budget": 50000000,
@@ -82,6 +88,9 @@
         "shirtStyle": "stripes",
         "primaryColor": "#DA291C",
         "secondaryColor": "#000000",
+        "awayShirtStyle": "stripes",
+        "awayPrimaryColor": "#213FB6"
+        "awaySecondaryColor": "#000000"  
         "stadiumName": "Vitality Stadium",
         "stadiumCapacity": 11000,
         "budget": 50000000,
@@ -119,6 +128,9 @@
         "shirtStyle": "stripes",
         "primaryColor": "#e30613",
         "secondaryColor": "#FFFFFF",
+        "awayShirtStyle": "plain",
+        "awayPrimaryColor": "#8B4513"
+        "awaySecondaryColor": "#FFD700"  
         "stadiumName": "Brentford Community Stadium",
         "stadiumCapacity": 17000,
         "budget": 50000000,
@@ -152,6 +164,9 @@
         "shirtStyle": "stripes",
         "primaryColor": "#0057B8",
         "secondaryColor": "#FFFFFF",
+        "awayShirtStyle": "plain",
+        "awayPrimaryColor": "#C597F0"
+        "awaySecondaryColor": "#FFFFFF"  
         "stadiumName": "AMEX Stadium",
         "stadiumCapacity": 32000,
         "budget": 50000000,
@@ -190,6 +205,9 @@
         "shirtStyle": "sleeves",
         "primaryColor": "#6C1D45",
         "secondaryColor": "#99D6EA",
+        "awayShirtStyle": "plain",
+        "awayPrimaryColor": "#97EBF0"
+        "awaySecondaryColor": "#6C1D45"  
         "stadiumName": "Turf Moor",
         "stadiumCapacity": 21000,
         "budget": 50000000,
@@ -232,6 +250,9 @@
         "shirtStyle": "plain",
         "primaryColor": "#034694",
         "secondaryColor": "#FFFFFF",
+        "awayShirtStyle": "plain",
+        "awayPrimaryColor": "#FFFFFF"
+        "awaySecondaryColor": "#FA9631"  
         "stadiumName": "Stamford Bridge",
         "stadiumCapacity": 42000,
         "budget": 50000000,
@@ -269,6 +290,9 @@
         "shirtStyle": "stripes",
         "primaryColor": "#1B458F",
         "secondaryColor": "#C4122E",
+        "awayShirtStyle": "plain",
+        "awayPrimaryColor": "#FFFFFF"
+        "awaySecondaryColor": "#256CE1"  
         "stadiumName": "Selhurst Park",
         "stadiumCapacity": 26000,
         "budget": 50000000,
@@ -307,6 +331,9 @@
         "shirtStyle": "plain",
         "primaryColor": "#003399",
         "secondaryColor": "#FFFFFF",
+        "awayShirtStyle": "plain",
+        "awayPrimaryColor": "#F0EAB3"
+        "awaySecondaryColor": "#1D2C64"  
         "stadiumName": "Hill Dickinson Stadium",
         "stadiumCapacity": 53000,
         "budget": 50000000,
@@ -344,6 +371,9 @@
         "shirtStyle": "plain",
         "primaryColor": "#FFFFFF",
         "secondaryColor": "#000000",
+        "awayShirtStyle": "plain",
+        "awayPrimaryColor": "#91E63D"
+        "awaySecondaryColor": "#000000"  
         "stadiumName": "Craven Cottage",
         "stadiumCapacity": 30000,
         "budget": 50000000,
@@ -380,6 +410,9 @@
         "shirtStyle": "plain",
         "primaryColor": "#FFFFFF",
         "secondaryColor": "#1D428A",
+        "awayShirtStyle": "plain",
+        "awayPrimaryColor": "#3560F0"
+        "awaySecondaryColor": "#FFEE00"  
         "stadiumName": "Elland Road",
         "stadiumCapacity": 38000,
         "budget": 50000000,
@@ -416,6 +449,9 @@
         "shirtStyle": "plain",
         "primaryColor": "#C8102E",
         "secondaryColor": "#FFFFFF",
+        "awayShirtStyle": "plain",
+        "awayPrimaryColor": "#F9F6D9"
+        "awaySecondaryColor": "#C8102E"  
         "stadiumName": "Anfield",
         "stadiumCapacity": 61000,
         "budget": 50000000,
@@ -454,6 +490,9 @@
         "shirtStyle": "plain",
         "primaryColor": "#6CABDD",
         "secondaryColor": "#FFFFFF",
+        "awayShirtStyle": "plain",
+        "awayPrimaryColor": "#000000"
+        "awaySecondaryColor": "#FFFFFF"  
         "stadiumName": "Etihad Stadium",
         "stadiumCapacity": 55000,
         "budget": 50000000,
@@ -493,6 +532,9 @@
         "shirtStyle": "plain",
         "primaryColor": "#DA291C",
         "secondaryColor": "#FFFFFF",
+        "awayShirtStyle": "plain",
+        "awayPrimaryColor": "#FFFFFF"
+        "awaySecondaryColor": "#000000"  
         "stadiumName": "Old Trafford",
         "stadiumCapacity": 76000,
         "budget": 50000000,
@@ -528,6 +570,9 @@
         "shirtStyle": "stripes",
         "primaryColor": "#241F20",
         "secondaryColor": "#FFFFFF",
+        "awayShirtStyle": "plain",
+        "awayPrimaryColor": "#52DA70"
+        "awaySecondaryColor": "#FFFFFF"  
         "stadiumName": "St James' Park",
         "stadiumCapacity": 52000,
         "budget": 50000000,
@@ -566,6 +611,9 @@
         "shirtStyle": "plain",
         "primaryColor": "#DD0000",
         "secondaryColor": "#FFFFFF",
+        "awayShirtStyle": "plain",
+        "awayPrimaryColor": "#F9F6D9"
+        "awaySecondaryColor": "#070B44"  
         "stadiumName": "City Ground Stadium",
         "stadiumCapacity": 30000,
         "budget": 50000000,
@@ -605,6 +653,9 @@
         "shirtStyle": "stripes",
         "primaryColor": "#EB172B",
         "secondaryColor": "#FFFFFF",
+        "awayShirtStyle": "plain",
+        "awayPrimaryColor": "#3036ED"
+        "awaySecondaryColor": "#FFFFFF"  
         "stadiumName": "Stadium of Light",
         "stadiumCapacity": 48000,
         "budget": 50000000,
@@ -643,6 +694,9 @@
         "shirtStyle": "plain",
         "primaryColor": "#FFFFFF",
         "secondaryColor": "#132257",
+        "awayShirtStyle": "plain",
+        "awayPrimaryColor": "#000000"
+        "awaySecondaryColor": "#FFFFFF"  
         "stadiumName": "Tottenham Hotspur Stadium",
         "stadiumCapacity": 63000,
         "budget": 50000000,
@@ -683,6 +737,9 @@
         "shirtStyle": "sleeves",
         "primaryColor": "#7A263A",
         "secondaryColor": "#1BB1E7",
+        "awayShirtStyle": "plain",
+        "awayPrimaryColor": "#F7F5E6"
+        "awaySecondaryColor": "#072044"  
         "stadiumName": "London Stadium",
         "stadiumCapacity": 63000,
         "budget": 50000000,
@@ -716,6 +773,9 @@
         "shirtStyle": "plain",
         "primaryColor": "#FDB913",
         "secondaryColor": "#231F20",
+        "awayShirtStyle": "plain",
+        "awayPrimaryColor": "#44DDD4"
+        "awaySecondaryColor": "#012F2D"  
         "stadiumName": "Molineux",
         "stadiumCapacity": 32000,
         "budget": 50000000,
