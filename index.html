@@ -1867,14 +1867,16 @@
                 <defs><clipPath id={clipId}><path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" /></clipPath></defs>
                 <path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" fill={c1} />
                 <g clipPath={`url(#${clipId})`}>
-                  {s === 'stripes' && <>{[4,14,24,34,44,54].map(x => <rect key={x} x={x} y="0" width="5" height="55" fill={c2} />)}</>}
-                  {s === 'hoops' && <>{[5,15,25,35,45].map(y => <rect key={y} x="0" y={y} width="60" height="5" fill={c2} />)}</>}
+                  {s === 'stripes' && <>{[8,22,36,50].map(x => <rect key={x} x={x} y="0" width="7" height="55" fill={c2} />)}</>}
+                  {s === 'hoops' && <>{[8,22,36].map(y => <rect key={y} x="0" y={y} width="60" height="8" fill={c2} />)}</>}
                   {s === 'quarters' && <><rect x="30" y="0" width="30" height="25" fill={c2} /><rect x="0" y="25" width="30" height="30" fill={c2} /></>}
                   {s === 'sleeves' && <><path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} /><path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c2} /></>}
                   {s === 'sash' && <><path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} /><path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c2} /><polygon points="5,50 15,50 55,10 55,0 50,0 45,0 0,45 0,50" fill={c2} opacity="0.9" /></>}
                   {s === 'halves' && <><rect x="30" y="0" width="30" height="55" fill={c2} /><path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} /><path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c1} /></>}
                   {s === 'checkered' && <>{[0,10,20,30,40,50].map(x => [0,10,20,30,40,50].map(y => ((x/10 + y/10) % 2 === 0) ? <rect key={`${x}-${y}`} x={x} y={y} width="10" height="10" fill={c2} /> : null))}</>}  
                 </g>
+                {s !== 'hoops' && <path d="M20 5 L22 0 L38 0 L40 5" fill="none" stroke={c2} strokeWidth="2.5" />}
+                {s === 'plain' && <rect x="10" y="0" width="40" height="3" fill={c2} opacity="0.5" />}  
                 <path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="0.8" />
               </svg>
             );
@@ -2225,14 +2227,16 @@
                           <defs><clipPath id={clipId}><path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" /></clipPath></defs>
                           <path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" fill={c1} />
                           <g clipPath={`url(#${clipId})`}>
-                            {s === 'stripes' && <>{[4,14,24,34,44,54].map(x => <rect key={x} x={x} y="0" width="5" height="55" fill={c2} />)}</>}
-                            {s === 'hoops' && <>{[5,15,25,35,45].map(y => <rect key={y} x="0" y={y} width="60" height="5" fill={c2} />)}</>}
+                            {s === 'stripes' && <>{[8,22,36,50].map(x => <rect key={x} x={x} y="0" width="7" height="55" fill={c2} />)}</>}
+                            {s === 'hoops' && <>{[8,22,36].map(y => <rect key={y} x="0" y={y} width="60" height="8" fill={c2} />)}</>}
                             {s === 'quarters' && <><rect x="30" y="0" width="30" height="25" fill={c2} /><rect x="0" y="25" width="30" height="30" fill={c2} /></>}
                             {s === 'sleeves' && <><path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} /><path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c2} /></>}
                             {s === 'sash' && <><path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} /><path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c2} /><polygon points="5,50 15,50 55,10 55,0 50,0 45,0 0,45 0,50" fill={c2} opacity="0.9" /></>}
                             {s === 'halves' && <><rect x="30" y="0" width="30" height="55" fill={c2} /><path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} /><path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c1} /></>}
                             {s === 'checkered' && <>{[0,10,20,30,40,50].map(x => [0,10,20,30,40,50].map(y => ((x/10 + y/10) % 2 === 0) ? <rect key={`${x}-${y}`} x={x} y={y} width="10" height="10" fill={c2} /> : null))}</>}
                           </g>
+                           {s !== 'hoops' && <path d="M20 5 L22 0 L38 0 L40 5" fill="none" stroke={c2} strokeWidth="2.5" />}
+                           {s === 'plain' && <rect x="10" y="0" width="40" height="3" fill={c2} opacity="0.5" />}  
                           <path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="1" />
                           <text x="30" y="36" textAnchor="middle" fill={txtCol} fontSize="18" fontWeight="bold" fontFamily="Arial" stroke={txtCol === '#FFFFFF' ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.3)'} strokeWidth="0.5">{number}</text>
                         </svg>
@@ -2568,13 +2572,16 @@
                             <defs><clipPath id={clipId}><path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" /></clipPath></defs>
                             <path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" fill={c1} />
                             <g clipPath={`url(#${clipId})`}>
-                              {style === 'stripes' && <>{[4,14,24,34,44,54].map(x => <rect key={x} x={x} y="0" width="5" height="55" fill={c2} />)}</>}
-                              {style === 'hoops' && <>{[5,15,25,35,45].map(y => <rect key={y} x="0" y={y} width="60" height="5" fill={c2} />)}</>}
+                              {style === 'stripes' && <>{[8,22,36,50].map(x => <rect key={x} x={x} y="0" width="7" height="55" fill={c2} />)}</>}
+                              {style === 'hoops' && <>{[8,22,36].map(y => <rect key={y} x="0" y={y} width="60" height="8" fill={c2} />)}</>}
                               {style === 'quarters' && <><rect x="30" y="0" width="30" height="25" fill={c2} /><rect x="0" y="25" width="30" height="30" fill={c2} /></>}
                               {style === 'sleeves' && <><path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} /><path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c2} /></>}
                               {style === 'sash' && <><path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} /><path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c2} /><polygon points="5,50 15,50 55,10 55,0 50,0 45,0 0,45 0,50" fill={c2} opacity="0.9" /></>}
                               {style === 'halves' && <><rect x="30" y="0" width="30" height="55" fill={c2} /><path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} /><path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c1} /></>}
+                              {style === 'checkered' && <>{[0,10,20,30,40,50].map(x => [0,10,20,30,40,50].map(y => ((x/10 + y/10) % 2 === 0) ? <rect key={`${x}-${y}`} x={x} y={y} width="10" height="10" fill={c2} /> : null))}</>}  
                             </g>
+                            {style !== 'hoops' && <path d="M20 5 L22 0 L38 0 L40 5" fill="none" stroke={c2} strokeWidth="2.5" />}
+                            {style === 'plain' && <rect x="10" y="0" width="40" height="3" fill={c2} opacity="0.5" />}  
                             <path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="1" />
                             <text x="30" y="38" textAnchor="middle" fill={txtCol} fontSize="20" fontWeight="bold" fontFamily="Arial">{p.rating}</text>
                           </svg>
@@ -3619,14 +3626,16 @@
                         <defs><clipPath id={clipId}><path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" /></clipPath></defs>
                         <path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" fill={c1} />
                         <g clipPath={`url(#${clipId})`}>
-                          {s === 'stripes' && <>{[4,14,24,34,44,54].map(x => <rect key={x} x={x} y="0" width="5" height="55" fill={c2} />)}</>}
-                          {s === 'hoops' && <>{[5,15,25,35,45].map(y => <rect key={y} x="0" y={y} width="60" height="5" fill={c2} />)}</>}
+                          {s === 'stripes' && <>{[8,22,36,50].map(x => <rect key={x} x={x} y="0" width="7" height="55" fill={c2} />)}</>}
+                          {s === 'hoops' && <>{[8,22,36].map(y => <rect key={y} x="0" y={y} width="60" height="8" fill={c2} />)}</>}
                           {s === 'quarters' && <><rect x="30" y="0" width="30" height="25" fill={c2} /><rect x="0" y="25" width="30" height="30" fill={c2} /></>}
                           {s === 'sleeves' && <><path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} /><path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c2} /></>}
                           {s === 'sash' && <><path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} /><path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c2} /><polygon points="5,50 15,50 55,10 55,0 50,0 45,0 0,45 0,50" fill={c2} opacity="0.9" /></>}
                           {s === 'halves' && <><rect x="30" y="0" width="30" height="55" fill={c2} /><path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} /><path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c1} /></>}
                           {s === 'checkered' && <>{[0,10,20,30,40,50].map(x => [0,10,20,30,40,50].map(y => ((x/10 + y/10) % 2 === 0) ? <rect key={`${x}-${y}`} x={x} y={y} width="10" height="10" fill={c2} /> : null))}</>}
                          </g>
+                        {s !== 'hoops' && <path d="M20 5 L22 0 L38 0 L40 5" fill="none" stroke={c2} strokeWidth="2.5" />}
+                        {s === 'plain' && <rect x="10" y="0" width="40" height="3" fill={c2} opacity="0.5" />}  
                         <path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="1" />
                         <text x="30" y="36" textAnchor="middle" fill={txtCol} fontSize="18" fontWeight="bold" fontFamily="Arial" stroke={txtCol === '#FFFFFF' ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.3)'} strokeWidth="0.5">{number}</text>
                       </svg>
