@@ -6155,7 +6155,7 @@
         "secondaryColor": "#0055A4",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Stade de l'Abbé-Deschamps",
         "stadiumCapacity": 19000,
         "budget": 50000000,
@@ -6197,7 +6197,7 @@
         "secondaryColor": "#FFFFFF",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Stade Francis-Le Blé",
         "stadiumCapacity": 16000,
         "budget": 50000000,
@@ -6235,7 +6235,7 @@
         "secondaryColor": "#1B2A4A",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Stade Océane",
         "stadiumCapacity": 25000,
         "budget": 50000000,
@@ -6275,7 +6275,7 @@
         "secondaryColor": "#ED1C24",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Stade Bollaert-Delelis",
         "stadiumCapacity": 38000,
         "budget": 50000000,
@@ -6318,7 +6318,7 @@
         "secondaryColor": "#FFFFFF",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Stade Pierre-Mauroy",
         "stadiumCapacity": 50000,
         "budget": 50000000,
@@ -6359,7 +6359,7 @@
         "secondaryColor": "#000000",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Stade du Moustoir",
         "stadiumCapacity": 18000,
         "budget": 50000000,
@@ -6400,7 +6400,7 @@
         "secondaryColor": "#DA291C",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Parc Olympique Lyonnais",
         "stadiumCapacity": 59000,
         "budget": 50000000,
@@ -6441,7 +6441,7 @@
         "secondaryColor": "#2FAEE0",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Stade Vélodrome",
         "stadiumCapacity": 67000,
         "budget": 50000000,
@@ -6478,7 +6478,7 @@
         "secondaryColor": "#FFFFFF",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Stade Saint-Symphorien",
         "stadiumCapacity": 29000,
         "budget": 50000000,
@@ -6519,7 +6519,7 @@
         "secondaryColor": "#FFFFFF",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Stade Louis II",
         "stadiumCapacity": 16000,
         "budget": 50000000,
@@ -6563,7 +6563,7 @@
         "secondaryColor": "#00843D",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Stade de la Beaujoire",
         "stadiumCapacity": 35000,
         "budget": 50000000,
@@ -6605,7 +6605,7 @@
         "secondaryColor": "#ED1C24",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Allianz Riviera",
         "stadiumCapacity": 36000,
         "budget": 50000000,
@@ -6646,7 +6646,7 @@
         "secondaryColor": "#FFFFFF",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Stade Jean-Bouin",
         "stadiumCapacity": 20000,
         "budget": 50000000,
@@ -6687,7 +6687,7 @@
         "secondaryColor": "#DA291C",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Parc des Princes",
         "stadiumCapacity": 48000,
         "budget": 50000000,
@@ -6726,7 +6726,7 @@
         "secondaryColor": "#000000",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Roazhon Park",
         "stadiumCapacity": 30000,
         "budget": 50000000,
@@ -6763,7 +6763,7 @@
         "secondaryColor": "#FFFFFF",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Stade de la Meinau",
         "stadiumCapacity": 26000,
         "budget": 50000000,
@@ -6805,7 +6805,7 @@
         "secondaryColor": "#6A2382",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Stadium de Toulouse",
         "stadiumCapacity": 33000,
         "budget": 50000000,
@@ -6851,7 +6851,7 @@
       "secondaryColor": "#FFFFFF",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Stade de la Licorne",
       "stadiumCapacity": 12000,
       "budget": 5000000,
@@ -6877,7 +6877,7 @@
       "secondaryColor": "#8C0F0E",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Parc des Sports",
       "stadiumCapacity": 16000,
       "budget": 5000000,
@@ -6903,7 +6903,7 @@
       "secondaryColor": "#FFFFFF",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Stade Armand Cesari",
       "stadiumCapacity": 16000,
       "budget": 5000000,
@@ -6929,7 +6929,7 @@
       "secondaryColor": "#BA0807",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Stade de la Libération",
       "stadiumCapacity": 10000,
       "budget": 5000000,
@@ -6955,7 +6955,7 @@
       "secondaryColor": "#193A73",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Stade Gabriel Montpied",
       "stadiumCapacity": 12000,
       "budget": 5000000,
@@ -6981,7 +6981,7 @@
       "secondaryColor": "#FFFFFF",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Stade Marcel Tribut",
       "stadiumCapacity": 5000,
       "budget": 5000000,
@@ -7007,7 +7007,7 @@
       "secondaryColor": "#FFFFFF",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Stade des Alpes",
       "stadiumCapacity": 20000,
       "budget": 5000000,
@@ -7033,7 +7033,7 @@
       "secondaryColor": "#000000",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Stade de Roudourou",
       "stadiumCapacity": 18000,
       "budget": 5000000,
@@ -7059,7 +7059,7 @@
       "secondaryColor": "#000000",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Stade Francis Le Basser",
       "stadiumCapacity": 19000,
       "budget": 5000000,
@@ -7085,7 +7085,7 @@
       "secondaryColor": "#FFD700",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Stade Marie-Marvingt",
       "stadiumCapacity": 25000,
       "budget": 5000000,
@@ -7111,7 +7111,7 @@
       "secondaryColor": "#F25907",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"
+      "awaySecondaryColor": "#FFFFFF",
       "stadiumName": "Stade de la Mosson",
       "stadiumCapacity": 33000,
       "budget": 5000000,
@@ -7137,7 +7137,7 @@
       "secondaryColor": "#E32221",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Stade Marcel Picot",
       "stadiumCapacity": 20000,
       "budget": 5000000,
@@ -7163,7 +7163,7 @@
       "secondaryColor": "#152D57",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Nouste Camp",
       "stadiumCapacity": 4000,
       "budget": 5000000,
@@ -7189,7 +7189,7 @@
       "secondaryColor": "#FFFFFF",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Stade Bauer",
       "stadiumCapacity": 10000,
       "budget": 5000000,
@@ -7215,7 +7215,7 @@
       "secondaryColor": "#FFFFFF",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Stade Auguste-Delaune",
       "stadiumCapacity": 21000,
       "budget": 5000000,
@@ -7241,7 +7241,7 @@
       "secondaryColor": "#F5A623",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Stade Paul Lignon",
       "stadiumCapacity": 6000,
       "budget": 5000000,
@@ -7267,7 +7267,7 @@
       "secondaryColor": "#FFFFFF",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Stade Geoffroy Guichard",
       "stadiumCapacity": 42000,
       "budget": 5000000,
@@ -7293,7 +7293,7 @@
       "secondaryColor": "#FFFFFF",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Stade de l'Aube",
       "stadiumCapacity": 21000,
       "budget": 5000000,
@@ -7325,7 +7325,7 @@
         "secondaryColor": "#000000",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "San Siro",
         "stadiumCapacity": 80000,
         "budget": 50000000,
@@ -7363,7 +7363,7 @@
         "secondaryColor": "#000000",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Stadio Atleti Azzurri d'Italia",
         "stadiumCapacity": 23000,
         "budget": 50000000,
@@ -7402,7 +7402,7 @@
         "secondaryColor": "#A31E2D",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Stadio Renato Dall'Ara",
         "stadiumCapacity": 38000,
         "budget": 50000000,
@@ -7443,7 +7443,7 @@
         "secondaryColor": "#10274f",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Sardegna Arena",
         "stadiumCapacity": 16000,
         "budget": 50000000,
@@ -7485,7 +7485,7 @@
         "secondaryColor": "#FFFFFF",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Stadio Giuseppe Sinigaglia",
         "stadiumCapacity": 14000,
         "budget": 50000000,
@@ -7527,7 +7527,7 @@
         "secondaryColor": "#ED1C24",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Stadio Giovanni Zini",
         "stadiumCapacity": 21000,
         "budget": 50000000,
@@ -7569,7 +7569,7 @@
         "secondaryColor": "#FFFFFF",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Stadio Artemio Franchi",
         "stadiumCapacity": 43000,
         "budget": 50000000,
@@ -7611,7 +7611,7 @@
         "secondaryColor": "#00205B",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Stadio Luigi Ferraris",
         "stadiumCapacity": 37000,
         "budget": 50000000,
@@ -7651,7 +7651,7 @@
         "secondaryColor": "#FFD700",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Marcantonio Bentegodi",
         "stadiumCapacity": 39000,
         "budget": 50000000,
@@ -7695,7 +7695,7 @@
         "secondaryColor": "#000000",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "San Siro",
         "stadiumCapacity": 80000,
         "budget": 50000000,
@@ -7734,7 +7734,7 @@
         "secondaryColor": "#000000",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Allianz Stadium",
         "stadiumCapacity": 42000,
         "budget": 50000000,
@@ -7774,7 +7774,7 @@
         "secondaryColor": "#FFFFFF",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Stadio Olimpico",
         "stadiumCapacity": 71000,
         "budget": 50000000,
@@ -7817,7 +7817,7 @@
         "secondaryColor": "#ED1C24",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Stadio Via del Mare",
         "stadiumCapacity": 32000,
         "budget": 50000000,
@@ -7859,7 +7859,7 @@
         "secondaryColor": "#FFFFFF",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Stadio Diego Armando Maradona",
         "stadiumCapacity": 55000,
         "budget": 50000000,
@@ -7899,7 +7899,7 @@
         "secondaryColor": "#000000",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Stadio Ennio Tardini",
         "stadiumCapacity": 28000,
         "budget": 50000000,
@@ -7939,7 +7939,7 @@
         "secondaryColor": "#003DA5",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Arena Garibaldi",
         "stadiumCapacity": 18000,
         "budget": 50000000,
@@ -7983,7 +7983,7 @@
         "secondaryColor": "#F5A623",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Stadio Olimpico",
         "stadiumCapacity": 71000,
         "budget": 50000000,
@@ -8025,7 +8025,7 @@
         "secondaryColor": "#000000",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "MAPEI Stadium",
         "stadiumCapacity": 22000,
         "budget": 50000000,
@@ -8069,7 +8069,7 @@
         "secondaryColor": "#FFFFFF",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Stadio Olimpico Grande Torino",
         "stadiumCapacity": 28000,
         "budget": 50000000,
@@ -8114,7 +8114,7 @@
         "secondaryColor": "#FFFFFF",
         "awayShirtStyle": "plain",
         "awayPrimaryColor": "#000000",
-        "awaySecondaryColor": "#FFFFFF"  
+        "awaySecondaryColor": "#FFFFFF",  
         "stadiumName": "Stadio Friuli",
         "stadiumCapacity": 25000,
         "budget": 50000000,
@@ -8161,7 +8161,7 @@
       "secondaryColor": "#FFFFFF",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Stadio Partenio-Adriano Lombardi",
       "stadiumCapacity": 26000,
       "budget": 5000000,
@@ -8187,7 +8187,7 @@
       "secondaryColor": "#E32221",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Stadio Comunale San Nicola",
       "stadiumCapacity": 58000,
       "budget": 5000000,
@@ -8213,7 +8213,7 @@
       "secondaryColor": "#FFD700",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Stadio dei Marmi",
       "stadiumCapacity": 4000,
       "budget": 5000000,
@@ -8239,7 +8239,7 @@
       "secondaryColor": "#FFD700",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Stadio Nicola Ceravolo",
       "stadiumCapacity": 15000,
       "budget": 5000000,
@@ -8265,7 +8265,7 @@
       "secondaryColor": "#000000",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Stadio Dino Manuzzi",
       "stadiumCapacity": 20000,
       "budget": 5000000,
@@ -8291,7 +8291,7 @@
       "secondaryColor": "#FFFFFF",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Stadio Carlo Castellani",
       "stadiumCapacity": 16000,
       "budget": 5000000,
@@ -8317,7 +8317,7 @@
       "secondaryColor": "#003DA5",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Stadio Benito Stirpe",
       "stadiumCapacity": 16000,
       "budget": 5000000,
@@ -8343,7 +8343,7 @@
       "secondaryColor": "#000000",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Stadio Comunale Romeo Menti",
       "stadiumCapacity": 8000,
       "budget": 5000000,
@@ -8369,7 +8369,7 @@
       "secondaryColor": "#082961",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Stadio Alberto Braglia",
       "stadiumCapacity": 21000,
       "budget": 5000000,
@@ -8395,7 +8395,7 @@
       "secondaryColor": "#E32221",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Stadio Danilo Martelli",
       "stadiumCapacity": 15000,
       "budget": 5000000,
@@ -8421,7 +8421,7 @@
       "secondaryColor": "#FFFFFF",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "U-Power Stadium",
       "stadiumCapacity": 17000,
       "budget": 5000000,
@@ -8447,7 +8447,7 @@
       "secondaryColor": "#E32221",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Stadio Comunale Euganeo",
       "stadiumCapacity": 32000,
       "budget": 5000000,
@@ -8473,7 +8473,7 @@
       "secondaryColor": "#000000",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Stadio Renzo Barbera",
       "stadiumCapacity": 36000,
       "budget": 5000000,
@@ -8499,7 +8499,7 @@
       "secondaryColor": "#FFFFFF",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Stadio Adriatico – Giovanni Cornacchia",
       "stadiumCapacity": 20000,
       "budget": 5000000,
@@ -8525,7 +8525,7 @@
       "secondaryColor": "#FFFFFF",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "MAPEI Stadium - Città del Tricolore",
       "stadiumCapacity": 22000,
       "budget": 5000000,
@@ -8551,7 +8551,7 @@
       "secondaryColor": "#000000",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Stadio Comunale Luigi Ferraris",
       "stadiumCapacity": 33000,
       "budget": 5000000,
@@ -8577,7 +8577,7 @@
       "secondaryColor": "#000000",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Stadio Alberto Picco",
       "stadiumCapacity": 12000,
       "budget": 5000000,
@@ -8603,7 +8603,7 @@
       "secondaryColor": "#E32221",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Stadio Marco Druso",
       "stadiumCapacity": 6000,
       "budget": 5000000,
@@ -8629,7 +8629,7 @@
       "secondaryColor": "#F5A623",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Stadio Pier Luigi Penzo",
       "stadiumCapacity": 12000,
       "budget": 5000000,
@@ -8655,7 +8655,7 @@
       "secondaryColor": "#FFFFFF",
       "awayShirtStyle": "plain",
       "awayPrimaryColor": "#000000",
-      "awaySecondaryColor": "#FFFFFF"  
+      "awaySecondaryColor": "#FFFFFF",  
       "stadiumName": "Stadio Enrico Sannazzari",
       "stadiumCapacity": 6000,
       "budget": 5000000,
