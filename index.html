@@ -1827,9 +1827,28 @@
           return Math.sqrt(Math.pow(r1-r2, 2) + Math.pow(g1-g2, 2) + Math.pow(b1-b2, 2));
         };
         
-        const kitsClash = (team1, team2) => {
-          const dist = colourDistance(team1.primaryColor || '#000000', team2.primaryColor || '#000000');
-          return dist < 120; // Clash if primary colours are too similar
+         // Preventing Kit Clashes
+          const kitsClash = (team1, team2) => {
+          const c1p = team1.primaryColor || '#000000';
+          const c2p = team2.primaryColor || '#000000';
+          
+          // Primary vs primary always checked
+          if (colourDistance(c1p, c2p) < 120) return true;
+          
+          // For heavy-secondary styles, check secondary vs opponent's primary
+          const heavySecondary = ['stripes', 'hoops', 'halves', 'checkered'];
+          
+          if (heavySecondary.includes(team1.shirtStyle)) {
+            const c1s = team1.secondaryColor || '#FFFFFF';
+            if (colourDistance(c1s, c2p) < 120) return true;
+          }
+          
+          if (heavySecondary.includes(team2.shirtStyle)) {
+            const c2s = team2.secondaryColor || '#FFFFFF';
+            if (colourDistance(c2s, c1p) < 120) return true;
+          }
+          
+          return false;
         };
         
         const getKitForMatch = (teamObj, opponentObj, isHome) => {
@@ -3299,10 +3318,57 @@
                       setDate(nd);
                       healInjuredPlayers(nd);
                       if (Math.random() < 0.3) generateIncomingOffers();
+                    
+                      // Generate preseason news
+                      const news = [];
+                    
+                      // Returning from injury
+                      team.players.forEach(p => {
+                        if (p.injured && p.injuryUntil && new Date(p.injuryUntil) <= nd) {
+                          news.push({
+                            type: 'available',
+                            icon: '✅',
+                            color: 'bg-blue-500',
+                            textColor: 'text-white',
+                            title: 'The following player is available again:',
+                            playerName: p.name,
+                            detail: 'Returned from injury'
+                          });
+                        }
+                      });
+                    
+                      // Development during preseason
+                      team.players.forEach(p => {
+                        if (!p.injured && !p.suspended) {
+                          const age = calcAge(p.dob);
+                          if (age <= 25 && p.rating < 20) {
+                            const devChance = 0.008 + (facilities.devLevel - 1) * 0.004;
+                            if (Math.random() < devChance) {
+                              p.rating = Math.min(20, p.rating + 1);
+                              news.push({
+                                type: 'development',
+                                icon: '📈',
+                                color: 'bg-orange-500',
+                                textColor: 'text-white',
+                                title: 'The following player has been training well and improved:',
+                                playerName: p.name,
+                                detail: `Rating increased to ${p.rating}/20`
+                              });
+                            }
+                          }
+                        }
+                      });
+                    
                       // After 4 weeks, end preseason
                       const weeksPassed = Math.round((nd - new Date('2025-08-01')) / (7 * 24 * 60 * 60 * 1000));
                       if (weeksPassed >= 4) setPreseason(false);
-                    }} className="w-full bg-orange-600 text-white py-4 rounded-lg font-bold">
+                    
+                      setPostMatchNews(news);
+                      if (news.length > 0) {
+                        setState('post-match');
+                      }
+                    }}
+                        className="w-full bg-orange-600 text-white py-4 rounded-lg font-bold">
                       Advance Week ({Math.max(0, 4 - Math.round((date - new Date('2025-08-01')) / (7 * 24 * 60 * 60 * 1000)))} weeks until season)
                     </button>
                   </div>
