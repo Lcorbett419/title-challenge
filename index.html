@@ -53,7 +53,7 @@
 
         const getLeagueTier = (leagueKey) => {
           const pyramids = {
-            england: ['england', 'england_championship', 'england_league1', 'england_league2'],
+            england: ['england', 'england_championship', 'england_league1', 'england_league2', 'england_national_league'],
             germany: ['germany', 'germany_2'],
             spain: ['spain', 'spain_segunda'],
             france: ['france', 'france_ligue2'],
@@ -733,7 +733,7 @@
             const playerPos = tbl.findIndex(t => t.teamId === team.id);
             
             const leaguePyramids = {
-              england: ['england', 'england_championship', 'england_league1', 'england_league2'],
+              england: ['england', 'england_championship', 'england_league1', 'england_league2', 'england_national_league'],
               germany: ['germany', 'germany_2'],
               spain: ['spain', 'spain_segunda'],
               france: ['france', 'france_ligue2'],
@@ -1922,7 +1922,7 @@
           if (state === 'country-select')
           {
             const countries = [
-              { key: 'england', name: 'England', flag: '🏴󠁧󠁢', tiers: 4 },
+              { key: 'england', name: 'England', flag: '🏴󠁧󠁢', tiers: 5 },
               { key: 'germany', name: 'Germany', flag: '🇩🇪', tiers: 2 },
               { key: 'spain', name: 'Spain', flag: '🇪🇸', tiers: 2 },
               { key: 'france', name: 'France', flag: '🇫🇷', tiers: 2 },
