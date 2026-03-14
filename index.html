@@ -98,6 +98,8 @@
           const [incomingOffers, setIncomingOffers] = useState([]);
           const [facilities, setFacilities] = useState({ stadiumLevel: 3, devLevel: 1 });
           const [preseason, setPreseason] = useState(true);
+          const [playoffState, setPlayoffState] = useState(null);
+          const [playoffResults, setPlayoffResults] = useState([]);  
           const [preMatchXI, setPreMatchXI] = useState({});
           const [postMatchNews, setPostMatchNews] = useState([]);
           const [suspensions, setSuspensions] = useState({});  
@@ -720,140 +722,322 @@
             setFixtures(newFix);
           };
 
-            const startNewSeason = () => {
-            const fix = fixtures[league] || [];
-            const seasonComplete = fix.length > 0 && fix.every(f => f.played);
-            
-            if (!seasonComplete) {
-              alert('Season not complete yet!');
-              return;
-            }
-
-            const tbl = getTable(league);
-            const playerPos = tbl.findIndex(t => t.teamId === team.id);
-            
-            const leaguePyramids = {
-              england: ['england', 'england_championship', 'england_league1', 'england_league2', 'england_national_league'],
-              germany: ['germany', 'germany_2'],
-              spain: ['spain', 'spain_segunda'],
-              france: ['france', 'france_ligue2'],
-              italy: ['italy', 'italy_serieb']
+            const simPlayoffLeg = (home, away) => {
+              const r = simMatch(home, away, false);
+              return { home: home.name, away: away.name, homeScore: r.homeScore, awayScore: r.awayScore, homeId: home.id, awayId: away.id };
             };
             
-            let foundCountry = null;
-            let currentTier = -1;
+            const simTwoLegs = (team1, team2) => {
+              const leg1 = simPlayoffLeg(team1, team2);
+              const leg2 = simPlayoffLeg(team2, team1);
+              const agg1 = leg1.homeScore + leg2.awayScore;
+              const agg2 = leg1.awayScore + leg2.homeScore;
+              const winner = agg1 > agg2 ? team1 : agg2 > agg1 ? team2 : Math.random() < 0.5 ? team1 : team2;
+              return { leg1, leg2, agg: [agg1, agg2], winner, loser: winner.id === team1.id ? team2 : team1 };
+            };
             
-            for (const [countryKey, pyramid] of Object.entries(leaguePyramids)) {
-              const tierIndex = pyramid.indexOf(league);
-              if (tierIndex !== -1) {
-                foundCountry = countryKey;
-                currentTier = tierIndex;
-                break;
-              }
-            }
-            
-            if (!foundCountry) {
-              alert('Error: League not found in pyramid system');
-              return;
-            }
-            
-            const pyramid = leaguePyramids[foundCountry];
-            let newLeague = league;
-            let message = '';
-            
-            if (playerPos < 2 && currentTier > 0) {
-              newLeague = pyramid[currentTier - 1];
-              message = `🎉 PROMOTED! You finished ${playerPos + 1}${playerPos === 0 ? 'st' : 'nd'} and are promoted to ${leagues[newLeague].name}!`;
-            } else if (playerPos >= tbl.length - 3 && currentTier < pyramid.length - 1) {
-              newLeague = pyramid[currentTier + 1];
-              message = `😢 RELEGATED. You finished ${playerPos + 1}th and are relegated to ${leagues[newLeague].name}.`;
-            } else if (playerPos === 0 && currentTier === 0) {
-              message = `🏆 CHAMPIONS! You won ${leagues[league].name}! You are the best team in ${leagues[league].country}!`;
-            } else if (playerPos === 0) {
-              message = `🏆 CHAMPIONS! You won ${leagues[league].name}!`;
-            } else {
-              message = `Season complete! You finished ${playerPos + 1}${playerPos === 1 ? 'nd' : playerPos === 2 ? 'rd' : 'th'}.`;
-            }
-            
-            alert(message);
+            const simOneLeg = (home, away) => {
+              const result = simPlayoffLeg(home, away);
+              const winner = result.homeScore > result.awayScore ? home : result.awayScore > result.homeScore ? away : Math.random() < 0.5 ? home : away;
+              return { result, winner, loser: winner.id === home.id ? away : home };
+            };
 
-            // Compute ALL tables BEFORE any swaps happen
-            const allTables = {};
-            pyramid.forEach(key => {
-              if (leagues[key]) allTables[key] = getTable(key);
-            });
+            const getLeagueRules = (leagueKey) => {
+              const rules = {
+                'england': { relCount: 3, promoAuto: 0, promoPlayoff: 0, playoffType: null, relegationTo: 'england_championship' },
+                'england_championship': { relCount: 3, promoAuto: 2, promoPlayoff: 1, playoffType: 'standard', playoffSeeds: [3,4,5,6], relegationTo: 'england_league1', promotionTo: 'england' },
+                'england_league1': { relCount: 4, promoAuto: 2, promoPlayoff: 1, playoffType: 'standard', playoffSeeds: [3,4,5,6], relegationTo: 'england_league2', promotionTo: 'england_championship' },
+                'england_league2': { relCount: 2, promoAuto: 3, promoPlayoff: 1, playoffType: 'league2', playoffSeeds: [4,5,6,7], relegationTo: 'england_national_league', promotionTo: 'england_league1' },
+                'england_national_league': { relCount: 0, promoAuto: 1, promoPlayoff: 1, playoffType: 'national', playoffSeeds: [2,3,4,5,6,7], promotionTo: 'england_league2' }
+              };
+              return rules[leagueKey] || null;
+            };
+
             
-            // Now process all swaps using pre-computed tables
-            const swaps = [];
-            for (let tier = 0; tier < pyramid.length - 1; tier++) {
-              const upperKey = pyramid[tier];
-              const lowerKey = pyramid[tier + 1];
-              if (!allTables[upperKey] || !allTables[lowerKey]) continue;
+              const startNewSeason = () => {
+              const fix = fixtures[league] || [];
+              const seasonComplete = fix.length > 0 && fix.every(f => f.played);
             
-              const relegatedIds = allTables[upperKey].slice(-3).map(t => t.teamId);
-              const promotedIds = allTables[lowerKey].slice(0, 3).map(t => t.teamId);
+              if (!seasonComplete) {
+                alert('Season not complete yet!');
+                return;
+              }
             
-              swaps.push({ upperKey, lowerKey, relegatedIds, promotedIds });
-            }
+              const tbl = getTable(league);
+              const playerPos = tbl.findIndex(t => t.teamId === team.id);
+              const rules = getLeagueRules(league);
             
-            // Apply all swaps at once
-            swaps.forEach(({ upperKey, lowerKey, relegatedIds, promotedIds }) => {
-              const relegatedTeams = relegatedIds.map(id => leagues[upperKey].teams.find(t => t.id === id)).filter(Boolean);
-              const promotedTeams = promotedIds.map(id => leagues[lowerKey].teams.find(t => t.id === id)).filter(Boolean);
+              // Check if player's team is in playoffs
+              if (rules && rules.playoffType && rules.promoPlayoff > 0) {
+                const seeds = rules.playoffSeeds;
+                const playerInPlayoffs = seeds.some(s => tbl[s - 1]?.teamId === team.id);
             
-              leagues[upperKey].teams = leagues[upperKey].teams.filter(t => !relegatedIds.includes(t.id));
-              leagues[lowerKey].teams = leagues[lowerKey].teams.filter(t => !promotedIds.includes(t.id));
-            
-              promotedTeams.forEach(t => leagues[upperKey].teams.push(t));
-              relegatedTeams.forEach(t => leagues[lowerKey].teams.push(t));
-            });
-            
-            if (newLeague !== league) {
-              setLeague(newLeague);
-            }
-            const seasonYear = date.getMonth() >= 7 ? date.getFullYear() + 1 : date.getFullYear();
-            const newDate = new Date(`${seasonYear}-08-01`);
-            setDate(newDate);
-            setPreseason(true);    
-            
-            // Apply youth development to YOUR team's players
-            team.players.forEach(p => {
-              const age = calcAge(p.dob);
-              if (age <= 27 && p.rating < 20) {
-                const growthChance = 0.08 + (facilities.devLevel - 1) * 0.025;
-                if (Math.random() < growthChance) {
-                  p.rating = Math.min(20, p.rating + 1);
+                if (playerInPlayoffs) {
+                  // Run playoffs
+                  runPlayoffs(league, tbl, rules);
+                  return;
                 }
               }
-              if (age >= 32) {
-                const declineChance = 0.15 + (age - 32) * 0.1;
-                if (Math.random() < declineChance && p.rating > 5) {
-                  p.rating -= 1;
+            
+              // Player not in playoffs — run everything automatically
+              completeSeasonTransition();
+            };
+            
+            const runPlayoffs = (leagueKey, tbl, rules) => {
+              const getTeamById = (id) => leagues[leagueKey].teams.find(t => t.id === id);
+              const seeds = rules.playoffSeeds;
+              const playoffTeams = seeds.map(s => getTeamById(tbl[s - 1]?.teamId)).filter(Boolean);
+              const results = [];
+            
+              if (rules.playoffType === 'standard') {
+                // 3v6 and 4v5 two legs, then final one leg
+                const semi1 = simTwoLegs(playoffTeams[seeds.indexOf(seeds[0]) === 0 ? 0 : 0], playoffTeams[3]);
+                const semi2 = simTwoLegs(playoffTeams[1], playoffTeams[2]);
+            
+                results.push({ round: 'Semi-Final 1', ...semi1, team1: playoffTeams[0], team2: playoffTeams[3] });
+                results.push({ round: 'Semi-Final 2', ...semi2, team1: playoffTeams[1], team2: playoffTeams[2] });
+            
+                const final1 = simOneLeg(semi1.winner, semi2.winner);
+                results.push({ round: 'FINAL', result: final1.result, winner: final1.winner, loser: final1.loser, team1: semi1.winner, team2: semi2.winner });
+            
+                setPlayoffState({
+                  leagueKey,
+                  rules,
+                  type: 'standard',
+                  results,
+                  promotedTeam: final1.winner,
+                  message: final1.winner.id === team.id
+                    ? `🎉 PROMOTED! You won the playoff final!`
+                    : `😢 ${final1.winner.name} won the playoff final.`
+                });
+            
+              } else if (rules.playoffType === 'league2') {
+                // 4v7 and 5v6 two legs, then final one leg
+                const semi1 = simTwoLegs(playoffTeams[0], playoffTeams[3]);
+                const semi2 = simTwoLegs(playoffTeams[1], playoffTeams[2]);
+            
+                results.push({ round: 'Semi-Final 1', ...semi1, team1: playoffTeams[0], team2: playoffTeams[3] });
+                results.push({ round: 'Semi-Final 2', ...semi2, team1: playoffTeams[1], team2: playoffTeams[2] });
+            
+                const final1 = simOneLeg(semi1.winner, semi2.winner);
+                results.push({ round: 'FINAL', result: final1.result, winner: final1.winner, loser: final1.loser, team1: semi1.winner, team2: semi2.winner });
+            
+                setPlayoffState({
+                  leagueKey,
+                  rules,
+                  type: 'league2',
+                  results,
+                  promotedTeam: final1.winner,
+                  message: final1.winner.id === team.id
+                    ? `🎉 PROMOTED! You won the playoff final!`
+                    : `😢 ${final1.winner.name} won the playoff final.`
+                });
+            
+              } else if (rules.playoffType === 'national') {
+                // 7v4 one leg, winner v 3rd one leg (side A)
+                // 5v6 one leg, winner v 2nd one leg (side B)
+                // Winners play final
+                const qf1 = simOneLeg(playoffTeams[5], playoffTeams[2]); // 7th vs 4th
+                results.push({ round: 'QF: 7th vs 4th', result: qf1.result, winner: qf1.winner, team1: playoffTeams[5], team2: playoffTeams[2] });
+            
+                const sf1 = simOneLeg(qf1.winner, playoffTeams[1]); // winner vs 3rd
+                results.push({ round: 'SF: Winner vs 3rd', result: sf1.result, winner: sf1.winner, team1: qf1.winner, team2: playoffTeams[1] });
+            
+                const qf2 = simOneLeg(playoffTeams[3], playoffTeams[4]); // 5th vs 6th
+                results.push({ round: 'QF: 5th vs 6th', result: qf2.result, winner: qf2.winner, team1: playoffTeams[3], team2: playoffTeams[4] });
+            
+                const sf2 = simOneLeg(qf2.winner, playoffTeams[0]); // winner vs 2nd
+                results.push({ round: 'SF: Winner vs 2nd', result: sf2.result, winner: sf2.winner, team1: qf2.winner, team2: playoffTeams[0] });
+            
+                const final1 = simOneLeg(sf1.winner, sf2.winner);
+                results.push({ round: 'FINAL', result: final1.result, winner: final1.winner, loser: final1.loser, team1: sf1.winner, team2: sf2.winner });
+            
+                setPlayoffState({
+                  leagueKey,
+                  rules,
+                  type: 'national',
+                  results,
+                  promotedTeam: final1.winner,
+                  message: final1.winner.id === team.id
+                    ? `🎉 PROMOTED! You won the playoff final!`
+                    : `😢 ${final1.winner.name} won the playoff final.`
+                });
+              }
+            
+              setState('playoffs');
+            };
+            
+            const completeSeasonTransition = (playoffPromoted) => {
+              const leaguePyramids = {
+                england: ['england', 'england_championship', 'england_league1', 'england_league2', 'england_national_league'],
+                germany: ['germany', 'germany_2'],
+                spain: ['spain', 'spain_segunda'],
+                france: ['france', 'france_ligue2'],
+                italy: ['italy', 'italy_serieb']
+              };
+            
+              let foundCountry = null;
+              let currentTier = -1;
+            
+              for (const [countryKey, pyramid] of Object.entries(leaguePyramids)) {
+                const tierIndex = pyramid.indexOf(league);
+                if (tierIndex !== -1) {
+                  foundCountry = countryKey;
+                  currentTier = tierIndex;
+                  break;
                 }
               }
-            });
-
-            Object.keys(leagues).forEach(lk => {
-              leagues[lk].teams.forEach(tm => {
-                tm.players.forEach(p => {
-                  p.goals = 0;
-                  p.assists = 0;
-                  p.yellowCards = 0;
-                  p.redCards = 0;  
-                  p.injured = false;
-                  p.injuryUntil = null;
-                  p.suspended = false;
-                  p.suspendedUntil = 0;
-                  p.matchesPlayed = 0;  
+            
+              if (!foundCountry) { alert('Error: League not found'); return; }
+            
+              const pyramid = leaguePyramids[foundCountry];
+            
+              // Compute all tables
+              const allTables = {};
+              pyramid.forEach(key => {
+                if (leagues[key]) allTables[key] = getTable(key);
+              });
+            
+              // Process all tier swaps
+              for (let tier = 0; tier < pyramid.length - 1; tier++) {
+                const upperKey = pyramid[tier];
+                const lowerKey = pyramid[tier + 1];
+                if (!allTables[upperKey] || !allTables[lowerKey]) continue;
+            
+                const upperRules = getLeagueRules(upperKey);
+                const lowerRules = getLeagueRules(lowerKey);
+            
+                // Relegated from upper
+                const relCount = upperRules ? upperRules.relCount : 3;
+                const relegatedIds = allTables[upperKey].slice(-relCount).map(t => t.teamId);
+            
+                // Promoted from lower
+                const autoPromo = lowerRules ? lowerRules.promoAuto : 2;
+                const promotedIds = allTables[lowerKey].slice(0, autoPromo).map(t => t.teamId);
+            
+                // Add playoff winner if applicable for this tier
+                if (playoffPromoted && playoffPromoted[lowerKey]) {
+                  promotedIds.push(playoffPromoted[lowerKey]);
+                }
+            
+                // Also run AI playoffs for leagues the player isn't in
+                if (!playoffPromoted || !playoffPromoted[lowerKey]) {
+                  const lr = getLeagueRules(lowerKey);
+                  if (lr && lr.playoffType && lr.promoPlayoff > 0) {
+                    const lt = allTables[lowerKey];
+                    const seeds = lr.playoffSeeds;
+                    const pTeams = seeds.map(s => leagues[lowerKey].teams.find(t => t.id === lt[s - 1]?.teamId)).filter(Boolean);
+            
+                    if (pTeams.length >= 4) {
+                      let playoffWinner;
+                      if (lr.playoffType === 'standard') {
+                        const s1 = simTwoLegs(pTeams[0], pTeams[3]);
+                        const s2 = simTwoLegs(pTeams[1], pTeams[2]);
+                        const f = simOneLeg(s1.winner, s2.winner);
+                        playoffWinner = f.winner;
+                      } else if (lr.playoffType === 'league2') {
+                        const s1 = simTwoLegs(pTeams[0], pTeams[3]);
+                        const s2 = simTwoLegs(pTeams[1], pTeams[2]);
+                        const f = simOneLeg(s1.winner, s2.winner);
+                        playoffWinner = f.winner;
+                      } else if (lr.playoffType === 'national' && pTeams.length >= 6) {
+                        const qf1 = simOneLeg(pTeams[5], pTeams[2]);
+                        const sf1 = simOneLeg(qf1.winner, pTeams[1]);
+                        const qf2 = simOneLeg(pTeams[3], pTeams[4]);
+                        const sf2 = simOneLeg(qf2.winner, pTeams[0]);
+                        const f = simOneLeg(sf1.winner, sf2.winner);
+                        playoffWinner = f.winner;
+                      }
+                      if (playoffWinner) promotedIds.push(playoffWinner.id);
+                    }
+                  }
+                }
+            
+                // Do the swaps
+                const relegatedTeams = relegatedIds.map(id => leagues[upperKey].teams.find(t => t.id === id)).filter(Boolean);
+                const promotedTeams = promotedIds.map(id => leagues[lowerKey].teams.find(t => t.id === id)).filter(Boolean);
+            
+                leagues[upperKey].teams = leagues[upperKey].teams.filter(t => !relegatedIds.includes(t.id));
+                leagues[lowerKey].teams = leagues[lowerKey].teams.filter(t => !promotedIds.includes(t.id));
+            
+                promotedTeams.forEach(t => leagues[upperKey].teams.push(t));
+                relegatedTeams.forEach(t => leagues[lowerKey].teams.push(t));
+              }
+            
+              // Determine player's new league
+              let newLeague = league;
+              let message = '';
+              const tbl = allTables[league];
+              const playerPos = tbl.findIndex(t => t.teamId === team.id);
+              const myRules = getLeagueRules(league);
+            
+              // Check if promoted (auto or playoff)
+              const autoPromo = myRules ? myRules.promoAuto : 2;
+              const wasAutoPromoted = playerPos < autoPromo && currentTier > 0;
+              const wasPlayoffPromoted = playoffPromoted && playoffPromoted[league] === team.id && currentTier > 0;
+            
+              if (wasAutoPromoted || wasPlayoffPromoted) {
+                newLeague = pyramid[currentTier - 1];
+                message = wasPlayoffPromoted
+                  ? `🎉 PROMOTED via playoffs! Welcome to ${leagues[newLeague].name}!`
+                  : `🎉 PROMOTED! You finished ${playerPos + 1}${playerPos === 0 ? 'st' : 'nd'} and are promoted to ${leagues[newLeague].name}!`;
+              } else if (myRules && playerPos >= tbl.length - myRules.relCount && currentTier < pyramid.length - 1) {
+                newLeague = pyramid[currentTier + 1];
+                message = `😢 RELEGATED to ${leagues[newLeague].name}.`;
+              } else if (playerPos === 0 && currentTier === 0) {
+                message = `🏆 CHAMPIONS! You won ${leagues[league].name}!`;
+              } else if (playerPos === 0) {
+                message = `🏆 CHAMPIONS! You won ${leagues[league].name}!`;
+              } else {
+                message = `Season complete! You finished ${playerPos + 1}${playerPos === 1 ? 'nd' : playerPos === 2 ? 'rd' : 'th'}.`;
+              }
+            
+              alert(message);
+            
+              if (newLeague !== league) setLeague(newLeague);
+            
+              const seasonYear = date.getMonth() >= 7 ? date.getFullYear() + 1 : date.getFullYear();
+              const newDate = new Date(`${seasonYear}-08-01`);
+              setDate(newDate);
+            
+              // Youth development
+              team.players.forEach(p => {
+                const age = calcAge(p.dob);
+                if (age <= 27 && p.rating < 20) {
+                  const growthChance = 0.08 + (facilities.devLevel - 1) * 0.025;
+                  if (Math.random() < growthChance) p.rating = Math.min(20, p.rating + 1);
+                }
+                if (age >= 32) {
+                  const declineChance = 0.15 + (age - 32) * 0.1;
+                  if (Math.random() < declineChance && p.rating > 5) p.rating -= 1;
+                }
+              });
+            
+              // Reset all players
+              Object.keys(leagues).forEach(lk => {
+                leagues[lk].teams.forEach(tm => {
+                  tm.players.forEach(p => {
+                    p.goals = 0;
+                    p.assists = 0;
+                    p.yellowCards = 0;
+                    p.redCards = 0;
+                    p.injured = false;
+                    p.injuryUntil = null;
+                    p.suspended = false;
+                    p.suspendedUntil = 0;
+                    p.matchesPlayed = 0;
+                  });
                 });
               });
-            });
             
-            processAITransfers();
-            setIncomingOffers([]);
-            setTransferList([]);
-            generateFixtures();
-          };
+              processAITransfers();
+              setIncomingOffers([]);
+              setTransferList([]);
+              setPreseason(true);
+              generateFixtures();
+              setPlayoffState(null);
+              setState('info-page');
+            };
 
           const getTable = (lk) => {
             const lg = leagues[lk]; const fix = fixtures[lk] || [];
@@ -2764,12 +2948,19 @@
                                   <tbody>
                                       {t.map((row, i) => {
                               let zoneBg = '';
-                              if (i < 2) zoneBg = 'bg-green-900/40';
-                              else if (i >= t.length - 3) zoneBg = 'bg-red-900/40';
+                              const lr = getLeagueRules(lk);
+                              const autoUp = lr ? lr.promoAuto : 2;
+                              const playoffUp = lr ? lr.promoPlayoff : 0;
+                              const relDown = lr ? lr.relCount : 3;
+                              const playoffSeeds = lr ? (lr.playoffSeeds || []) : [];
+                                
+                                if (i < autoUp) zoneBg = 'bg-green-900/40';
+                                else if (playoffSeeds.includes(i + 1)) zoneBg = 'bg-green-900/20';
+                                else if (i >= t.length - relDown && relDown > 0) zoneBg = 'bg-red-900/40';
                               const isPlayer = row.teamId === team.id;
                               return (
                                   <tr key={row.teamId} className={`border-b border-gray-700 ${isPlayer ? 'ring-2 ring-orange-500' : zoneBg}`}>
-                                      <td className="text-white p-2">{i + 1}{i < 2 && <span className="ml-1 text-green-400">↑</span>}{i >= t.length - 3 && <span className="ml-1 text-red-400">↓</span>}</td>
+                                      <td className="text-white p-2">{i + 1}{i < autoUp && <span className="ml-1 text-green-400">↑</span>}{playoffSeeds.includes(i + 1) && <span className="ml-1 text-green-300">⇈</span>}{i >= t.length - relDown && relDown > 0 && <span className="ml-1 text-red-400">↓</span>}</td>
                                       <td className="text-white p-2 cursor-pointer hover:text-orange-400" onClick={() => {
                                       const tm = leagues[lk].teams.find(t => t.id === row.teamId);
                                       if (tm) { setSelectedTeamProfile({ team: tm, leagueKey: lk }); setPage('team-profile'); }
@@ -2791,8 +2982,9 @@
                       );
                   })}
                       <div className="space-y-2 text-xs">
-                          <div className="flex items-center gap-2"><div className="w-4 h-4 bg-green-900/40 rounded"></div><span className="text-gray-400">Promotion zone (Top 2)</span></div>
-                          <div className="flex items-center gap-2"><div className="w-4 h-4 bg-red-900/40 rounded"></div><span className="text-gray-400">Relegation zone (Bottom 3)</span></div>
+                          <div className="flex items-center gap-2"><div className="w-4 h-4 bg-green-900/40 rounded"></div><span className="text-gray-400">Automatic promotion</span></div>
+                          <div className="flex items-center gap-2"><div className="w-4 h-4 bg-green-900/20 rounded"></div><span className="text-gray-400">Playoff zone</span></div>
+                          <div className="flex items-center gap-2"><div className="w-4 h-4 bg-red-900/40 rounded"></div><span className="text-gray-400">Relegation zone</span></div>
                       </div>
                   </div>
               )}
@@ -3897,6 +4089,74 @@
             </div>
           );
         }
+
+            if (state === 'playoffs' && playoffState) {
+              return (
+                <div className="min-h-screen bg-gray-900 flex flex-col">
+                  <div className="p-4 text-center" style={{ background: 'linear-gradient(180deg, #1a3a1a 0%, #0a1a0a 100%)' }}>
+                    <p className="text-yellow-400 font-bold text-2xl" style={{ fontFamily: 'monospace' }}>PLAYOFFS</p>
+                    <p className="text-yellow-600 text-sm">{leagues[playoffState.leagueKey].name}</p>
+                  </div>
+            
+                  <div className="flex-1 overflow-y-auto p-4 pb-24">
+                    {playoffState.results.map((r, i) => (
+                      <div key={i} className={`bg-gray-800 rounded-lg p-4 mb-3 ${r.round === 'FINAL' ? 'ring-2 ring-yellow-500' : ''}`}>
+                        <p className={`text-xs font-bold mb-2 ${r.round === 'FINAL' ? 'text-yellow-400' : 'text-gray-500'}`}>{r.round}</p>
+            
+                        {r.leg1 ? (
+                          <>
+                            <div className="flex justify-between items-center mb-1">
+                              <span className="text-white text-sm">{r.leg1.home}</span>
+                              <span className="text-white font-bold">{r.leg1.homeScore} - {r.leg1.awayScore}</span>
+                              <span className="text-white text-sm">{r.leg1.away}</span>
+                            </div>
+                            <div className="flex justify-between items-center mb-2">
+                              <span className="text-white text-sm">{r.leg2.home}</span>
+                              <span className="text-white font-bold">{r.leg2.homeScore} - {r.leg2.awayScore}</span>
+                              <span className="text-white text-sm">{r.leg2.away}</span>
+                            </div>
+                            <div className="text-center">
+                              <span className="text-gray-400 text-xs">Agg: {r.agg[0]} - {r.agg[1]}</span>
+                              <p className="text-green-400 font-bold text-sm mt-1">✓ {r.winner.name} advance</p>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <div className="flex justify-between items-center mb-2">
+                              <div className="flex items-center gap-2">
+                                <div className="flex-shrink-0">{renderShirt(r.team1, '30px')}</div>
+                                <span className="text-white text-sm">{r.result.home}</span>
+                              </div>
+                              <span className="text-white font-bold text-lg">{r.result.homeScore} - {r.result.awayScore}</span>
+                              <div className="flex items-center gap-2">
+                                <span className="text-white text-sm">{r.result.away}</span>
+                                <div className="flex-shrink-0">{renderShirt(r.team2, '30px')}</div>
+                              </div>
+                            </div>
+                            <p className={`text-center font-bold text-sm ${r.round === 'FINAL' ? 'text-yellow-400' : 'text-green-400'}`}>
+                              {r.round === 'FINAL' ? '🏆 ' : '✓ '}{r.winner.name} {r.round === 'FINAL' ? 'PROMOTED!' : 'advance'}
+                            </p>
+                          </>
+                        )}
+                      </div>
+                    ))}
+            
+                    <div className={`bg-gray-800 rounded-lg p-6 text-center ${playoffState.promotedTeam.id === team.id ? 'ring-2 ring-green-500' : 'ring-2 ring-red-500'}`}>
+                      <p className="text-3xl mb-2">{playoffState.promotedTeam.id === team.id ? '🎉' : '😢'}</p>
+                      <p className="text-white font-bold text-xl">{playoffState.message}</p>
+                    </div>
+                  </div>
+            
+                  <div className="fixed bottom-0 left-0 right-0 p-4 bg-gray-900 z-50">
+                    <button onClick={() => {
+                      const promoted = {};
+                      promoted[playoffState.leagueKey] = playoffState.promotedTeam.id;
+                      completeSeasonTransition(promoted);
+                    }} className="w-full bg-green-600 text-white py-4 rounded-lg font-bold text-lg">Continue to Next Season</button>
+                  </div>
+                </div>
+              );
+            }
 
             if (state === 'post-match') {
               const isHome = match?.home;
