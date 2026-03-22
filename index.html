@@ -695,32 +695,109 @@
           };
 
           const generateFixtures = () => {
-            const newFix = {};
-            Object.keys(leagues).forEach(lk => {
-              const lg = leagues[lk]; const teams = lg.teams;
-              teams.forEach(tm => { tm.players.forEach(p => {
-                  if (!p.goals) p.goals = 0;
-                  if (!p.assists) p.assists = 0;
-                  if (!p.yellowCards) p.yellowCards = 0;
-                  if (!p.redCards) p.redCards = 0;
-                  if (!p.suspended) p.suspended = false;
-                  if (!p.suspendedUntil) p.suspendedUntil = 0;
-                  if (!p.matchesPlayed) p.matchesPlayed = 0;
-                  if (!p.injured) p.injured = false;
-                }); });
-              const n = teams.length; const fix = [];
-              for (let r = 0; r < (n - 1) * 2; r++) {
-                const first = r < n - 1; const base = first ? r : r - (n - 1);
-                for (let i = 0; i < n / 2; i++) {
-                  let h = (base + i) % (n - 1); let a = (n - 1 - i + base) % (n - 1);
-                  if (i === 0) a = n - 1; if (!first) [h, a] = [a, h];
-                  fix.push({ homeTeamId: teams[h].id, awayTeamId: teams[a].id, played: false, homeScore: null, awayScore: null, scorers: [], matchday: r + 1 });
+          const newFix = {};
+          Object.keys(leagues).forEach(lk => {
+            const lg = leagues[lk]; const teams = lg.teams;
+            teams.forEach(tm => { tm.players.forEach(p => {
+              if (!p.goals) p.goals = 0;
+              if (!p.assists) p.assists = 0;
+              if (!p.yellowCards) p.yellowCards = 0;
+              if (!p.redCards) p.redCards = 0;
+              if (!p.injured) p.injured = false;
+              if (!p.suspended) p.suspended = false;
+              if (!p.suspendedUntil) p.suspendedUntil = 0;
+              if (!p.matchesPlayed) p.matchesPlayed = 0;
+            }); });
+        
+            const n = teams.length;
+            const fix = [];
+            const teamIds = teams.map(t => t.id);
+        
+            // Generate round-robin with proper home/away alternation
+            const rounds = [];
+            const ids = [...teamIds];
+            const ghost = n % 2 !== 0 ? -1 : null;
+            if (ghost !== null) ids.push(ghost);
+            const total = ids.length;
+            const half = total / 2;
+            const fixed = ids[0];
+            const rotating = ids.slice(1);
+        
+            for (let r = 0; r < total - 1; r++) {
+              const round = [];
+              const current = [fixed, ...rotating];
+        
+              for (let i = 0; i < half; i++) {
+                const t1 = current[i];
+                const t2 = current[total - 1 - i];
+                if (t1 === -1 || t2 === -1) continue;
+        
+                // Alternate home/away each round
+                if (r % 2 === 0) {
+                  round.push({ home: t1, away: t2 });
+                } else {
+                  round.push({ home: t2, away: t1 });
                 }
               }
-              newFix[lk] = fix;
+              rounds.push(round);
+              // Rotate
+              rotating.push(rotating.shift());
+            }
+        
+            // First half of season
+            let matchday = 1;
+            rounds.forEach(round => {
+              round.forEach(m => {
+                fix.push({ homeTeamId: m.home, awayTeamId: m.away, played: false, homeScore: null, awayScore: null, scorers: [], matchday });
+              });
+              matchday++;
             });
-            setFixtures(newFix);
-          };
+        
+            // Second half — reverse home/away
+            rounds.forEach(round => {
+              round.forEach(m => {
+                fix.push({ homeTeamId: m.away, awayTeamId: m.home, played: false, homeScore: null, awayScore: null, scorers: [], matchday });
+              });
+              matchday++;
+            });
+        
+            // Now reorder each team's fixtures to alternate H/A as much as possible
+            // Group fixtures by matchday
+            const matchdays = {};
+            fix.forEach(f => {
+              if (!matchdays[f.matchday]) matchdays[f.matchday] = [];
+              matchdays[f.matchday].push(f);
+            });
+        
+            // Track each team's last home/away
+            const teamLastHome = {};
+            const reorderedFix = [];
+            const mdKeys = Object.keys(matchdays).map(Number).sort((a, b) => a - b);
+        
+            mdKeys.forEach(md => {
+              const games = matchdays[md];
+              games.forEach(g => {
+                // Check if swapping would improve alternation
+                const hLast = teamLastHome[g.homeTeamId];
+                const aLast = teamLastHome[g.awayTeamId];
+        
+                // If home team was home last AND away team was away last, swap
+                if (hLast === true && aLast === false) {
+                  const temp = g.homeTeamId;
+                  g.homeTeamId = g.awayTeamId;
+                  g.awayTeamId = temp;
+                }
+        
+                teamLastHome[g.homeTeamId] = true;
+                teamLastHome[g.awayTeamId] = false;
+                reorderedFix.push(g);
+              });
+            });
+        
+            newFix[lk] = reorderedFix;
+          });
+          setFixtures(newFix);
+        };
 
             const simPlayoffLeg = (home, away) => {
               const r = simMatch(home, away, false);
