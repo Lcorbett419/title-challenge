@@ -1063,60 +1063,91 @@
           };
 
           const simMatch = (h, a, track) => {
-            const comm = []; const scorers = [];
-            const getMatchPlayers = (tm) => {
-              if (tm.id === team.id && Object.keys(startingXI).length > 0) {
-                return Object.entries(startingXI).map(([key, playerId]) => {
-                  const player = tm.players.find(p => p.id === playerId);
-                  if (!player || player.injured || player.suspended) return null;
-                  const posIdx = parseInt(key.replace('pos', ''));
-                  const requiredPos = formations[formation].positions[posIdx];
-                  const inPosition = player.positions.includes(requiredPos);
-                  return { ...player, effectiveRating: inPosition ? player.rating : Math.max(1, player.rating - 5) };
-                }).filter(p => p !== null);
-              } else {
-                return tm.players.filter(p => !p.injured && !p.suspended).sort((a, b) => b.rating - a.rating).slice(0, 11).map(p => ({ ...p, effectiveRating: p.rating }));
-              }
-            };
-            const homePlayers = getMatchPlayers(h); const awayPlayers = getMatchPlayers(a);
-            let hs = 0, as = 0;
-            comm.push(`${h.name} vs ${a.name}`); comm.push("Kick off!");
-            for (let i = 0; i < 10; i++) {
-              const min = Math.floor(Math.random() * 90) + 1;
-              if (Math.random() < 0.3) {
-                const pickScorer = (players) => {
-                  const r = Math.random();
-                  if (r < 0.70) { const fwd = players.filter(p => p.positions.some(pos => ['ST','LW','RW','CAM'].includes(pos))); return fwd.length > 0 ? fwd[Math.floor(Math.random() * fwd.length)] : null; }
-                  if (r < 0.90) { const mid = players.filter(p => p.positions.some(pos => ['CDM','CM'].includes(pos))); return mid.length > 0 ? mid[0] : null; }
-                  if (r < 0.999) { const def = players.filter(p => p.positions.some(pos => ['LB','CB','RB'].includes(pos))); return def.length > 0 ? def[0] : null; }
-                  return players.find(p => p.positions.includes('GK')) || null;
-                };
-                if (Math.random() < 0.5) {
-                  const sc = pickScorer(homePlayers);
-                  if (sc && Math.random() < (0.2 + sc.effectiveRating * 0.02)) { hs++; comm.push(`${min}' GOAL! ${sc.name}! ${hs}-${as}`); if (track) scorers.push({ playerId: sc.id, teamId: h.id }); }
-                } else {
-                  const sc = pickScorer(awayPlayers);
-                  if (sc && Math.random() < (0.2 + sc.effectiveRating * 0.02)) { as++; comm.push(`${min}' GOAL! ${sc.name}! ${hs}-${as}`); if (track) scorers.push({ playerId: sc.id, teamId: a.id }); }
+          const comm = []; const scorers = [];
+          const getMatchPlayers = (tm) => {
+            if (tm.id === team.id && Object.keys(startingXI).length > 0) {
+              return Object.entries(startingXI).map(([key, playerId]) => {
+                const player = tm.players.find(p => p.id === playerId);
+                if (!player || player.injured) return null;
+                const posIdx = parseInt(key.replace('pos', ''));
+                const requiredPos = formations[formation].positions[posIdx];
+                const inPosition = player.positions.includes(requiredPos);
+                return { ...player, effectiveRating: inPosition ? player.rating : Math.max(1, player.rating - 5) };
+              }).filter(p => p !== null);
+            } else {
+              return tm.players.filter(p => !p.injured && !p.suspended).sort((a, b) => b.rating - a.rating).slice(0, 11).map(p => ({ ...p, effectiveRating: p.rating }));
+            }
+          };
+        
+          const homePlayers = getMatchPlayers(h);
+          const awayPlayers = getMatchPlayers(a);
+          let hs = 0, as = 0;
+        
+          // Strength-based system (same as generateMatchEvents)
+          const homeStrength = homePlayers.reduce((s, p) => s + p.effectiveRating, 0) / Math.max(homePlayers.length, 1);
+          const awayStrength = awayPlayers.reduce((s, p) => s + p.effectiveRating, 0) / Math.max(awayPlayers.length, 1);
+          const totalStrength = homeStrength + awayStrength;
+          const baseChanceRate = 0.03 + (totalStrength / 40) * 0.06;
+          const homeDominance = homeStrength / totalStrength;
+          const homeChancePct = Math.min(0.75, homeDominance + 0.05);
+        
+          comm.push(`${h.name} vs ${a.name}`);
+          comm.push("Kick off!");
+        
+          for (let min = 1; min <= 90; min++) {
+            if (Math.random() < baseChanceRate) {
+              const isHome = Math.random() < homeChancePct;
+              const players = isHome ? homePlayers : awayPlayers;
+        
+              const pickScorer = (ps) => {
+                const r = Math.random();
+                if (r < 0.70) { const fwd = ps.filter(p => p.positions.some(pos => ['ST','LW','RW','CAM'].includes(pos))); return fwd.length > 0 ? fwd[Math.floor(Math.random() * fwd.length)] : null; }
+                if (r < 0.90) { const mid = ps.filter(p => p.positions.some(pos => ['CDM','CM'].includes(pos))); return mid.length > 0 ? mid[0] : null; }
+                if (r < 0.999) { const def = ps.filter(p => p.positions.some(pos => ['LB','CB','RB'].includes(pos))); return def.length > 0 ? def[0] : null; }
+                return ps.find(p => p.positions.includes('GK')) || null;
+              };
+        
+              const sc = pickScorer(players);
+              if (sc) {
+                const scoreChance = 0.12 + sc.effectiveRating * 0.015;
+                if (Math.random() < scoreChance) {
+                  if (isHome) hs++; else as++;
+                  comm.push(`${min}' GOAL! ${sc.name}! ${hs}-${as}`);
+                  if (track) {
+                    // Pick assister
+                    const possibleAssisters = players.filter(p => p.id !== sc.id);
+                    let assisterId = null;
+                    if (possibleAssisters.length > 0 && Math.random() < 0.9) {
+                      const midAtk = possibleAssisters.filter(p => p.positions.some(pos => ['CAM','CM','LW','RW','ST'].includes(pos)));
+                      const assister = midAtk.length > 0 ? midAtk[Math.floor(Math.random() * midAtk.length)] : possibleAssisters[Math.floor(Math.random() * possibleAssisters.length)];
+                      assisterId = assister.id;
+                    }
+                    scorers.push({ playerId: sc.id, teamId: isHome ? h.id : a.id, assisterId });
+                  }
                 }
               }
             }
-            [...homePlayers, ...awayPlayers].forEach(p => {
-              if (!p.injured && Math.random() < 0.01) {
-                const tmObj = h.players.find(pl => pl.id === p.id) ? h : a;
-                const originalPlayer = tmObj.players.find(pl => pl.id === p.id);
-                if (originalPlayer) {
-                  originalPlayer.injured = true;
-                  const w = 1 + Math.floor(Math.random() * 4);
-                  const injDate = new Date(date);
-                  injDate.setDate(injDate.getDate() + w * 7);
-                  originalPlayer.injuryUntil = injDate.toISOString();
-                  if ((h.id === team.id || a.id === team.id)) comm.push(`⚕️ ${p.name} injured (${w} week${w > 1 ? 's' : ''})`);
-                }
+          }
+        
+          // Injuries
+          [...homePlayers, ...awayPlayers].forEach(p => {
+            if (!p.injured && Math.random() < 0.01) {
+              const tmObj = h.players.find(pl => pl.id === p.id) ? h : a;
+              const originalPlayer = tmObj.players.find(pl => pl.id === p.id);
+              if (originalPlayer) {
+                originalPlayer.injured = true;
+                const w = 1 + Math.floor(Math.random() * 4);
+                const injDate = new Date(date);
+                injDate.setDate(injDate.getDate() + w * 7);
+                originalPlayer.injuryUntil = injDate.toISOString();
+                if ((h.id === team.id || a.id === team.id)) comm.push(`⚕️ ${p.name} injured (${w} week${w > 1 ? 's' : ''})`);
               }
-            });
-            comm.push(`FULL TIME: ${h.name} ${hs} - ${as} ${a.name}`);
-            return { homeScore: hs, awayScore: as, commentary: comm, scorers };
-          };
+            }
+          });
+        
+          comm.push(`FULL TIME: ${h.name} ${hs} - ${as} ${a.name}`);
+          return { homeScore: hs, awayScore: as, commentary: comm, scorers };
+        };
 
             const generateMatchEvents = (homePlayers, awayPlayers, h, a, minStart, minEnd, existingScore, existingScorers) => {
               const events = [];
