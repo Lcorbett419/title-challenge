@@ -5180,7 +5180,7 @@
         "players": [
           { "id": 1, "name": "Daniel Heuer Fernandes", "positions": ["GK"], "dob": "1992-11-13", "rating": 14 },
           { "id": 12, "name": "Sander Tangvik", "positions": ["GK"], "dob": "2002-11-29", "rating": 13 },
-          { "id": 44, "name": "Luka Vušković", "positions": ["CB"], "dob": "2007-02-24", "rating": 15 },
+          { "id": 44, "name": "Luka Vušković", "positions": ["CB"], "dob": "2007-02-24", "rating": 14 },
           { "id": 25, "name": "Jordan Torunarigha", "positions": ["CB"], "dob": "1997-08-07", "rating": 14 },
           { "id": 17, "name": "Warmed Omari", "positions": ["CB"], "dob": "2000-04-23", "rating": 14 },
           { "id": 28, "name": "Miro Muheim", "positions": ["LB"], "dob": "1998-03-24", "rating": 14 },
