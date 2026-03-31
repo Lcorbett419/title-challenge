@@ -3665,10 +3665,10 @@
                       if (weeksPassed >= 4) setPreseason(false);
                     
                       setPostMatchNews(news);
-                      if (news.length > 0) {
                         setState('post-match');
-                      }
-                    }}
+                    
+                  }}
+                        
                         className="w-full bg-orange-600 text-white py-4 rounded-lg font-bold">
                       Advance Week ({Math.max(0, 4 - Math.round((date - new Date('2025-08-01')) / (7 * 24 * 60 * 60 * 1000)))} weeks until season)
                     </button>
