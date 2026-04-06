@@ -2502,6 +2502,15 @@
 
                     const handleSlotClick = (idx) => {
                       if (selectedSlot === idx) { setSelectedSlot(null); return; }
+                      // If a bench player is selected, place them here
+                      if (selectedBenchPlayer) {
+                        const xi = { ...startingXI };
+                        xi[`pos${idx}`] = selectedBenchPlayer;
+                        setStartingXI(xi);
+                        setSelectedBenchPlayer(null);
+                        setSelectedSlot(null);
+                        return;
+                      }
                       if (selectedSlot !== null) {
                         const xi = { ...startingXI };
                         const temp = xi[`pos${selectedSlot}`];
@@ -2525,7 +2534,13 @@
                     };
 
                     const handleBenchClick = (playerId) => {
-                      if (selectedSlot !== null) handleBenchToSlot(playerId, selectedSlot);
+                      if (selectedSlot !== null) {
+                        handleBenchToSlot(playerId, selectedSlot);
+                      } else {
+                        // Select bench player first, then tap a slot
+                        setSelectedBenchPlayer(selectedBenchPlayer === playerId ? null : playerId);
+                        setSelectedSlot(null);
+                      }
                     };
 
                     const autoFillBest = () => {
@@ -2658,9 +2673,14 @@
                           </div>
                         </div>
 
-                        {selectedSlot !== null && (
+                        {(selectedSlot !== null || selectedBenchPlayer) && (
                           <div className="bg-orange-900/40 px-3 py-2 text-center">
-                            <p className="text-orange-300 text-xs font-semibold">Tap a bench player to place them, or tap another shirt to swap</p>
+                            <p className="text-orange-300 text-xs font-semibold">
+                              {selectedSlot !== null
+                                ? 'Tap a bench player to place them, or tap another shirt to swap'
+                                : `Tap a position on the pitch to place ${team.players.find(p => p.id === selectedBenchPlayer)?.name || 'player'}`
+                              }
+                            </p>
                           </div>
                         )}
 
@@ -2671,7 +2691,7 @@
                           const bestSlot = selectedSlot !== null ? formations[formation].positions[selectedSlot] : null;
                           const fitsSelected = bestSlot && p.positions.includes(bestSlot);
                           return (
-                              <div key={p.id} onClick={() => handleBenchClick(p.id)} className={`rounded p-2 flex items-center gap-3 transition-all ${selectedSlot !== null ? fitsSelected ? 'bg-green-900/40 cursor-pointer ring-1 ring-green-500' : 'bg-gray-700 cursor-pointer hover:bg-gray-600' : 'bg-gray-700'}`}>
+                              <div key={p.id} onClick={() => handleBenchClick(p.id)} className={`rounded p-2 flex items-center gap-3 transition-all cursor-pointer ${selectedBenchPlayer === p.id ? 'bg-orange-900/40 ring-2 ring-orange-500' : selectedSlot !== null ? fitsSelected ? 'bg-green-900/40 ring-1 ring-green-500' : 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-700 hover:bg-gray-600'}`}>
                                   <div style={{ width: '32px', height: '28px', flexShrink: 0 }}>
                                       <ShirtSvg number={p.rating} isGK={p.positions.includes('GK')} isOOP={false} />
                                   </div>
