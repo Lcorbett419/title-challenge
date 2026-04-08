@@ -2822,90 +2822,7 @@
                     </div>
                   );
                 })()}
-                        <div className="relative w-full" style={{ paddingBottom: '140%', background: 'linear-gradient(180deg, #2d5a1e 0%, #357a24 8%, #2d5a1e 16%, #357a24 24%, #2d5a1e 32%, #357a24 40%, #2d5a1e 48%, #357a24 56%, #2d5a1e 64%, #357a24 72%, #2d5a1e 80%, #357a24 88%, #2d5a1e 100%)' }}>
-                          <div className="absolute inset-0">
-                            <svg viewBox="0 0 100 140" className="absolute inset-0 w-full h-full">
-                              <rect x="2" y="2" width="96" height="136" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.4" />
-                              <line x1="2" y1="70" x2="98" y2="70" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
-                              <circle cx="50" cy="70" r="10" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
-                              <circle cx="50" cy="70" r="0.6" fill="rgba(255,255,255,0.2)" />
-                              <rect x="25" y="2" width="50" height="18" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
-                              <rect x="35" y="2" width="30" height="7" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
-                              <rect x="25" y="120" width="50" height="18" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
-                              <rect x="35" y="131" width="30" height="7" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
-                              <path d="M 35 20 A 12 12 0 0 0 65 20" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
-                              <path d="M 35 120 A 12 12 0 0 1 65 120" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
-                            </svg>
-
-                             {lineup.map((slot, idx) => {
-                              const pos = allPositions[slot.position] || { x: 50, y: 50 };
-                              const playerId = startingXI[`pos${idx}`];
-                              const player = playerId ? team.players.find(p => p.id === playerId) : null;
-                              const requiredPos = lineup[idx]?.position || 'CM';
-                              const isGK = requiredPos === 'GK';
-                              const isOutOfPosition = player && !isPlayerInPosition(player, lineup[idx]?.position || 'CM');
-                              const isSelected = selectedSlot === idx;
-
-                              const posAbbrevs = player ? player.positions.map(p => {
-                                const map = { 'GK':'G', 'LB':'DL', 'RB':'DR', 'CB':'DC', 'CDM':'MC', 'CM':'MC', 'CAM':'AC', 'LW':'ALC', 'RW':'ARC', 'ST':'A' };
-                                return map[p] || p;
-                              }).join(' ') : '';
-
-                              const shirtNum = player ? (idx + 1) : '?';
-                              const surname = player ? player.name.split(' ').pop() : requiredPos;
-
-                              return (
-                                <div key={idx} onClick={() => handleSlotClick(idx)} className="absolute flex flex-col items-center cursor-pointer" style={{ left: `${pos.x}%`, top: `${pos.y / 140 * 100}%`, transform: 'translate(-50%, -50%)', zIndex: isSelected ? 20 : 10, width: '18%' }}>
-                                  <div className={`relative transition-transform ${isSelected ? 'scale-110' : ''}`} style={{ width: '42px', height: '38px' }}>
-                                    <ShirtSvg number={shirtNum} isGK={isGK} isOOP={isOutOfPosition && !!player} />
-                                    {isSelected && <div className="absolute inset-0 rounded" style={{ boxShadow: '0 0 12px rgba(249,115,22,0.8)' }}></div>}
-                                  </div>
-                                  <div className="text-white text-center font-bold leading-tight mt-0.5 cursor-pointer" style={{ fontSize: '8px', textShadow: '0 1px 3px rgba(0,0,0,0.9)' }} onClick={(e) => { if (player) { e.stopPropagation(); setSelectedPlayer(player); setSelectedPlayerTeam(team); setPage('player-profile'); }}}>{surname}</div>
-                                  <div className="text-gray-300 text-center leading-tight" style={{ fontSize: '7px', textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}>{player ? posAbbrevs : ''}</div>
-                                  {isOutOfPosition && player && (<div style={{ fontSize: '8px' }} className="text-yellow-400">⚠️</div>)}
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-
-                        {(selectedSlot !== null || selectedBenchPlayer) && (
-                          <div className="bg-orange-900/40 px-3 py-2 text-center">
-                            <p className="text-orange-300 text-xs font-semibold">
-                              {selectedSlot !== null
-                                ? 'Tap a bench player to place them, or tap another shirt to swap'
-                                : `Tap a position on the pitch to place ${team.players.find(p => p.id === selectedBenchPlayer)?.name || 'player'}`
-                              }
-                            </p>
-                          </div>
-                        )}
-
-                      <div className="bg-gray-800 rounded-b-lg p-4">
-                          <h3 className="text-white font-bold mb-3">Substitutes</h3>
-                          <div className="space-y-2 max-h-64 overflow-y-auto">
-                              {benchPlayers.map(p => {
-                          const bestSlot = selectedSlot !== null ? formations[formation].positions[selectedSlot] : null;
-                          const fitsSelected = bestSlot && p.positions.includes(bestSlot);
-                          return (
-                              <div key={p.id} onClick={() => handleBenchClick(p.id)} className={`rounded p-2 flex items-center gap-3 transition-all cursor-pointer ${selectedBenchPlayer === p.id ? 'bg-orange-900/40 ring-2 ring-orange-500' : selectedSlot !== null ? fitsSelected ? 'bg-green-900/40 ring-1 ring-green-500' : 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-700 hover:bg-gray-600'}`}>
-                                  <div style={{ width: '32px', height: '28px', flexShrink: 0 }}>
-                                      <ShirtSvg number={p.rating} isGK={p.positions.includes('GK')} isOOP={false} />
-                                  </div>
-                                  <div className="flex-1 min-w-0">
-                                      <div className="text-white font-semibold text-sm truncate">{p.name}</div>
-                                      <div className="text-gray-400 text-xs">{p.positions.join('/')} • Age {calcAge(p.dob)}</div>
-                                  </div>
-                                  {selectedSlot !== null && fitsSelected && <span className="text-green-400 text-xs font-bold">✓</span>}
-                              </div>
-                          );
-                      })}
-                              {benchPlayers.length === 0 && <p className="text-gray-500 text-sm">All players in starting XI</p>}
-                          </div>
-                          </div>
-                      </div>
-                          );
-                        })()}
-
+                        
 {page === 'team-profile' && selectedTeamProfile && (() => {
   const tp = selectedTeamProfile.team;
   const lk = selectedTeamProfile.leagueKey;
@@ -4212,7 +4129,7 @@
                   const gkColor = '#2d8a4e';
                 
                 
-                  const ShirtSvg = ({ number, isGK, isOOP }) => {
+                    const ShirtSvg = ({ number, isGK, isOOP }) => {
                     const clipId = `tc${number}-${Math.random().toString(36).substr(2,5)}`;
                     const c1 = isGK ? gkColor : isOOP ? '#b45309' : pc;
                     const c2 = isGK ? '#1a6b30' : isOOP ? '#92400e' : sc2;
