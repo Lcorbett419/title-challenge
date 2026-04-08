@@ -2837,8 +2837,8 @@
                               <path d="M 35 120 A 12 12 0 0 1 65 120" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
                             </svg>
 
-                             {layout.map((pos, idx) => {
-                              const layout = lineup.map(s => allPositions[s.position] || { x: 50, y: 50 });
+                             {lineup.map((slot, idx) => {
+                              const pos = allPositions[slot.position] || { x: 50, y: 50 };
                               const playerId = startingXI[`pos${idx}`];
                               const player = playerId ? team.players.find(p => p.id === playerId) : null;
                               const requiredPos = lineup[idx]?.position || 'CM';
