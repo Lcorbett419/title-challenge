@@ -1999,8 +1999,14 @@
           if (Math.random() < 0.15) generateIncomingOffers();
         
           // Advance date
-          const nd = new Date(date);
-          nd.setDate(nd.getDate() + 7);
+            const nd = new Date(date);
+            const totalFixtures = (fixtures[league] || []).filter(f => f.homeTeamId === team.id || f.awayTeamId === team.id).length;
+            const playedFixtures = (fixtures[league] || []).filter(f => (f.homeTeamId === team.id || f.awayTeamId === team.id) && f.played).length;
+            const seasonStartMonth = 8; // September after preseason
+            const seasonEndMonth = 5; // May
+            const totalWeeks = 42; // Aug to May
+            const daysPerMatch = Math.floor((totalWeeks * 7) / totalFixtures);
+            nd.setDate(nd.getDate() + Math.max(3, Math.min(10, daysPerMatch)));
           const seasonEndYear = date.getMonth() >= 7 ? date.getFullYear() + 1 : date.getFullYear();
           const seasonEnd = new Date(`${seasonEndYear}-07-31`);
           if (nd > seasonEnd) nd.setTime(seasonEnd.getTime());
