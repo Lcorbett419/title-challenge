@@ -18,6 +18,10 @@
           80% { background: #FFD700; color: #000; }
           100% { background: #000; color: #FFD700; }
         }
+        @keyframes pulse {
+          0%, 100% { transform: translate(-50%, -50%) scale(1); }
+          50% { transform: translate(-50%, -50%) scale(1.1); }
+        }
         .goal-flash-active {
           animation: goalFlashAnim 0.6s ease-in-out 3;
         }
@@ -82,7 +86,10 @@
           const [financeHistory, setFinanceHistory] = useState([]);
           const [startingXI, setStartingXI] = useState({});
           const [selectedSlot, setSelectedSlot] = useState(null);
-          const [selectedBenchPlayer, setSelectedBenchPlayer] = useState(null);  
+          const [selectedBenchPlayer, setSelectedBenchPlayer] = useState(null);
+          const [longPressSlot, setLongPressSlot] = useState(null);
+          const [longPressTimer, setLongPressTimer] = useState(null);
+          const [showPositionPicker, setShowPositionPicker] = useState(null);  
           const [showBench, setShowBench] = useState(false);
           const [country, setCountry] = useState(null);
           const [selectedPlayer, setSelectedPlayer] = useState(null);
@@ -108,6 +115,7 @@
           const [liveMinute, setLiveMinute] = useState(0);
           const [liveCommentary, setLiveCommentary] = useState([]);
           const [liveScore, setLiveScore] = useState({ home: 0, away: 0 });
+          const [lineup, setLineup] = useState([]);  
           const [matchTab, setMatchTab] = useState('commentary');
           const [matchPlayerRatings, setMatchPlayerRatings] = useState({ home: [], away: [] });
           const [goalFlash, setGoalFlash] = useState(false);
@@ -122,12 +130,52 @@
           const clockPausedRef = useRef(false);
           const matchIntRef = useRef(null);
 
-          const formations = {
-            '4-3-3': { positions: ['GK','LB','CB','CB','RB','CDM','CM','CM','LW','RW','ST'], labels: ['GK','LB','CB','CB','RB','CDM','CM','CM','LW','RW','ST'] },
-            '4-4-2': { positions: ['GK','LB','CB','CB','RB','CM','CM','CAM','CAM','ST','ST'], labels: ['GK','LB','CB','CB','RB','CM','CM','CAM','CAM','ST','ST'] },
-            '4-2-3-1': { positions: ['GK','LB','CB','CB','RB','CDM','CDM','CAM','LW','RW','ST'], labels: ['GK','LB','CB','CB','RB','CDM','CDM','CAM','LW','RW','ST'] },
-            '3-5-2': { positions: ['GK','CB','CB','CB','LB','RB','CM','CM','CM','ST','ST'], labels: ['GK','CB','CB','CB','LB','RB','CM','CM','CM','ST','ST'] }
-          };
+          const allPositions = {
+              'GK':   { x: 50, y: 92, label: 'GK' },
+              'LCB':  { x: 25, y: 78, label: 'LCB' },
+              'CCB':  { x: 50, y: 80, label: 'CCB' },
+              'RCB':  { x: 75, y: 78, label: 'RCB' },
+              'LB':   { x: 8, y: 72, label: 'LB' },
+              'RB':   { x: 92, y: 72, label: 'RB' },
+              'LWB':  { x: 8, y: 58, label: 'LWB' },
+              'RWB':  { x: 92, y: 58, label: 'RWB' },
+              'LCDM': { x: 35, y: 60, label: 'LCDM' },
+              'CCDM': { x: 50, y: 62, label: 'CCDM' },
+              'RCDM': { x: 65, y: 60, label: 'RCDM' },
+              'LCM':  { x: 30, y: 48, label: 'LCM' },
+              'CCM':  { x: 50, y: 50, label: 'CCM' },
+              'RCM':  { x: 70, y: 48, label: 'RCM' },
+              'LM':   { x: 8, y: 42, label: 'LM' },
+              'RM':   { x: 92, y: 42, label: 'RM' },
+              'LW':   { x: 15, y: 28, label: 'LW' },
+              'RW':   { x: 85, y: 28, label: 'RW' },
+              'LST':  { x: 35, y: 20, label: 'LST' },
+              'ST':   { x: 50, y: 18, label: 'ST' },
+              'RST':  { x: 65, y: 20, label: 'RST' }
+            };
+            
+            // Map free positions to database positions for in-position checking
+            const positionMapping = {
+              'GK': ['GK'],
+              'LCB': ['CB'], 'CCB': ['CB'], 'RCB': ['CB'],
+              'LB': ['LB'], 'RB': ['RB'],
+              'LWB': ['LB', 'LWB'], 'RWB': ['RB', 'RWB'],
+              'LCDM': ['CDM', 'CM'], 'CCDM': ['CDM'], 'RCDM': ['CDM', 'CM'],
+              'LCM': ['CM'], 'CCM': ['CM', 'CAM'], 'RCM': ['CM'],
+              'LM': ['LW', 'LM'], 'RM': ['RW', 'RM'],
+              'LW': ['LW'], 'RW': ['RW'],
+              'LST': ['ST', 'LW'], 'ST': ['ST'], 'RST': ['ST', 'RW']
+            };
+            
+            // Preset formations for quick setup
+            const presetFormations = {
+              '4-3-3': ['GK','LB','LCB','RCB','RB','LCDM','CCM','RCM','LW','RW','ST'],
+              '4-4-2': ['GK','LB','LCB','RCB','RB','LM','LCM','RCM','RM','LST','RST'],
+              '4-2-3-1': ['GK','LB','LCB','RCB','RB','LCDM','RCDM','LW','CCM','RW','ST'],
+              '3-5-2': ['GK','LCB','CCB','RCB','LWB','RWB','LCM','CCM','RCM','LST','RST'],
+              '4-1-4-1': ['GK','LB','LCB','RCB','RB','CCDM','LM','LCM','RCM','RM','ST'],
+              '3-4-3': ['GK','LCB','CCB','RCB','LWB','LCM','RCM','RWB','LW','RW','ST']
+            };
 
           useEffect(() => {
             fetch('./leagues-database.json')
@@ -681,14 +729,47 @@
 
           const selectLeague = (lk) => { setLeague(lk); setState('team-select'); };
 
+          const initLineup = (teamObj, preset) => {
+          const positions = preset || presetFormations['4-3-3'];
+          const newLineup = [];
+          const used = [];
+          positions.forEach(pos => {
+            const validPositions = positionMapping[pos] || [];
+            const eligible = teamObj.players.filter(p =>
+              !p.injured && !p.suspended && !used.includes(p.id) &&
+              p.positions.some(pp => validPositions.includes(pp))
+            ).sort((a, b) => b.rating - a.rating);
+            const fallback = teamObj.players.filter(p =>
+              !p.injured && !p.suspended && !used.includes(p.id)
+            ).sort((a, b) => b.rating - a.rating);
+            const pick = eligible[0] || fallback[0];
+            if (pick) {
+              newLineup.push({ playerId: pick.id, position: pos });
+              used.push(pick.id);
+            }
+          });
+          return newLineup;
+        };
+        
+        const lineupToStartingXI = (lin) => {
+          const xi = {};
+          lin.forEach((slot, idx) => {
+            xi[`pos${idx}`] = slot.playerId;
+          });
+          return xi;
+        };
+        
+        const isPlayerInPosition = (player, freePos) => {
+          const validPositions = positionMapping[freePos] || [];
+          return player.positions.some(pp => validPositions.includes(pp));
+        };
+            
           const selectTeam = (t) => {
             setTeam(t); generateFixtures();
             setFinanceHistory([{ date: new Date('2025-08-01').toISOString(), balance: t.budget }]);
-            const xi = {};
-            formations['4-3-3'].positions.forEach((pos, idx) => {
-              const eligible = t.players.filter(p => p.positions.includes(pos) && !Object.values(xi).includes(p.id));
-              if (eligible.length > 0) xi[`pos${idx}`] = eligible.sort((a, b) => b.rating - a.rating)[0].id;
-            });
+            const newLineup = initLineup(t, presetFormations['4-3-3']);
+            setLineup(newLineup);
+            setStartingXI(lineupToStartingXI(newLineup));
             setStartingXI(xi);
             const stadLvl = t.stadiumCapacity ? Math.round(t.stadiumCapacity / 10000) : 3;
             setFacilities({ stadiumLevel: Math.max(1, Math.min(10, stadLvl)), devLevel: 1 });
@@ -1148,8 +1229,10 @@
                 const player = tm.players.find(p => p.id === playerId);
                 if (!player || player.injured) return null;
                 const posIdx = parseInt(key.replace('pos', ''));
-                const requiredPos = formations[formation].positions[posIdx];
-                const inPosition = player.positions.includes(requiredPos);
+                const slot = lineup[posIdx];
+                const freePos = slot ? slot.position : 'CM';
+                const validPositions = positionMapping[freePos] || [];
+                const inPosition = player.positions.some(pp => validPositions.includes(pp));
                 return { ...player, effectiveRating: inPosition ? player.rating : Math.max(1, player.rating - 5) };
               }).filter(p => p !== null);
             } else {
@@ -1559,8 +1642,10 @@
                     const player = tm.players.find(p => p.id === playerId);
                     if (!player || player.injured) return null;
                     const posIdx = parseInt(key.replace('pos', ''));
-                    const requiredPos = formations[formation].positions[posIdx];
-                    const inPosition = player.positions.includes(requiredPos);
+                    const slot = lineup[posIdx];
+                    const freePos = slot ? slot.position : 'CM';
+                    const validPositions = positionMapping[freePos] || [];
+                    const inPosition = player.positions.some(pp => validPositions.includes(pp));
                     const rated = allRated.find(r => r.id === playerId);
                     const baseRating = rated ? rated.matchRating : 6.0;
                     return { ...player, effectiveRating: inPosition ? player.rating : Math.max(1, player.rating - 5), matchRating: baseRating };
@@ -1715,8 +1800,10 @@
                 const player = tm.players.find(p => p.id === playerId);
                 if (!player || player.injured) return null;
                 const posIdx = parseInt(key.replace('pos', ''));
-                const requiredPos = formations[formation].positions[posIdx];
-                const inPosition = player.positions.includes(requiredPos);
+                const slot = lineup[posIdx];
+                const freePos = slot ? slot.position : 'CM';
+                const validPositions = positionMapping[freePos] || [];
+                const inPosition = player.positions.some(pp => validPositions.includes(pp));
                 return { ...player, effectiveRating: inPosition ? player.rating : Math.max(1, player.rating - 5), matchRating: 6.0 + Math.random() * 1.0 };
               }).filter(p => p !== null);
             } else {
@@ -2467,166 +2554,271 @@
                   )}
 
                   {page === 'starting-xi' && (() => {
-                    const formationLayouts = {
-                      '4-3-3': [
-                        { x: 50, y: 92 },
-                        { x: 12, y: 74 }, { x: 37, y: 77 }, { x: 63, y: 77 }, { x: 88, y: 74 },
-                        { x: 50, y: 56 }, { x: 25, y: 50 }, { x: 75, y: 50 },
-                        { x: 15, y: 28 }, { x: 85, y: 28 }, { x: 50, y: 22 }
-                      ],
-                      '4-4-2': [
-                        { x: 50, y: 92 },
-                        { x: 12, y: 74 }, { x: 37, y: 77 }, { x: 63, y: 77 }, { x: 88, y: 74 },
-                        { x: 15, y: 50 }, { x: 40, y: 53 }, { x: 60, y: 53 }, { x: 85, y: 50 },
-                        { x: 35, y: 22 }, { x: 65, y: 22 }
-                      ],
-                      '4-2-3-1': [
-                        { x: 50, y: 92 },
-                        { x: 12, y: 74 }, { x: 37, y: 77 }, { x: 63, y: 77 }, { x: 88, y: 74 },
-                        { x: 35, y: 58 }, { x: 65, y: 58 },
-                        { x: 15, y: 38 }, { x: 50, y: 40 }, { x: 85, y: 38 },
-                        { x: 50, y: 20 }
-                      ],
-                      '3-5-2': [
-                        { x: 50, y: 92 },
-                        { x: 25, y: 77 }, { x: 50, y: 77 }, { x: 75, y: 77 },
-                        { x: 10, y: 53 }, { x: 90, y: 53 },
-                        { x: 30, y: 48 }, { x: 50, y: 45 }, { x: 70, y: 48 },
-                        { x: 35, y: 22 }, { x: 65, y: 22 }
-                      ]
-                    };
-
-                    const layout = formationLayouts[formation];
-                    const availablePlayers = team.players.filter(p => !p.injured && !p.suspended);
-                    const benchPlayers = availablePlayers.filter(p => !Object.values(startingXI).includes(p.id) && !p.suspended);
-
-                    const handleSlotClick = (idx) => {
-                      if (selectedSlot === idx) { setSelectedSlot(null); return; }
-                      // If a bench player is selected, place them here
-                      if (selectedBenchPlayer) {
-                        const xi = { ...startingXI };
-                        xi[`pos${idx}`] = selectedBenchPlayer;
-                        setStartingXI(xi);
-                        setSelectedBenchPlayer(null);
-                        setSelectedSlot(null);
-                        return;
-                      }
-                      if (selectedSlot !== null) {
-                        const xi = { ...startingXI };
-                        const temp = xi[`pos${selectedSlot}`];
-                        xi[`pos${selectedSlot}`] = xi[`pos${idx}`];
-                        xi[`pos${idx}`] = temp;
-                        setStartingXI(xi);
-                        setSelectedSlot(null);
-                      } else {
-                        setSelectedSlot(idx);
-                      }
-                    };
-
-                    const handleBenchToSlot = (playerId, slotIdx) => {
-                      const xi = { ...startingXI };
-                      const existingSlot = Object.entries(xi).find(([k, v]) => v === playerId);
-                      if (existingSlot) xi[existingSlot[0]] = xi[`pos${slotIdx}`];
-                      xi[`pos${slotIdx}`] = playerId;
-                      setStartingXI(xi);
-                      setSelectedSlot(null);
-                      setShowBench(false);
-                    };
-
-                    const handleBenchClick = (playerId) => {
-                      if (selectedSlot !== null) {
-                        handleBenchToSlot(playerId, selectedSlot);
-                      } else {
-                        // Select bench player first, then tap a slot
-                        setSelectedBenchPlayer(selectedBenchPlayer === playerId ? null : playerId);
-                        setSelectedSlot(null);
-                      }
-                    };
-
-                    const autoFillBest = () => {
-                      const xi = {};
-                      formations[formation].positions.forEach((pos, idx) => {
-                        const eligible = team.players.filter(p => p.positions.includes(pos) && !Object.values(xi).includes(p.id) && !p.injured);
-                        if (eligible.length > 0) xi[`pos${idx}`] = eligible.sort((a, b) => b.rating - a.rating)[0].id;
-                      });
-                      setStartingXI(xi);
-                    };
-
-                    const style = team.shirtStyle || 'plain';
-                    const pc = team.primaryColor || '#1a1a2e';
-                    const sc = team.secondaryColor || '#FFFFFF';
-                    const gkColor = '#2d8a4e';
-
-                    const ShirtSvg = ({ number, isGK, isOOP }) => {
-                      const clipId = `sc${number}-${Math.random().toString(36).substr(2,5)}`;
-                      const c1 = isGK ? gkColor : isOOP ? '#b45309' : pc;
-                      const c2 = isGK ? '#1a6b30' : isOOP ? '#92400e' : sc;
-                      const s = isGK ? 'plain' : isOOP ? 'plain' : style;
-                      const dark = ['#000000','#00205B','#1a1a2e','#1B458F','#034694','#003399','#1D428A','#132257','#231F20','#241F20','#012B4A','#00225C','#122336','#0A2452','#1A2F6B','#10274f','#022663','#6D2C34','#7A263A','#670E36','#6C1D45','#5B2D8E','#781D2A','#004D98','#012C57','#99022C','#00205B','#003DA5','#004FA3','#0054A6','#0055A4','#245701','#2B6303','#1D2CCF','#00296B','#003D7C','#DD0000','#DC052D','#ED1C24','#E2001A','#E32221','#CB3524','#E20613','#D91A2A','#C8102E','#DA291C','#e30613','#EB172B','#EE2523','#E7192F','#E1000F','#ED0000','#6B3524','#c22538','#1B2A4A','#0068A8','#FB090B','#1E71B8','#A31E2D','#A50044','#D40027','#CD2534','#00954C','#12A0D7','#F47920','#E2001A','#6A2382','#00843D'].includes(c1);
-                      const light = ['#FFFFFF','#FFE114','#FDE100','#FDB913','#FCDD09','#FFD700','#8AC3EE','#87CEEB','#6CABDD','#95BFE5','#99D6EA','#65B32E'].includes(c1);
-                      const txtCol = isGK ? '#FFFFFF' : dark ? '#FFFFFF' : light ? '#000000' : '#FFFFFF';
-                      return (
-                        <svg viewBox="0 0 60 55" style={{ width: '100%', height: '100%' }}>
-                          <defs><clipPath id={clipId}><path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" /></clipPath></defs>
-                          <path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" fill={c1} />
-                          <g clipPath={`url(#${clipId})`}>
-                            {s === 'stripes' && <>{[8,22,36,50].map(x => <rect key={x} x={x} y="0" width="7" height="55" fill={c2} />)}</>}
-                            {s === 'hoops' && <>{[8,22,36].map(y => <rect key={y} x="0" y={y} width="60" height="8" fill={c2} />)}</>}
-                            {s === 'quarters' && <><rect x="30" y="0" width="30" height="25" fill={c2} /><rect x="0" y="25" width="30" height="30" fill={c2} /></>}
-                            {s === 'sleeves' && <><path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} /><path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c2} /></>}
-                            {s === 'sash' && <><path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} /><path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c2} /><polygon points="5,50 15,50 55,10 55,0 50,0 45,0 0,45 0,50" fill={c2} opacity="0.9" /></>}
-                            {s === 'halves' && <><rect x="30" y="0" width="30" height="55" fill={c2} /><path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} /><path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c1} /></>}
-                            {s === 'checkered' && <>{[0,10,20,30,40,50].map(x => [0,10,20,30,40,50].map(y => ((x/10 + y/10) % 2 === 0) ? <rect key={`${x}-${y}`} x={x} y={y} width="10" height="10" fill={c2} /> : null))}</>}
-                          </g>
-                           {s !== 'hoops' && <path d="M20 5 L22 0 L38 0 L40 5" fill="none" stroke={c2} strokeWidth="2.5" />}
-                           <path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="1" />
-                          <text x="30" y="36" textAnchor="middle" fill={txtCol} fontSize="18" fontWeight="bold" fontFamily="Arial" stroke={txtCol === '#FFFFFF' ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.3)'} strokeWidth="0.5">{number}</text>
-                        </svg>
-                      );
-                    };
-
+                  const benchPlayers = team.players.filter(p =>
+                    !p.injured && !p.suspended && !lineup.some(s => s.playerId === p.id)
+                  ).sort((a, b) => b.rating - a.rating);
+                
+                  const style = team.shirtStyle || 'plain';
+                  const pc = team.primaryColor || '#1a1a2e';
+                  const sc2 = team.secondaryColor || '#FFFFFF';
+                  const gkColor = '#2d8a4e';
+                
+                  const ShirtSvg = ({ number, isGK, isOOP }) => {
+                    const clipId = `sc${number}-${Math.random().toString(36).substr(2,5)}`;
+                    const c1 = isGK ? gkColor : isOOP ? '#b45309' : pc;
+                    const c2 = isGK ? '#1a6b30' : isOOP ? '#92400e' : sc2;
+                    const s = isGK ? 'plain' : isOOP ? 'plain' : style;
+                    const dark = ['#000000','#00205B','#1a1a2e','#1B458F','#034694','#003399','#1D428A','#132257','#231F20','#241F20','#012B4A','#00225C','#122336','#0A2452','#1A2F6B','#10274f','#022663','#6D2C34','#7A263A','#670E36','#6C1D45','#5B2D8E','#781D2A','#004D98','#012C57','#99022C','#00205B','#003DA5','#004FA3','#0054A6','#0055A4','#245701','#2B6303','#1D2CCF','#00296B','#003D7C','#DD0000','#DC052D','#ED1C24','#E2001A','#E32221','#CB3524','#E20613','#D91A2A','#C8102E','#DA291C','#e30613','#EB172B','#EE2523','#E7192F','#E1000F','#ED0000','#6B3524','#c22538','#1B2A4A','#0068A8','#FB090B','#1E71B8','#A31E2D','#A50044','#D40027','#CD2534','#00954C','#12A0D7','#F47920','#E2001A','#6A2382','#00843D'].includes(c1);
+                    const light = ['#FFFFFF','#FFE114','#FDE100','#FDB913','#FCDD09','#FFD700','#8AC3EE','#87CEEB','#6CABDD','#95BFE5','#99D6EA','#65B32E'].includes(c1);
+                    const txtCol = isGK ? '#FFFFFF' : dark ? '#FFFFFF' : light ? '#000000' : '#FFFFFF';
                     return (
-                      <div>
-                        <div className="bg-gray-800 rounded-t-lg p-3 flex justify-between items-center border-b border-gray-700">
-                          <div>
-                            <h2 className="text-white font-bold text-lg">{team.name}</h2>
-                            <p className="text-gray-400 text-xs">Tactics</p>
-                          </div>
-                          </div>
-
-                        <div className="bg-gray-800 p-3 border-b border-gray-700">
-                          <div className="flex gap-2 items-center">
-                            {Object.keys(formations).map(f => (
-                              <button key={f} onClick={() => {
-                                setFormation(f);
-                                const xi = {};
-                                formations[f].positions.forEach((pos, idx) => {
-                                  const eligible = team.players.filter(p => p.positions.includes(pos) && !Object.values(xi).includes(p.id) && !p.injured);
-                                  if (eligible.length > 0) xi[`pos${idx}`] = eligible.sort((a, b) => b.rating - a.rating)[0].id;
-                                });
-                                setStartingXI(xi);
-                                setSelectedSlot(null);
-                              }} className={`px-3 py-1.5 rounded text-xs font-bold ${formation === f ? 'bg-orange-600 text-white' : 'bg-gray-700 text-gray-400'}`}>{f}</button>
-                            ))}
-                            <button onClick={autoFillBest} className="ml-auto px-3 py-1.5 rounded bg-gray-700 text-gray-300 text-xs font-bold hover:bg-gray-600">⚡ Auto</button>
-                          </div>
+                      <svg viewBox="0 0 60 55" style={{ width: '100%', height: '100%' }}>
+                        <defs><clipPath id={clipId}><path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" /></clipPath></defs>
+                        <path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" fill={c1} />
+                        <g clipPath={`url(#${clipId})`}>
+                          {s === 'stripes' && <>{[8,22,36,50].map(x => <rect key={x} x={x} y="0" width="7" height="55" fill={c2} />)}</>}
+                          {s === 'hoops' && <>{[8,22,36].map(y => <rect key={y} x="0" y={y} width="60" height="8" fill={c2} />)}</>}
+                          {s === 'quarters' && <><rect x="30" y="0" width="30" height="25" fill={c2} /><rect x="0" y="25" width="30" height="30" fill={c2} /></>}
+                          {s === 'sleeves' && <><path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} /><path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c2} /></>}
+                          {s === 'sash' && <><path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} /><path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c2} /><polygon points="5,50 15,50 55,10 55,0 50,0 45,0 0,45 0,50" fill={c2} opacity="0.9" /></>}
+                          {s === 'halves' && <><rect x="30" y="0" width="30" height="55" fill={c2} /><path d="M0 12 L5 0 L20 5 L10 18 Z" fill={c2} /><path d="M60 12 L55 0 L40 5 L50 18 Z" fill={c1} /></>}
+                          {s === 'checkered' && <>{[0,10,20,30,40,50].map(x => [0,10,20,30,40,50].map(y => ((x/10 + y/10) % 2 === 0) ? <rect key={`${x}-${y}`} x={x} y={y} width="10" height="10" fill={c2} /> : null))}</>}
+                        </g>
+                        {s !== 'hoops' && <path d="M20 5 L22 0 L38 0 L40 5" fill="none" stroke={c2} strokeWidth="2.5" />}
+                        <path d="M10 18 L0 12 L5 0 L20 5 L22 0 L38 0 L40 5 L55 0 L60 12 L50 18 L50 50 L10 50 Z" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="1" />
+                        <text x="30" y="36" textAnchor="middle" fill={txtCol} fontSize="18" fontWeight="bold" fontFamily="Arial" stroke={txtCol === '#FFFFFF' ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.3)'} strokeWidth="0.5">{number}</text>
+                      </svg>
+                    );
+                  };
+                
+                  const handleSlotTap = (idx) => {
+                    if (showPositionPicker !== null) { setShowPositionPicker(null); return; }
+                    if (selectedBenchPlayer) {
+                      const newLineup = [...lineup];
+                      newLineup[idx] = { ...newLineup[idx], playerId: selectedBenchPlayer };
+                      setLineup(newLineup);
+                      setStartingXI(lineupToStartingXI(newLineup));
+                      setSelectedBenchPlayer(null);
+                      setSelectedSlot(null);
+                    } else if (selectedSlot !== null && selectedSlot !== idx) {
+                      // Swap two on-pitch players
+                      const newLineup = [...lineup];
+                      const tempId = newLineup[selectedSlot].playerId;
+                      newLineup[selectedSlot] = { ...newLineup[selectedSlot], playerId: newLineup[idx].playerId };
+                      newLineup[idx] = { ...newLineup[idx], playerId: tempId };
+                      setLineup(newLineup);
+                      setStartingXI(lineupToStartingXI(newLineup));
+                      setSelectedSlot(null);
+                    } else {
+                      setSelectedSlot(selectedSlot === idx ? null : idx);
+                      setSelectedBenchPlayer(null);
+                    }
+                  };
+                
+                  const handleSlotLongPress = (idx) => {
+                    setShowPositionPicker(idx);
+                    setSelectedSlot(null);
+                    setSelectedBenchPlayer(null);
+                  };
+                
+                  const handlePositionChange = (idx, newPos) => {
+                    const newLineup = [...lineup];
+                    newLineup[idx] = { ...newLineup[idx], position: newPos };
+                    setLineup(newLineup);
+                    setStartingXI(lineupToStartingXI(newLineup));
+                    setShowPositionPicker(null);
+                  };
+                
+                  const handleBenchClick = (playerId) => {
+                    if (selectedSlot !== null) {
+                      const newLineup = [...lineup];
+                      newLineup[selectedSlot] = { ...newLineup[selectedSlot], playerId };
+                      setLineup(newLineup);
+                      setStartingXI(lineupToStartingXI(newLineup));
+                      setSelectedSlot(null);
+                      setSelectedBenchPlayer(null);
+                    } else {
+                      setSelectedBenchPlayer(selectedBenchPlayer === playerId ? null : playerId);
+                      setSelectedSlot(null);
+                    }
+                  };
+                
+                  const applyPreset = (presetKey) => {
+                    const positions = presetFormations[presetKey];
+                    const newLineup = initLineup(team, positions);
+                    setLineup(newLineup);
+                    setStartingXI(lineupToStartingXI(newLineup));
+                    setSelectedSlot(null);
+                    setSelectedBenchPlayer(null);
+                    setShowPositionPicker(null);
+                  };
+                
+                  const autoFillBest = () => {
+                    const positions = lineup.map(s => s.position);
+                    const newLineup = initLineup(team, positions);
+                    setLineup(newLineup);
+                    setStartingXI(lineupToStartingXI(newLineup));
+                  };
+                
+                  return (
+                    <div>
+                      <div className="bg-gray-800 rounded-t-lg p-3 flex justify-between items-center border-b border-gray-700">
+                        <div>
+                          <h2 className="text-white font-bold text-lg">{team.name}</h2>
+                          <p className="text-gray-400 text-xs">Tactics — Tap to swap, hold to move position</p>
                         </div>
-
-                        {(() => {
-                          const next = getNext();
-                          if (!next) return null;
-                          const tbl = getTable(league);
-                          const opp = next.homeTeamId === team.id ? leagues[league].teams.find(t => t.id === next.awayTeamId) : leagues[league].teams.find(t => t.id === next.homeTeamId);
-                          const oppPos = tbl.findIndex(t => t.teamId === opp?.id) + 1;
-                          const homeAway = next.homeTeamId === team.id ? 'Home' : 'Away';
-                          const ordinal = oppPos === 1 ? 'st' : oppPos === 2 ? 'nd' : oppPos === 3 ? 'rd' : 'th';
-                          return (
-                            <div className="bg-green-900/60 px-3 py-2 text-center">
-                              <p className="text-green-300 text-xs font-semibold">Next fixture: {homeAway} to {opp?.name} ({oppPos}{ordinal})</p>
+                      </div>
+                
+                      {/* Preset formations */}
+                      <div className="bg-gray-800 p-3 border-b border-gray-700">
+                        <div className="flex gap-2 items-center flex-wrap">
+                          {Object.keys(presetFormations).map(f => (
+                            <button key={f} onClick={() => applyPreset(f)} className="px-3 py-1.5 rounded text-xs font-bold bg-gray-700 text-gray-400 hover:bg-gray-600">{f}</button>
+                          ))}
+                          <button onClick={autoFillBest} className="ml-auto px-3 py-1.5 rounded bg-gray-700 text-gray-300 text-xs font-bold hover:bg-gray-600">⚡ Auto</button>
+                        </div>
+                      </div>
+                
+                      {/* Next fixture info */}
+                      {(() => {
+                        const next = getNext();
+                        if (!next) return null;
+                        const tbl = getTable(league);
+                        const opp = next.homeTeamId === team.id ? leagues[league].teams.find(t => t.id === next.awayTeamId) : leagues[league].teams.find(t => t.id === next.homeTeamId);
+                        const oppPos = tbl.findIndex(t => t.teamId === opp?.id) + 1;
+                        const homeAway = next.homeTeamId === team.id ? 'Home' : 'Away';
+                        const ordinal = oppPos === 1 ? 'st' : oppPos === 2 ? 'nd' : oppPos === 3 ? 'rd' : 'th';
+                        return (
+                          <div className="bg-green-900/60 px-3 py-2 text-center">
+                            <p className="text-green-300 text-xs font-semibold">Next fixture: {homeAway} to {opp?.name} ({oppPos}{ordinal})</p>
+                          </div>
+                        );
+                      })()}
+                
+                      {/* Pitch */}
+                      <div className="relative w-full" style={{ paddingBottom: '140%', background: 'linear-gradient(180deg, #2d5a1e 0%, #357a24 8%, #2d5a1e 16%, #357a24 24%, #2d5a1e 32%, #357a24 40%, #2d5a1e 48%, #357a24 56%, #2d5a1e 64%, #357a24 72%, #2d5a1e 80%, #357a24 88%, #2d5a1e 100%)' }}>
+                        <div className="absolute inset-0">
+                          <svg viewBox="0 0 100 140" className="absolute inset-0 w-full h-full">
+                            <rect x="2" y="2" width="96" height="136" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.4" />
+                            <line x1="2" y1="70" x2="98" y2="70" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                            <circle cx="50" cy="70" r="10" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                            <circle cx="50" cy="70" r="0.6" fill="rgba(255,255,255,0.2)" />
+                            <rect x="25" y="2" width="50" height="18" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                            <rect x="35" y="2" width="30" height="7" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                            <rect x="25" y="120" width="50" height="18" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                            <rect x="35" y="131" width="30" height="7" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                            <path d="M 35 20 A 12 12 0 0 0 65 20" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                            <path d="M 35 120 A 12 12 0 0 1 65 120" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
+                          </svg>
+                
+                          {lineup.map((slot, idx) => {
+                            const pos = allPositions[slot.position];
+                            if (!pos) return null;
+                            const player = team.players.find(p => p.id === slot.playerId);
+                            const isGK = slot.position === 'GK';
+                            const isOOP = player && !isPlayerInPosition(player, slot.position);
+                            const isSelected = selectedSlot === idx;
+                            const isPositionPicking = showPositionPicker === idx;
+                            const surname = player ? player.name.split(' ').pop() : '?';
+                
+                            let pressTimer = null;
+                
+                            return (
+                              <div key={idx}
+                                onMouseDown={() => { pressTimer = setTimeout(() => handleSlotLongPress(idx), 500); }}
+                                onMouseUp={() => { clearTimeout(pressTimer); }}
+                                onMouseLeave={() => { clearTimeout(pressTimer); }}
+                                onTouchStart={() => { pressTimer = setTimeout(() => handleSlotLongPress(idx), 500); }}
+                                onTouchEnd={() => { clearTimeout(pressTimer); }}
+                                onClick={() => { if (showPositionPicker === null || showPositionPicker !== idx) handleSlotTap(idx); }}
+                                className="absolute flex flex-col items-center cursor-pointer"
+                                style={{
+                                  left: `${pos.x}%`,
+                                  top: `${pos.y / 140 * 100}%`,
+                                  transform: 'translate(-50%, -50%)',
+                                  zIndex: isSelected || isPositionPicking ? 30 : 10,
+                                  width: '18%',
+                                  animation: isPositionPicking ? 'pulse 0.5s infinite' : 'none'
+                                }}>
+                                <div className={`relative transition-transform ${isSelected ? 'scale-110' : ''}`} style={{ width: '42px', height: '38px' }}>
+                                  <ShirtSvg number={player ? player.rating : '?'} isGK={isGK} isOOP={isOOP && !!player} />
+                                  {isSelected && <div className="absolute inset-0 rounded" style={{ boxShadow: '0 0 12px rgba(249,115,22,0.8)' }}></div>}
+                                  {isPositionPicking && <div className="absolute inset-0 rounded" style={{ boxShadow: '0 0 15px rgba(59,130,246,0.9)' }}></div>}
+                                </div>
+                                <div className="text-white text-center font-bold leading-tight mt-0.5" style={{ fontSize: '8px', textShadow: '0 1px 3px rgba(0,0,0,0.9)' }}
+                                  onClick={(e) => { if (player) { e.stopPropagation(); setSelectedPlayer(player); setSelectedPlayerTeam(team); setPage('player-profile'); }}}>{surname}</div>
+                                <div className="text-gray-300 text-center leading-tight" style={{ fontSize: '7px', textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}>{slot.position}</div>
+                                {isOOP && player && <div style={{ fontSize: '8px' }} className="text-yellow-400">⚠️</div>}
+                              </div>
+                            );
+                          })}
+                
+                          {/* Position picker overlay */}
+                          {showPositionPicker !== null && (
+                            <div className="absolute inset-0 bg-black/60 z-20" onClick={() => setShowPositionPicker(null)}>
+                              {Object.entries(allPositions).map(([posKey, posData]) => {
+                                const isOccupied = lineup.some((s, i) => s.position === posKey && i !== showPositionPicker);
+                                const isCurrent = lineup[showPositionPicker]?.position === posKey;
+                                if (isOccupied) return null;
+                                return (
+                                  <div key={posKey}
+                                    onClick={(e) => { e.stopPropagation(); handlePositionChange(showPositionPicker, posKey); }}
+                                    className={`absolute flex items-center justify-center cursor-pointer rounded-full ${isCurrent ? 'bg-blue-500' : 'bg-green-600 hover:bg-green-500'}`}
+                                    style={{
+                                      left: `${posData.x}%`,
+                                      top: `${posData.y / 140 * 100}%`,
+                                      transform: 'translate(-50%, -50%)',
+                                      width: '32px', height: '32px',
+                                      zIndex: 25
+                                    }}>
+                                    <span className="text-white font-bold" style={{ fontSize: '7px' }}>{posKey}</span>
+                                  </div>
+                                );
+                              })}
                             </div>
-                          );
-                        })()}
-
+                          )}
+                        </div>
+                      </div>
+                
+                      {/* Instructions */}
+                      {(selectedSlot !== null || selectedBenchPlayer || showPositionPicker !== null) && (
+                        <div className="bg-orange-900/40 px-3 py-2 text-center">
+                          <p className="text-orange-300 text-xs font-semibold">
+                            {showPositionPicker !== null
+                              ? 'Tap a green circle to move this player to that position'
+                              : selectedSlot !== null
+                              ? 'Tap another shirt to swap, or a bench player to substitute'
+                              : `Tap a position to place ${team.players.find(p => p.id === selectedBenchPlayer)?.name || 'player'}`
+                            }
+                          </p>
+                        </div>
+                      )}
+                
+                      {/* Bench */}
+                      <div className="bg-gray-800 rounded-b-lg p-4">
+                        <h3 className="text-white font-bold mb-3">Substitutes</h3>
+                        <div className="space-y-2 max-h-64 overflow-y-auto">
+                          {benchPlayers.map(p => {
+                            const isSelectedBench = selectedBenchPlayer === p.id;
+                            return (
+                              <div key={p.id} onClick={() => handleBenchClick(p.id)}
+                                className={`rounded p-2 flex items-center gap-3 cursor-pointer transition-all ${isSelectedBench ? 'bg-orange-900/40 ring-2 ring-orange-500' : selectedSlot !== null ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-700 hover:bg-gray-600'}`}>
+                                <div style={{ width: '32px', height: '28px', flexShrink: 0 }}>
+                                  <ShirtSvg number={p.rating} isGK={p.positions.includes('GK')} isOOP={false} />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <div className="text-white font-semibold text-sm truncate">{p.name}</div>
+                                  <div className="text-gray-400 text-xs">{p.positions.join('/')} • Age {calcAge(p.dob)}</div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                          {benchPlayers.length === 0 && <p className="text-gray-500 text-sm">All players in starting XI</p>}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()}
                         <div className="relative w-full" style={{ paddingBottom: '140%', background: 'linear-gradient(180deg, #2d5a1e 0%, #357a24 8%, #2d5a1e 16%, #357a24 24%, #2d5a1e 32%, #357a24 40%, #2d5a1e 48%, #357a24 56%, #2d5a1e 64%, #357a24 72%, #2d5a1e 80%, #357a24 88%, #2d5a1e 100%)' }}>
                           <div className="absolute inset-0">
                             <svg viewBox="0 0 100 140" className="absolute inset-0 w-full h-full">
@@ -2645,9 +2837,9 @@
                             {layout.map((pos, idx) => {
                               const playerId = startingXI[`pos${idx}`];
                               const player = playerId ? team.players.find(p => p.id === playerId) : null;
-                              const requiredPos = formations[formation].positions[idx];
+                              const requiredPos = lineup[idx]?.position || 'CM';
                               const isGK = requiredPos === 'GK';
-                              const isOutOfPosition = player && !player.positions.includes(requiredPos);
+                              const isOutOfPosition = player && !isPlayerInPosition(player, lineup[idx]?.position || 'CM');
                               const isSelected = selectedSlot === idx;
 
                               const posAbbrevs = player ? player.positions.map(p => {
@@ -4118,11 +4310,11 @@
                             {layout.map((pos, idx) => {
                               const playerId = startingXI[`pos${idx}`];
                               const player = playerId ? team.players.find(p => p.id === playerId) : null;
-                              const requiredPos = formations[formation].positions[idx];
+                              const requiredPos = lineup[idx]?.position || 'CM';
                               const isGK = requiredPos === 'GK';
                               const isInjured = player && player.injured;
                               const isSentOff = player && sentOffPlayers.includes(player.id);
-                              const isOOP = player && !player.positions.includes(requiredPos);
+                              const isOOP = player && !isPlayerInPosition(player, lineup[idx]?.position || 'CM');
                               const isSelected = selectedSlot === idx;
                               const surname = player ? player.name.split(' ').pop() : requiredPos;
                 
