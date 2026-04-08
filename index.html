@@ -4133,9 +4133,10 @@
                 
                               return (
                                 <div key={idx} 
+                                    
                                   onClick={() => {
                                   if (isSentOff) return;
-                                  // If a bench player is already selected, place them here
+                                  // If a bench player is already selected, sub them in (costs a sub)
                                   if (selectedBenchPlayer && matchSubs.made < matchSubs.max) {
                                     const xi = { ...startingXI };
                                     xi[`pos${idx}`] = selectedBenchPlayer;
@@ -4143,11 +4144,21 @@
                                     setMatchSubs(prev => ({ ...prev, made: prev.made + 1 }));
                                     setSelectedBenchPlayer(null);
                                     setSelectedSlot(null);
+                                  } else if (selectedSlot !== null && selectedSlot !== idx) {
+                                    // Swap two on-pitch players (free — no sub used)
+                                    const xi = { ...startingXI };
+                                    const temp = xi[`pos${selectedSlot}`];
+                                    xi[`pos${selectedSlot}`] = xi[`pos${idx}`];
+                                    xi[`pos${idx}`] = temp;
+                                    setStartingXI(xi);
+                                    setSelectedSlot(null);
+                                    setSelectedBenchPlayer(null);
                                   } else {
                                     setSelectedSlot(isSelected ? null : idx);
                                     setSelectedBenchPlayer(null);
                                   }
                                 }}
+                                    
                                   className="absolute flex flex-col items-center cursor-pointer"
                                   style={{ left: `${pos.x}%`, top: `${pos.y / 140 * 100}%`, transform: 'translate(-50%, -50%)', zIndex: isSelected ? 20 : 10, width: '18%' }}>
                                   <div className={`relative transition-transform ${isSelected ? 'scale-125' : ''}`} style={{ width: '42px', height: '38px' }}>
@@ -4168,15 +4179,15 @@
                 
                         {/* Bench section below pitch */}
                        {(selectedSlot !== null || selectedBenchPlayer !== null) && (
-                       <div className="bg-orange-900/40 px-3 py-2 text-center">
-                        <p className="text-orange-300 text-xs font-semibold">
-                          {selectedSlot !== null
-                            ? `Select a bench player to sub into ${formations[formation].positions[selectedSlot]}`
-                            : `Tap a position on the pitch to place ${team.players.find(p => p.id === selectedBenchPlayer)?.name || 'player'}`
-                          }
-                        </p>
-                      </div>
-                    )}
+                          <div className="bg-orange-900/40 px-3 py-2 text-center">
+                            <p className="text-orange-300 text-xs font-semibold">
+                              {selectedSlot !== null
+                                ? 'Tap another shirt to swap positions, or a bench player to substitute'
+                                : `Tap a position on the pitch to place ${team.players.find(p => p.id === selectedBenchPlayer)?.name || 'player'}`
+                              }
+                            </p>
+                          </div>
+                        )}
                 
                         <div className="bg-gray-800 p-3 pb-24">
                           <h3 className="text-white font-bold text-sm mb-2">Substitutes</h3>
