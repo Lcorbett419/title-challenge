@@ -1850,14 +1850,15 @@
                 
                 // Auto-fill gaps left by suspended players
                 if (removedSuspended) {
-                  formations[formation].positions.forEach((pos, idx) => {
-                    if (!cleanXI[`pos${idx}`]) {
-                      const eligible = team.players.filter(p =>
-                        p.positions.includes(pos) && !p.injured && !p.suspended && !Object.values(cleanXI).includes(p.id)
-                      );
-                      if (eligible.length > 0) cleanXI[`pos${idx}`] = eligible.sort((a, b) => b.rating - a.rating)[0].id;
-                    }
-                  });
+                  lineup.forEach((slot, idx) => {
+                      if (!cleanXI[`pos${idx}`]) {
+                        const validPositions = positionMapping[slot.position] || [];
+                        const eligible = team.players.filter(p =>
+                          p.positions.some(pp => validPositions.includes(pp)) && !p.injured && !p.suspended && !Object.values(cleanXI).includes(p.id)
+                        );
+                        if (eligible.length > 0) cleanXI[`pos${idx}`] = eligible.sort((a, b) => b.rating - a.rating)[0].id;
+                      }
+                    });
                   setStartingXI(cleanXI);
                 }  
             
@@ -2694,63 +2695,7 @@
                         );
                       })()}
                 
-                      {/* Pitch */}
-                      <div className="relative w-full" style={{ paddingBottom: '140%', background: 'linear-gradient(180deg, #2d5a1e 0%, #357a24 8%, #2d5a1e 16%, #357a24 24%, #2d5a1e 32%, #357a24 40%, #2d5a1e 48%, #357a24 56%, #2d5a1e 64%, #357a24 72%, #2d5a1e 80%, #357a24 88%, #2d5a1e 100%)' }}>
-                        <div className="absolute inset-0">
-                          <svg viewBox="0 0 100 140" className="absolute inset-0 w-full h-full">
-                            <rect x="2" y="2" width="96" height="136" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.4" />
-                            <line x1="2" y1="70" x2="98" y2="70" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
-                            <circle cx="50" cy="70" r="10" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
-                            <circle cx="50" cy="70" r="0.6" fill="rgba(255,255,255,0.2)" />
-                            <rect x="25" y="2" width="50" height="18" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
-                            <rect x="35" y="2" width="30" height="7" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
-                            <rect x="25" y="120" width="50" height="18" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
-                            <rect x="35" y="131" width="30" height="7" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
-                            <path d="M 35 20 A 12 12 0 0 0 65 20" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
-                            <path d="M 35 120 A 12 12 0 0 1 65 120" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
-                          </svg>
-                
-                          {lineup.map((slot, idx) => {
-                            const pos = allPositions[slot.position];
-                            if (!pos) return null;
-                            const player = team.players.find(p => p.id === slot.playerId);
-                            const isGK = slot.position === 'GK';
-                            const isOOP = player && !isPlayerInPosition(player, slot.position);
-                            const isSelected = selectedSlot === idx;
-                            const isPositionPicking = showPositionPicker === idx;
-                            const surname = player ? player.name.split(' ').pop() : '?';
-                
-                            let pressTimer = null;
-                
-                            return (
-                              <div key={idx}
-                                onMouseDown={() => { pressTimer = setTimeout(() => handleSlotLongPress(idx), 500); }}
-                                onMouseUp={() => { clearTimeout(pressTimer); }}
-                                onMouseLeave={() => { clearTimeout(pressTimer); }}
-                                onTouchStart={() => { pressTimer = setTimeout(() => handleSlotLongPress(idx), 500); }}
-                                onTouchEnd={() => { clearTimeout(pressTimer); }}
-                                onClick={() => { if (showPositionPicker === null || showPositionPicker !== idx) handleSlotTap(idx); }}
-                                className="absolute flex flex-col items-center cursor-pointer"
-                                style={{
-                                  left: `${pos.x}%`,
-                                  top: `${pos.y / 140 * 100}%`,
-                                  transform: 'translate(-50%, -50%)',
-                                  zIndex: isSelected || isPositionPicking ? 30 : 10,
-                                  width: '18%',
-                                  animation: isPositionPicking ? 'pulse 0.5s infinite' : 'none'
-                                }}>
-                                <div className={`relative transition-transform ${isSelected ? 'scale-110' : ''}`} style={{ width: '42px', height: '38px' }}>
-                                  <ShirtSvg number={player ? player.rating : '?'} isGK={isGK} isOOP={isOOP && !!player} />
-                                  {isSelected && <div className="absolute inset-0 rounded" style={{ boxShadow: '0 0 12px rgba(249,115,22,0.8)' }}></div>}
-                                  {isPositionPicking && <div className="absolute inset-0 rounded" style={{ boxShadow: '0 0 15px rgba(59,130,246,0.9)' }}></div>}
-                                </div>
-                                <div className="text-white text-center font-bold leading-tight mt-0.5" style={{ fontSize: '8px', textShadow: '0 1px 3px rgba(0,0,0,0.9)' }}
-                                  onClick={(e) => { if (player) { e.stopPropagation(); setSelectedPlayer(player); setSelectedPlayerTeam(team); setPage('player-profile'); }}}>{surname}</div>
-                                <div className="text-gray-300 text-center leading-tight" style={{ fontSize: '7px', textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}>{slot.position}</div>
-                                {isOOP && player && <div style={{ fontSize: '8px' }} className="text-yellow-400">⚠️</div>}
-                              </div>
-                            );
-                          })}
+                        
                 
                           {/* Position picker overlay */}
                           {showPositionPicker !== null && (
@@ -4268,25 +4213,12 @@
                 
                       {/* Formation selector */}
                       <div className="bg-gray-800 p-2 flex gap-2 justify-center border-b border-gray-700">
-                        {Object.keys(formations).map(f => (
+                        {Object.keys(presetFormations).map(f => (
                           <button key={f} onClick={() => {
-                            setFormation(f);
-                            const xi = {};
-                            formations[f].positions.forEach((pos, idx) => {
-                              const cid = startingXI[`pos${idx}`];
-                              const cp = cid ? team.players.find(p => p.id === cid) : null;
-                              if (cp && !cp.injured && cp.positions.includes(pos)) {
-                                xi[`pos${idx}`] = cid;
-                              }
-                            });
-                            formations[f].positions.forEach((pos, idx) => {
-                              if (!xi[`pos${idx}`]) {
-                                const eligible = team.players.filter(p => p.positions.includes(pos) && !p.injured && !Object.values(xi).includes(p.id));
-                                if (eligible.length > 0) xi[`pos${idx}`] = eligible.sort((a, b) => b.rating - a.rating)[0].id;
-                              }
-                            });
-                            setStartingXI(xi);
-                          }} className={`px-3 py-1.5 rounded text-xs font-bold ${formation === f ? 'bg-orange-600 text-white' : 'bg-gray-700 text-gray-400'}`}>{f}</button>
+                            const newLin = initLineup(team, presetFormations[f]);
+                            setLineup(newLin);
+                            setStartingXI(lineupToStartingXI(newLin));
+                          }} className={`px-3 py-1.5 rounded text-xs font-bold bg-gray-700 text-gray-400 hover:bg-gray-600`}>{f}</button>
                         ))}
                       </div>
                 
@@ -4386,8 +4318,9 @@
                           <h3 className="text-white font-bold text-sm mb-2">Substitutes</h3>
                           <div className="space-y-1">
                             {benchPlayers.map(p => {
-                              const targetPos = selectedSlot !== null ? formations[formation].positions[selectedSlot] : null;
-                              const fits = targetPos && p.positions.includes(targetPos);
+                              const slotPos = selectedSlot !== null ? lineup[selectedSlot]?.position : null;
+                              const validPos = slotPos ? (positionMapping[slotPos] || []) : [];
+                              const fits = selectedSlot !== null && p.positions.some(pp => validPos.includes(pp));
                               return (
                                 <div key={p.id}
                               onClick={() => {
