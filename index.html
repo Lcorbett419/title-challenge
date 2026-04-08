@@ -4173,7 +4173,35 @@
               </div>
 
                 {(isHalfTime || tacticsPaused) && (() => {
-                  
+
+                const formationLayouts = {
+                    '4-3-3': [
+                      { x: 50, y: 92 },
+                      { x: 12, y: 74 }, { x: 37, y: 77 }, { x: 63, y: 77 }, { x: 88, y: 74 },
+                      { x: 50, y: 56 }, { x: 25, y: 50 }, { x: 75, y: 50 },
+                      { x: 15, y: 28 }, { x: 85, y: 28 }, { x: 50, y: 22 }
+                    ],
+                    '4-4-2': [
+                      { x: 50, y: 92 },
+                      { x: 12, y: 74 }, { x: 37, y: 77 }, { x: 63, y: 77 }, { x: 88, y: 74 },
+                      { x: 15, y: 50 }, { x: 40, y: 53 }, { x: 60, y: 53 }, { x: 85, y: 50 },
+                      { x: 35, y: 22 }, { x: 65, y: 22 }
+                    ],
+                    '4-2-3-1': [
+                      { x: 50, y: 92 },
+                      { x: 12, y: 74 }, { x: 37, y: 77 }, { x: 63, y: 77 }, { x: 88, y: 74 },
+                      { x: 35, y: 58 }, { x: 65, y: 58 },
+                      { x: 15, y: 38 }, { x: 50, y: 40 }, { x: 85, y: 38 },
+                      { x: 50, y: 20 }
+                    ],
+                    '3-5-2': [
+                      { x: 50, y: 92 },
+                      { x: 25, y: 77 }, { x: 50, y: 77 }, { x: 75, y: 77 },
+                      { x: 10, y: 53 }, { x: 90, y: 53 },
+                      { x: 30, y: 48 }, { x: 50, y: 45 }, { x: 70, y: 48 },
+                      { x: 35, y: 22 }, { x: 65, y: 22 }
+                    ]
+                  };
                 
                   const layout = lineup.map(s => allPositions[s.position] || { x: 50, y: 50 });
                   const benchPlayers = team.players.filter(p => !Object.values(startingXI).includes(p.id) && !p.injured && !p.suspended && !sentOffPlayers.includes(p.id)).sort((a, b) => b.rating - a.rating);
@@ -4182,6 +4210,7 @@
                   const pc = team.primaryColor || '#1a1a2e';
                   const sc2 = team.secondaryColor || '#FFFFFF';
                   const gkColor = '#2d8a4e';
+                
                 
                   const ShirtSvg = ({ number, isGK, isOOP }) => {
                     const clipId = `tc${number}-${Math.random().toString(36).substr(2,5)}`;
@@ -4271,8 +4300,8 @@
                               <path d="M 35 120 A 12 12 0 0 1 65 120" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.3" />
                             </svg>
                 
-                            {layout.map((pos, idx) => {
-                              const layout = lineup.map(s => allPositions[s.position] || { x: 50, y: 50 });
+                            {lineup.map((slot, idx) => {
+                              const pos = allPositions[slot.position] || { x: 50, y: 50 };
                               const playerId = startingXI[`pos${idx}`];
                               const player = playerId ? team.players.find(p => p.id === playerId) : null;
                               const requiredPos = lineup[idx]?.position || 'CM';
