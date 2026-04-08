@@ -2644,14 +2644,26 @@
                   };
                 
                   const applyPreset = (presetKey) => {
-                    const positions = presetFormations[presetKey];
-                    const newLineup = initLineup(team, positions);
+                  const newPositions = presetFormations[presetKey];
+                  const currentPlayerIds = lineup.map(s => s.playerId);
+                  if (currentPlayerIds.length === newPositions.length) {
+                    // Keep same players, just change positions
+                    const newLin = newPositions.map((pos, idx) => ({
+                      playerId: currentPlayerIds[idx],
+                      position: pos
+                    }));
+                    setLineup(newLin);
+                    setStartingXI(lineupToStartingXI(newLin));
+                  } else {
+                    // Different number of slots — rebuild from scratch
+                    const newLineup = initLineup(team, newPositions);
                     setLineup(newLineup);
                     setStartingXI(lineupToStartingXI(newLineup));
-                    setSelectedSlot(null);
-                    setSelectedBenchPlayer(null);
-                    setShowPositionPicker(null);
-                  };
+                  }
+                  setSelectedSlot(null);
+                  setSelectedBenchPlayer(null);
+                  setShowPositionPicker(null);
+                };
                 
                   const autoFillBest = () => {
                     const positions = lineup.map(s => s.position);
