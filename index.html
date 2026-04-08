@@ -1280,7 +1280,7 @@
               if (sc) {
                 const defStrength = isHome ? effectiveAwayStrength : effectiveHomeStrength;
                 const defPenalty = defStrength * 0.008;
-                const scoreChance = Math.max(0.06, (0.15 + attacker.effectiveRating * 0.018) - defPenalty);
+                const scoreChance = Math.max(0.06, (0.15 + sc.effectiveRating * 0.018) - defPenalty);
                 if (Math.random() < scoreChance) {
                   if (isHome) hs++; else as++;
                   comm.push(`${min}' GOAL! ${sc.name}! ${hs}-${as}`);
