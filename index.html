@@ -4197,7 +4197,7 @@
                     ]
                   };
                 
-                  const layout = formationLayouts[formation];
+                  const layout = lineup.map(s => allPositions[s.position] || { x: 50, y: 50 });
                   const benchPlayers = team.players.filter(p => !Object.values(startingXI).includes(p.id) && !p.injured && !p.suspended && !sentOffPlayers.includes(p.id)).sort((a, b) => b.rating - a.rating);
                 
                   const style = team.shirtStyle || 'plain';
