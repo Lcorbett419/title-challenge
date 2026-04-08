@@ -132,9 +132,9 @@
 
           const allPositions = {
               'GK':   { x: 50, y: 92, label: 'GK' },
-              'LCB':  { x: 25, y: 78, label: 'LCB' },
+              'LCB':  { x: 37, y: 78, label: 'LCB' },
               'CCB':  { x: 50, y: 80, label: 'CCB' },
-              'RCB':  { x: 75, y: 78, label: 'RCB' },
+              'RCB':  { x: 63, y: 78, label: 'RCB' },
               'LB':   { x: 8, y: 72, label: 'LB' },
               'RB':   { x: 92, y: 72, label: 'RB' },
               'LWB':  { x: 8, y: 58, label: 'LWB' },
@@ -164,12 +164,12 @@
               'LCM': ['CM'], 'CCM': ['CM', 'CAM'], 'RCM': ['CM'],
               'LM': ['LW', 'LM'], 'RM': ['RW', 'RM'],
               'LW': ['LW'], 'RW': ['RW'],
-              'LST': ['ST', 'LW'], 'ST': ['ST'], 'RST': ['ST', 'RW']
+              'LST': ['ST'], 'ST': ['ST'], 'RST': ['ST']
             };
             
             // Preset formations for quick setup
             const presetFormations = {
-              '4-3-3': ['GK','LB','LCB','RCB','RB','LCDM','CCM','RCM','LW','RW','ST'],
+              '4-3-3': ['GK','LB','LCB','RCB','RB','LCM','CCM','RCM','LW','RW','ST'],
               '4-4-2': ['GK','LB','LCB','RCB','RB','LM','LCM','RCM','RM','LST','RST'],
               '4-2-3-1': ['GK','LB','LCB','RCB','RB','LCDM','RCDM','LW','CCM','RW','ST'],
               '3-5-2': ['GK','LCB','CCB','RCB','LWB','RWB','LCM','CCM','RCM','LST','RST'],
@@ -1247,7 +1247,7 @@
           const homeStrength = homePlayers.reduce((s, p) => s + p.effectiveRating, 0) / Math.max(homePlayers.length, 1);
           const awayStrength = awayPlayers.reduce((s, p) => s + p.effectiveRating, 0) / Math.max(awayPlayers.length, 1);
           const totalStrength = homeStrength + awayStrength;
-          const baseChanceRate = 0.02 + (totalStrength / 40) * 0.08;
+          const baseChanceRate = 0.03 + (totalStrength / 40) * 0.09;
           const homeDominance = homeStrength / totalStrength;
           const strengthGap = Math.abs(homeStrength - awayStrength);
           const dominanceBoost = Math.pow(strengthGap / 20, 1.5) * 0.15;
@@ -1280,7 +1280,7 @@
               if (sc) {
                 const defStrength = isHome ? effectiveAwayStrength : effectiveHomeStrength;
                 const defPenalty = defStrength * 0.008;
-                const scoreChance = Math.max(0.05, (0.12 + sc.effectiveRating * 0.015) - defPenalty);
+                const scoreChance = Math.max(0.06, (0.15 + attacker.effectiveRating * 0.018) - defPenalty);
                 if (Math.random() < scoreChance) {
                   if (isHome) hs++; else as++;
                   comm.push(`${min}' GOAL! ${sc.name}! ${hs}-${as}`);
@@ -1328,7 +1328,7 @@
               const homeStrength = homePlayers.reduce((s, p) => s + p.effectiveRating, 0) / Math.max(homePlayers.length, 1);
               const awayStrength = awayPlayers.reduce((s, p) => s + p.effectiveRating, 0) / Math.max(awayPlayers.length, 1);
               const totalStrength = homeStrength + awayStrength;
-              const baseChanceRate = 0.02 + (totalStrength / 40) * 0.08;
+              const baseChanceRate = 0.03 + (totalStrength / 40) * 0.09;
               const homeDominance = homeStrength / totalStrength;
               const homeChancePct = Math.min(0.75, homeDominance + 0.05);
 
@@ -1390,7 +1390,7 @@
             
                 const defStrength = isHome ? effectiveAwayStrength : effectiveHomeStrength;
                 const defPenalty = defStrength * 0.008;
-                const scoreChance = Math.max(0.05, (0.12 + attacker.effectiveRating * 0.015) - defPenalty);
+                const scoreChance = Math.max(0.06, (0.15 + attacker.effectiveRating * 0.018) - defPenalty);
                 const roll = Math.random();
             
                 if (roll < scoreChance) {
