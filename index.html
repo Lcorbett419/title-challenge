@@ -770,7 +770,6 @@
             const newLineup = initLineup(t, presetFormations['4-3-3']);
             setLineup(newLineup);
             setStartingXI(lineupToStartingXI(newLineup));
-            setStartingXI(xi);
             const stadLvl = t.stadiumCapacity ? Math.round(t.stadiumCapacity / 10000) : 3;
             setFacilities({ stadiumLevel: Math.max(1, Math.min(10, stadLvl)), devLevel: 1 });
             setState('info-page');
