@@ -1250,7 +1250,7 @@
           const baseChanceRate = 0.03 + (totalStrength / 40) * 0.09;
           const homeDominance = homeStrength / totalStrength;
           const strengthGap = Math.abs(homeStrength - awayStrength);
-          const dominanceBoost = Math.pow(strengthGap / 20, 1.5) * 0.15;
+          const dominanceBoost = Math.pow(strengthGap / 20, 1.5) * 0.22;
           const homeChancePct = Math.min(0.80, Math.max(0.20, homeDominance + 0.05 + (homeStrength > awayStrength ? dominanceBoost : -dominanceBoost)));    
 
           // Form/momentum factor — slight random swing per match
