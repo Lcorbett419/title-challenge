@@ -395,7 +395,7 @@
           { "id": 20, "name": "Saša Lukić", "positions": ["CDM"], "dob": "1996-08-13", "rating": 15 },
           { "id": 24, "name": "Josh King", "positions": ["CM", "CAM"], "dob": "2007-01-03", "rating": 12 },
           { "id": 30, "name": "Ryan Sessegnon", "positions": ["LW", "LB"], "dob": "2000-05-18", "rating": 14 },
-          { "id": 32, "name": "Emile Smith Rowe", "positions": ["CAM"], "dob": "2000-07-28", "rating": 15 },
+          { "id": 32, "name": "Emile Smith-Rowe", "positions": ["CAM"], "dob": "2000-07-28", "rating": 15 },
           { "id": 7, "name": "Raúl Jiménez", "positions": ["ST"], "dob": "1991-05-05", "rating": 15 },
           { "id": 9, "name": "Rodrigo Muniz", "positions": ["ST"], "dob": "2001-05-04", "rating": 14 },
           { "id": 14, "name": "Oscar Bobb", "positions": ["LW", "RW"], "dob": "2003-07-12", "rating": 14 },
