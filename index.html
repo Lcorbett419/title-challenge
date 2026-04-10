@@ -146,6 +146,9 @@
               'LCM':  { x: 30, y: 48, label: 'LCM' },
               'CCM':  { x: 50, y: 50, label: 'CCM' },
               'RCM':  { x: 70, y: 48, label: 'RCM' },
+              'LCAM': { x: 30, y: 38, label: 'LCAM' },
+              'CAM':  { x: 50, y: 36, label: 'CAM' },
+              'RCAM': { x: 70, y: 38, label: 'RCAM' },
               'LM':   { x: 8, y: 42, label: 'LM' },
               'RM':   { x: 92, y: 42, label: 'RM' },
               'LW':   { x: 15, y: 28, label: 'LW' },
@@ -163,6 +166,7 @@
               'LWB': ['LB', 'LWB'], 'RWB': ['RB', 'RWB'],
               'LCDM': ['CDM', 'CM'], 'CCDM': ['CDM'], 'RCDM': ['CDM', 'CM'],
               'LCM': ['CM'], 'CCM': ['CM', 'CAM'], 'RCM': ['CM'],
+              'LCAM': ['CAM', 'LW'], 'CAM': ['CAM'], 'RCAM': ['CAM', 'RW'],  
               'LM': ['LW', 'LM'], 'RM': ['RW', 'RM'],
               'LW': ['LW'], 'RW': ['RW'],
               'LST': ['ST'], 'ST': ['ST'], 'RST': ['ST']
@@ -172,7 +176,7 @@
             const presetFormations = {
               '4-3-3': ['GK','LB','LCB','RCB','RB','LCM','CCM','RCM','LW','RW','ST'],
               '4-4-2': ['GK','LB','LCB','RCB','RB','LM','LCM','RCM','RM','LST','RST'],
-              '4-2-3-1': ['GK','LB','LCB','RCB','RB','LCDM','RCDM','LW','CCM','RW','ST'],
+              '4-2-3-1': ['GK','LB','LCB','RCB','RB','LCDM','RCDM','LW','CAM','RW','ST'],
               '3-5-2': ['GK','LCB','CCB','RCB','LWB','RWB','LCM','CCM','RCM','LST','RST'],
               '4-1-4-1': ['GK','LB','LCB','RCB','RB','CCDM','LM','LCM','RCM','RM','ST'],
               '3-4-3': ['GK','LCB','CCB','RCB','LWB','LCM','RCM','RWB','LW','RW','ST']
