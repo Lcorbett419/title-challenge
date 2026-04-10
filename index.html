@@ -1824,7 +1824,7 @@
 
         const getInjuryType = () => injuryTypes[Math.floor(Math.random() * injuryTypes.length)];    
             
-          const playMatch = () => {
+          const playMatch = () => { try {
           const next = getNext();
           if (!next) {
             alert('Season complete!');
@@ -1919,11 +1919,13 @@
             setMatchPlayerRatings({ home: homePlayers, away: awayPlayers });
             setMatchTab('commentary');
             setState('live-match');
+            setCommentary([]);
+            setMatch(null);
             
             scheduleEvents(firstHalf.events, 0, 45);
-                      };
+                      } catch(e) { alert('playMatch error: ' + e.message); console.error(e); } };
 
-          const finishLiveMatch = () => {
+          const finishLiveMatch = () => { try {
           if (!liveMatch) return;
           const { homeTeam, awayTeam, scorers, finalScore, fixture } = liveMatch;
              const allEvents = liveMatch.events || [];
@@ -2249,7 +2251,7 @@
           setLiveMatch(null);
           setPage('home');
           setState('post-match');
-        };
+        } catch(e) { alert('finishLiveMatch error: ' + e.message); console.error(e); } };
             const getScorers = (lk) => {
             const sc = [];
             leagues[lk].teams.forEach(t => { t.players.forEach(p => { if (p.goals > 0) sc.push({ name: p.name, team: t.name, goals: p.goals }); }); });
