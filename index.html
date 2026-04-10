@@ -4316,7 +4316,28 @@
                                 <div key={idx} 
                                     
                                   onClick={() => {
-                                  if (isSentOff) return;
+                                  // Sent off slots: allow position swaps with other pitch players, but block subs
+                                  if (isSentOff) {
+                                    if (selectedSlot !== null && selectedSlot !== idx) {
+                                      // Swap positions with another on-pitch player (free)
+                                      const xi = { ...startingXI };
+                                      const temp = xi[`pos${selectedSlot}`];
+                                      xi[`pos${selectedSlot}`] = xi[`pos${idx}`];
+                                      xi[`pos${idx}`] = temp;
+                                      setStartingXI(xi);
+                                      setSelectedSlot(null);
+                                      setSelectedBenchPlayer(null);
+                                    }
+                                    return;
+                                  }
+                                  // Block subbing a bench player into a sent-off slot
+                                  if (selectedBenchPlayer) {
+                                    const currentOccupant = startingXI[`pos${idx}`];
+                                    if (currentOccupant && sentOffPlayers.includes(currentOccupant)) {
+                                      return;
+                                    }
+                                }
+                                      
                                   // If a bench player is already selected, sub them in (costs a sub)
                                   if (selectedBenchPlayer && matchSubs.made < matchSubs.max) {
                                     const xi = { ...startingXI };
