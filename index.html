@@ -70,7 +70,7 @@
           return 0;
         };
         
-        const App = () => {
+          const App = () => {
           const [db, setDb] = useState(null);
           const [state, setState] = useState('main-menu');
           const [league, setLeague] = useState(null);
@@ -174,7 +174,7 @@
             
             // Preset formations for quick setup
             const presetFormations = {
-              '4-3-3': ['GK','LB','LCB','RCB','RB','LCM','CCM','RCM','LW','RW','ST'],
+              '4-3-3': ['GK','LB','LCB','RCB','RB','LCM','CDM','RCM','LW','RW','ST'],
               '4-4-2': ['GK','LB','LCB','RCB','RB','LM','LCM','RCM','RM','LST','RST'],
               '4-2-3-1': ['GK','LB','LCB','RCB','RB','LCDM','RCDM','LW','CAM','RW','ST'],
               '3-5-2': ['GK','LCB','CCB','RCB','LWB','RWB','LCM','CCM','RCM','LST','RST'],
@@ -1028,9 +1028,31 @@
             
               setState('playoffs');
             };
+
+            const getPrizeMoney = (leagueKey, position, totalTeams) => {
+            const tier = getLeagueTier(leagueKey);
+  
+              // Base prize pool per tier
+              const tierPools = {
+                0: 200000000, // Top flight: £200M pool
+                1: 80000000,  // Second tier: £80M pool
+                2: 30000000,  // Third tier: £30M pool
+                3: 12000000,  // Fourth tier: £12M pool
+                4: 4000000    // Fifth tier: £4M pool
+              };
+              
+              const pool = tierPools[tier] || 4000000;
+              
+              // Distribution: 1st gets biggest share, last gets smallest
+              // Creates a curve where top teams get significantly more
+              const share = (totalTeams - position) / (totalTeams * (totalTeams + 1) / 2) * 2;
+              const prize = Math.round(pool * share);
+              
+              return prize;
+            };
             
             const completeSeasonTransition = (playoffPromoted) => {
-              const leaguePyramids = {
+                const leaguePyramids = {
                 england: ['england', 'england_championship', 'england_league1', 'england_league2', 'england_national_league'],
                 germany: ['germany', 'germany_2'],
                 spain: ['spain', 'spain_segunda'],
@@ -1138,21 +1160,25 @@
               const wasAutoPromoted = playerPos < autoPromo && currentTier > 0;
               const wasPlayoffPromoted = playoffPromoted && playoffPromoted[league] === team.id && currentTier > 0;
             
-              if (wasAutoPromoted || wasPlayoffPromoted) {
-                newLeague = pyramid[currentTier - 1];
-                message = wasPlayoffPromoted
-                  ? `🎉 PROMOTED via playoffs! Welcome to ${leagues[newLeague].name}!`
-                  : `🎉 PROMOTED! You finished ${playerPos + 1}${playerPos === 0 ? 'st' : 'nd'} and are promoted to ${leagues[newLeague].name}!`;
-              } else if (myRules && playerPos >= tbl.length - myRules.relCount && currentTier < pyramid.length - 1) {
-                newLeague = pyramid[currentTier + 1];
-                message = `😢 RELEGATED to ${leagues[newLeague].name}.`;
-              } else if (playerPos === 0 && currentTier === 0) {
-                message = `🏆 CHAMPIONS! You won ${leagues[league].name}!`;
-              } else if (playerPos === 0) {
-                message = `🏆 CHAMPIONS! You won ${leagues[league].name}!`;
-              } else {
-                message = `Season complete! You finished ${playerPos + 1}${playerPos === 1 ? 'nd' : playerPos === 2 ? 'rd' : 'th'}.`;
-              }
+             const myPrize = getPrizeMoney(league, playerPos + 1, tbl.length);
+                team.budget += myPrize;
+                setFinanceHistory(prev => [...prev, { date: date.toISOString(), balance: team.budget }]);
+                
+                if (wasAutoPromoted || wasPlayoffPromoted) {
+                  newLeague = pyramid[currentTier - 1];
+                  message = wasPlayoffPromoted
+                    ? `🎉 PROMOTED via playoffs! Welcome to ${leagues[newLeague].name}!\n💰 Prize money: ${formatCurrency(myPrize)}`
+                    : `🎉 PROMOTED! You finished ${playerPos + 1}${playerPos === 0 ? 'st' : 'nd'} and are promoted to ${leagues[newLeague].name}!\n💰 Prize money: ${formatCurrency(myPrize)}`;
+                } else if (myRules && playerPos >= tbl.length - myRules.relCount && currentTier < pyramid.length - 1) {
+                  newLeague = pyramid[currentTier + 1];
+                  message = `😢 RELEGATED to ${leagues[newLeague].name}.\n💰 Prize money: ${formatCurrency(myPrize)}`;
+                } else if (playerPos === 0 && currentTier === 0) {
+                  message = `🏆 CHAMPIONS! You won ${leagues[league].name}!\n💰 Prize money: ${formatCurrency(myPrize)}`;
+                } else if (playerPos === 0) {
+                  message = `🏆 CHAMPIONS! You won ${leagues[league].name}!\n💰 Prize money: ${formatCurrency(myPrize)}`;
+                } else {
+                  message = `Season complete! You finished ${playerPos + 1}${playerPos === 1 ? 'nd' : playerPos === 2 ? 'rd' : 'th'}.\n💰 Prize money: ${formatCurrency(myPrize)}`;
+                }
             
               alert(message);
             
@@ -1174,7 +1200,19 @@
                   if (Math.random() < declineChance && p.rating > 5) p.rating -= 1;
                 }
               });
-            
+
+                // Award end-of-season prize money to ALL clubs
+                Object.keys(allTables).forEach(lk => {
+                  const table = allTables[lk];
+                  table.forEach((row, pos) => {
+                    const tm = leagues[lk].teams.find(t => t.id === row.teamId);
+                    if (tm) {
+                      const prize = getPrizeMoney(lk, pos + 1, table.length);
+                      tm.budget = (tm.budget || 0) + prize;
+                    }
+                  });
+                });
+                
               // Reset all players
               Object.keys(leagues).forEach(lk => {
                 leagues[lk].teams.forEach(tm => {
