@@ -1458,7 +1458,8 @@ Object.keys(fixtures).forEach(lk => {
                     events.push({ min, type: 'penalty', text: pickTemplate('penalty_won').replace('{player}', fouledPlayer.name), isHome, isGoal: false, playerId: fouledPlayer.id });
             
                     // Penalty taker — highest rated attacker/midfielder
-                    const penTaker = [...attackers].sort((a, b) => b.effectiveRating - a.effectiveRating)[0] || attacker;
+                    const penCandidates = attackers.filter(p => p.positions.some(pos => ['ST','LW','RW','CAM','CM'].includes(pos)));
+                    const penTaker = penCandidates.length > 0 ? penCandidates.sort((a, b) => b.effectiveRating - a.effectiveRating)[0] : attacker;
                     const penScored = Math.random() < 0.75; // 75% conversion
             
                     if (penScored) {
