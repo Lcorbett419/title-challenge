@@ -724,12 +724,25 @@
 
           useEffect(() => {
             if (team && state === 'info-page') {
-              const gameData = { league, team, country, leagues, fixtures, date: date.toISOString(), formation, financeHistory, startingXI, facilities, playerHistories };
-              localStorage.setItem('footballManagerSave', JSON.stringify({ gameData }));
+              const countryFixtures = {};
+Object.keys(fixtures).forEach(lk => {
+  if (lk.startsWith(country)) countryFixtures[lk] = fixtures[lk];
+});
+    const gameData = { league, team, country, leagues, fixtures: countryFixtures, date: date.toISOString(), formation, financeHistory: financeHistory.slice(-20), startingXI, facilities, playerHistories, lineup };
+    localStorage.setItem('footballManagerSave', JSON.stringify({ gameData }));
             }
           }, [team, leagues, fixtures, date, state, facilities]);
 
-          const selectCountry = (c) => { setCountry(c); setState('league-select'); };
+          const selectCountry = (c) => {
+              setCountry(c);
+              // Remove other countries' fixtures to save memory, keep teams for transfers
+              const trimmedFixtures = {};
+              Object.keys(fixtures).forEach(lk => {
+                if (lk.startsWith(c)) trimmedFixtures[lk] = fixtures[lk];
+              });
+              setFixtures(trimmedFixtures);
+              setState('league-select');
+            };
 
           const selectLeague = (lk) => { setLeague(lk); setState('team-select'); };
 
@@ -1921,6 +1934,7 @@
             setState('live-match');
             setCommentary([]);
             setMatch(null);
+            setPostMatchNews([]);  
             
             scheduleEvents(firstHalf.events, 0, 45);
                       } catch(e) { alert('playMatch error: ' + e.message); console.error(e); } };
@@ -1983,6 +1997,13 @@
           });
         
           setFixtures(uf);
+         
+        // Clear old scorer data from played fixtures to save memory
+            Object.keys(uf).forEach(lk => {
+              uf[lk].forEach(f => {
+                if (f.played) f.scorers = [];
+              });
+            });    
         
          // --- PLAYER STATS TRACKING ---
             const season = getSeasonDisplay();
@@ -2059,7 +2080,7 @@
           healInjuredPlayers(nd);
         
           if (nd.getDate() === 1 || financeHistory.length === 0 || new Date(financeHistory[financeHistory.length - 1].date).getMonth() !== nd.getMonth()) {
-            setFinanceHistory([...financeHistory, { date: nd.toISOString(), balance: team.budget }]);
+            setFinanceHistory(prev => [...prev.slice(-20), { date: nd.toISOString(), balance: team.budget }]);
           }
         
           // Set match result for display
@@ -2248,6 +2269,7 @@
         // === END POST-MATCH NEWS ===
               
           setStartingXI({ ...preMatchXI });
+          setLiveCommentary([]);    
           setLiveMatch(null);
           setPage('home');
           setState('post-match');
