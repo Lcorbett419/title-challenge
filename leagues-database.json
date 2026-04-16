@@ -1321,7 +1321,6 @@
         { "id": 41, "name": "Gabriel Forsyth", "positions": ["CM"], "dob": "2006-08-04", "rating": 9 },
         { "id": 42, "name": "Tony Springett", "positions": ["RW", "LW"], "dob": "2002-09-22", "rating": 10 },
         { "id": 44, "name": "Elliot Myles", "positions": ["CAM", "RW"], "dob": "2007-01-20", "rating": 9 },
-        { "id": 9, "name": "Josh Sargent", "positions": ["ST", "RW", "LW"], "dob": "2000-02-20", "rating": 14 },
         { "id": 10, "name": "Matěj Jurásek", "positions": ["RW"], "dob": "2003-08-30", "rating": 11 },
         { "id": 17, "name": "Ante Crnac", "positions": ["ST", "RW"], "dob": "2003-12-17", "rating": 11 },
         { "id": 19, "name": "Papa Amadou Diallo", "positions": ["LW"], "dob": "2004-06-25", "rating": 11 },
