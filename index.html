@@ -1275,6 +1275,55 @@ Object.keys(fixtures).forEach(lk => {
             return fix.find(f => !f.played && (f.homeTeamId === team.id || f.awayTeamId === team.id));
           };
 
+
+          const getAIFormation = (tm) => {
+          const available = tm.players.filter(p => !p.injured && !p.suspended);
+          let bestFormation = null;
+          let bestScore = -1;
+          let bestXI = [];
+        
+          Object.entries(presetFormations).forEach(([name, positions]) => {
+            const used = [];
+            let totalRating = 0;
+            let inPositionCount = 0;
+            const xi = [];
+        
+            positions.forEach(pos => {
+              const validPos = positionMapping[pos] || [];
+              // First try to find someone who fits the position
+              const eligible = available.filter(p =>
+                !used.includes(p.id) &&
+                p.positions.some(pp => validPos.includes(pp))
+              ).sort((a, b) => b.rating - a.rating);
+        
+              const fallback = available.filter(p =>
+                !used.includes(p.id)
+              ).sort((a, b) => b.rating - a.rating);
+        
+              const pick = eligible[0] || fallback[0];
+              if (pick) {
+                const inPos = pick.positions.some(pp => validPos.includes(pp));
+                totalRating += inPos ? pick.rating : Math.max(1, pick.rating - 5);
+                if (inPos) inPositionCount++;
+                used.push(pick.id);
+                xi.push({ player: pick, position: pos, inPosition: inPos });
+              }
+            });
+        
+            // Score = total effective rating + bonus for players in position
+            const score = totalRating + (inPositionCount * 2);
+        
+            if (score > bestScore) {
+              bestScore = score;
+              bestFormation = name;
+              bestXI = xi;
+            }
+          });
+        
+          return { formation: bestFormation, xi: bestXI };
+        };
+
+              
           const simMatch = (h, a, track) => {
           const comm = []; const scorers = [];
           const getMatchPlayers = (tm) => {
@@ -1290,7 +1339,11 @@ Object.keys(fixtures).forEach(lk => {
                 return { ...player, effectiveRating: inPosition ? player.rating : Math.max(1, player.rating - 5) };
               }).filter(p => p !== null);
             } else {
-              return tm.players.filter(p => !p.injured && !p.suspended).sort((a, b) => b.rating - a.rating).slice(0, 11).map(p => ({ ...p, effectiveRating: p.rating }));
+              const ai = getAIFormation(tm);
+              return ai.xi.map(slot => ({
+                ...slot.player,
+                effectiveRating: slot.inPosition ? slot.player.rating : Math.max(1, slot.player.rating - 5)
+              }));
             }
           };
         
@@ -1738,10 +1791,11 @@ Object.keys(fixtures).forEach(lk => {
                     return { ...player, effectiveRating: inPosition ? player.rating : Math.max(1, player.rating - 5), matchRating: baseRating };
                   }).filter(p => p !== null);
                 } else {
-                  return tm.players.filter(p => !p.injured).sort((a, b) => b.rating - a.rating).slice(0, 11).map(p => {
-                    const rated = allRated.find(r => r.id === p.id);
+                  const ai = getAIFormation(tm);
+                  return ai.xi.map(slot => {
+                    const rated = allRated.find(r => r.id === slot.player.id);
                     const baseRating = rated ? rated.matchRating : 6.0;
-                    return { ...p, effectiveRating: p.rating, matchRating: baseRating };
+                    return { ...slot.player, effectiveRating: slot.inPosition ? slot.player.rating : Math.max(1, slot.player.rating - 5), matchRating: baseRating };
                   });
                 }
               };
@@ -1897,7 +1951,12 @@ Object.keys(fixtures).forEach(lk => {
                 return { ...player, effectiveRating: inPosition ? player.rating : Math.max(1, player.rating - 5), matchRating: 6.0 + Math.random() * 1.0 };
               }).filter(p => p !== null);
             } else {
-              return tm.players.filter(p => !p.injured).sort((a, b) => b.rating - a.rating).slice(0, 11).map(p => ({ ...p, effectiveRating: p.rating, matchRating: 6.0 + Math.random() * 1.0 }));
+              const ai = getAIFormation(tm);
+              return ai.xi.map(slot => ({
+                ...slot.player,
+                effectiveRating: slot.inPosition ? slot.player.rating : Math.max(1, slot.player.rating - 5),
+                matchRating: 6.0 + Math.random() * 1.0
+              }));
             }
           };
         
