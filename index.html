@@ -1625,7 +1625,7 @@ Object.keys(fixtures).forEach(lk => {
                   events.push({ min, type: 'foul', text: pickTemplate('foul').replace('{player}', p.name), isHome, isGoal: false, playerId: p.id });
             
                   if (Math.random() < 0.4) {
-                    const cardKey = `${p.id}`;
+                    const cardKey = `${isHome ? 'h' : 'a'}-${p.id}`;
                     if (!matchCards[cardKey]) matchCards[cardKey] = 0;
                     matchCards[cardKey]++;
             
@@ -4258,10 +4258,9 @@ Object.keys(fixtures).forEach(lk => {
                           return subbedOffPlayers.map(pid => {
                             const player = team.players.find(p => p.id === pid);
                             if (!player) return null;
-                            const allPlayers = [...(liveMatch.homePlayers || []), ...(liveMatch.awayPlayers || [])];
-                            const original = allPlayers.find(p => p.id === pid);
-                            if (!original) return null;
-                            const rated = computeLiveRatings([original], liveCommentary, liveMatch.homeTeam.id === team.id);
+                            // Create a fake player entry for rating calculation since they've been removed from match lists
+                            const fakePlayer = { ...player, effectiveRating: player.rating };
+                            const rated = computeLiveRatings([fakePlayer], liveCommentary, liveMatch.homeTeam.id === team.id);
                             return rated[0] || null;
                           }).filter(Boolean);
                         };
