@@ -1480,9 +1480,12 @@ Object.keys(fixtures).forEach(lk => {
                       assister = midAtk.length > 0 ? midAtk[Math.floor(Math.random() * midAtk.length)] : possibleAssisters[Math.floor(Math.random() * possibleAssisters.length)];
                     }
             
+                    // Add a cross/through-ball moment before the goal
+                    if (assister) {
+                      events.push({ min, type: 'buildup', text: pickTemplate('assist').replace('{player}', assister.name), isHome, isGoal: false, playerId: assister.id });
+                    }
                     events.push({ min, type: 'goal', text: pickTemplate('goal').replace('{player}', attacker.name), isHome, isGoal: true, score: { home: hs, away: as }, playerId: attacker.id });
                     if (assister) {
-                      events.push({ min, type: 'assist', text: pickTemplate('assist').replace('{player}', assister.name), isHome, isGoal: false, playerId: assister.id });
                       scorers.push({ playerId: attacker.id, teamId: attTeam.id, assisterId: assister.id });
                     } else {
                       scorers.push({ playerId: attacker.id, teamId: attTeam.id, assisterId: null });
@@ -1589,42 +1592,72 @@ Object.keys(fixtures).forEach(lk => {
                 });
               }, msPerMinute);
             
-              events.sort((a, b) => a.min - b.min);
-              let cumulativeDelay = 0;
             
-              events.forEach((ev, idx) => {
-                const baseDelay = (ev.min - minOffset) * msPerMinute;
-                const prevEv = idx > 0 ? events[idx - 1] : null;
-                if (prevEv && prevEv.type === 'chance') cumulativeDelay += 2500;
-                else if (prevEv && prevEv.type === 'goal') cumulativeDelay += 3500;
-            
-                const delay = baseDelay + cumulativeDelay + Math.random() * 150;
-            
-                const tid = setTimeout(() => {
-                  setLiveCommentary(prev => [ev, ...prev]);
-            
-                  if (ev.type === 'chance' || ev.type === 'corner') {
-                  clockPausedRef.current = true;
-                  setTimeout(() => { clockPausedRef.current = false; }, 2500);
+                  events.sort((a, b) => a.min - b.min);
+                  let cumulativeDelay = 0;
+                  let lastMin = -1;
+                  let subEventDelay = 0;
+                
+                  events.forEach((ev, idx) => {
+                  const baseDelay = (ev.min - minOffset) * msPerMinute;
+                
+                  // Add pause after previous sequences
+                  const prevEv = idx > 0 ? events[idx - 1] : null;
+                  if (prevEv && prevEv.min !== ev.min) {
+                    // New minute — reset sub-event counter
+                    subEventDelay = 0;
+                  }
+                
+                  // Add cumulative pauses between different minutes
+                  if (prevEv && prevEv.min !== ev.min) {
+                    if (prevEv.type === 'chance' || prevEv.type === 'corner') cumulativeDelay += 2500;
+                    else if (prevEv.type === 'goal') cumulativeDelay += 4000;
+                    else if (prevEv.type === 'penalty') cumulativeDelay += 4000;
+                  }
+                
+                  // Sub-event delays within the same minute (build-up → shot → goal → assist)
+                  if (prevEv && prevEv.min === ev.min) {
+                    if (ev.type === 'chance' || ev.type === 'penalty') {
+                      subEventDelay += 1500; // Pause before the shot/penalty
+                    } else if (ev.type === 'goal') {
+                      subEventDelay += 2000; // Pause before the goal
+                    } else if (ev.type === 'assist') {
+                      subEventDelay += 1200; // Brief pause before assist credit
+                    } else if (ev.type === 'defend') {
+                      subEventDelay += 1000; // Pause before defensive action
+                    } else if (ev.type === 'corner') {
+                      subEventDelay += 1500; // Pause before corner
+                    } else {
+                      subEventDelay += 800; // Default gap between same-minute events
+                    }
+                  }
+                
+                  const delay = baseDelay + cumulativeDelay + subEventDelay + Math.random() * 100;
+                
+                  const tid = setTimeout(() => {
+                    setLiveCommentary(prev => [ev, ...prev]);
+                
+                    if (ev.type === 'chance' || ev.type === 'corner') {
+                      clockPausedRef.current = true;
+                      setTimeout(() => { clockPausedRef.current = false; }, 2500);
                     }
                     if (ev.type === 'penalty') {
                       clockPausedRef.current = true;
                       setTimeout(() => { clockPausedRef.current = false; }, 4000);
                     }
-                                       
-                  if (ev.isGoal && ev.score) {
-                    setLiveScore(ev.score);
-                    setGoalFlash(true);
-                    setTimeout(() => setGoalFlash(false), 3600);
-                    clockPausedRef.current = true;
-                    setTimeout(() => { clockPausedRef.current = false; }, 3500);
-                  }
-
+                
+                    if (ev.isGoal && ev.score) {
+                      setLiveScore(ev.score);
+                      setGoalFlash(true);
+                      setTimeout(() => setGoalFlash(false), 3600);
+                      clockPausedRef.current = true;
+                      setTimeout(() => { clockPausedRef.current = false; }, 3500);
+                    }
+                
                     if (ev.type === 'injury') {
-                      // Check if it's one of our players
                       const injuredPlayer = team.players.find(p => ev.text.includes(p.name));
                       if (injuredPlayer && Object.values(startingXI).includes(injuredPlayer.id)) {
-                        setTacticsReason({ type: 'injury', playerName: injuredPlayer.name, text: ev.text });  
+                        setTacticsReason({ type: 'injury', playerName: injuredPlayer.name, text: ev.text });
                         clearInterval(matchIntRef.current);
                         pendingTimeoutsRef.current.forEach(tid => clearTimeout(tid));
                         pendingTimeoutsRef.current = [];
@@ -1633,16 +1666,13 @@ Object.keys(fixtures).forEach(lk => {
                         setSelectedSlot(null);
                       }
                     }
-                    
+                
                     if (ev.type === 'redCard' && ev.playerId && ev.teamId === team.id) {
                       setSentOffPlayers(prev => [...prev, ev.playerId]);
-                        
-                      // If it's our goalkeeper, force tactics open
                       if (ev.teamId === team.id) {
                         const player = team.players.find(p => p.id === ev.playerId);
                         if (player && player.positions.includes('GK')) {
-                          // Pause for forced GK substitution
-                          setTacticsReason({ type: 'redCard', playerName: player.name, text: `🟥 ${player.name} has been sent off!` });  
+                          setTacticsReason({ type: 'redCard', playerName: player.name, text: `🟥 ${player.name} has been sent off!` });
                           clearInterval(matchIntRef.current);
                           pendingTimeoutsRef.current.forEach(tid => clearTimeout(tid));
                           pendingTimeoutsRef.current = [];
@@ -1652,22 +1682,22 @@ Object.keys(fixtures).forEach(lk => {
                         }
                       }
                     }
-                    
-                  if (ev.type === 'halftime') {
-                    clearInterval(matchIntRef.current);
-                    setLiveMinute(45);
-                    setIsHalfTime(true);
-                    setMatchHalf(2);
-                  }
-                  if (ev.type === 'end') {
-                    clearInterval(matchIntRef.current);
-                    setLiveMinute(90);
-                    setMatchEnded(true);
-                  }
-                }, delay);
-            
-                pendingTimeoutsRef.current.push(tid);
-              });
+                
+                    if (ev.type === 'halftime') {
+                      clearInterval(matchIntRef.current);
+                      setLiveMinute(45);
+                      setIsHalfTime(true);
+                      setMatchHalf(2);
+                    }
+                    if (ev.type === 'end') {
+                      clearInterval(matchIntRef.current);
+                      setLiveMinute(90);
+                      setMatchEnded(true);
+                    }
+                  }, delay);
+                
+                  pendingTimeoutsRef.current.push(tid);
+                });
             }; 
 
             const pauseForTactics = () => {
