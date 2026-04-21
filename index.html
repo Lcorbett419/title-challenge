@@ -4361,17 +4361,40 @@ Object.keys(fixtures).forEach(lk => {
                           );
                         });
                         
-                        // Unused bench players
-                        const benchRows = benchNotPlayed.slice(0, 7).map((p, i) => (
-                          <tr key={`bench-${i}`} className="border-b border-gray-700/20">
-                            <td className="py-1"></td>
-                            <td colSpan="3" className="py-1 text-gray-600 text-xs">
-                              {p.name.split(' ').pop()}
-                              <span className="ml-1 text-gray-700">{p.positions.join('/')}</span>
-                            </td>
-                            <td className="py-1"></td>
-                          </tr>
-                        ));
+                        // Unused bench — both teams
+                        const homeBench = (userIsHome ? benchNotPlayed : 
+                          liveMatch.awayTeam.players || liveMatch.homeTeam.players
+                        ).filter(p => {
+                          const tm = userIsHome ? team : (liveMatch.homeTeam.id === team.id ? liveMatch.awayTeam : liveMatch.homeTeam);
+                          const onPitch = userIsHome ? sortedHome : sortedAway;
+                          return !onPitch.some(op => op.id === p.id) && !p.injured && !p.suspended;
+                        });
+                        
+                        const awayBench = (!userIsHome ? benchNotPlayed :
+                          (liveMatch.homeTeam.id === team.id ? liveMatch.awayTeam : liveMatch.homeTeam).players || []
+                        ).filter(p => {
+                          const onPitch = userIsHome ? sortedAway : sortedHome;
+                          return !onPitch.some(op => op.id === p.id) && !p.injured && !p.suspended;
+                        }).sort((a, b) => b.rating - a.rating);
+                        
+                        const homeTeamBench = userIsHome ? benchNotPlayed : homeBench;
+                        const awayTeamBench = userIsHome ? awayBench : benchNotPlayed;
+                        
+                        const maxBench = Math.max(homeTeamBench.length, awayTeamBench.length);
+                        
+                        const benchRows = Array.from({ length: maxBench }).map((_, i) => {
+                          const hb = homeTeamBench[i];
+                          const ab = awayTeamBench[i];
+                          return (
+                            <tr key={`bench-${i}`} className="border-b border-gray-700/20">
+                              <td className="py-1"></td>
+                              <td className="py-1 text-gray-600 text-right pr-1 text-xs">{hb ? hb.name.split(' ').pop() : ''}</td>
+                              <td className="py-1"></td>
+                              <td className="py-1 text-gray-600 text-left pl-1 text-xs">{ab ? ab.name.split(' ').pop() : ''}</td>
+                              <td className="py-1"></td>
+                            </tr>
+                          );
+                        });
                         
                         return (
                           <>
