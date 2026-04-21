@@ -4240,21 +4240,48 @@ Object.keys(fixtures).forEach(lk => {
                               else awayMotmId = bestId;
                             }
                         
-                            const posMap = { 'GK':'GK', 'LB':'DL', 'RB':'DR', 'CB':'DC', 'CDM':'MC', 'CM':'MC', 'CAM':'AMC', 'LW':'AML', 'RW':'AMR', 'ST':'AC' };
+                      const posMap = { 'GK':'GK', 'LB':'DL', 'RB':'DR', 'CB':'DC', 'CDM':'MC', 'CM':'MC', 'CAM':'AMC', 'LW':'AML', 'RW':'AMR', 'ST':'AC' };
                         
-                            const posOrder = ['GK','CB','LB','RB','LWB','RWB','CDM','CM','CAM','LM','RM','LW','RW','ST'];
-                            const sortByPos = (players) => [...players].sort((a, b) => {
-                              const aIdx = Math.min(...a.positions.map(p => posOrder.indexOf(p)).filter(i => i >= 0).concat([99]));
-                              const bIdx = Math.min(...b.positions.map(p => posOrder.indexOf(p)).filter(i => i >= 0).concat([99]));
-                              return aIdx - bIdx;
-                            });
+                      const posOrder = ['GK','CB','LB','RB','LWB','RWB','CDM','CM','CAM','LM','RM','LW','RW','ST'];
+                          
+                      const sortByPos = (players) => [...players].sort((a, b) => {
+                          const aIdx = Math.min(...a.positions.map(p => posOrder.indexOf(p)).filter(i => i >= 0).concat([99]));
+                          const bIdx = Math.min(...b.positions.map(p => posOrder.indexOf(p)).filter(i => i >= 0).concat([99]));
+                          return aIdx - bIdx;
+                        });
+                        
+                        const sortedHome = sortByPos(liveHomePlayers);
+                        const sortedAway = sortByPos(liveAwayPlayers);
+                        
+                        // Get subbed-off players with their ratings from commentary
+                        const getSubbedOffWithRatings = () => {
+                          return subbedOffPlayers.map(pid => {
+                            const player = team.players.find(p => p.id === pid);
+                            if (!player) return null;
+                            const allPlayers = [...(liveMatch.homePlayers || []), ...(liveMatch.awayPlayers || [])];
+                            const original = allPlayers.find(p => p.id === pid);
+                            if (!original) return null;
+                            const rated = computeLiveRatings([original], liveCommentary, liveMatch.homeTeam.id === team.id);
+                            return rated[0] || null;
+                          }).filter(Boolean);
+                        };
+                        
+                        const subbedOffRated = getSubbedOffWithRatings();
+                        
+                        // Bench players who haven't played at all
+                        const benchNotPlayed = team.players.filter(p =>
+                          !Object.values(startingXI).includes(p.id) &&
+                          !subbedOffPlayers.includes(p.id) &&
+                          !p.injured && !p.suspended &&
+                          !sentOffPlayers.includes(p.id)
+                        ).sort((a, b) => b.rating - a.rating);
+                        
+                        // Determine which side is user's team
+                        const userIsHome = liveMatch.homeTeam.id === team.id;
                             
-                            const sortedHome = sortByPos(liveHomePlayers);
-                            const sortedAway = sortByPos(liveAwayPlayers);
-                            
-                            return Array.from({ length: Math.max(sortedHome.length, sortedAway.length) }).map((_, i) => {
-                                const hp = sortedHome[i];
-                                const ap = sortedAway[i];
+                            const mainRows = Array.from({ length: Math.max(sortedHome.length, sortedAway.length) }).map((_, i) => {
+                            const hp = sortedHome[i];
+                            const ap = sortedAway[i];
                             const hPos = hp ? hp.positions[0] : '';
                             const aPos = ap ? ap.positions[0] : '';
                             const hIcons = hp ? getPlayerIcons(hp.id, true) : [];
@@ -4276,7 +4303,7 @@ Object.keys(fixtures).forEach(lk => {
                             );
                         
                             return (
-                              <tr key={i} className={`border-b border-gray-700/50 ${i >= 11 ? 'opacity-50' : ''} ${hIsMotm || aIsMotm ? 'bg-yellow-900/20' : ''}`}>
+                              <tr key={i} className={`border-b border-gray-700/50 ${hIsMotm || aIsMotm ? 'bg-yellow-900/20' : ''}`}>
                                 <td className="py-2 text-white font-bold">{hp ? hp.matchRating.toFixed(0) : ''}</td>
                                 <td className="py-2 text-white text-right pr-1 text-xs">
                                   {hp && (
@@ -4304,7 +4331,58 @@ Object.keys(fixtures).forEach(lk => {
                                 <td className="py-2 text-white font-bold text-right">{ap ? ap.matchRating.toFixed(0) : ''}</td>
                               </tr>
                             );
-                          });
+                        });
+                        
+                        // Subbed-off players row
+                        const subbedRows = subbedOffRated.map((p, i) => {
+                          const icons = getPlayerIcons(p.id, userIsHome);
+                          return (
+                            <tr key={`sub-${i}`} className="border-b border-gray-700/30">
+                              <td className="py-1 text-gray-400 font-bold text-sm">{p.matchRating.toFixed(0)}</td>
+                              <td colSpan="3" className="py-1 text-gray-400 text-xs">
+                                <span className="text-gray-500">↩ </span>
+                                {p.name.split(' ').pop()}
+                                <span className="ml-1 text-gray-500">{p.positions.join('/')}</span>
+                                {icons.length > 0 && (
+                                  <span className="ml-1">
+                                    {icons.map((ic, j) => (
+                                      <span key={j} className="text-xs">
+                                        {ic.type === 'goal' && <span>⚽</span>}
+                                        {ic.type === 'assist' && <span>🅰️</span>}
+                                        {ic.type === 'yellow' && <span>🟨</span>}
+                                        {ic.type === 'red' && <span>🟥</span>}
+                                      </span>
+                                    ))}
+                                  </span>
+                                )}
+                              </td>
+                              <td className="py-1"></td>
+                            </tr>
+                          );
+                        });
+                        
+                        // Unused bench players
+                        const benchRows = benchNotPlayed.slice(0, 7).map((p, i) => (
+                          <tr key={`bench-${i}`} className="border-b border-gray-700/20">
+                            <td className="py-1"></td>
+                            <td colSpan="3" className="py-1 text-gray-600 text-xs">
+                              {p.name.split(' ').pop()}
+                              <span className="ml-1 text-gray-700">{p.positions.join('/')}</span>
+                            </td>
+                            <td className="py-1"></td>
+                          </tr>
+                        ));
+                        
+                        return (
+                          <>
+                            {mainRows}
+                            {(subbedRows.length > 0 || benchRows.length > 0) && (
+                              <tr><td colSpan="5" className="py-1 text-gray-500 text-xs text-center border-b border-gray-600">— Substitutes —</td></tr>
+                            )}
+                            {subbedRows}
+                            {benchRows}
+                          </>
+                        );
                         })()}
                       </tbody>
                     </table>
