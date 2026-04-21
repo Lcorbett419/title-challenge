@@ -4518,15 +4518,20 @@ Object.keys(fixtures).forEach(lk => {
                       {/* Formation selector */}
                       <div className="bg-gray-800 p-2 flex gap-2 justify-center border-b border-gray-700">
                         {Object.keys(presetFormations).map(f => (
-                          <button key={f} onClick={() => {
-                            const newPositions = presetFormations[f];
-                            const currentPlayerIds = lineup.map(s => s.playerId);
-                            const newLin = newPositions.map((pos, idx) => {
-                              return { playerId: currentPlayerIds[idx] || currentPlayerIds[0], position: pos };
-                            });
-                            setLineup(newLin);
-                            setStartingXI(lineupToStartingXI(newLin));
-                          }} className={`px-3 py-1.5 rounded text-xs font-bold bg-gray-700 text-gray-400 hover:bg-gray-600`}>{f}</button>
+                          <button key={f}
+                              onClick={() => {
+                              const newPositions = presetFormations[f];
+                              // Get current on-pitch players only (exclude subbed off)
+                              const currentPlayerIds = Object.values(startingXI).filter(pid => 
+                                !subbedOffPlayers.includes(pid) && !sentOffPlayers.includes(pid)
+                              );
+                              const newLin = newPositions.map((pos, idx) => {
+                                return { playerId: currentPlayerIds[idx] || currentPlayerIds[0], position: pos };
+                              });
+                              setLineup(newLin);
+                              setStartingXI(lineupToStartingXI(newLin));
+                            }}
+                            className={`px-3 py-1.5 rounded text-xs font-bold bg-gray-700 text-gray-400 hover:bg-gray-600`}>{f}</button>
                         ))}
                       </div>
                 
