@@ -4596,7 +4596,8 @@ Object.keys(fixtures).forEach(lk => {
                                     setSelectedBenchPlayer(null);
                                     setSelectedSlot(null);
                                     const removedId = startingXI[`pos${idx}`];
-                                    if (removedId) setSubbedOffPlayers(prev => [...prev, removedId]);  
+                                    const removedPlayer = team.players.find(p => p.id === removedId);
+                                    if (removedId && removedPlayer) setSubbedOffPlayers(prev => [...prev, removedId]);  
                                   }
                                   else if (selectedSlot !== null && selectedSlot !== idx) {
                                     // Swap two on-pitch players (free — no sub used)
@@ -4662,7 +4663,8 @@ Object.keys(fixtures).forEach(lk => {
                                 setSelectedSlot(null);
                                 setSelectedBenchPlayer(null);
                                 const removedId = startingXI[`pos${selectedSlot}`];
-                                if (removedId) setSubbedOffPlayers(prev => [...prev, removedId]);  
+                                const removedPlayer = team.players.find(p => p.id === removedId);
+                                if (removedId && removedPlayer) setSubbedOffPlayers(prev => [...prev, removedId]);  
                               } 
                               else if (selectedSlot !== null) {
                                 alert('No substitutions remaining!');
