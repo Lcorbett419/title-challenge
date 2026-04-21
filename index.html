@@ -1618,17 +1618,19 @@ Object.keys(fixtures).forEach(lk => {
                   // Sub-event delays within the same minute (build-up → shot → goal → assist)
                   if (prevEv && prevEv.min === ev.min) {
                     if (ev.type === 'chance' || ev.type === 'penalty') {
-                      subEventDelay += 1500; // Pause before the shot/penalty
+                      subEventDelay += 2500;
                     } else if (ev.type === 'goal') {
-                      subEventDelay += 2000; // Pause before the goal
+                      subEventDelay += 3500;
                     } else if (ev.type === 'assist') {
-                      subEventDelay += 1200; // Brief pause before assist credit
+                      subEventDelay += 2000;
                     } else if (ev.type === 'defend') {
-                      subEventDelay += 1000; // Pause before defensive action
+                      subEventDelay += 2000;
                     } else if (ev.type === 'corner') {
-                      subEventDelay += 1500; // Pause before corner
+                      subEventDelay += 2500;
+                    } else if (ev.type === 'buildup') {
+                      subEventDelay += 2500;
                     } else {
-                      subEventDelay += 800; // Default gap between same-minute events
+                      subEventDelay += 1500;
                     }
                   }
                 
