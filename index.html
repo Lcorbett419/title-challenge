@@ -1716,13 +1716,16 @@ Object.keys(fixtures).forEach(lk => {
             
               const newHome = getUpdatedPlayers(homeTeam);
               const newAway = getUpdatedPlayers(awayTeam);
+              // Remove sent-off players
+              const cleanHome = newHome.filter(p => !sentOffPlayers.includes(p.id));
+              const cleanAway = newAway.filter(p => !sentOffPlayers.includes(p.id)); 
               const currentScore = { home: liveScore.home, away: liveScore.away };
               const currentScorers = liveMatch.scorers || [];
             
               // Generate remaining events
               const endMin = currentMin < 45 ? 45 : 90;
-              const remaining = generateMatchEvents(newHome, newAway, homeTeam, awayTeam, currentMin + 1, endMin, currentScore, currentScorers);
-            
+              const remaining = generateMatchEvents(cleanHome, cleanAway, homeTeam, awayTeam, currentMin + 1, endMin, currentScore, currentScorers);
+               
               // Add half-time or full-time marker
               if (endMin === 45) {
                 remaining.events.push({ min: 45, type: 'halftime', text: '🕐 Half Time', isHome: true, isGoal: false });
@@ -1757,8 +1760,8 @@ Object.keys(fixtures).forEach(lk => {
                 events: [...(prev.events || []), ...remaining.events],
                 scorers: remaining.scorers,
                 finalScore: remaining.score,
-                homePlayers: newHome,
-                awayPlayers: newAway
+                homePlayers: cleanHome,
+                awayPlayers: cleanAway
               }));
             
               setTacticsPaused(false);
@@ -2211,7 +2214,11 @@ Object.keys(fixtures).forEach(lk => {
         // 4. DEVELOPMENT (orange) — random chance of training improvement
         team.players.forEach(p => {
           if (!p.injured && !p.suspended) {
-            p.matchesPlayed = (p.matchesPlayed || 0) + (matchPlayers.includes(p.id) ? 1 : 0);
+            if (matchPlayers.includes(p.id)) {
+              p.matchesPlayed = (p.matchesPlayed || 0) + 1;
+            } else {
+              p.matchesPlayed = 0; // Reset consecutive count when rested
+            }
             const age = calcAge(p.dob);
             if (age <= 25 && p.rating < 20) {
               const devChance = 0.005 + (facilities.devLevel - 1) * 0.01;
