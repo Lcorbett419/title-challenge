@@ -579,8 +579,8 @@
                           if (Math.random() > 0.15) return;
                 
                           // Realism checks:
-                          // 1. Star players (16+) won't drop more than 1 tier
-                          if (p.rating >= 16 && aiTier - otherTier > 1) return;
+                          // 1. Star players (16+) won't drop at all
+                          if (p.rating >= 16 && aiTier > otherTier) return;
                 
                           // 2. Good players (14+) won't drop more than 2 tiers
                           if (p.rating >= 14 && aiTier - otherTier > 2) return;
