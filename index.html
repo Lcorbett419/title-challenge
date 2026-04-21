@@ -4335,27 +4335,30 @@ Object.keys(fixtures).forEach(lk => {
                         // Subbed-off players row
                         const subbedRows = subbedOffRated.map((p, i) => {
                           const icons = getPlayerIcons(p.id, userIsHome);
+                          const renderSubIcons = (icons) => icons.length > 0 ? (
+                            <span className="ml-1">
+                              {icons.map((ic, j) => (
+                                <span key={j} className="text-xs">
+                                  {ic.type === 'goal' && <span>⚽</span>}
+                                  {ic.type === 'assist' && <span>🅰️</span>}
+                                  {ic.type === 'yellow' && <span>🟨</span>}
+                                  {ic.type === 'red' && <span>🟥</span>}
+                                </span>
+                              ))}
+                            </span>
+                          ) : null;
+                        
                           return (
                             <tr key={`sub-${i}`} className="border-b border-gray-700/30">
-                              <td className="py-1 text-gray-400 font-bold text-sm">{p.matchRating.toFixed(0)}</td>
-                              <td colSpan="3" className="py-1 text-gray-400 text-xs">
-                                <span className="text-gray-500">↩ </span>
-                                {p.name.split(' ').pop()}
-                                <span className="ml-1 text-gray-500">{p.positions.join('/')}</span>
-                                {icons.length > 0 && (
-                                  <span className="ml-1">
-                                    {icons.map((ic, j) => (
-                                      <span key={j} className="text-xs">
-                                        {ic.type === 'goal' && <span>⚽</span>}
-                                        {ic.type === 'assist' && <span>🅰️</span>}
-                                        {ic.type === 'yellow' && <span>🟨</span>}
-                                        {ic.type === 'red' && <span>🟥</span>}
-                                      </span>
-                                    ))}
-                                  </span>
-                                )}
+                              <td className="py-1 text-gray-400 font-bold text-sm">{userIsHome ? p.matchRating.toFixed(0) : ''}</td>
+                              <td className="py-1 text-gray-400 text-xs text-right pr-1">
+                                {userIsHome && <><span className="text-gray-500">↩ </span>{p.name.split(' ').pop()}{renderSubIcons(icons)}</>}
                               </td>
                               <td className="py-1"></td>
+                              <td className="py-1 text-gray-400 text-xs text-left pl-1">
+                                {!userIsHome && <><span className="text-gray-500">↩ </span>{p.name.split(' ').pop()}{renderSubIcons(icons)}</>}
+                              </td>
+                              <td className="py-1 text-gray-400 font-bold text-sm text-right">{!userIsHome ? p.matchRating.toFixed(0) : ''}</td>
                             </tr>
                           );
                         });
