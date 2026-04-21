@@ -2484,6 +2484,7 @@ Object.keys(fixtures).forEach(lk => {
                   <h1 className="text-5xl font-bold text-white mb-8">Title Challenge</h1>
                   <button onClick={newGame} className="w-full bg-green-600 text-white py-6 rounded-lg font-bold text-xl mb-4 hover:bg-green-700">New Game</button>
                   <button onClick={loadGame} disabled={!hasSaved()} className={`w-full py-6 rounded-lg font-bold text-xl ${hasSaved() ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-800 text-gray-600 cursor-not-allowed'}`}>Load Game</button>
+                <p className="text-gray-600 text-xs mt-8">L Corbett Gaming</p>
                 </div>
               </div>
             );
@@ -2613,6 +2614,7 @@ Object.keys(fixtures).forEach(lk => {
                           <button key={p.key} onClick={() => { if (p.action) p.action(); setPage(p.key); setMenuOpen(false); }} className="w-full text-left text-white py-2 px-3 rounded hover:bg-gray-700">{p.label}</button>
                         ))}
                         <button onClick={() => setState('main-menu')} className="w-full text-left text-red-400 py-2 px-3 rounded hover:bg-gray-700">Exit</button>
+                      <p className="text-gray-600 text-xs mt-6 text-center">L Corbett Gaming</p>
                       </div>
                     </div>
                   </div>
