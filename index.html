@@ -1680,19 +1680,15 @@ Object.keys(fixtures).forEach(lk => {
                   events.forEach((ev, idx) => {
                   const baseDelay = (ev.min - minOffset) * msPerMinute;
                 
-                  // Add pause after previous sequences
-                  const prevEv = idx > 0 ? events[idx - 1] : null;
                   if (prevEv && prevEv.min !== ev.min) {
-                    // New minute — reset sub-event counter
-                    subEventDelay = 0;
-                  }
+                  // Absorb sub-event delay into cumulative before resetting
+                  cumulativeDelay += subEventDelay;
+                  subEventDelay = 0;
                 
-                  // Add cumulative pauses between different minutes
-                  if (prevEv && prevEv.min !== ev.min) {
-                    if (prevEv.type === 'chance' || prevEv.type === 'corner') cumulativeDelay += 2500;
-                    else if (prevEv.type === 'goal') cumulativeDelay += 4000;
-                    else if (prevEv.type === 'penalty') cumulativeDelay += 4000;
-                  }
+                  if (prevEv.type === 'chance' || prevEv.type === 'corner') cumulativeDelay += 2500;
+                  else if (prevEv.type === 'goal') cumulativeDelay += 4000;
+                  else if (prevEv.type === 'penalty') cumulativeDelay += 4000;
+                }
                 
                   // Sub-event delays within the same minute (build-up → shot → goal → assist)
                   if (prevEv && prevEv.min === ev.min) {
@@ -1714,9 +1710,11 @@ Object.keys(fixtures).forEach(lk => {
                   }
                 
                   const delay = baseDelay + cumulativeDelay + subEventDelay + Math.random() * 100;
+                    // Update clock to match event minute when it appears
                 
                   const tid = setTimeout(() => {
-                    setLiveCommentary(prev => [ev, ...prev]);
+                  setLiveCommentary(prev => [ev, ...prev]);
+                  setLiveMinute(ev.min);  
                 
                     if (ev.type === 'chance' || ev.type === 'corner') {
                       clockPausedRef.current = true;
