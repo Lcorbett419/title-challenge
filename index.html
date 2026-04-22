@@ -1659,9 +1659,44 @@ Object.keys(fixtures).forEach(lk => {
               clockPausedRef.current = false;
               pendingTimeoutsRef.current = [];
             
-             // Clock is now driven by events via setLiveMinute(ev.min)
-            // Just store the ref so it can be cleared in pauseForTactics
-            matchIntRef.current = null;
+             // Calculate total duration including all event delays
+                let totalDelay = 0;
+                let tempSubDelay = 0;
+                events.forEach((ev, idx) => {
+                  const prevEv = idx > 0 ? events[idx - 1] : null;
+                  if (prevEv && prevEv.min !== ev.min) {
+                    totalDelay += tempSubDelay;
+                    tempSubDelay = 0;
+                    if (prevEv.type === 'chance' || prevEv.type === 'corner') totalDelay += 2500;
+                    else if (prevEv.type === 'goal') totalDelay += 4000;
+                    else if (prevEv.type === 'penalty') totalDelay += 4000;
+                  }
+                  if (prevEv && prevEv.min === ev.min) {
+                    if (ev.type === 'chance' || ev.type === 'penalty') tempSubDelay += 2500;
+                    else if (ev.type === 'goal') tempSubDelay += 3500;
+                    else if (ev.type === 'assist') tempSubDelay += 2000;
+                    else if (ev.type === 'defend') tempSubDelay += 2000;
+                    else if (ev.type === 'corner') tempSubDelay += 2500;
+                    else if (ev.type === 'buildup') tempSubDelay += 2500;
+                    else tempSubDelay += 1500;
+                  }
+                });
+                totalDelay += tempSubDelay;
+                
+                const totalDuration = (totalMinutes * msPerMinute) + totalDelay;
+                const adjustedMsPerMinute = totalDuration / totalMinutes;
+                
+                matchIntRef.current = setInterval(() => {
+                  if (clockPausedRef.current) return;
+                  setLiveMinute(prev => {
+                    const target = minOffset + totalMinutes;
+                    if (prev >= target) {
+                      clearInterval(matchIntRef.current);
+                      return target;
+                    }
+                    return prev + 1;
+                  });
+                }, adjustedMsPerMinute);
             
             
                   events.sort((a, b) => a.min - b.min);
