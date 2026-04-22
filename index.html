@@ -1652,56 +1652,11 @@ Object.keys(fixtures).forEach(lk => {
               return { events, score: { home: hs, away: as }, scorers };
             };
 
-           const scheduleEvents = (events, minOffset, totalMinutes) => {
+              const scheduleEvents = (events, minOffset, totalMinutes) => {
               const baseDuration = (totalMinutes / 45) * 30000;
               const msPerMinute = baseDuration / totalMinutes;
-            
-              clockPausedRef.current = false;
-              pendingTimeoutsRef.current = [];
-            
-             // Schedule clock ticks based on actual event timing
-            // Find the last event's delay to know total match duration
-            let maxDelay = 0;
-            let calcCumDelay = 0;
-            let calcSubDelay = 0;
-            events.forEach((ev, idx) => {
-              const prevEv = idx > 0 ? events[idx - 1] : null;
-              const baseDelay = (ev.min - minOffset) * msPerMinute;
-              if (prevEv && prevEv.min !== ev.min) {
-                calcCumDelay += calcSubDelay;
-                calcSubDelay = 0;
-                if (prevEv.type === 'chance' || prevEv.type === 'corner') calcCumDelay += 2500;
-                else if (prevEv.type === 'goal') calcCumDelay += 4000;
-                else if (prevEv.type === 'penalty') calcCumDelay += 4000;
-              }
-              if (prevEv && prevEv.min === ev.min) {
-                if (ev.type === 'chance' || ev.type === 'penalty') calcSubDelay += 2500;
-                else if (ev.type === 'goal') calcSubDelay += 3500;
-                else if (ev.type === 'assist') calcSubDelay += 2000;
-                else if (ev.type === 'defend') calcSubDelay += 2000;
-                else if (ev.type === 'corner') calcSubDelay += 2500;
-                else if (ev.type === 'buildup') calcSubDelay += 2500;
-                else calcSubDelay += 1500;
-              }
-              const thisDelay = baseDelay + calcCumDelay + calcSubDelay;
-              if (thisDelay > maxDelay) maxDelay = thisDelay;
-            });
-            maxDelay += 1000; // Small buffer
-            
-            // Schedule a clock tick for each minute, spread evenly across total duration
-            const tickInterval = maxDelay / totalMinutes;
-            for (let m = 1; m <= totalMinutes; m++) {
-              const tickDelay = m * tickInterval;
-              const targetMin = minOffset + m;
-              const tid = setTimeout(() => {
-                setLiveMinute(prev => Math.max(prev, targetMin));
-              }, tickDelay);
-              pendingTimeoutsRef.current.push(tid);
-            }
-            
-            // Clear ref so pauseForTactics can still cancel
-            matchIntRef.current = null;
-            
+              pendingTimeoutsRef.current = [];         
+                          
             
                   events.sort((a, b) => a.min - b.min);
                     let cumulativeDelay = 0;
