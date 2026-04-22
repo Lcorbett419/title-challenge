@@ -1679,6 +1679,7 @@ Object.keys(fixtures).forEach(lk => {
                 
                   events.forEach((ev, idx) => {
                   const baseDelay = (ev.min - minOffset) * msPerMinute;
+                  const prevEv = idx > 0 ? events[idx - 1] : null;    
                 
                   if (prevEv && prevEv.min !== ev.min) {
                   // Absorb sub-event delay into cumulative before resetting
