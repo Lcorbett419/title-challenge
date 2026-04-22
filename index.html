@@ -1715,7 +1715,7 @@ Object.keys(fixtures).forEach(lk => {
                 
                   const tid = setTimeout(() => {
                   setLiveCommentary(prev => [ev, ...prev]);
-                  setLiveMinute(ev.min);  
+                  setLiveMinute(prev => Math.max(prev, ev.min));  
                 
                     if (ev.type === 'chance' || ev.type === 'corner') {
                       clockPausedRef.current = true;
