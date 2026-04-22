@@ -1659,17 +1659,9 @@ Object.keys(fixtures).forEach(lk => {
               clockPausedRef.current = false;
               pendingTimeoutsRef.current = [];
             
-              matchIntRef.current = setInterval(() => {
-                if (clockPausedRef.current) return;
-                setLiveMinute(prev => {
-                  const target = minOffset + totalMinutes;
-                  if (prev >= target) {
-                    clearInterval(matchIntRef.current);
-                    return target;
-                  }
-                  return prev + 1;
-                });
-              }, msPerMinute);
+             // Clock is now driven by events via setLiveMinute(ev.min)
+            // Just store the ref so it can be cleared in pauseForTactics
+            matchIntRef.current = null;
             
             
                   events.sort((a, b) => a.min - b.min);
