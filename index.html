@@ -1736,14 +1736,14 @@ Object.keys(fixtures).forEach(lk => {
                     
                     // Work out total match duration from last event
                     const totalDuration = Math.max(...eventDelays) + 1000;
-                    const tickInterval = totalDuration / totalMinutes;
+                    const clockTickMs = totalDuration / totalMinutes;
                     
                     // Schedule clock ticks — one per minute, evenly spread
                     matchIntRef.current = null;
                     for (let m = 1; m <= totalMinutes; m++) {
                       const tid = setTimeout(() => {
                         setLiveMinute(prev => Math.max(prev, minOffset + m));
-                      }, m * tickInterval);
+                      }, m * clockTickMs);
                       pendingTimeoutsRef.current.push(tid);
                     }
                     
