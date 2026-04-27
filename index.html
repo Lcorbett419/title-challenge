@@ -730,6 +730,7 @@
                   setDate(new Date(data.gameData.date));
                   setFormation(data.gameData.formation || '4-3-3');
                   setFinanceHistory(data.gameData.financeHistory || []);
+                  setLineup(data.gameData.lineup || []);  
                   setStartingXI(data.gameData.startingXI || {});
                   setFacilities(data.gameData.facilities || { stadiumLevel: 3, devLevel: 1 });
                   setPlayerHistories(data.gameData.playerHistories || {});
@@ -2038,7 +2039,9 @@ Object.keys(fixtures).forEach(lk => {
           const finishLiveMatch = () => { try {
           if (!liveMatch) return;
           const { homeTeam, awayTeam, scorers, finalScore, fixture } = liveMatch;
-             const allEvents = liveMatch.events || [];
+          const allEvents = liveMatch.events || [];
+          const matchdayIncome = facilities.stadiumLevel * 10000 * (isHome ? 1 : 0.3);
+            team.budget += matchdayIncome;    
         
           // Update fixtures
           const uf = JSON.parse(JSON.stringify(fixtures));
