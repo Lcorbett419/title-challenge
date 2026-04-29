@@ -130,6 +130,7 @@
           const pendingTimeoutsRef = useRef([]);  
           const clockPausedRef = useRef(false);
           const matchIntRef = useRef(null);
+          const [seasonSummary, setSeasonSummary] = useState(null);
 
           const allPositions = {
               'GK':   { x: 50, y: 92, label: 'GK' },
@@ -955,6 +956,74 @@ Object.keys(fixtures).forEach(lk => {
               return rules[leagueKey] || null;
             };
 
+              const generateSeasonSummary = () => {
+                  const tbl = getTable(league);
+                  const pos = tbl.findIndex(t => t.teamId === team.id);
+                  const row = tbl.find(t => t.teamId === team.id);
+                  const season = getSeasonDisplay();
+                
+                  // Top scorer from your team
+                  const topScorer = [...team.players].sort((a, b) => (b.goals || 0) - (a.goals || 0))[0];
+                
+                  // Top assister
+                  const topAssister = [...team.players].sort((a, b) => (b.assists || 0) - (a.assists || 0))[0];
+                
+                  // Best average rating from player histories
+                  let bestRated = null;
+                  let bestAvg = 0;
+                  Object.values(playerHistories).forEach(h => {
+                    if (h.season === season && h.matchCount >= 5) {
+                      const avg = h.totalRating / h.matchCount;
+                      if (avg > bestAvg) {
+                        bestAvg = avg;
+                        bestRated = { ...h, avg };
+                      }
+                    }
+                  });
+                  const bestRatedPlayer = bestRated ? team.players.find(p => p.id === bestRated.playerId) : null;
+                
+                  // Most MOTM
+                  let mostMotm = null;
+                  let motmCount = 0;
+                  Object.values(playerHistories).forEach(h => {
+                    if (h.season === season && (h.motm || 0) > motmCount) {
+                      motmCount = h.motm;
+                      mostMotm = h;
+                    }
+                  });
+                  const motmPlayer = mostMotm ? team.players.find(p => p.id === mostMotm.playerId) : null;
+                
+                  // Most yellow cards
+                  const mostYellows = [...team.players].sort((a, b) => (b.yellowCards || 0) - (a.yellowCards || 0))[0];
+                
+                  // League top scorer
+                  const leagueScorers = [];
+                  leagues[league].teams.forEach(t => {
+                    t.players.forEach(p => {
+                      if ((p.goals || 0) > 0) leagueScorers.push({ name: p.name, team: t.name, goals: p.goals });
+                    });
+                  });
+                  leagueScorers.sort((a, b) => b.goals - a.goals);
+                
+                  return {
+                    position: pos + 1,
+                    totalTeams: tbl.length,
+                    played: row?.played || 0,
+                    won: row?.won || 0,
+                    drawn: row?.drawn || 0,
+                    lost: row?.lost || 0,
+                    goalsFor: row?.goalsFor || 0,
+                    goalsAgainst: row?.goalsAgainst || 0,
+                    points: row?.points || 0,
+                    topScorer: topScorer ? { name: topScorer.name, goals: topScorer.goals || 0 } : null,
+                    topAssister: topAssister ? { name: topAssister.name, assists: topAssister.assists || 0 } : null,
+                    bestRated: bestRatedPlayer ? { name: bestRatedPlayer.name, avg: bestAvg.toFixed(2) } : null,
+                    motmPlayer: motmPlayer ? { name: motmPlayer.name, count: motmCount } : null,
+                    mostYellows: mostYellows && (mostYellows.yellowCards || 0) > 0 ? { name: mostYellows.name, count: mostYellows.yellowCards } : null,
+                    leagueTopScorer: leagueScorers[0] || null,
+                    season
+                  };
+                };
             
               const startNewSeason = () => {
               const fix = fixtures[league] || [];
@@ -1547,7 +1616,7 @@ Object.keys(fixtures).forEach(lk => {
                       events.push({ min, type: 'goal', text: pickTemplate('penalty_scored').replace('{player}', penTaker.name), isHome, isGoal: true, score: { home: hs, away: as }, playerId: penTaker.id });
                       scorers.push({ playerId: penTaker.id, teamId: attTeam.id, assisterId: null });
                     } else {
-                      events.push({ min, type: 'chance', text: pickTemplate('penalty_missed').replace('{player}', penTaker.name), isHome, isGoal: false, playerId: penTaker.id });
+                      events.push({ min, type: 'penaltyMiss', text: pickTemplate('penalty_missed').replace('{player}', penTaker.name), isHome, isGoal: false, playerId: penTaker.id });
                     }
                   } else {
                     // Normal goal
@@ -1899,6 +1968,9 @@ Object.keys(fixtures).forEach(lk => {
                   break;
                 case 'redCard':
                   rating -= 5.0;
+                  break;
+                case 'penaltyMiss':
+                  rating -= 0.8;
                   break;
               }
             });
@@ -2727,7 +2799,10 @@ Object.keys(fixtures).forEach(lk => {
                         {pos < 2 && <span className="block text-green-400 mt-2">🎉 Promotion zone!</span>}
                         {pos >= tbl.length - 3 && <span className="block text-red-400 mt-2">⚠️ Relegation zone</span>}
                       </p>
-                      <button onClick={startNewSeason} className="bg-green-600 text-white py-3 px-8 rounded-lg font-bold hover:bg-green-700">Start New Season</button>
+                          <button onClick={() => {
+                          setSeasonSummary(generateSeasonSummary());
+                          setState('season-summary');
+                        }} className="bg-green-600 text-white py-3 px-8 rounded-lg font-bold hover:bg-green-700">View Season Summary</button>
                     </div>
                   )}
 
@@ -4718,6 +4793,156 @@ Object.keys(fixtures).forEach(lk => {
             </div>
           );
         }
+
+            if (state === 'season-summary' && seasonSummary) {
+              const s = seasonSummary;
+              const ordinal = s.position === 1 ? 'st' : s.position === 2 ? 'nd' : s.position === 3 ? 'rd' : 'th';
+              return (
+                <div className="min-h-screen bg-gray-900 flex flex-col">
+                  <div className="p-4 text-center" style={{ background: team.primaryColor || '#ea580c' }}>
+                    <p className="text-white font-bold text-lg">Season Review</p>
+                    <p className="text-white/70 text-sm">{s.season} — {leagues[league].name}</p>
+                  </div>
+            
+                  <div className="flex-1 overflow-y-auto pb-24">
+                    {/* Final Position */}
+                    <div className="p-6 text-center">
+                      <p className="text-gray-400 text-sm">Final position</p>
+                      <p className="text-white font-bold text-6xl">{s.position}{ordinal}</p>
+                      <p className="text-gray-500 text-sm">out of {s.totalTeams} teams</p>
+                    </div>
+            
+                    {/* Record */}
+                    <div className="bg-gray-800 mx-4 rounded-lg p-4 mb-4">
+                      <h3 className="text-gray-500 text-xs mb-3">Season record</h3>
+                      <div className="grid grid-cols-4 gap-2 text-center mb-3">
+                        <div>
+                          <p className="text-gray-500 text-xs">Played</p>
+                          <p className="text-white font-bold text-xl">{s.played}</p>
+                        </div>
+                        <div>
+                          <p className="text-gray-500 text-xs">Won</p>
+                          <p className="text-green-400 font-bold text-xl">{s.won}</p>
+                        </div>
+                        <div>
+                          <p className="text-gray-500 text-xs">Drawn</p>
+                          <p className="text-yellow-400 font-bold text-xl">{s.drawn}</p>
+                        </div>
+                        <div>
+                          <p className="text-gray-500 text-xs">Lost</p>
+                          <p className="text-red-400 font-bold text-xl">{s.lost}</p>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-3 gap-2 text-center">
+                        <div>
+                          <p className="text-gray-500 text-xs">Goals for</p>
+                          <p className="text-white font-bold text-xl">{s.goalsFor}</p>
+                        </div>
+                        <div>
+                          <p className="text-gray-500 text-xs">Goals against</p>
+                          <p className="text-white font-bold text-xl">{s.goalsAgainst}</p>
+                        </div>
+                        <div>
+                          <p className="text-gray-500 text-xs">Points</p>
+                          <p className="text-white font-bold text-xl">{s.points}</p>
+                        </div>
+                      </div>
+                    </div>
+            
+                    {/* Player Awards */}
+                    <div className="bg-gray-800 mx-4 rounded-lg p-4 mb-4">
+                      <h3 className="text-gray-500 text-xs mb-3">Player awards</h3>
+                      <div className="space-y-3">
+                        {s.topScorer && s.topScorer.goals > 0 && (
+                          <div className="flex justify-between items-center">
+                            <div className="flex items-center gap-2">
+                              <span className="text-lg">⚽</span>
+                              <div>
+                                <p className="text-white font-bold text-sm">{s.topScorer.name}</p>
+                                <p className="text-gray-500 text-xs">Top scorer</p>
+                              </div>
+                            </div>
+                            <p className="text-white font-bold">{s.topScorer.goals} goals</p>
+                          </div>
+                        )}
+                        {s.topAssister && s.topAssister.assists > 0 && (
+                          <div className="flex justify-between items-center">
+                            <div className="flex items-center gap-2">
+                              <span className="text-lg">🅰️</span>
+                              <div>
+                                <p className="text-white font-bold text-sm">{s.topAssister.name}</p>
+                                <p className="text-gray-500 text-xs">Most assists</p>
+                              </div>
+                            </div>
+                            <p className="text-white font-bold">{s.topAssister.assists} assists</p>
+                          </div>
+                        )}
+                        {s.bestRated && (
+                          <div className="flex justify-between items-center">
+                            <div className="flex items-center gap-2">
+                              <span className="text-lg">📊</span>
+                              <div>
+                                <p className="text-white font-bold text-sm">{s.bestRated.name}</p>
+                                <p className="text-gray-500 text-xs">Highest avg rating</p>
+                              </div>
+                            </div>
+                            <p className="text-white font-bold">{s.bestRated.avg}</p>
+                          </div>
+                        )}
+                        {s.motmPlayer && (
+                          <div className="flex justify-between items-center">
+                            <div className="flex items-center gap-2">
+                              <span className="text-lg">⭐</span>
+                              <div>
+                                <p className="text-white font-bold text-sm">{s.motmPlayer.name}</p>
+                                <p className="text-gray-500 text-xs">Most man of the match</p>
+                              </div>
+                            </div>
+                            <p className="text-white font-bold">{s.motmPlayer.count} MOTM</p>
+                          </div>
+                        )}
+                        {s.mostYellows && (
+                          <div className="flex justify-between items-center">
+                            <div className="flex items-center gap-2">
+                              <span className="text-lg">🟨</span>
+                              <div>
+                                <p className="text-white font-bold text-sm">{s.mostYellows.name}</p>
+                                <p className="text-gray-500 text-xs">Most yellow cards</p>
+                              </div>
+                            </div>
+                            <p className="text-yellow-400 font-bold">{s.mostYellows.count} cards</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+            
+                    {/* League top scorer */}
+                    {s.leagueTopScorer && (
+                      <div className="bg-gray-800 mx-4 rounded-lg p-4 mb-4">
+                        <h3 className="text-gray-500 text-xs mb-3">League golden boot</h3>
+                        <div className="flex justify-between items-center">
+                          <div className="flex items-center gap-2">
+                            <span className="text-lg">🏆</span>
+                            <div>
+                              <p className="text-white font-bold text-sm">{s.leagueTopScorer.name}</p>
+                              <p className="text-gray-500 text-xs">{s.leagueTopScorer.team}</p>
+                            </div>
+                          </div>
+                          <p className="text-white font-bold">{s.leagueTopScorer.goals} goals</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+            
+                  <div className="fixed bottom-0 left-0 right-0 p-4 bg-gray-900 z-50">
+                    <button onClick={() => {
+                      setSeasonSummary(null);
+                      startNewSeason();
+                    }} className="w-full bg-green-600 text-white py-4 rounded-lg font-bold text-lg">Continue to Next Season</button>
+                  </div>
+                </div>
+              );
+            }  
 
             if (state === 'playoffs' && playoffState) {
               return (
