@@ -17,7 +17,7 @@
         "budget": 50000000,
         "players": [
           { "id": 1, "name": "David Raya", "positions": ["GK"], "dob": "1995-09-15", "rating": 17 },
-          { "id": 13, "name": "Kepa Arrizabalaga", "positions": ["GK"], "dob": "1994-10-03", "rating": 14 },
+          { "id": 13, "name": "Kepa Arrizabalaga", "positions": ["GK"], "dob": "1994-10-03", "rating": 15 },
           { "id": 35, "name": "Tommy Setford", "positions": ["GK"], "dob": "2006-03-13", "rating": 10 },
           { "id": 33, "name": "Riccardo Calafiori", "positions": ["LB", "CB"], "dob": "2002-05-19", "rating": 17 },
           { "id": 2, "name": "William Saliba", "positions": ["CB"], "dob": "2001-03-24", "rating": 18 },
@@ -117,9 +117,9 @@
           { "id": 27, "name": "Alex Tóth", "positions": ["CM"], "dob": "2005-10-23", "rating": 12 },
           { "id": 9, "name": "Evanilson", "positions": ["ST"], "dob": "1999-10-06", "rating": 15 },
           { "id": 19, "name": "Justin Kluivert", "positions": ["LW", "CAM", "ST"], "dob": "1999-05-05", "rating": 15 },
-          { "id": 22, "name": "Eli Junior Kroupi", "positions": ["RW", "LW", "ST"], "dob": "2006-06-23", "rating": 14 },
+          { "id": 22, "name": "Eli Junior Kroupi", "positions": ["RW", "LW", "ST"], "dob": "2006-06-23", "rating": 15 },
           { "id": 26, "name": "Enes Ünal", "positions": ["RW", "LW", "ST"], "dob": "1997-05-10", "rating": 13 },
-          { "id": 37, "name": "Rayan", "positions": ["RW", "LW", "ST"], "dob": "2006-08-03", "rating": 13 }
+          { "id": 37, "name": "Rayan", "positions": ["RW", "LW", "ST"], "dob": "2006-08-03", "rating": 14 }
         ]
       },
       {
@@ -551,12 +551,12 @@
           { "id": 13, "name": "Patrick Dorgu", "positions": ["LB", "LW", "RW"], "dob": "2004-10-26", "rating": 16 },
           { "id": 15, "name": "Leny Yoro", "positions": ["CB"], "dob": "2005-11-13", "rating": 15 },
           { "id": 23, "name": "Luke Shaw", "positions": ["LB", "CB"], "dob": "1995-07-12", "rating": 15 },
-          { "id": 26, "name": "Ayden Heaven", "positions": ["CB"], "dob": "2006-09-22", "rating": 12 },
+          { "id": 26, "name": "Ayden Heaven", "positions": ["CB"], "dob": "2006-09-22", "rating": 13 },
           { "id": 7, "name": "Mason Mount", "positions": ["CM", "CAM", "RW", "LW"], "dob": "1999-01-10", "rating": 15 },
           { "id": 8, "name": "Bruno Fernandes", "positions": ["CAM", "CM"], "dob": "1994-09-08", "rating": 18 },
-          { "id": 18, "name": "Casemiro", "positions": ["CDM", "CM"], "dob": "1992-02-23", "rating": 15 },
+          { "id": 18, "name": "Casemiro", "positions": ["CDM", "CM"], "dob": "1992-02-23", "rating": 16 },
           { "id": 25, "name": "Manuel Ugarte", "positions": ["CDM", "CM"], "dob": "2001-04-11", "rating": 15 },
-          { "id": 37, "name": "Kobbie Mainoo", "positions": ["CDM", "CM"], "dob": "2005-04-19", "rating": 14 },
+          { "id": 37, "name": "Kobbie Mainoo", "positions": ["CDM", "CM"], "dob": "2005-04-19", "rating": 16 },
           { "id": 10, "name": "Matheus Cunha", "positions": ["ST", "CAM", "LW", "RW"], "dob": "1999-05-27", "rating": 16 },
           { "id": 11, "name": "Joshua Zirkzee", "positions": ["ST", "CAM"], "dob": "2001-05-22", "rating": 14 },
           { "id": 16, "name": "Amad Diallo", "positions": ["RW", "LW"], "dob": "2002-07-11", "rating": 15 },
@@ -577,7 +577,7 @@
         "stadiumCapacity": 52000,
         "budget": 50000000,
         "players": [
-          { "id": 1, "name": "Nick Pope", "positions": ["GK"], "dob": "1992-04-19", "rating": 15 },
+          { "id": 1, "name": "Nick Pope", "positions": ["GK"], "dob": "1992-04-19", "rating": 14 },
           { "id": 26, "name": "John Ruddy", "positions": ["GK"], "dob": "1986-10-24", "rating": 10 },
           { "id": 29, "name": "Mark Gillespie", "positions": ["GK"], "dob": "1992-03-27", "rating": 9 },
           { "id": 32, "name": "Aaron Ramsdale", "positions": ["GK"], "dob": "1998-05-14", "rating": 14 },
@@ -597,10 +597,10 @@
           { "id": 39, "name": "Bruno Guimarães", "positions": ["CM", "CDM"], "dob": "1997-11-16", "rating": 17 },
           { "id": 41, "name": "Jacob Ramsey", "positions": ["CM", "CAM"], "dob": "2001-05-28", "rating": 15 },
           { "id": 67, "name": "Lewis Miley", "positions": ["CM", "RB"], "dob": "2006-05-01", "rating": 15 },
-          { "id": 9, "name": "Yoane Wissa", "positions": ["ST"], "dob": "1996-09-03", "rating": 15 },
+          { "id": 9, "name": "Yoane Wissa", "positions": ["ST"], "dob": "1996-09-03", "rating": 14 },
           { "id": 10, "name": "Anthony Gordon", "positions": ["LW", "ST"], "dob": "2001-02-24", "rating": 16 },
-          { "id": 11, "name": "Harvey Barnes", "positions": ["LW", "RW"], "dob": "1997-12-09", "rating": 16 },
-          { "id": 18, "name": "William Osula", "positions": ["ST", "LW"], "dob": "2003-08-04", "rating": 13 },
+          { "id": 11, "name": "Harvey Barnes", "positions": ["LW", "RW"], "dob": "1997-12-09", "rating": 15 },
+          { "id": 18, "name": "William Osula", "positions": ["ST", "LW"], "dob": "2003-08-04", "rating": 14 },
           { "id": 20, "name": "Anthony Elanga", "positions": ["RW"], "dob": "2002-04-27", "rating": 14 },
           { "id": 27, "name": "Nick Woltemade", "positions": ["ST"], "dob": "2002-02-14", "rating": 16 }
         ]
@@ -4992,13 +4992,13 @@
           { "id": 10, "name": "Jamal Musiala", "positions": ["CAM", "LW"], "dob": "2003-02-26", "rating": 19 },
           { "id": 20, "name": "Tom Bischof", "positions": ["CM", "CDM", "RB"], "dob": "2005-06-28", "rating": 14 },
           { "id": 27, "name": "Konrad Laimer", "positions": ["CDM", "CM"], "dob": "1997-05-27", "rating": 16 },
-          { "id": 42, "name": "Lennart Karl", "positions": ["CAM", "RW"], "dob": "2008-02-22", "rating": 15 },
-          { "id": 45, "name": "Aleksandar Pavlović", "positions": ["CDM", "CM"], "dob": "2004-05-03", "rating": 15 },
+          { "id": 42, "name": "Lennart Karl", "positions": ["CAM", "RW"], "dob": "2008-02-22", "rating": 16 },
+          { "id": 45, "name": "Aleksandar Pavlović", "positions": ["CDM", "CM"], "dob": "2004-05-03", "rating": 16 },
           { "id": 7, "name": "Serge Gnabry", "positions": ["LW", "RW"], "dob": "1995-07-14", "rating": 16 },
           { "id": 9, "name": "Harry Kane", "positions": ["ST"], "dob": "1993-07-28", "rating": 19 },
           { "id": 11, "name": "Nicolas Jackson", "positions": ["ST"], "dob": "2001-06-20", "rating": 16 },
-          { "id": 14, "name": "Luis Díaz", "positions": ["LW"], "dob": "1997-01-13", "rating": 17 },
-          { "id": 17, "name": "Michael Olise", "positions": ["RW", "CAM"], "dob": "2001-12-12", "rating": 17 }
+          { "id": 14, "name": "Luis Díaz", "positions": ["LW"], "dob": "1997-01-13", "rating": 18 },
+          { "id": 17, "name": "Michael Olise", "positions": ["RW", "CAM"], "dob": "2001-12-12", "rating": 18 }
         ]
       },
       {
