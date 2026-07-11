@@ -107,6 +107,9 @@
           const [facilities, setFacilities] = useState({ stadiumLevel: 3, devLevel: 1 });
           const [preseason, setPreseason] = useState(true);
           const [playoffState, setPlayoffState] = useState(null);
+          const [playoffRound, setPlayoffRound] = useState(null);
+          const [playoffBracket, setPlayoffBracket] = useState(null);
+          const [playoffMatchQueue, setPlayoffMatchQueue] = useState([]);
           const [playoffResults, setPlayoffResults] = useState([]);  
           const [preMatchXI, setPreMatchXI] = useState({});
           const [postMatchNews, setPostMatchNews] = useState([]);
@@ -1062,85 +1065,271 @@ Object.keys(fixtures).forEach(lk => {
               const getTeamById = (id) => leagues[leagueKey].teams.find(t => t.id === id);
               const seeds = rules.playoffSeeds;
               const playoffTeams = seeds.map(s => getTeamById(tbl[s - 1]?.teamId)).filter(Boolean);
-              const results = [];
+              const isUserInvolved = (t1, t2) => t1.id === team.id || t2.id === team.id;
+            
+              const bracket = {
+                leagueKey,
+                rules,
+                type: rules.playoffType,
+                teams: playoffTeams,
+                rounds: [],
+                currentRound: 0,
+                complete: false,
+                promotedTeam: null
+              };
             
               if (rules.playoffType === 'standard') {
-                // 3v6 and 4v5 two legs, then final one leg
-                const semi1 = simTwoLegs(playoffTeams[seeds.indexOf(seeds[0]) === 0 ? 0 : 0], playoffTeams[3]);
-                const semi2 = simTwoLegs(playoffTeams[1], playoffTeams[2]);
-            
-                results.push({ round: 'Semi-Final 1', ...semi1, team1: playoffTeams[0], team2: playoffTeams[3] });
-                results.push({ round: 'Semi-Final 2', ...semi2, team1: playoffTeams[1], team2: playoffTeams[2] });
-            
-                const final1 = simOneLeg(semi1.winner, semi2.winner);
-                results.push({ round: 'FINAL', result: final1.result, winner: final1.winner, loser: final1.loser, team1: semi1.winner, team2: semi2.winner });
-            
-                setPlayoffState({
-                  leagueKey,
-                  rules,
-                  type: 'standard',
-                  results,
-                  promotedTeam: final1.winner,
-                  message: final1.winner.id === team.id
-                    ? `🎉 PROMOTED! You won the playoff final!`
-                    : `😢 ${final1.winner.name} won the playoff final.`
-                });
-            
+                bracket.rounds = [
+                  { name: 'Semi-Final 1', team1: playoffTeams[0], team2: playoffTeams[3], legs: 2, result: null, winner: null, userMatch: isUserInvolved(playoffTeams[0], playoffTeams[3]) },
+                  { name: 'Semi-Final 2', team1: playoffTeams[1], team2: playoffTeams[2], legs: 2, result: null, winner: null, userMatch: isUserInvolved(playoffTeams[1], playoffTeams[2]) },
+                  { name: 'FINAL', team1: null, team2: null, legs: 1, result: null, winner: null, userMatch: false }
+                ];
               } else if (rules.playoffType === 'league2') {
-                // 4v7 and 5v6 two legs, then final one leg
-                const semi1 = simTwoLegs(playoffTeams[0], playoffTeams[3]);
-                const semi2 = simTwoLegs(playoffTeams[1], playoffTeams[2]);
-            
-                results.push({ round: 'Semi-Final 1', ...semi1, team1: playoffTeams[0], team2: playoffTeams[3] });
-                results.push({ round: 'Semi-Final 2', ...semi2, team1: playoffTeams[1], team2: playoffTeams[2] });
-            
-                const final1 = simOneLeg(semi1.winner, semi2.winner);
-                results.push({ round: 'FINAL', result: final1.result, winner: final1.winner, loser: final1.loser, team1: semi1.winner, team2: semi2.winner });
-            
-                setPlayoffState({
-                  leagueKey,
-                  rules,
-                  type: 'league2',
-                  results,
-                  promotedTeam: final1.winner,
-                  message: final1.winner.id === team.id
-                    ? `🎉 PROMOTED! You won the playoff final!`
-                    : `😢 ${final1.winner.name} won the playoff final.`
-                });
-            
+                bracket.rounds = [
+                  { name: 'Semi-Final 1', team1: playoffTeams[0], team2: playoffTeams[3], legs: 2, result: null, winner: null, userMatch: isUserInvolved(playoffTeams[0], playoffTeams[3]) },
+                  { name: 'Semi-Final 2', team1: playoffTeams[1], team2: playoffTeams[2], legs: 2, result: null, winner: null, userMatch: isUserInvolved(playoffTeams[1], playoffTeams[2]) },
+                  { name: 'FINAL', team1: null, team2: null, legs: 1, result: null, winner: null, userMatch: false }
+                ];
               } else if (rules.playoffType === 'national') {
-                // 7v4 one leg, winner v 3rd one leg (side A)
-                // 5v6 one leg, winner v 2nd one leg (side B)
-                // Winners play final
-                const qf1 = simOneLeg(playoffTeams[5], playoffTeams[2]); // 7th vs 4th
-                results.push({ round: 'QF: 7th vs 4th', result: qf1.result, winner: qf1.winner, team1: playoffTeams[5], team2: playoffTeams[2] });
-            
-                const sf1 = simOneLeg(qf1.winner, playoffTeams[1]); // winner vs 3rd
-                results.push({ round: 'SF: Winner vs 3rd', result: sf1.result, winner: sf1.winner, team1: qf1.winner, team2: playoffTeams[1] });
-            
-                const qf2 = simOneLeg(playoffTeams[3], playoffTeams[4]); // 5th vs 6th
-                results.push({ round: 'QF: 5th vs 6th', result: qf2.result, winner: qf2.winner, team1: playoffTeams[3], team2: playoffTeams[4] });
-            
-                const sf2 = simOneLeg(qf2.winner, playoffTeams[0]); // winner vs 2nd
-                results.push({ round: 'SF: Winner vs 2nd', result: sf2.result, winner: sf2.winner, team1: qf2.winner, team2: playoffTeams[0] });
-            
-                const final1 = simOneLeg(sf1.winner, sf2.winner);
-                results.push({ round: 'FINAL', result: final1.result, winner: final1.winner, loser: final1.loser, team1: sf1.winner, team2: sf2.winner });
-            
-                setPlayoffState({
-                  leagueKey,
-                  rules,
-                  type: 'national',
-                  results,
-                  promotedTeam: final1.winner,
-                  message: final1.winner.id === team.id
-                    ? `🎉 PROMOTED! You won the playoff final!`
-                    : `😢 ${final1.winner.name} won the playoff final.`
-                });
+                bracket.rounds = [
+                  { name: 'QF: 7th vs 4th', team1: playoffTeams[5], team2: playoffTeams[2], legs: 1, result: null, winner: null, userMatch: isUserInvolved(playoffTeams[5], playoffTeams[2]) },
+                  { name: 'QF: 5th vs 6th', team1: playoffTeams[3], team2: playoffTeams[4], legs: 1, result: null, winner: null, userMatch: isUserInvolved(playoffTeams[3], playoffTeams[4]) },
+                  { name: 'SF: Winner vs 3rd', team1: null, team2: playoffTeams[1], legs: 1, result: null, winner: null, userMatch: false },
+                  { name: 'SF: Winner vs 2nd', team1: null, team2: playoffTeams[0], legs: 1, result: null, winner: null, userMatch: false },
+                  { name: 'FINAL', team1: null, team2: null, legs: 1, result: null, winner: null, userMatch: false }
+                ];
               }
             
-              setState('playoffs');
+              setPlayoffBracket(bracket);
+              setState('playoff-hub');
+              processNextPlayoffRound(bracket);
             };
+
+              const processNextPlayoffRound = (bracket) => {
+                  const b = { ...bracket };
+                  const rounds = [...b.rounds];
+                
+                  // Find next unplayed round
+                  const nextIdx = rounds.findIndex(r => !r.winner);
+                  if (nextIdx === -1) {
+                    // All rounds done
+                    b.complete = true;
+                    b.promotedTeam = rounds[rounds.length - 1].winner;
+                    setPlayoffBracket(b);
+                    return;
+                  }
+                
+                  const round = rounds[nextIdx];
+                
+                  // Fill in teams from previous winners for later rounds
+                  if (b.type === 'standard' || b.type === 'league2') {
+                    if (nextIdx === 2) { // Final
+                      round.team1 = rounds[0].winner;
+                      round.team2 = rounds[1].winner;
+                      round.userMatch = round.team1.id === team.id || round.team2.id === team.id;
+                    }
+                  } else if (b.type === 'national') {
+                    if (nextIdx === 2) { // SF1: QF1 winner vs 3rd
+                      round.team1 = rounds[0].winner;
+                      round.userMatch = round.team1.id === team.id || round.team2.id === team.id;
+                    }
+                    if (nextIdx === 3) { // SF2: QF2 winner vs 2nd
+                      round.team1 = rounds[1].winner;
+                      round.userMatch = round.team1.id === team.id || round.team2.id === team.id;
+                    }
+                    if (nextIdx === 4) { // Final
+                      round.team1 = rounds[2].winner;
+                      round.team2 = rounds[3].winner;
+                      round.userMatch = round.team1.id === team.id || round.team2.id === team.id;
+                    }
+                  }
+                
+                  rounds[nextIdx] = round;
+                  b.rounds = rounds;
+                  b.currentRound = nextIdx;
+                
+                  if (!round.userMatch) {
+                    // Sim AI match
+                    if (round.legs === 2) {
+                      const res = simTwoLegs(round.team1, round.team2);
+                      round.result = res;
+                      round.winner = res.winner;
+                    } else {
+                      const res = simOneLeg(round.team1, round.team2);
+                      round.result = res;
+                      round.winner = res.winner;
+                    }
+                    rounds[nextIdx] = round;
+                    b.rounds = rounds;
+                    setPlayoffBracket(b);
+                    // Process next round after a brief pause
+                    setTimeout(() => processNextPlayoffRound(b), 100);
+                  } else {
+                    // User plays this match
+                    setPlayoffBracket(b);
+                  }
+                };
+                
+                const playPlayoffMatch = (isSecondLeg) => {
+                  if (!playoffBracket) return;
+                  const round = playoffBracket.rounds[playoffBracket.currentRound];
+                  if (!round) return;
+                
+                  // Determine home/away — first leg: lower seed home, second leg: higher seed home
+                  // For finals: team1 is home
+                  let h, a;
+                  if (round.legs === 1 || !isSecondLeg) {
+                    h = round.team1;
+                    a = round.team2;
+                  } else {
+                    h = round.team2;
+                    a = round.team1;
+                  }
+                
+                  // Create a fake fixture for the match engine
+                  const fakeFixture = {
+                    homeTeamId: h.id,
+                    awayTeamId: a.id,
+                    played: false,
+                    homeScore: null,
+                    awayScore: null,
+                    scorers: [],
+                    matchday: 99
+                  };
+                
+                  // Store playoff context so finishLiveMatch knows to return to playoffs
+                  setPlayoffRound({ roundIdx: playoffBracket.currentRound, isSecondLeg: isSecondLeg || false });
+                
+                  // Use the normal match flow
+                  const getMatchPlayers = (tm) => {
+                    if (tm.id === team.id && Object.keys(startingXI).length > 0) {
+                      return Object.entries(startingXI).map(([key, playerId]) => {
+                        const player = tm.players.find(p => p.id === playerId);
+                        if (!player || player.injured || player.suspended) return null;
+                        const posIdx = parseInt(key.replace('pos', ''));
+                        const slot = lineup[posIdx];
+                        const freePos = slot ? slot.position : 'CM';
+                        const validPositions = positionMapping[freePos] || [];
+                        const inPosition = player.positions.some(pp => validPositions.includes(pp));
+                        return { ...player, effectiveRating: inPosition ? player.rating : Math.max(1, player.rating - 5), matchRating: 6.0 + Math.random() * 1.0 };
+                      }).filter(p => p !== null);
+                    } else {
+                      const ai = getAIFormation(tm);
+                      return ai.xi.map(slot => ({
+                        ...slot.player,
+                        effectiveRating: slot.inPosition ? slot.player.rating : Math.max(1, slot.player.rating - 5),
+                        matchRating: 6.0 + Math.random() * 1.0
+                      }));
+                    }
+                  };
+                
+                  const homePlayers = getMatchPlayers(h);
+                  const awayPlayers = getMatchPlayers(a);
+                
+                  const firstHalf = generateMatchEvents(homePlayers, awayPlayers, h, a, 1, 45, { home: 0, away: 0 }, [], {});
+                  setMatchCardTracker(firstHalf.matchCards || {});
+                
+                  firstHalf.events.unshift({ min: 0, type: 'start', text: 'Kick off!', isHome: true, isGoal: false });
+                  firstHalf.events.push({ min: 45, type: 'halftime', text: '🕐 Half Time', isHome: true, isGoal: false });
+                
+                  [...homePlayers, ...awayPlayers].forEach(p => {
+                    if (!p.injured && Math.random() < 0.005) {
+                      const tmObj = h.players.find(pl => pl.id === p.id) ? h : a;
+                      const originalPlayer = tmObj.players.find(pl => pl.id === p.id);
+                      if (originalPlayer) {
+                        originalPlayer.injured = true;
+                        const w = 1 + Math.floor(Math.random() * 4);
+                        const injDate = new Date(date);
+                        injDate.setDate(injDate.getDate() + w * 7);
+                        originalPlayer.injuryUntil = injDate.toISOString();
+                        firstHalf.events.push({ min: Math.floor(Math.random() * 40) + 1, type: 'injury', text: `⚕️ ${p.name} injured (${w} week${w > 1 ? 's' : ''})`, isHome: h.players.find(pl => pl.id === p.id) ? true : false, isGoal: false });
+                      }
+                    }
+                  });
+                
+                  firstHalf.events.sort((a, b) => a.min - b.min);
+                
+                  setPreMatchXI({ ...startingXI });
+                  setLiveMatch({ homeTeam: h, awayTeam: a, events: firstHalf.events, scorers: firstHalf.scorers, finalScore: firstHalf.score, homePlayers, awayPlayers, fixture: fakeFixture });
+                  setLiveMinute(0);
+                  setMatchEnded(false);
+                  setIsHalfTime(false);
+                  setTacticsPaused(false);
+                  setMatchHalf(1);
+                  setMatchSubs({ made: 0, max: 5 });
+                  setSentOffPlayers([]);
+                  setSubbedOffPlayers([]);
+                  setLiveCommentary([]);
+                  setLiveScore({ home: 0, away: 0 });
+                  setMatchPlayerRatings({ home: homePlayers, away: awayPlayers });
+                  setMatchTab('commentary');
+                  setState('live-match');
+                
+                  scheduleEvents(firstHalf.events, 0, 45);
+                };
+                
+                const finishPlayoffMatch = () => {
+                  if (!playoffBracket || !playoffRound || !liveMatch) return;
+                  const { finalScore, fixture } = liveMatch;
+                  const roundIdx = playoffRound.roundIdx;
+                  const isSecondLeg = playoffRound.isSecondLeg;
+                
+                  const b = { ...playoffBracket };
+                  const rounds = [...b.rounds];
+                  const round = { ...rounds[roundIdx] };
+                
+                  if (round.legs === 1) {
+                    // One-leg match — winner decided
+                    round.result = { result: { home: fixture.homeTeamId === round.team1.id ? round.team1.name : round.team2.name, away: fixture.homeTeamId === round.team1.id ? round.team2.name : round.team1.name, homeScore: finalScore.home, awayScore: finalScore.away } };
+                    if (finalScore.home > finalScore.away) {
+                      round.winner = fixture.homeTeamId === round.team1.id ? round.team1 : round.team2;
+                    } else if (finalScore.away > finalScore.home) {
+                      round.winner = fixture.awayTeamId === round.team1.id ? round.team1 : round.team2;
+                    } else {
+                      round.winner = Math.random() < 0.5 ? round.team1 : round.team2; // Penalties (random)
+                    }
+                  } else if (round.legs === 2 && !isSecondLeg) {
+                    // First leg done — store result
+                    round.result = {
+                      leg1: { home: round.team1.name, away: round.team2.name, homeScore: finalScore.home, awayScore: finalScore.away }
+                    };
+                    rounds[roundIdx] = round;
+                    b.rounds = rounds;
+                    setPlayoffBracket(b);
+                    setStartingXI({ ...preMatchXI });
+                    setLiveMatch(null);
+                    setLiveCommentary([]);
+                    setPlayoffRound(null);
+                    setState('playoff-hub');
+                    return;
+                  } else if (round.legs === 2 && isSecondLeg) {
+                    // Second leg done — calculate aggregate
+                    const leg1Home = round.result.leg1.homeScore;
+                    const leg1Away = round.result.leg1.awayScore;
+                    round.result.leg2 = { home: round.team2.name, away: round.team1.name, homeScore: finalScore.home, awayScore: finalScore.away };
+                
+                    // Team1 aggregate: scored at home (leg1) + scored away (leg2 away)
+                    const team1Agg = leg1Home + finalScore.away;
+                    const team2Agg = leg1Away + finalScore.home;
+                    round.result.agg = [team1Agg, team2Agg];
+                
+                    if (team1Agg > team2Agg) round.winner = round.team1;
+                    else if (team2Agg > team1Agg) round.winner = round.team2;
+                    else round.winner = Math.random() < 0.5 ? round.team1 : round.team2; // Penalties
+                  }
+                
+                  rounds[roundIdx] = round;
+                  b.rounds = rounds;
+                  setPlayoffBracket(b);
+                  setStartingXI({ ...preMatchXI });
+                  setLiveMatch(null);
+                  setLiveCommentary([]);
+                  setPlayoffRound(null);
+                  setState('playoff-hub');
+                
+                  // Process next round
+                  setTimeout(() => processNextPlayoffRound(b), 500);
+                };
 
             const getPrizeMoney = (leagueKey, position, totalTeams) => {
             const tier = getLeagueTier(leagueKey);
@@ -2449,9 +2638,13 @@ Object.keys(fixtures).forEach(lk => {
               
           setStartingXI({ ...preMatchXI });
           setLiveCommentary([]);    
-          setLiveMatch(null);
-          setPage('home');
-          setState('post-match');
+          if (playoffRound) {
+              finishPlayoffMatch();
+              return;
+            }
+            setLiveMatch(null);
+            setPage('home');
+            setState('post-match');
         } catch(e) { alert('finishLiveMatch error: ' + e.message); console.error(e); } };
             const getScorers = (lk) => {
               const sc = [];
@@ -4965,69 +5158,121 @@ Object.keys(fixtures).forEach(lk => {
               );
             }  
 
-            if (state === 'playoffs' && playoffState) {
+           if (state === 'playoff-hub' && playoffBracket) {
+              const b = playoffBracket;
+              const currentRound = b.rounds[b.currentRound];
+              const userPlaying = currentRound && currentRound.userMatch && !currentRound.winner;
+              const needsSecondLeg = userPlaying && currentRound.legs === 2 && currentRound.result && currentRound.result.leg1 && !currentRound.result.leg2;
+            
               return (
                 <div className="min-h-screen bg-gray-900 flex flex-col">
                   <div className="p-4 text-center" style={{ background: 'linear-gradient(180deg, #1a3a1a 0%, #0a1a0a 100%)' }}>
                     <p className="text-yellow-400 font-bold text-2xl" style={{ fontFamily: 'monospace' }}>PLAYOFFS</p>
-                    <p className="text-yellow-600 text-sm">{leagues[playoffState.leagueKey].name}</p>
+                    <p className="text-yellow-600 text-sm">{leagues[b.leagueKey].name}</p>
                   </div>
             
                   <div className="flex-1 overflow-y-auto p-4 pb-24">
-                    {playoffState.results.map((r, i) => (
-                      <div key={i} className={`bg-gray-800 rounded-lg p-4 mb-3 ${r.round === 'FINAL' ? 'ring-2 ring-yellow-500' : ''}`}>
-                        <p className={`text-xs font-bold mb-2 ${r.round === 'FINAL' ? 'text-yellow-400' : 'text-gray-500'}`}>{r.round}</p>
+                    {b.rounds.map((r, i) => {
+                      if (!r.team1 && !r.team2 && !r.winner) return null; // Future round not yet set
+                      const isCurrent = i === b.currentRound && !b.complete;
+                      const isUserRound = r.userMatch && !r.winner;
             
-                        {r.leg1 ? (
-                          <>
-                            <div className="flex justify-between items-center mb-1">
-                              <span className="text-white text-sm">{r.leg1.home}</span>
-                              <span className="text-white font-bold">{r.leg1.homeScore} - {r.leg1.awayScore}</span>
-                              <span className="text-white text-sm">{r.leg1.away}</span>
-                            </div>
-                            <div className="flex justify-between items-center mb-2">
-                              <span className="text-white text-sm">{r.leg2.home}</span>
-                              <span className="text-white font-bold">{r.leg2.homeScore} - {r.leg2.awayScore}</span>
-                              <span className="text-white text-sm">{r.leg2.away}</span>
-                            </div>
-                            <div className="text-center">
-                              <span className="text-gray-400 text-xs">Agg: {r.agg[0]} - {r.agg[1]}</span>
-                              <p className="text-green-400 font-bold text-sm mt-1">✓ {r.winner.name} advance</p>
-                            </div>
-                          </>
-                        ) : (
-                          <>
-                            <div className="flex justify-between items-center mb-2">
+                      return (
+                        <div key={i} className={`bg-gray-800 rounded-lg p-4 mb-3 ${r.name === 'FINAL' && r.winner ? 'ring-2 ring-yellow-500' : isCurrent ? 'ring-2 ring-orange-500' : ''}`}>
+                          <p className={`text-xs font-bold mb-2 ${r.name === 'FINAL' ? 'text-yellow-400' : isCurrent ? 'text-orange-400' : 'text-gray-500'}`}>
+                            {r.name} {isCurrent && !r.winner && '(Current)'}
+                          </p>
+            
+                          {r.winner ? (
+                            <>
+                              {r.result.leg1 ? (
+                                <>
+                                  <div className="flex justify-between items-center mb-1">
+                                    <span className="text-white text-sm">{r.result.leg1.home}</span>
+                                    <span className="text-white font-bold">{r.result.leg1.homeScore} - {r.result.leg1.awayScore}</span>
+                                    <span className="text-white text-sm">{r.result.leg1.away}</span>
+                                  </div>
+                                  {r.result.leg2 && (
+                                    <div className="flex justify-between items-center mb-2">
+                                      <span className="text-white text-sm">{r.result.leg2.home}</span>
+                                      <span className="text-white font-bold">{r.result.leg2.homeScore} - {r.result.leg2.awayScore}</span>
+                                      <span className="text-white text-sm">{r.result.leg2.away}</span>
+                                    </div>
+                                  )}
+                                  {r.result.agg && <p className="text-gray-400 text-xs text-center">Agg: {r.result.agg[0]} - {r.result.agg[1]}</p>}
+                                </>
+                              ) : r.result.result ? (
+                                <div className="flex justify-between items-center mb-2">
+                                  <div className="flex items-center gap-2">
+                                    <div className="flex-shrink-0">{renderShirt(r.team1, '30px')}</div>
+                                    <span className="text-white text-sm">{r.result.result.home}</span>
+                                  </div>
+                                  <span className="text-white font-bold text-lg">{r.result.result.homeScore} - {r.result.result.awayScore}</span>
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-white text-sm">{r.result.result.away}</span>
+                                    <div className="flex-shrink-0">{renderShirt(r.team2, '30px')}</div>
+                                  </div>
+                                </div>
+                              ) : null}
+                              <p className={`text-center font-bold text-sm ${r.name === 'FINAL' ? 'text-yellow-400' : 'text-green-400'}`}>
+                                {r.name === 'FINAL' ? '🏆 ' : '✓ '}{r.winner.name} {r.name === 'FINAL' ? 'PROMOTED!' : 'advance'}
+                              </p>
+                            </>
+                          ) : r.result && r.result.leg1 && !r.result.leg2 ? (
+                            <>
+                              <p className="text-gray-400 text-xs mb-2">1st Leg played:</p>
+                              <div className="flex justify-between items-center mb-2">
+                                <span className="text-white text-sm">{r.result.leg1.home}</span>
+                                <span className="text-white font-bold">{r.result.leg1.homeScore} - {r.result.leg1.awayScore}</span>
+                                <span className="text-white text-sm">{r.result.leg1.away}</span>
+                              </div>
+                              <p className="text-orange-400 text-xs text-center">2nd Leg to play</p>
+                            </>
+                          ) : r.team1 && r.team2 ? (
+                            <div className="flex justify-between items-center">
                               <div className="flex items-center gap-2">
                                 <div className="flex-shrink-0">{renderShirt(r.team1, '30px')}</div>
-                                <span className="text-white text-sm">{r.result.home}</span>
+                                <span className="text-white text-sm">{r.team1.name}</span>
                               </div>
-                              <span className="text-white font-bold text-lg">{r.result.homeScore} - {r.result.awayScore}</span>
+                              <span className="text-gray-500 text-sm">vs</span>
                               <div className="flex items-center gap-2">
-                                <span className="text-white text-sm">{r.result.away}</span>
+                                <span className="text-white text-sm">{r.team2.name}</span>
                                 <div className="flex-shrink-0">{renderShirt(r.team2, '30px')}</div>
                               </div>
                             </div>
-                            <p className={`text-center font-bold text-sm ${r.round === 'FINAL' ? 'text-yellow-400' : 'text-green-400'}`}>
-                              {r.round === 'FINAL' ? '🏆 ' : '✓ '}{r.winner.name} {r.round === 'FINAL' ? 'PROMOTED!' : 'advance'}
-                            </p>
-                          </>
-                        )}
-                      </div>
-                    ))}
+                          ) : (
+                            <p className="text-gray-500 text-sm text-center">Waiting for previous rounds</p>
+                          )}
+                        </div>
+                      );
+                    })}
             
-                    <div className={`bg-gray-800 rounded-lg p-6 text-center ${playoffState.promotedTeam.id === team.id ? 'ring-2 ring-green-500' : 'ring-2 ring-red-500'}`}>
-                      <p className="text-3xl mb-2">{playoffState.promotedTeam.id === team.id ? '🎉' : '😢'}</p>
-                      <p className="text-white font-bold text-xl">{playoffState.message}</p>
-                    </div>
+                    {/* Final result message */}
+                    {b.complete && b.promotedTeam && (
+                      <div className={`bg-gray-800 rounded-lg p-6 text-center ${b.promotedTeam.id === team.id ? 'ring-2 ring-green-500' : 'ring-2 ring-red-500'}`}>
+                        <p className="text-3xl mb-2">{b.promotedTeam.id === team.id ? '🎉' : '😢'}</p>
+                        <p className="text-white font-bold text-xl">
+                          {b.promotedTeam.id === team.id ? 'PROMOTED! You won the playoff final!' : `${b.promotedTeam.name} won the playoff final.`}
+                        </p>
+                      </div>
+                    )}
                   </div>
             
                   <div className="fixed bottom-0 left-0 right-0 p-4 bg-gray-900 z-50">
-                    <button onClick={() => {
-                      const promoted = {};
-                      promoted[playoffState.leagueKey] = playoffState.promotedTeam.id;
-                      completeSeasonTransition(promoted);
-                    }} className="w-full bg-green-600 text-white py-4 rounded-lg font-bold text-lg">Continue to Next Season</button>
+                    {b.complete ? (
+                      <button onClick={() => {
+                        const promoted = {};
+                        promoted[b.leagueKey] = b.promotedTeam.id;
+                        setPlayoffBracket(null);
+                        completeSeasonTransition(promoted);
+                      }} className="w-full bg-green-600 text-white py-4 rounded-lg font-bold text-lg">Continue to Next Season</button>
+                    ) : userPlaying ? (
+                      <button onClick={() => playPlayoffMatch(needsSecondLeg)} className="w-full bg-orange-600 text-white py-4 rounded-lg font-bold text-lg">
+                        {needsSecondLeg ? `Play 2nd Leg →` : `Play ${currentRound.name} →`}
+                      </button>
+                    ) : (
+                      <p className="text-gray-400 text-center py-4">AI matches in progress...</p>
+                    )}
                   </div>
                 </div>
               );
