@@ -2454,10 +2454,27 @@ Object.keys(fixtures).forEach(lk => {
           setState('post-match');
         } catch(e) { alert('finishLiveMatch error: ' + e.message); console.error(e); } };
             const getScorers = (lk) => {
-            const sc = [];
-            leagues[lk].teams.forEach(t => { t.players.forEach(p => { if (p.goals > 0) sc.push({ name: p.name, team: t.name, goals: p.goals }); }); });
-            sc.sort((a, b) => b.goals - a.goals); return sc.slice(0, 10);
-          };
+              const sc = [];
+              const seen = new Set();
+              leagues[lk].teams.forEach(t => {
+                t.players.forEach(p => {
+                  if (p.goals > 0) {
+                    sc.push({ name: p.name, team: t.name, goals: p.goals });
+                    seen.add(`${t.id}-${p.id}`);
+                  }
+                });
+              });
+              // Also check user's team in case references diverged
+              if (leagues[lk].teams.some(t => t.id === team.id)) {
+                team.players.forEach(p => {
+                  if (p.goals > 0 && !seen.has(`${team.id}-${p.id}`)) {
+                    sc.push({ name: p.name, team: team.name, goals: p.goals });
+                  }
+                });
+              }
+              sc.sort((a, b) => b.goals - a.goals);
+              return sc.slice(0, 10);
+            };
 
           const getSeasonDisplay = () => {
             if (date.getMonth() >= 6) return `${date.getFullYear()}/${date.getFullYear() + 1}`;
