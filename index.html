@@ -549,77 +549,81 @@
                   const countryLeagues = Object.keys(leagues).filter(lk => lk.startsWith(country));
                   const allTeams = [];
                   countryLeagues.forEach(lk => {
+                    const tier = getLeagueTier(lk);
                     leagues[lk].teams.forEach(tm => {
-                      if (tm.id !== team.id) allTeams.push({ team: tm, leagueKey: lk, tier: getLeagueTier(lk), strength: getTeamStrength(tm) });
+                      if (tm.id !== team.id) allTeams.push({ team: tm, leagueKey: lk, tier, strength: getTeamStrength(tm) });
                     });
                   });
                 
-                  allTeams.forEach(({ team: aiTeam, leagueKey: aiLeague, tier: aiTier, strength: aiStrength }) => {
+                  allTeams.forEach(({ team: buyingTeam, leagueKey: buyingLeague, tier: buyingTier, strength: buyingStrength }) => {
                     const numTransfers = Math.floor(Math.random() * 3) + 1;
                     for (let i = 0; i < numTransfers; i++) {
-                      if (aiTeam.players.length <= 11) break;
+                      if (buyingTeam.players.length <= 11) break;
                 
                       const positions = ['GK','CB','LB','RB','CDM','CM','CAM','LW','RW','ST'];
                       const targetPos = positions[Math.floor(Math.random() * positions.length)];
                 
-                      const posPlayers = aiTeam.players.filter(p => p.positions.includes(targetPos));
+                      const posPlayers = buyingTeam.players.filter(p => p.positions.includes(targetPos));
                       if (posPlayers.length <= 1) continue;
                       const weakest = posPlayers.sort((a, b) => a.rating - b.rating)[0];
                 
                       let bestBuy = null;
-                      let bestBuyTeam = null;
-                      let bestBuyTier = null;
+                      let bestBuyTeamObj = null;
                 
-                      allTeams.forEach(({ team: otherTeam, leagueKey: otherLeague, tier: otherTier, strength: otherStrength }) => {
-                        if (otherTeam.id === aiTeam.id) return;
-                        if (otherTeam.players.length <= 11) return;
+                      allTeams.forEach(({ team: sellingTeam, tier: sellingTier, strength: sellingStrength }) => {
+                        if (sellingTeam.id === buyingTeam.id) return;
+                        if (sellingTeam.players.length <= 11) return;
                 
-                        otherTeam.players.forEach(p => {
+                        sellingTeam.players.forEach(p => {
                           if (!p.positions.includes(targetPos)) return;
                           if (p.rating <= weakest.rating) return;
                           if (Math.random() > 0.15) return;
                 
-                          // Realism checks:
-                          // 1. Star players (16+) won't drop at all
-                          if (p.rating >= 16 && aiTier > otherTier) return;
+                          const tierDrop = buyingTier - sellingTier; // positive = moving down
                 
-                          // 2. Good players (14+) won't drop more than 2 tiers
-                          if (p.rating >= 14 && aiTier - otherTier > 2) return;
+                          // === STRICT REALISM CHECKS ===
                 
-                          // 3. Any player won't drop more than 3 tiers
-                          if (aiTier - otherTier > 3) return;
+                          // Rating 16+: NEVER moves down any tier
+                          if (p.rating >= 16 && tierDrop > 0) return;
                 
-                          // 4. Players prefer sideways or upward moves
-                          // Moving down a tier: only 20% chance of accepting
-                          if (aiTier > otherTier && Math.random() > 0.2) return;
+                          // Rating 14-15: max 1 tier drop
+                          if (p.rating >= 14 && tierDrop > 1) return;
                 
-                          // 5. Big rating gap between player and team average = unlikely
-                          // A rating 18 player won't join a team averaging 10
-                          const ratingGap = p.rating - aiStrength;
-                          if (ratingGap > 5) return;
+                          // Rating 12-13: max 2 tier drop
+                          if (p.rating >= 12 && tierDrop > 2) return;
                 
-                          // 6. Players moving up tiers are more likely to accept
-                          // No extra check needed — they pass through naturally
+                          // Anyone: max 3 tier drop
+                          if (tierDrop > 3) return;
+                
+                          // Moving down: low acceptance chance
+                          if (tierDrop === 1 && Math.random() > 0.15) return;
+                          if (tierDrop === 2 && Math.random() > 0.05) return;
+                          if (tierDrop === 3 && Math.random() > 0.02) return;
+                
+                          // Player much better than buying team average: won't join
+                          if (p.rating - buyingStrength > 4) return;
+                
+                          // Prefer moves to equal or better teams
+                          if (buyingStrength < sellingStrength - 3 && Math.random() > 0.1) return;
                 
                           if (!bestBuy || p.rating > bestBuy.rating) {
                             bestBuy = p;
-                            bestBuyTeam = otherTeam;
-                            bestBuyTier = otherTier;
+                            bestBuyTeamObj = sellingTeam;
                           }
                         });
                       });
                 
-                      if (bestBuy && bestBuyTeam) {
-                        bestBuyTeam.players = bestBuyTeam.players.filter(p => p.id !== bestBuy.id);
-                        aiTeam.players = aiTeam.players.filter(p => p.id !== weakest.id);
+                      if (bestBuy && bestBuyTeamObj) {
+                        bestBuyTeamObj.players = bestBuyTeamObj.players.filter(p => p.id !== bestBuy.id);
+                        buyingTeam.players = buyingTeam.players.filter(p => p.id !== weakest.id);
                         bestBuy.goals = 0; bestBuy.injured = false; bestBuy.injuryUntil = null;
                         bestBuy.assists = 0; bestBuy.yellowCards = 0; bestBuy.redCards = 0;
                         bestBuy.suspended = false; bestBuy.suspendedUntil = 0; bestBuy.matchesPlayed = 0;
                         weakest.goals = 0; weakest.injured = false; weakest.injuryUntil = null;
                         weakest.assists = 0; weakest.yellowCards = 0; weakest.redCards = 0;
                         weakest.suspended = false; weakest.suspendedUntil = 0; weakest.matchesPlayed = 0;
-                        aiTeam.players.push(bestBuy);
-                        bestBuyTeam.players.push(weakest);
+                        buyingTeam.players.push(bestBuy);
+                        bestBuyTeamObj.players.push(weakest);
                       }
                     }
                   });
