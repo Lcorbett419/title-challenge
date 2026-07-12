@@ -5198,7 +5198,7 @@
           { "id": 27, "name": "Nicolas Höfler", "positions": ["CDM", "CM"], "dob": "1990-03-09", "rating": 14 },
           { "id": 14, "name": "Yuito Suzuki", "positions": ["CAM", "RW"], "dob": "2001-10-25", "rating": 14 },
           { "id": 11, "name": "Daniel-Kofi Kyereh", "positions": ["CAM"], "dob": "1996-03-08", "rating": 13 },
-          { "id": 44, "name": "Johan Manzambi", "positions": ["RM", "CAM"], "dob": "2005-10-14", "rating": 12 },
+          { "id": 44, "name": "Johan Manzambi", "positions": ["RM", "CAM"], "dob": "2005-10-14", "rating": 15 },
           { "id": 9, "name": "Lucas Höler", "positions": ["ST", "LW"], "dob": "1994-07-10", "rating": 14 },
           { "id": 31, "name": "Igor Matanović", "positions": ["ST"], "dob": "2003-03-31", "rating": 14 },
           { "id": 26, "name": "Maximilian Philipp", "positions": ["ST", "CAM"], "dob": "1994-03-01", "rating": 13 },
@@ -5367,7 +5367,7 @@
           { "id": 7, "name": "Antonio Nusa", "positions": ["LW", "RW"], "dob": "2005-04-17", "rating": 15 },
           { "id": 10, "name": "Brajan Gruda", "positions": ["RW", "CAM"], "dob": "2004-05-31", "rating": 14 },
           { "id": 21, "name": "Ayodele Thomas", "positions": ["RW", "LW"], "dob": "2007-07-23", "rating": 13 },
-          { "id": 49, "name": "Yan Diomande", "positions": ["LW", "ST"], "dob": "2006-11-14", "rating": 14 },
+          { "id": 49, "name": "Yan Diomande", "positions": ["LW", "ST"], "dob": "2006-11-14", "rating": 17 },
           { "id": 11, "name": "Conrad Harder", "positions": ["ST"], "dob": "2005-04-07", "rating": 14 },
           { "id": 40, "name": "Rômulo", "positions": ["ST"], "dob": "2002-02-08", "rating": 13 },
           { "id": 27, "name": "Tidiam Gomis", "positions": ["ST", "LW"], "dob": "2006-08-08", "rating": 13 }
