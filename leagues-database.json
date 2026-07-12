@@ -44,7 +44,7 @@
           { "id": 20, "name": "Noni Madueke", "positions": ["RW", "LW"], "dob": "2002-03-10", "rating": 16 },
           { "id": 24, "name": "Reiss Nelson", "positions": ["LW", "RW", "ST"], "dob": "1999-12-10", "rating": 13 },  
           { "id": 29, "name": "Kai Havertz", "positions": ["RW", "LW", "CAM", "ST"], "dob": "1999-06-11", "rating": 16 },
-          { "id": 56, "name": "Max Dowman", "positions": ["LW", "RW", "CAM"], "dob": "2009-12-31", "rating": 13 },  
+          { "id": 56, "name": "Max Dowman", "positions": ["LW", "RW", "CAM"], "dob": "2009-12-31", "rating": 13 }  
         ]
       },
       {
