@@ -840,6 +840,7 @@ Object.keys(fixtures).forEach(lk => {
               if (!p.suspended) p.suspended = false;
               if (!p.suspendedUntil) p.suspendedUntil = 0;
               if (!p.matchesPlayed) p.matchesPlayed = 0;
+              if (p.lastYellowBanAt === undefined) p.lastYellowBanAt = 0;
             }); });
         
             const n = teams.length;
@@ -1523,6 +1524,7 @@ Object.keys(fixtures).forEach(lk => {
                     p.assists = 0;
                     p.yellowCards = 0;
                     p.redCards = 0;
+                    p.lastYellowBanAt = 0;  
                     p.injured = false;
                     p.injuryUntil = null;
                     p.suspended = false;
@@ -2464,20 +2466,12 @@ Object.keys(fixtures).forEach(lk => {
           });
           setCommentary(liveCommentary.reverse().map(e => `${e.min}' ${e.text}`));
 
-              // Decrement ALL suspensions each match
-                team.players.forEach(p => {
-                  if (p.suspended && p.suspendedUntil > 0) {
-                    p.suspendedUntil -= 1;
-                    if (p.suspendedUntil <= 0) {
-                      p.suspended = false;
-                      p.suspendedUntil = 0;
-                    }
-                  }
-                });
-        
-                  // === POST-MATCH NEWS GENERATION ===
+              // === POST-MATCH NEWS GENERATION ===
+        // Capture who was suspended BEFORE decrementing, so we can detect
+        // players who become available again this match.
         const wasSuspended = team.players.filter(p => p.suspended).map(p => p.id);
 
+        // Decrement ALL suspensions ONCE per match.
         team.players.forEach(p => {
           if (p.suspended && p.suspendedUntil > 0) {
             p.suspendedUntil -= 1;
@@ -2527,11 +2521,16 @@ Object.keys(fixtures).forEach(lk => {
           }
         });
         
-        // Yellow card accumulation — 5 yellows = 1 match ban
+        // Yellow card accumulation — every 5 yellows = 1 match ban.
+        // Track the count at which the last ban was issued so a player who
+        // stays on 5 yellows isn't re-banned every subsequent match.
         team.players.forEach(p => {
-          if ((p.yellowCards || 0) > 0 && (p.yellowCards % 5) === 0 && !p.suspended) {
+          const yellows = p.yellowCards || 0;
+          if (p.lastYellowBanAt === undefined) p.lastYellowBanAt = 0;
+          if (yellows > 0 && yellows % 5 === 0 && yellows > p.lastYellowBanAt && !p.suspended) {
             p.suspended = true;
             p.suspendedUntil = 1;
+            p.lastYellowBanAt = yellows;
             news.push({
               type: 'suspension',
               icon: '🟨',
@@ -2643,7 +2642,32 @@ Object.keys(fixtures).forEach(lk => {
         setPostMatchNews(news);
         // === END POST-MATCH NEWS ===
               
-          setStartingXI({ ...preMatchXI });
+          // Restore pre-match XI, but drop anyone now suspended or sent off,
+          // then auto-fill the gaps so the lineup stays valid.
+          const restoredXI = { ...preMatchXI };
+          Object.entries(restoredXI).forEach(([key, pid]) => {
+            const p = team.players.find(pl => pl.id === pid);
+            if (!p || p.suspended || sentOffPlayers.includes(pid)) {
+              delete restoredXI[key];
+            }
+          });
+          lineup.forEach((slot, idx) => {
+            if (!restoredXI[`pos${idx}`]) {
+              const validPositions = positionMapping[slot.position] || [];
+              const eligible = team.players.filter(pl =>
+                pl.positions.some(pp => validPositions.includes(pp)) &&
+                !pl.injured && !pl.suspended &&
+                !Object.values(restoredXI).includes(pl.id)
+              ).sort((a, b) => b.rating - a.rating);
+              const fallback = team.players.filter(pl =>
+                !pl.injured && !pl.suspended &&
+                !Object.values(restoredXI).includes(pl.id)
+              ).sort((a, b) => b.rating - a.rating);
+              const pick = eligible[0] || fallback[0];
+              if (pick) restoredXI[`pos${idx}`] = pick.id;
+            }
+          });
+          setStartingXI(restoredXI);
           setLiveCommentary([]);    
           if (playoffRound) {
               finishPlayoffMatch();
