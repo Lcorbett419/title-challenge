@@ -22,6 +22,12 @@
           0%, 100% { transform: translate(-50%, -50%) scale(1); }
           50% { transform: translate(-50%, -50%) scale(1.1); }
         }
+        @keyframes penPop {
+          0% { transform: scale(0.4); opacity: 0; }
+          60% { transform: scale(1.15); opacity: 1; }
+          100% { transform: scale(1); opacity: 1; }
+        }
+        .pen-pop { animation: penPop 0.45s ease-out; }
         .goal-flash-active {
           animation: goalFlashAnim 0.6s ease-in-out 3;
         }
@@ -112,6 +118,8 @@
           const [playoffMatchQueue, setPlayoffMatchQueue] = useState([]);
           const [playoffResults, setPlayoffResults] = useState([]);  
           const [playoffPending, setPlayoffPending] = useState(null); // { isSecondLeg } — set when heading into playoff pre-match setup
+          const [shootout, setShootout] = useState(null); // penalty shootout sequence + resume context
+          const [shootoutRevealed, setShootoutRevealed] = useState(0); // how many kicks are currently shown
           const [preMatchXI, setPreMatchXI] = useState({});
           const [postMatchNews, setPostMatchNews] = useState([]);
           const [suspensions, setSuspensions] = useState({});  
@@ -828,6 +836,15 @@ Object.keys(fixtures).forEach(lk => {
             }
           }, [team, leagues, fixtures, date, state, facilities]);
 
+            // Penalty shootout: reveal kicks one at a time for tension.
+          useEffect(() => {
+            if (state === 'playoff-shootout' && shootout && shootoutRevealed < shootout.kicks.length) {
+              const delay = shootoutRevealed === 0 ? 700 : 1300;
+              const t = setTimeout(() => setShootoutRevealed(r => r + 1), delay);
+              return () => clearTimeout(t);
+            }
+          }, [state, shootout, shootoutRevealed]);  
+
           const selectCountry = (c) => {
               setCountry(c);
               // Remove other countries' fixtures to save memory, keep teams for transfers
@@ -998,18 +1015,51 @@ Object.keys(fixtures).forEach(lk => {
               return { home: home.name, away: away.name, homeScore: r.homeScore, awayScore: r.awayScore, homeId: home.id, awayId: away.id };
             };
             
-            const simTwoLegs = (team1, team2) => {
+            // Penalty shootout generator — best of 5 then sudden death.
+            // Strength nudges conversion slightly; luck dominates so upsets are common.
+            const generateShootout = (teamA, teamB) => {
+              const convChance = (str) => Math.max(0.55, Math.min(0.90, 0.72 + (str - 12) * 0.012));
+              const pA = convChance(getTeamStrength(teamA));
+              const pB = convChance(getTeamStrength(teamB));
+              const kicks = [];
+              let scoreA = 0, scoreB = 0, takenA = 0, takenB = 0;
+              const remaining = (taken) => Math.max(0, 5 - taken);
+              let decided = false;
+              for (let r = 1; r <= 5 && !decided; r++) {
+                const sa = Math.random() < pA; if (sa) scoreA++; takenA++;
+                kicks.push({ team: 'A', teamName: teamA.name, scored: sa, round: r });
+                if (scoreA > scoreB + remaining(takenB) || scoreB > scoreA + remaining(takenA)) { decided = true; break; }
+                const sb = Math.random() < pB; if (sb) scoreB++; takenB++;
+                kicks.push({ team: 'B', teamName: teamB.name, scored: sb, round: r });
+                if (scoreB > scoreA + remaining(takenA) || scoreA > scoreB + remaining(takenB)) { decided = true; break; }
+              }
+              let sd = 6;
+              while (scoreA === scoreB && sd <= 30) {
+                const sa = Math.random() < pA; if (sa) scoreA++; takenA++;
+                kicks.push({ team: 'A', teamName: teamA.name, scored: sa, round: sd, suddenDeath: true });
+                const sb = Math.random() < pB; if (sb) scoreB++; takenB++;
+                kicks.push({ team: 'B', teamName: teamB.name, scored: sb, round: sd, suddenDeath: true });
+                sd++;
+              }
+              const winner = scoreA > scoreB ? teamA : teamB;
+              const loser = scoreA > scoreB ? teamB : teamA;
+              return { kicks, scoreA, scoreB, winner, loser };
+            };
+
+            const simShootout = (teamA, teamB) => generateShootout(teamA, teamB).winner;
+
+              const simTwoLegs = (team1, team2) => {
               const leg1 = simPlayoffLeg(team1, team2);
               const leg2 = simPlayoffLeg(team2, team1);
               const agg1 = leg1.homeScore + leg2.awayScore;
               const agg2 = leg1.awayScore + leg2.homeScore;
-              const winner = agg1 > agg2 ? team1 : agg2 > agg1 ? team2 : Math.random() < 0.5 ? team1 : team2;
+              const winner = agg1 > agg2 ? team1 : agg2 > agg1 ? team2 : simShootout(team1, team2);
               return { leg1, leg2, agg: [agg1, agg2], winner, loser: winner.id === team1.id ? team2 : team1 };
             };
             
             const simOneLeg = (home, away) => {
               const result = simPlayoffLeg(home, away);
-              const winner = result.homeScore > result.awayScore ? home : result.awayScore > result.homeScore ? away : Math.random() < 0.5 ? home : away;
+              const winner = result.homeScore > result.awayScore ? home : result.awayScore > result.homeScore ? away : simShootout(home, away);
               return { result, winner, loser: winner.id === home.id ? away : home };
             };
 
@@ -1333,7 +1383,37 @@ Object.keys(fixtures).forEach(lk => {
                 
                   scheduleEvents(firstHalf.events, 0, 45);
                 };
-                
+
+                const beginShootout = (b, roundIdx) => {
+                  const round = b.rounds[roundIdx];
+                  const seq = generateShootout(round.team1, round.team2);
+                  // Tear down the live match view, keep bracket + round index for resume.
+                  setStartingXI({ ...preMatchXI });
+                  setLiveMatch(null);
+                  setLiveCommentary([]);
+                  setPlayoffRound(null);
+                  setShootout({ ...seq, bracket: b, roundIdx });
+                  setShootoutRevealed(0);
+                  setState('playoff-shootout');
+                };
+
+                const finishShootout = () => {
+                  if (!shootout) return;
+                  const b = { ...shootout.bracket };
+                  const rounds = [...b.rounds];
+                  const round = { ...rounds[shootout.roundIdx] };
+                  round.winner = shootout.winner;
+                  round.result = { ...round.result, penalties: { team1: shootout.scoreA, team2: shootout.scoreB } };
+                  rounds[shootout.roundIdx] = round;
+                  b.rounds = rounds;
+                  setPlayoffBracket(b);
+                  setShootout(null);
+                  setShootoutRevealed(0);
+                  setState('playoff-hub');
+                  setTimeout(() => processNextPlayoffRound(b), 500);
+                };
+
+              
                 const finishPlayoffMatch = () => {
                   if (!playoffBracket || !playoffRound || !liveMatch) return;
                   const { finalScore, fixture } = liveMatch;
@@ -1352,8 +1432,13 @@ Object.keys(fixtures).forEach(lk => {
                     } else if (finalScore.away > finalScore.home) {
                       round.winner = fixture.awayTeamId === round.team1.id ? round.team1 : round.team2;
                     } else {
-                      round.winner = Math.random() < 0.5 ? round.team1 : round.team2; // Penalties (random)
+                      // Level after 90 → penalty shootout (no extra time)
+                      rounds[roundIdx] = round;
+                      b.rounds = rounds;
+                      beginShootout(b, roundIdx);
+                      return;
                     }
+                      
                   } else if (round.legs === 2 && !isSecondLeg) {
                     // First leg done — store result
                     round.result = {
@@ -1381,7 +1466,13 @@ Object.keys(fixtures).forEach(lk => {
                 
                     if (team1Agg > team2Agg) round.winner = round.team1;
                     else if (team2Agg > team1Agg) round.winner = round.team2;
-                    else round.winner = Math.random() < 0.5 ? round.team1 : round.team2; // Penalties
+                    else {
+                      // Level on aggregate → penalty shootout (no extra time, no away goals)
+                      rounds[roundIdx] = round;
+                      b.rounds = rounds;
+                      beginShootout(b, roundIdx);
+                      return;
+                    }
                   }
                 
                   rounds[roundIdx] = round;
@@ -5256,6 +5347,95 @@ Object.keys(fixtures).forEach(lk => {
               );
             }  
 
+            if (state === 'playoff-shootout' && shootout) {
+            const roundObj = shootout.bracket.rounds[shootout.roundIdx];
+            const teamA = roundObj.team1;
+            const teamB = roundObj.team2;
+            const revealed = shootout.kicks.slice(0, shootoutRevealed);
+            const liveA = revealed.filter(k => k.team === 'A' && k.scored).length;
+            const liveB = revealed.filter(k => k.team === 'B' && k.scored).length;
+            const allDone = shootoutRevealed >= shootout.kicks.length;
+            const latest = shootoutRevealed > 0 ? shootout.kicks[shootoutRevealed - 1] : null;
+            const isUserA = teamA.id === team.id;
+            const isUserB = teamB.id === team.id;
+            const userInvolved = isUserA || isUserB;
+            const userWon = allDone && shootout.winner.id === team.id;
+
+            const withGi = shootout.kicks.map((k, i) => ({ ...k, gi: i }));
+            const aKicks = withGi.filter(k => k.team === 'A');
+            const bKicks = withGi.filter(k => k.team === 'B');
+
+            const KickDot = ({ k }) => {
+              if (!k || k.gi >= shootoutRevealed) return <div className="w-6 h-6 rounded-full bg-gray-700 border border-gray-600" />;
+              return (
+                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${k.scored ? 'bg-green-500 text-white' : 'bg-red-600 text-white'}`}>
+                  {k.scored ? '✓' : '✗'}
+                </div>
+              );
+            };
+
+            return (
+              <div className="min-h-screen bg-gray-900 flex flex-col">
+                <div className="p-4 text-center" style={{ background: 'linear-gradient(180deg, #1a3a1a 0%, #0a1a0a 100%)' }}>
+                  <p className="text-yellow-400 font-bold text-2xl" style={{ fontFamily: 'monospace' }}>PENALTY SHOOTOUT</p>
+                  <p className="text-yellow-600 text-xs">{roundObj.name}</p>
+                </div>
+
+                <div className="bg-gray-800 p-6 flex items-center justify-around border-b border-gray-700">
+                  <div className="text-center flex-1">
+                    <div className="flex justify-center mb-2">{renderShirt(teamA, '60px')}</div>
+                    <p className={`font-bold text-sm ${isUserA ? 'text-orange-400' : 'text-white'}`}>{teamA.name}</p>
+                  </div>
+                  <div className="text-center px-4">
+                    <p className="text-white font-bold text-5xl" style={{ fontFamily: 'monospace' }}>{liveA} - {liveB}</p>
+                  </div>
+                  <div className="text-center flex-1">
+                    <div className="flex justify-center mb-2">{renderShirt(teamB, '60px')}</div>
+                    <p className={`font-bold text-sm ${isUserB ? 'text-orange-400' : 'text-white'}`}>{teamB.name}</p>
+                  </div>
+                </div>
+
+                <div className="bg-gray-800/60 p-4 border-b border-gray-700 space-y-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-gray-400 text-xs w-20 truncate">{teamA.name}</span>
+                    <div className="flex gap-1 flex-wrap">{aKicks.map((k, i) => <KickDot key={i} k={k} />)}</div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-gray-400 text-xs w-20 truncate">{teamB.name}</span>
+                    <div className="flex gap-1 flex-wrap">{bKicks.map((k, i) => <KickDot key={i} k={k} />)}</div>
+                  </div>
+                </div>
+
+                <div className="flex-1 flex items-center justify-center p-6" style={{ background: 'linear-gradient(180deg, #2d4a2d 0%, #1a3a1a 100%)' }}>
+                  {!allDone && latest && (
+                    <div key={shootoutRevealed} className="pen-pop text-center">
+                      <div className="text-7xl mb-3">{latest.scored ? '⚽' : '🧤'}</div>
+                      <p className="text-white font-bold text-xl">{latest.teamName}</p>
+                      <p className={`font-bold text-2xl ${latest.scored ? 'text-green-400' : 'text-red-400'}`}>{latest.scored ? 'SCORES!' : 'MISSES!'}</p>
+                      {latest.suddenDeath && <p className="text-yellow-400 text-sm mt-2">SUDDEN DEATH</p>}
+                    </div>
+                  )}
+                  {!allDone && !latest && (
+                    <p className="text-gray-400 text-lg animate-pulse">The players step up...</p>
+                  )}
+                  {allDone && (
+                    <div className="text-center">
+                      <div className="text-7xl mb-3">{userInvolved ? (userWon ? '🎉' : '😢') : '🏆'}</div>
+                      <p className="text-white font-bold text-2xl">{shootout.winner.name}</p>
+                      <p className="text-yellow-400 font-bold text-lg">win {shootout.scoreA > shootout.scoreB ? `${shootout.scoreA}-${shootout.scoreB}` : `${shootout.scoreB}-${shootout.scoreA}`} on penalties</p>
+                    </div>
+                  )}
+                </div>
+
+                {allDone && (
+                  <div className="fixed bottom-0 left-0 right-0 p-4 bg-gray-900 z-50">
+                    <button onClick={finishShootout} className="w-full bg-green-600 text-white py-4 rounded-lg font-bold text-lg">Continue →</button>
+                  </div>
+                )}
+              </div>
+            );
+          }
+
            if (state === 'playoff-hub' && playoffBracket) {
               const b = playoffBracket;
               const currentRound = b.rounds[b.currentRound];
@@ -5312,6 +5492,7 @@ Object.keys(fixtures).forEach(lk => {
                                   </div>
                                 </div>
                               ) : null}
+                             {r.result.penalties && <p className="text-yellow-400 text-xs text-center mb-1">Won on penalties {r.result.penalties.team1} - {r.result.penalties.team2}</p>}
                               <p className={`text-center font-bold text-sm ${r.name === 'FINAL' ? 'text-yellow-400' : 'text-green-400'}`}>
                                 {r.name === 'FINAL' ? '🏆 ' : '✓ '}{r.winner.name} {r.name === 'FINAL' ? 'PROMOTED!' : 'advance'}
                               </p>
