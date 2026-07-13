@@ -2066,9 +2066,16 @@ Object.keys(fixtures).forEach(lk => {
             
               const newHome = getUpdatedPlayers(homeTeam);
               const newAway = getUpdatedPlayers(awayTeam);
-              // Remove sent-off players
-              const cleanHome = newHome.filter(p => !sentOffPlayers.includes(p.id));
-              const cleanAway = newAway.filter(p => !sentOffPlayers.includes(p.id)); 
+              // Remove ALL sent-off players from BOTH teams.
+              // sentOffPlayers only tracks the user's team, so opponent red cards
+              // were leaking through into the next half. Derive the full list from
+              // the red-card events that have actually occurred (liveCommentary).
+              const redCardIds = liveCommentary
+                .filter(ev => ev.cardType === 'red' || ev.type === 'redCard')
+                .map(ev => ev.playerId);
+              const allSentOff = [...new Set([...sentOffPlayers, ...redCardIds])];
+              const cleanHome = newHome.filter(p => !allSentOff.includes(p.id));
+              const cleanAway = newAway.filter(p => !allSentOff.includes(p.id));
               const currentScore = { home: liveScore.home, away: liveScore.away };
               const currentScorers = liveMatch.scorers || [];
             
