@@ -1227,8 +1227,7 @@ Object.keys(fixtures).forEach(lk => {
                   const homePlayers = getMatchPlayers(h);
                   const awayPlayers = getMatchPlayers(a);
                 
-                  const firstHalf = generateMatchEvents(homePlayers, awayPlayers, h, a, 1, 45, { home: 0, away: 0 }, [], {});
-                  setMatchCardTracker(firstHalf.matchCards || {});
+                  const firstHalf = generateMatchEvents(homePlayers, awayPlayers, h, a, 1, 45, { home: 0, away: 0 }, []);
                 
                   firstHalf.events.unshift({ min: 0, type: 'start', text: 'Kick off!', isHome: true, isGoal: false });
                   firstHalf.events.push({ min: 45, type: 'halftime', text: '🕐 Half Time', isHome: true, isGoal: false });
