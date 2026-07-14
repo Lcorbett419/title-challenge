@@ -787,7 +787,7 @@
           { "id": 1, "name": "Guglielmo Vicario", "positions": ["GK"], "dob": "1996-10-07", "rating": 16 },
           { "id": 31, "name": "Antonín Kinský", "positions": ["GK"], "dob": "2003-03-13", "rating": 15 },
           { "id": 40, "name": "Brandon Austin", "positions": ["GK"], "dob": "1999-01-08", "rating": 11 },
-          { "id": 91, "name": "Martin Dúbravka", "positions": ["GK"], "dob": "1989-01-15", "rating": 15 },  
+          { "id": 91, "name": "Martin Dúbravka", "positions": ["GK"], "dob": "1989-01-15", "rating": 14 },  
           { "id": 4, "name": "Kevin Danso", "positions": ["CB"], "dob": "1998-09-19", "rating": 15 },
           { "id": 5, "name": "Marcos Senesi", "positions": ["CB"], "dob": "1997-05-10", "rating": 15 },
           { "id": 6, "name": "Jan Paul van Hecke", "positions": ["CB"], "dob": "1999-07-29", "rating": 16 },  
