@@ -5365,6 +5365,16 @@ Object.keys(fixtures).forEach(lk => {
             const aKicks = withGi.filter(k => k.team === 'A');
             const bKicks = withGi.filter(k => k.team === 'B');
 
+            // Build fixed-length slot rows so the layout NEVER reveals the outcome early.
+            // Always show at least 5 slots per team; extend only for sudden-death rounds
+            // that have ALREADY been revealed (so upcoming SD kicks don't leak either).
+            const revealedRounds = shootout.kicks.slice(0, shootoutRevealed).map(k => k.round);
+            const maxRevealedRound = revealedRounds.length ? Math.max(...revealedRounds) : 0;
+            const slotCount = Math.max(5, maxRevealedRound);
+            const buildRow = (kicks) => Array.from({ length: slotCount }, (_, i) => kicks[i] || null);
+            const aRow = buildRow(aKicks);
+            const bRow = buildRow(bKicks);
+
             const KickDot = ({ k }) => {
               if (!k || k.gi >= shootoutRevealed) return <div className="w-6 h-6 rounded-full bg-gray-700 border border-gray-600" />;
               return (
