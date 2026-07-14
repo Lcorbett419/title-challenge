@@ -5408,12 +5408,11 @@ Object.keys(fixtures).forEach(lk => {
                 <div className="bg-gray-800/60 p-4 border-b border-gray-700 space-y-3">
                   <div className="flex items-center gap-2">
                     <span className="text-gray-400 text-xs w-20 truncate">{teamA.name}</span>
-                    <div className="flex gap-1 flex-wrap">{aKicks.map((k, i) => <KickDot key={i} k={k} />)}</div>
+                    <div className="flex gap-1 flex-wrap">{aRow.map((k, i) => <KickDot key={i} k={k} />)}</div>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-gray-400 text-xs w-20 truncate">{teamB.name}</span>
-                    <div className="flex gap-1 flex-wrap">{bKicks.map((k, i) => <KickDot key={i} k={k} />)}</div>
-                  </div>
+                    <div className="flex gap-1 flex-wrap">{bRow.map((k, i) => <KickDot key={i} k={k} />)}</div>                  </div>
                 </div>
 
                 <div className="flex-1 flex items-center justify-center p-6" style={{ background: 'linear-gradient(180deg, #2d4a2d 0%, #1a3a1a 100%)' }}>
