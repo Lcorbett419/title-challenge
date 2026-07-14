@@ -83,7 +83,7 @@
           const [team, setTeam] = useState(null);
           const [leagues, setLeagues] = useState(null);
           const [fixtures, setFixtures] = useState({});
-          const [date, setDate] = useState(new Date('2025-07-01'));
+          const [date, setDate] = useState(new Date('2026-07-01'));
           const [formation, setFormation] = useState('4-3-3');
           const [menuOpen, setMenuOpen] = useState(false);
           const [page, setPage] = useState('home');
@@ -728,7 +728,7 @@
           const newGame = () => {
             setTeam(null); setLeague(null); setCountry(null);
             setLeagues(JSON.parse(JSON.stringify(db)));
-            setFixtures({}); setDate(new Date('2025-07-01'));
+            setFixtures({}); setDate(new Date('2026-07-01'));
             setFinanceHistory([]);
             setFacilities({ stadiumLevel: 3, devLevel: 1 });
             localStorage.removeItem('footballManagerSave');
@@ -836,7 +836,7 @@ Object.keys(fixtures).forEach(lk => {
             
           const selectTeam = (t) => {
             setTeam(t); generateFixtures();
-            setFinanceHistory([{ date: new Date('2025-07-01').toISOString(), balance: t.budget }]);
+            setFinanceHistory([{ date: new Date('2026-07-01').toISOString(), balance: t.budget }]);
             const newLineup = initLineup(t, presetFormations['4-3-3']);
             setLineup(newLineup);
             setStartingXI(lineupToStartingXI(newLineup));
@@ -2804,8 +2804,8 @@ Object.keys(fixtures).forEach(lk => {
           };
 
           const getSeasonNumber = () => {
-            if (date.getMonth() >= 6) return date.getFullYear() - 2024;
-            return date.getFullYear() - 2025;
+            if (date.getMonth() >= 6) return date.getFullYear() - 2025;
+            return date.getFullYear() - 2026;
           };
 
           if (!db) return <div className="min-h-screen bg-gray-900 flex items-center justify-center"><div className="text-white">Loading...</div></div>;
@@ -3051,7 +3051,7 @@ Object.keys(fixtures).forEach(lk => {
                           <div className="bg-orange-900/40 rounded-lg p-4 mb-4 border border-orange-500/50">
                             <h3 className="text-orange-400 font-bold text-lg">🏋️ Pre-Season</h3>
                             <p className="text-gray-300 text-sm mt-1">The season hasn't started yet. Use this time to buy and sell players, set your tactics, and upgrade facilities.</p>
-                            <p className="text-orange-300 text-sm mt-2 font-semibold">{Math.max(0, 4 - Math.round((date - new Date('2025-07-01')) / (7 * 24 * 60 * 60 * 1000)))} weeks until first match</p>
+                            <p className="text-orange-300 text-sm mt-2 font-semibold">{Math.max(0, 4 - Math.round((date - new Date('2026-07-01')) / (7 * 24 * 60 * 60 * 1000)))} weeks until first match</p>
                           </div>
                         )}
                       <div className="bg-gray-800 rounded-lg p-6 mb-4">
@@ -4419,7 +4419,7 @@ Object.keys(fixtures).forEach(lk => {
                       });
                     
                       // After 4 weeks, end preseason
-                      const weeksPassed = Math.round((nd - new Date('2025-07-01')) / (7 * 24 * 60 * 60 * 1000));
+                      const weeksPassed = Math.round((nd - new Date('2026-07-01')) / (7 * 24 * 60 * 60 * 1000));
                       if (weeksPassed >= 4) setPreseason(false);
                     
                       setPostMatchNews(news);
@@ -4428,7 +4428,7 @@ Object.keys(fixtures).forEach(lk => {
                   }}
                         
                         className="w-full bg-orange-600 text-white py-4 rounded-lg font-bold">
-                      Advance Week ({Math.max(0, 4 - Math.round((date - new Date('2025-07-01')) / (7 * 24 * 60 * 60 * 1000)))} weeks until season)
+                      Advance Week ({Math.max(0, 4 - Math.round((date - new Date('2026-07-01')) / (7 * 24 * 60 * 60 * 1000)))} weeks until season)
                     </button>
                   </div>
                 ) : (next || playoffPending) ? (
