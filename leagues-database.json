@@ -1232,7 +1232,7 @@
         { "id": 20, "name": "Kaly Sène", "positions": ["ST"], "dob": "2001-05-28", "rating": 11 },
         { "id": 27, "name": "Sontje Hansen", "positions": ["RW", "LW"], "dob": "2002-05-18", "rating": 11 },
         { "id": 39, "name": "Sonny Finch", "positions": ["ST", "RW"], "dob": "2005-08-05", "rating": 9 },
-        { "id": 42, "name": "Kyle Joseph", "positions": ["RW", "ST", "LW"], "dob": "2001-09-10", "rating": 11 }  
+        { "id": 42, "name": "Kyle Joseph", "positions": ["RW", "ST", "LW"], "dob": "2001-09-10", "rating": 11 },  
         { "id": 45, "name": "Jeremy Sarmiento", "positions": ["LW", "RW", "CAM"], "dob": "2002-06-16", "rating": 12 }
       ]
     },
