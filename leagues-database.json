@@ -7105,7 +7105,7 @@
           { "id": 21, "name": "Arsen Zakharyan", "positions": ["CAM", "LW", "RW"], "dob": "2003-05-26", "rating": 14 },
           { "id": 23, "name": "Brais Méndez", "positions": ["CAM", "CM", "RW"], "dob": "1997-01-07", "rating": 15 },
           { "id": 24, "name": "Luka Sučić", "positions": ["CM", "CAM"], "dob": "2002-09-08", "rating": 15 },
-          { "id": 10, "name": "Mikel Oyarzabal", "positions": ["LW", "ST", "CAM"], "dob": "1997-04-21", "rating": 16 },
+          { "id": 10, "name": "Mikel Oyarzabal", "positions": ["LW", "ST", "CAM"], "dob": "1997-04-21", "rating": 17 },
           { "id": 7, "name": "Ander Barrenetxea", "positions": ["LW", "RW"], "dob": "2001-12-27", "rating": 15 },
           { "id": 9, "name": "Orri Óskarsson", "positions": ["ST"], "dob": "2004-08-29", "rating": 15 },
           { "id": 11, "name": "Gonçalo Guedes", "positions": ["LW", "ST", "RW"], "dob": "1996-11-29", "rating": 14 },
