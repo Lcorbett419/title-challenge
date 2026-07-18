@@ -110,7 +110,7 @@
           const [transferSortBy, setTransferSortBy] = useState('rating');  
           const [transferNegotiation, setTransferNegotiation] = useState(null);
           const [incomingOffers, setIncomingOffers] = useState([]);
-          const [facilities, setFacilities] = useState({ stadiumLevel: 3, devLevel: 1 });
+          const [facilities, setFacilities] = useState({ stadiumLevel: 3, devLevel: 1, youthLevel: 1 });
           const [preseason, setPreseason] = useState(true);
           const [playoffState, setPlayoffState] = useState(null);
           const [playoffRound, setPlayoffRound] = useState(null);
@@ -730,7 +730,7 @@
             setLeagues(JSON.parse(JSON.stringify(db)));
             setFixtures({}); setDate(new Date('2026-07-01'));
             setFinanceHistory([]);
-            setFacilities({ stadiumLevel: 3, devLevel: 1 });
+            setFacilities({ stadiumLevel: 3, devLevel: 1, youthLevel: 1 });
             localStorage.removeItem('footballManagerSave');
             setState('country-select');
           };
@@ -749,7 +749,7 @@
                   setFinanceHistory(data.gameData.financeHistory || []);
                   setLineup(data.gameData.lineup || []);  
                   setStartingXI(data.gameData.startingXI || {});
-                  setFacilities(data.gameData.facilities || { stadiumLevel: 3, devLevel: 1 });
+                  setFacilities({ stadiumLevel: 3, devLevel: 1, youthLevel: 1, ...(data.gameData.facilities || {}) });
                   setPlayerHistories(data.gameData.playerHistories || {});
                   setState('info-page');
                   setPreseason(false);    
@@ -841,7 +841,7 @@ Object.keys(fixtures).forEach(lk => {
             setLineup(newLineup);
             setStartingXI(lineupToStartingXI(newLineup));
             const stadLvl = t.stadiumCapacity ? Math.round(t.stadiumCapacity / 10000) : 3;
-            setFacilities({ stadiumLevel: Math.max(1, Math.min(10, stadLvl)), devLevel: 1 });
+            setFacilities({ stadiumLevel: Math.max(1, Math.min(10, stadLvl)), devLevel: 1, youthLevel: 1 });
             setState('info-page');
           };
 
@@ -1580,6 +1580,10 @@ Object.keys(fixtures).forEach(lk => {
                   message = `Season complete! You finished ${playerPos + 1}${playerPos === 1 ? 'nd' : playerPos === 2 ? 'rd' : 'th'}.\n💰 Prize money: ${formatCurrency(myPrize)}`;
                 }
             
+              if (userGraduates.length > 0) {
+                const gradText = userGraduates.map(g => `• ${g.name} (${g.positions[0]}, rated ${g.rating})`).join('\n');
+                message += `\n\n🎓 Academy graduate${userGraduates.length > 1 ? 's' : ''}:\n${gradText}`;
+              }
               alert(message);
             
               if (newLeague !== league) setLeague(newLeague);
@@ -1599,6 +1603,16 @@ Object.keys(fixtures).forEach(lk => {
                   const declineChance = 0.15 + (age - 32) * 0.1;
                   if (Math.random() < declineChance && p.rating > 5) p.rating -= 1;
                 }
+              });
+
+              // === ACADEMY GRADUATIONS ===
+              // User's club — capture graduates for news.
+              const userGraduates = runAcademyForTeam(team, date, true);
+              // AI clubs across all leagues — silent.
+              Object.keys(leagues).forEach(lk => {
+                leagues[lk].teams.forEach(tm => {
+                  if (tm.id !== team.id) runAcademyForTeam(tm, date, false);
+                });
               });
 
                 // Award end-of-season prize money to ALL clubs
@@ -2290,6 +2304,65 @@ Object.keys(fixtures).forEach(lk => {
             return { ...p, matchRating: Math.round(rating * 100) / 100 };
           });
         };
+
+        const academyFirstNames = ['James','Oliver','Harry','Jack','Charlie','Thomas','George','Oscar','William','Noah','Leo','Alfie','Freddie','Archie','Theo','Joshua','Alexander','Logan','Harrison','Mason','Lucas','Ethan','Daniel','Isaac','Max','Riley','Samuel','Sebastian','Louie','Finley','Jacob','Callum','Kai','Reece','Dylan','Nathan','Aaron','Tyler','Connor','Liam','Jayden','Bailey','Rhys','Kian','Cole','Zac','Elliott','Joel','Marcus','Devon'];
+        const academyLastNames = ['Smith','Jones','Taylor','Brown','Williams','Wilson','Johnson','Davies','Robinson','Wright','Thompson','Evans','Walker','White','Roberts','Green','Hall','Wood','Jackson','Clarke','Turner','Hughes','Edwards','Hill','Moore','Clark','Harris','Cooper','Ward','Morris','King','Baker','Bell','Cox','Bailey','Murphy','Rogers','Reid','Barnes','Fletcher','Kelly','Shaw','Holmes','Owen','Marsh','Doyle','Lowe','Palmer','Vaughan','Sutton'];
+
+        // Generate an academy graduate for a team, given the target rating centre.
+        const generateAcademyPlayer = (teamObj, ratingCentre, currentDate, existingIds) => {
+          const first = academyFirstNames[Math.floor(Math.random() * academyFirstNames.length)];
+          const last = academyLastNames[Math.floor(Math.random() * academyLastNames.length)];
+          // ±1 scatter around the facility-set centre, floored at 6.
+          const scatter = Math.floor(Math.random() * 3) - 1; // -1, 0, or +1
+          const rating = Math.max(6, Math.round(ratingCentre + scatter));
+          // Age 16-20
+          const age = 16 + Math.floor(Math.random() * 5);
+          const bd = new Date(currentDate);
+          bd.setFullYear(bd.getFullYear() - age);
+          bd.setMonth(Math.floor(Math.random() * 12));
+          bd.setDate(1 + Math.floor(Math.random() * 27));
+          // Position — weighted toward outfield, occasional keeper
+          const posPool = ['ST','ST','LW','RW','CAM','CM','CM','CDM','CB','CB','LB','RB','GK'];
+          const position = posPool[Math.floor(Math.random() * posPool.length)];
+          const maxId = Math.max(...teamObj.players.map(p => p.id), ...existingIds, 0);
+          return {
+            id: maxId + 1,
+            name: `${first} ${last}`,
+            positions: [position],
+            rating,
+            dob: bd.toISOString().split('T')[0],
+            goals: 0, assists: 0, yellowCards: 0, redCards: 0,
+            injured: false, injuryUntil: null,
+            suspended: false, suspendedUntil: 0, matchesPlayed: 0,
+            lastYellowBanAt: 0
+          };
+        };
+
+        // Run academy graduations for one team. Returns array of new players added.
+        const runAcademyForTeam = (teamObj, currentDate, isUser) => {
+          if (teamObj.players.length >= 30) return []; // no room
+          const avg = teamObj.players.reduce((s, p) => s + p.rating, 0) / teamObj.players.length;
+          // Facility-set centre: user's youthLevel slides -5 (lvl1) to -3 (lvl10); AI fixed at -4.
+          let offset;
+          if (isUser) {
+            const yl = facilities.youthLevel || 1;
+            offset = -5 + ((yl - 1) / 9) * 2; // -5 at lvl1, -3 at lvl10
+          } else {
+            offset = -4; // mid baseline for AI
+          }
+          const centre = avg + offset;
+          // Usually 1, sometimes 2, never 3+.
+          let count = Math.random() < 0.25 ? 2 : 1;
+          // Respect the 30-cap
+          count = Math.min(count, 30 - teamObj.players.length);
+          const added = [];
+          for (let i = 0; i < count; i++) {
+            const p = generateAcademyPlayer(teamObj, centre, currentDate, added.map(a => a.id));
+            teamObj.players.push(p);
+            added.push(p);
+          }
+          return added;
+        };      
 
         const injuryTypes = [
           'Hamstring strain', 'Twisted ankle', 'Knee ligament damage',
@@ -4251,8 +4324,10 @@ Object.keys(fixtures).forEach(lk => {
                   {page === 'facilities' && (() => {
                     const getStadiumUpgradeCost = (lvl) => Math.round((lvl + 1) * (lvl + 1) * 1200000);
                     const getDevUpgradeCost = (lvl) => Math.round((lvl + 1) * (lvl + 1) * 600000);
+                    const getYouthUpgradeCost = (lvl) => Math.round((lvl + 1) * (lvl + 1) * 700000);
                     const stadCost = facilities.stadiumLevel < 10 ? getStadiumUpgradeCost(facilities.stadiumLevel) : null;
                     const devCost = facilities.devLevel < 10 ? getDevUpgradeCost(facilities.devLevel) : null;
+                    const youthCost = facilities.youthLevel < 10 ? getYouthUpgradeCost(facilities.youthLevel) : null;
 
                     const upgradeStadium = () => {
                       if (facilities.stadiumLevel >= 10) return;
@@ -4269,6 +4344,15 @@ Object.keys(fixtures).forEach(lk => {
                       if (team.budget < cost) { alert('Insufficient funds!'); return; }
                       team.budget -= cost;
                       setFacilities({ ...facilities, devLevel: facilities.devLevel + 1 });
+                      setFinanceHistory([...financeHistory, { date: date.toISOString(), balance: team.budget }]);
+                    };
+
+                    const upgradeYouth = () => {
+                      if (facilities.youthLevel >= 10) return;
+                      const cost = getYouthUpgradeCost(facilities.youthLevel);
+                      if (team.budget < cost) { alert('Insufficient funds!'); return; }
+                      team.budget -= cost;
+                      setFacilities({ ...facilities, youthLevel: facilities.youthLevel + 1 });
                       setFinanceHistory([...financeHistory, { date: date.toISOString(), balance: team.budget }]);
                     };
 
@@ -4311,10 +4395,10 @@ Object.keys(fixtures).forEach(lk => {
                             )}
                           </div>
 
-                          <div className="bg-gray-700 rounded-lg p-4">
+                          <div className="bg-gray-700 rounded-lg p-4 mb-4">
                             <div className="flex justify-between items-center mb-2">
                               <div>
-                                <h3 className="text-white font-bold">⚽ Youth Development</h3>
+                                <h3 className="text-white font-bold">🏋️ Training Facilities</h3>
                                 <p className="text-gray-400 text-xs">Improves player growth rate each season</p>
                               </div>
                               <div className="text-right">
@@ -4341,6 +4425,36 @@ Object.keys(fixtures).forEach(lk => {
                               <p className="text-blue-400 text-sm font-bold text-center">✅ Fully upgraded!</p>
                             )}
                           </div>
+
+                          <div className="bg-gray-700 rounded-lg p-4">
+                            <div className="flex justify-between items-center mb-2">
+                              <div>
+                                <h3 className="text-white font-bold">🎓 Youth Development</h3>
+                                <p className="text-gray-400 text-xs">Better academy graduates each season</p>
+                              </div>
+                              <div className="text-right">
+                                <span className="text-white font-bold text-2xl">{facilities.youthLevel}</span>
+                                <span className="text-gray-400 text-sm">/10</span>
+                              </div>
+                            </div>
+                            <div className="mb-3"><ProgressBar level={facilities.youthLevel} color="#a855f7" /></div>
+                            <div className="mb-3 bg-gray-800 rounded p-2">
+                              <p className="text-gray-400 text-xs text-center">
+                                Graduate quality: <span className="text-purple-400 font-bold">squad avg −{(5 - ((facilities.youthLevel - 1) / 9) * 2).toFixed(1)}</span>
+                              </p>
+                            </div>
+                            {facilities.youthLevel < 10 ? (
+                              <div className="flex justify-between items-center">
+                                <div>
+                                  <p className="text-gray-300 text-xs">Level {facilities.youthLevel} → {facilities.youthLevel + 1}</p>
+                                  <p className="text-orange-400 text-sm font-bold">{formatCurrency(youthCost)}</p>
+                                </div>
+                                <button onClick={upgradeYouth} disabled={team.budget < youthCost} className={`px-4 py-2 rounded-lg font-bold text-sm ${team.budget >= youthCost ? 'bg-purple-600 text-white hover:bg-purple-700' : 'bg-gray-600 text-gray-400 cursor-not-allowed'}`}>Upgrade</button>
+                              </div>
+                            ) : (
+                              <p className="text-purple-400 text-sm font-bold text-center">✅ Fully upgraded!</p>
+                            )}
+                          </div>
                         </div>
 
                         <div className="bg-gray-800 rounded-lg p-4">
@@ -4350,7 +4464,8 @@ Object.keys(fixtures).forEach(lk => {
                               <tr className="text-gray-500 border-b border-gray-700">
                                 <th className="text-left p-1">Level</th>
                                 <th className="text-right p-1">Stadium</th>
-                                <th className="text-right p-1">Development</th>
+                                <th className="text-right p-1">Training</th>
+                                <th className="text-right p-1">Youth</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -4359,6 +4474,7 @@ Object.keys(fixtures).forEach(lk => {
                                   <td className="text-gray-400 p-1">{lvl} → {lvl+1}</td>
                                   <td className={`text-right p-1 ${lvl === facilities.stadiumLevel ? 'text-green-400 font-bold' : lvl < facilities.stadiumLevel ? 'text-gray-600 line-through' : 'text-gray-400'}`}>{formatCurrency(getStadiumUpgradeCost(lvl))}</td>
                                   <td className={`text-right p-1 ${lvl === facilities.devLevel ? 'text-blue-400 font-bold' : lvl < facilities.devLevel ? 'text-gray-600 line-through' : 'text-gray-400'}`}>{formatCurrency(getDevUpgradeCost(lvl))}</td>
+                                  <td className={`text-right p-1 ${lvl === facilities.youthLevel ? 'text-purple-400 font-bold' : lvl < facilities.youthLevel ? 'text-gray-600 line-through' : 'text-gray-400'}`}>{formatCurrency(getYouthUpgradeCost(lvl))}</td>
                                 </tr>
                               ))}
                             </tbody>
