@@ -1580,6 +1580,16 @@ Object.keys(fixtures).forEach(lk => {
                   message = `Season complete! You finished ${playerPos + 1}${playerPos === 1 ? 'nd' : playerPos === 2 ? 'rd' : 'th'}.\n💰 Prize money: ${formatCurrency(myPrize)}`;
                 }
             
+              if (userRetirements.length > 0) {
+                const retText = userRetirements.map(p => {
+                  const bd = new Date(p.dob);
+                  let a = date.getFullYear() - bd.getFullYear();
+                  const m = date.getMonth() - bd.getMonth();
+                  if (m < 0 || (m === 0 && date.getDate() < bd.getDate())) a--;
+                  return `• ${p.name} (${p.positions[0]}, age ${a})`;
+                }).join('\n');
+                message += `\n\n👋 Retiring player${userRetirements.length > 1 ? 's' : ''}:\n${retText}`;
+              }
               if (userGraduates.length > 0) {
                 const gradText = userGraduates.map(g => `• ${g.name} (${g.positions[0]}, rated ${g.rating})`).join('\n');
                 message += `\n\n🎓 Academy graduate${userGraduates.length > 1 ? 's' : ''}:\n${gradText}`;
@@ -1605,13 +1615,120 @@ Object.keys(fixtures).forEach(lk => {
                 }
               });
 
+            // === RETIREMENTS ===
+              // Age- and rating-based. Chance rises from 34, near-certain by 40.
+              // Low-rated veterans retire earlier; keepers last longer. Never drops
+              // a club below 11 players.
+              const retireFromTeam = (tm, currentDate) => {
+                const retired = [];
+                const ageOf = (p) => {
+                  const bd = new Date(p.dob);
+                  let a = currentDate.getFullYear() - bd.getFullYear();
+                  const m = currentDate.getMonth() - bd.getMonth();
+                  if (m < 0 || (m === 0 && currentDate.getDate() < bd.getDate())) a--;
+                  return a;
+                };
+                // Evaluate oldest first so the 11-floor protects the youngest.
+                const candidates = [...tm.players].sort((a, b) => ageOf(b) - ageOf(a));
+                candidates.forEach(p => {
+                  if (tm.players.length - retired.length <= 11) return; // squad floor
+                  const age = ageOf(p);
+                  const isGK = p.positions.includes('GK');
+                  const effectiveAge = isGK ? age - 2 : age; // keepers last ~2 yrs longer
+                  if (effectiveAge < 34) return;
+                  // Base chance climbs steeply toward 40.
+                  let chance = (effectiveAge - 33) * 0.18; // 34→0.18, 39→1.08 (clamped)
+                  // Low-rated players are likelier to call it a day.
+                  if (p.rating <= 8) chance += 0.25;
+                  else if (p.rating <= 11) chance += 0.10;
+                  chance = Math.min(0.97, chance);
+                  if (Math.random() < chance) retired.push(p);
+                });
+                if (retired.length > 0) {
+                  const retiredIds = retired.map(p => p.id);
+                  tm.players = tm.players.filter(p => !retiredIds.includes(p.id));
+                }
+                return retired;
+              };
+
+              // AI clubs: instant retirement at transition (unchanged, silent).
+              Object.keys(leagues).forEach(lk => {
+                leagues[lk].teams.forEach(tm => {
+                  if (tm.id !== team.id) retireFromTeam(tm, date);
+                });
+              });
+
+              // Your club, part 1: players who announced retirement LAST season now leave.
+              const userRetirements = team.players.filter(p => p.retiringAtSeasonEnd);
+              if (userRetirements.length > 0) {
+                const goneIds = userRetirements.map(p => p.id);
+                team.players = team.players.filter(p => !goneIds.includes(p.id));
+                // Clear any XI slots they occupied.
+                const xi = { ...startingXI };
+                Object.keys(xi).forEach(k => { if (goneIds.includes(xi[k])) delete xi[k]; });
+                setStartingXI(xi);
+              }
+
+              // Your club, part 2: roll who will retire at the END of the upcoming season,
+              // and flag them so it can be announced in-season via Squad News.
+              const ageOfUser = (p) => {
+                const bd = new Date(p.dob);
+                let a = date.getFullYear() - bd.getFullYear();
+                const m = date.getMonth() - bd.getMonth();
+                if (m < 0 || (m === 0 && date.getDate() < bd.getDate())) a--;
+                return a;
+              };
+              // Evaluate oldest-first, protect the 11-floor (counting already-flagged).
+              const flaggedCount = () => team.players.filter(p => p.retiringAtSeasonEnd).length;
+              [...team.players].sort((a, b) => ageOfUser(b) - ageOfUser(a)).forEach(p => {
+                if (p.retiringAtSeasonEnd) return; // already flagged
+                if (team.players.length - flaggedCount() <= 11) return;
+                const age = ageOfUser(p);
+                const isGK = p.positions.includes('GK');
+                const effectiveAge = isGK ? age - 2 : age;
+                if (effectiveAge < 34) return;
+                let chance = (effectiveAge - 33) * 0.18;
+                if (p.rating <= 8) chance += 0.25;
+                else if (p.rating <= 11) chance += 0.10;
+                chance = Math.min(0.97, chance);
+                if (Math.random() < chance) {
+                  p.retiringAtSeasonEnd = true;
+                  p.retirementAnnounced = false; // not yet surfaced in Squad News
+                }
+              });
+
               // === ACADEMY GRADUATIONS ===
               // User's club — capture graduates for news.
               const userGraduates = runAcademyForTeam(team, date, true);
-              // AI clubs across all leagues — silent.
+              // AI clubs across all leagues — silent academy + development.
               Object.keys(leagues).forEach(lk => {
                 leagues[lk].teams.forEach(tm => {
-                  if (tm.id !== team.id) runAcademyForTeam(tm, date, false);
+                  if (tm.id === team.id) return;
+                  runAcademyForTeam(tm, date, false);
+                  // AI player development — growth slightly below a facility-investing
+                  // user (flat ~6.5%, vs the user's 8%+ scaling with training level),
+                  // decline mirrors the user's, elite ceiling capped at 18 (rare 19).
+                  tm.players.forEach(p => {
+                    const bd = new Date(p.dob);
+                    let age = date.getFullYear() - bd.getFullYear();
+                    const m = date.getMonth() - bd.getMonth();
+                    if (m < 0 || (m === 0 && date.getDate() < bd.getDate())) age--;
+
+                    // Growth
+                    if (age <= 27) {
+                      if (p.rating < 18) {
+                        if (Math.random() < 0.065) p.rating += 1;
+                      } else if (p.rating === 18) {
+                        // Only a rare bump from 18 to 19; 20 stays reserved for elites.
+                        if (Math.random() < 0.02) p.rating += 1;
+                      }
+                    }
+                    // Decline — same as the user's club
+                    if (age >= 32) {
+                      const declineChance = 0.15 + (age - 32) * 0.1;
+                      if (Math.random() < declineChance && p.rating > 5) p.rating -= 1;
+                    }
+                  });
                 });
               });
 
@@ -2805,9 +2922,30 @@ Object.keys(fixtures).forEach(lk => {
             }
           }
         });
-        
+
+           // 6. RETIREMENT ANNOUNCEMENTS — surface once per flagged player.
+        team.players.forEach(p => {
+          if (p.retiringAtSeasonEnd && !p.retirementAnnounced) {
+            p.retirementAnnounced = true;
+            const bd = new Date(p.dob);
+            let a = date.getFullYear() - bd.getFullYear();
+            const m = date.getMonth() - bd.getMonth();
+            if (m < 0 || (m === 0 && date.getDate() < bd.getDate())) a--;
+            news.push({
+              type: 'retirement',
+              icon: '👋',
+              color: 'bg-indigo-600',
+              textColor: 'text-white',
+              title: 'The following player has announced they will retire at the end of the season:',
+              playerName: p.name,
+              detail: `Age ${a} • ${p.positions.join('/')} — a full season of service remains`
+            });
+          }
+        });
+
+       
         // Sort news: injuries first, then suspensions, available, development, rest
-        const typeOrder = { injury: 0, suspension: 1, decline: 2, development: 3, available: 4, rest: 5 };
+        const typeOrder = { injury: 0, retirement: 1, suspension: 2, decline: 3, development: 4, available: 5, rest: 6 };
         news.sort((a, b) => (typeOrder[a.type] || 99) - (typeOrder[b.type] || 99));
         
         setPostMatchNews(news);
@@ -5665,6 +5803,7 @@ Object.keys(fixtures).forEach(lk => {
                                 item.type === 'development' ? 'text-orange-400' :
                                 item.type === 'decline' ? 'text-orange-700' :
                                 item.type === 'rest' ? 'text-amber-400' :
+                                item.type === 'retirement' ? 'text-indigo-300' :
                                 'text-gray-400'
                               }`}>{item.detail}</p>
                             </div>
