@@ -1580,26 +1580,8 @@ Object.keys(fixtures).forEach(lk => {
                 } else {
                   message = `Season complete! You finished ${playerPos + 1}${playerPos === 1 ? 'nd' : playerPos === 2 ? 'rd' : 'th'}.\n💰 Prize money: ${formatCurrency(myPrize)}`;
                 }
-            
-              if (userRetirements.length > 0) {
-                const retText = userRetirements.map(p => {
-                  const bd = new Date(p.dob);
-                  let a = date.getFullYear() - bd.getFullYear();
-                  const m = date.getMonth() - bd.getMonth();
-                  if (m < 0 || (m === 0 && date.getDate() < bd.getDate())) a--;
-                  return `• ${p.name} (${p.positions[0]}, age ${a})`;
-                }).join('\n');
-                message += `\n\n👋 Retiring player${userRetirements.length > 1 ? 's' : ''}:\n${retText}`;
-              }
-              if (userGraduates.length > 0) {
-                const gradText = userGraduates.map(g => `• ${g.name} (${g.positions[0]}, rated ${g.rating})`).join('\n');
-                message += `\n\n🎓 Academy graduate${userGraduates.length > 1 ? 's' : ''}:\n${gradText}`;
-              }
-              alert(message);
-            
-              if (newLeague !== league) setLeague(newLeague);
-            
-              const seasonYear = date.getMonth() >= 6 ? date.getFullYear() + 1 : date.getFullYear();
+
+                            const seasonYear = date.getMonth() >= 6 ? date.getFullYear() + 1 : date.getFullYear();
               const newDate = new Date(`${seasonYear}-07-01`);
               setDate(newDate);
             
@@ -1660,6 +1642,7 @@ Object.keys(fixtures).forEach(lk => {
               });
 
               // Your club, part 1: players who announced retirement LAST season now leave.
+              const userRetirements = team.players.filter(p => p.retiringAtSeasonEnd);    
               if (userRetirements.length > 0) {
                 const goneIds = userRetirements.map(p => p.id);
                 team.players = team.players.filter(p => !goneIds.includes(p.id));
@@ -1730,7 +1713,27 @@ Object.keys(fixtures).forEach(lk => {
                     }
                   });
                 });
-              });
+              });    
+            
+              if (userRetirements.length > 0) {
+                const retText = userRetirements.map(p => {
+                  const bd = new Date(p.dob);
+                  let a = date.getFullYear() - bd.getFullYear();
+                  const m = date.getMonth() - bd.getMonth();
+                  if (m < 0 || (m === 0 && date.getDate() < bd.getDate())) a--;
+                  return `• ${p.name} (${p.positions[0]}, age ${a})`;
+                }).join('\n');
+                message += `\n\n👋 Retiring player${userRetirements.length > 1 ? 's' : ''}:\n${retText}`;
+              }
+              if (userGraduates.length > 0) {
+                const gradText = userGraduates.map(g => `• ${g.name} (${g.positions[0]}, rated ${g.rating})`).join('\n');
+                message += `\n\n🎓 Academy graduate${userGraduates.length > 1 ? 's' : ''}:\n${gradText}`;
+              }
+              alert(message);
+            
+              if (newLeague !== league) setLeague(newLeague);
+            
+
 
                 // Award end-of-season prize money to ALL clubs
                 Object.keys(allTables).forEach(lk => {
