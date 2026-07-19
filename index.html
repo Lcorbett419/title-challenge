@@ -1452,6 +1452,7 @@ Object.keys(fixtures).forEach(lk => {
             };
             
             const completeSeasonTransition = (playoffPromoted) => {
+              try {  
                 const leaguePyramids = {
                 england: ['england', 'england_championship', 'england_league1', 'england_league2', 'england_national_league'],
                 germany: ['germany', 'germany_2'],
@@ -1770,6 +1771,7 @@ Object.keys(fixtures).forEach(lk => {
               setPlayoffState(null);
               setPlayoffPending(null);
               setState('info-page');
+              } catch(e) { alert('Season transition error: ' + e.message); console.error(e); }    
             };
 
           const getTable = (lk) => {
