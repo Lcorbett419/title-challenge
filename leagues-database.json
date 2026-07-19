@@ -6574,7 +6574,7 @@
           { "id": 2, "name": "João Cancelo", "positions": ["RB", "LB"], "dob": "1994-05-27", "rating": 16 },
           { "id": 3, "name": "Alejandro Balde", "positions": ["LB"], "dob": "2003-10-18", "rating": 16 },
           { "id": 4, "name": "Ronald Araújo", "positions": ["CB"], "dob": "1999-03-07", "rating": 17 },
-          { "id": 5, "name": "Pau Cubarsí", "positions": ["CB"], "dob": "2007-01-22", "rating": 16 },
+          { "id": 5, "name": "Pau Cubarsí", "positions": ["CB"], "dob": "2007-01-22", "rating": 18 },
           { "id": 15, "name": "Andreas Christensen", "positions": ["CB", "CDM"], "dob": "1996-04-10", "rating": 15 },
           { "id": 18, "name": "Gerard Martín", "positions": ["LB"], "dob": "2002-02-26", "rating": 14 },
           { "id": 23, "name": "Jules Koundé", "positions": ["RB", "CB"], "dob": "1998-11-12", "rating": 16 },
