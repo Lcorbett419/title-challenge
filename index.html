@@ -1660,7 +1660,6 @@ Object.keys(fixtures).forEach(lk => {
               });
 
               // Your club, part 1: players who announced retirement LAST season now leave.
-              const userRetirements = team.players.filter(p => p.retiringAtSeasonEnd);
               if (userRetirements.length > 0) {
                 const goneIds = userRetirements.map(p => p.id);
                 team.players = team.players.filter(p => !goneIds.includes(p.id));
