@@ -83,7 +83,8 @@
           { "id": 44, "name": "Johan Manzambi", "positions": ["RM", "CAM"], "dob": "2005-10-14", "rating": 16 },  
           { "id": 47, "name": "Alysson", "positions": ["RW"], "dob": "2006-05-05", "rating": 11 },
           { "id": 11, "name": "Ollie Watkins", "positions": ["ST"], "dob": "1995-12-30", "rating": 16 },
-          { "id": 18, "name": "Tammy Abraham", "positions": ["ST"], "dob": "1997-10-02", "rating": 15 }
+          { "id": 18, "name": "Tammy Abraham", "positions": ["ST"], "dob": "1997-10-02", "rating": 15 },
+          { "id": 49, "name": "Alejandro Garnacho", "positions": ["RW", "LW"], "dob": "2004-07-01", "rating": 14 }  
         ]
       },
       {
@@ -241,8 +242,7 @@
           { "id": 11, "name": "Jamie Gittens", "positions": ["LW", "RW"], "dob": "2004-08-08", "rating": 14 },
           { "id": 20, "name": "João Pedro", "positions": ["CAM", "ST"], "dob": "2001-09-26", "rating": 16 },
           { "id": 38, "name": "Marc Guiu", "positions": ["ST"], "dob": "2006-01-04", "rating": 13 },
-          { "id": 41, "name": "Estêvão", "positions": ["RW", "LW"], "dob": "2007-04-24", "rating": 15 },
-          { "id": 49, "name": "Alejandro Garnacho", "positions": ["RW", "LW"], "dob": "2004-07-01", "rating": 14 }
+          { "id": 41, "name": "Estêvão", "positions": ["RW", "LW"], "dob": "2007-04-24", "rating": 15 }
         ]
       },
     {
