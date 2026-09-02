@@ -1265,7 +1265,7 @@
         { "id": 9, "name": "Tommy Conway", "positions": ["ST"], "dob": "2002-08-06", "rating": 12 },
         { "id": 13, "name": "David Strelec", "positions": ["ST"], "dob": "2001-04-04", "rating": 12 },
         { "id": 22, "name": "Kyle Joseph", "positions": ["RW", "ST", "LW"], "dob": "2001-09-10", "rating": 11 },   
-        { "id": 22, "name": "Amario Cozier-Duberry", "positions": ["RW", "LW"], "dob": "2005-05-29", "rating": 12 }
+        { "id": 37, "name": "Amario Cozier-Duberry", "positions": ["RW", "LW"], "dob": "2005-05-29", "rating": 12 }
       ]
     },
     {
