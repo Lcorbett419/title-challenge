@@ -1882,13 +1882,13 @@
         { "id": 17, "name": "Callum O'Hare", "positions": ["CAM"], "dob": "1998-05-01", "rating": 13 },
         { "id": 18, "name": "Ben Sheaf", "positions": ["CDM", "CM"], "dob": "1998-02-05", "rating": 13 },
         { "id": 20, "name": "Oliver Rathbone", "positions": ["CM"], "dob": "1996-10-10", "rating": 12 },
-        { "id": 27, "name": "Lewis O'Brien", "positions": ["CM", "LM"], "dob": "1998-10-14", "rating": 13 },
+        { "id": 27, "name": "Lewis O'Brien", "positions": ["CM", "LM"], "dob": "1998-10-14", "rating": 11 },
         { "id": 37, "name": "Matty James", "positions": ["CM", "CDM"], "dob": "1991-07-22", "rating": 11 },
         { "id": 47, "name": "Ryan Longman", "positions": ["LW", "RW", "RWB"], "dob": "2000-11-06", "rating": 12 },
         { "id": 11, "name": "Bailey Cadamarteri", "positions": ["ST"], "dob": "2005-05-09", "rating": 11 },
         { "id": 19, "name": "Kieffer Moore", "positions": ["ST"], "dob": "1992-08-08", "rating": 13 },
         { "id": 28, "name": "Sam Smith", "positions": ["ST"], "dob": "1998-03-08", "rating": 12 },
-        { "id": 33, "name": "Nathan Broadhead", "positions": ["LW", "ST"], "dob": "1998-04-05", "rating": 13 }
+        { "id": 33, "name": "Nathan Broadhead", "positions": ["LW", "ST"], "dob": "1998-04-05", "rating": 12 }
       ]
     }
   ]
@@ -2451,7 +2451,7 @@
         { "id": 8, "name": "Alex Gilbey", "positions": ["CAM", "CM"], "dob": "1994-12-09", "rating": 11 },
         { "id": 22, "name": "Ibrahim Fullah", "positions": ["CAM", "CM"], "dob": "2007-04-05", "rating": 9 },  
         { "id": 24, "name": "Ryan Wintle", "positions": ["CDM", "CM"], "dob": "1997-06-13", "rating": 11 },
-        { "id": 26, "name": "Ben Wiles", "positions": ["CM", "CAM"], "dob": "1999-04-17", "rating": 11 },  
+        { "id": 26, "name": "Ben Wiles", "positions": ["CM", "CAM"], "dob": "1999-04-17", "rating": 10 },  
         { "id": 28, "name": "Jay Matete", "positions": ["CDM", "CM"], "dob": "2001-02-11", "rating": 10 },
         { "id": 34, "name": "Callum Tripp", "positions": ["CM", "RB"], "dob": "2006-08-31", "rating": 8 },
         { "id": 9, "name": "Sam Nombe", "positions": ["ST"], "dob": "1998-10-22", "rating": 12 },  
