@@ -1033,7 +1033,7 @@
         "stadiumCapacity": 21000,
         "budget": 50000000,
         "players": [
-          { "id": 1, "name": "Max Weiß", "positions": ["GK"], "dob": "2004-06-15", "rating": 12 },
+          { "id": 1, "name": "Max Weiß", "positions": ["GK"], "dob": "2004-06-15", "rating": 11 },
           { "id": 13, "name": "Ben Amos", "positions": ["GK"], "dob": "1990-04-10", "rating": 9 },
           { "id": 37, "name": "Grégoire Coudert", "positions": ["GK"], "dob": "1999-04-03", "rating": 11 },  
           { "id": 2, "name": "Kyle Walker", "positions": ["RB"], "dob": "1990-05-28", "rating": 13 },
