@@ -990,6 +990,7 @@
       "players": [
         { "id": 1, "name": "Sam Tickle", "positions": ["GK"], "dob": "2002-03-31", "rating": 12 },
         { "id": 32, "name": "Lewis Thomas", "positions": ["GK"], "dob": "1997-09-20", "rating": 10 },
+        { "id": 40, "name": "Bradley Collins", "positions": ["GK"], "dob": "1997-02-18", "rating": 11 },  
         { "id": 2, "name": "Ross McCrorie", "positions": ["RB", "CDM"], "dob": "1998-03-18", "rating": 12 },
         { "id": 3, "name": "Cameron Pring", "positions": ["LB", "LWB"], "dob": "1998-01-22", "rating": 12 },
         { "id": 5, "name": "Robert Atkinson", "positions": ["CB"], "dob": "1998-07-13", "rating": 13 },
@@ -2102,7 +2103,6 @@
       "stadiumCapacity": 7000,
       "budget": 10000000,
       "players": [
-        { "id": 24, "name": "Bradley Collins", "positions": ["GK"], "dob": "1997-02-18", "rating": 12 },
         { "id": 21, "name": "Jordan Amissah", "positions": ["GK"], "dob": "2001-08-02", "rating": 10 },
         { "id": 27, "name": "Kamil Dudek", "positions": ["GK"], "dob": "2005-10-10", "rating": 9 },
         { "id": 2, "name": "Udoka Godwin-Malife", "positions": ["CB", "RB"], "dob": "2000-05-09", "rating": 11 },
