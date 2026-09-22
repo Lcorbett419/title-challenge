@@ -991,7 +991,6 @@
         { "id": 1, "name": "Sam Tickle", "positions": ["GK"], "dob": "2002-03-31", "rating": 12 },
         { "id": 32, "name": "Lewis Thomas", "positions": ["GK"], "dob": "1997-09-20", "rating": 10 },
         { "id": 40, "name": "Bradley Collins", "positions": ["GK"], "dob": "1997-02-18", "rating": 11 },  
-        { "id": 2, "name": "Ross McCrorie", "positions": ["RB", "CDM"], "dob": "1998-03-18", "rating": 12 },
         { "id": 3, "name": "Cameron Pring", "positions": ["LB", "LWB"], "dob": "1998-01-22", "rating": 12 },
         { "id": 5, "name": "Robert Atkinson", "positions": ["CB"], "dob": "1998-07-13", "rating": 13 },
         { "id": 15, "name": "Luke McNally", "positions": ["CB"], "dob": "1999-09-20", "rating": 12 },
