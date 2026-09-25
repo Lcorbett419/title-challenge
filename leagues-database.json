@@ -1356,25 +1356,24 @@
         { "id": 33, "name": "José Córdoba", "positions": ["CB"], "dob": "2001-06-03", "rating": 13 },
         { "id": 35, "name": "Kellen Fisher", "positions": ["RB"], "dob": "2004-05-05", "rating": 11 },
         { "id": 7, "name": "Pelle Mattsson", "positions": ["CDM", "CM"], "dob": "2001-08-04", "rating": 12 },
-        { "id": 11, "name": "Emiliano Marcondes", "positions": ["CAM", "LW"], "dob": "1995-03-09", "rating": 11 },
+        { "id": 11, "name": "Andre Brooks", "positions": ["LW", "RW"], "dob": "2003-08-20", "rating": 11 },  
         { "id": 16, "name": "Jacob Wright", "positions": ["CDM"], "dob": "2005-09-21", "rating": 11 },
-        { "id": 18, "name": "Forson Amankwah", "positions": ["CM"], "dob": "2002-12-31", "rating": 12 },
+        { "id": 19, "name": "Papa Amadou Diallo", "positions": ["LW"], "dob": "2004-06-25", "rating": 11 },  
         { "id": 20, "name": "Anis Ben Slimane", "positions": ["CM"], "dob": "2001-03-16", "rating": 13 },
         { "id": 22, "name": "Mirko Topić", "positions": ["CDM"], "dob": "2001-02-05", "rating": 12 },
         { "id": 23, "name": "Kenny McLean", "positions": ["CM", "CDM"], "dob": "1992-01-08", "rating": 13 },
         { "id": 25, "name": "Paris Maghoma", "positions": ["CAM", "CM"], "dob": "2001-05-08", "rating": 12 },
         { "id": 26, "name": "Sam Field", "positions": ["CDM"], "dob": "1998-05-08", "rating": 12 },
         { "id": 29, "name": "Oscar Schwartau", "positions": ["CAM", "LW"], "dob": "2006-05-17", "rating": 12 },
+        { "id": 37, "name": "Ali Ahmed", "positions": ["LW", "RW"], "dob": "2000-10-10", "rating": 11 },  
         { "id": 41, "name": "Gabriel Forsyth", "positions": ["CM"], "dob": "2006-08-04", "rating": 9 },
-        { "id": 42, "name": "Tony Springett", "positions": ["RW", "LW"], "dob": "2002-09-22", "rating": 10 },
         { "id": 44, "name": "Elliot Myles", "positions": ["CAM", "RW"], "dob": "2007-01-20", "rating": 9 },
-        { "id": 10, "name": "Matěj Jurásek", "positions": ["RW"], "dob": "2003-08-30", "rating": 11 },
         { "id": 17, "name": "Ante Crnac", "positions": ["ST", "RW"], "dob": "2003-12-17", "rating": 11 },
-        { "id": 19, "name": "Papa Amadou Diallo", "positions": ["LW"], "dob": "2004-06-25", "rating": 11 },
         { "id": 21, "name": "Mohamed Toure", "positions": ["ST"], "dob": "2004-03-26", "rating": 14 },  
         { "id": 24, "name": "Jovon Makama", "positions": ["ST", "RW"], "dob": "2004-02-01", "rating": 13 },
         { "id": 30, "name": "Mathias Kvistgaarden", "positions": ["ST"], "dob": "2002-04-15", "rating": 12 },
-        { "id": 37, "name": "Ali Ahmed", "positions": ["LW", "RW"], "dob": "2000-10-10", "rating": 11 }  
+        { "id": 46, "name": "Errol Mundle-Smith", "positions": ["LW", "RW", "ST"], "dob": "2006-03-19", "rating": 8 },
+        { "id": 49, "name": "Anthony Musaba", "positions": ["LW", "RW"], "dob": "2000-12-06", "rating": 12 }  
       ]
     },
     {
@@ -1438,33 +1437,28 @@
       "stadiumCapacity": 23000,
       "budget": 25000000,
       "players": [
-        { "id": 1, "name": "Daniel Iversen", "positions": ["GK"], "dob": "1997-07-19", "rating": 12 },
-        { "id": 12, "name": "Jack Walton", "positions": ["GK"], "dob": "1998-04-23", "rating": 10 },
-        { "id": 13, "name": "David Cornell", "positions": ["GK"], "dob": "1991-03-28", "rating": 10 },
+        { "id": 1, "name": "Daniel Iversen", "positions": ["GK"], "dob": "1997-07-19", "rating": 13 },
+        { "id": 21, "name": "Lee Nicholls", "positions": ["GK"], "dob": "1992-10-05", "rating": 11 },  
         { "id": 2, "name": "Pol Valentín", "positions": ["RB", "RWB"], "dob": "1997-02-21", "rating": 12 },
         { "id": 3, "name": "Andrija Vukčević", "positions": ["LB", "LWB"], "dob": "1996-10-11", "rating": 11 },
         { "id": 4, "name": "Harry Clarke", "positions": ["RB"], "dob": "2001-03-02", "rating": 12 },  
         { "id": 6, "name": "Liam Lindsay", "positions": ["CB"], "dob": "1995-10-12", "rating": 12 },
+        { "id": 11, "name": "Thierry Small", "positions": ["LB"], "dob": "2004-08-01", "rating": 11 },  
+        { "id": 12, "name": "Caleb Wiley", "positions": ["LB"], "dob": "2004-12-22", "rating": 11 },  
         { "id": 14, "name": "Jordan Storey", "positions": ["CB"], "dob": "1997-09-02", "rating": 13 },
         { "id": 16, "name": "Andrew Hughes", "positions": ["CB", "LB"], "dob": "1992-06-05", "rating": 12 },
-        { "id": 18, "name": "Jamal Lewis", "positions": ["LB", "LWB"], "dob": "1998-01-25", "rating": 12 },
         { "id": 19, "name": "Lewis Gibson", "positions": ["CB"], "dob": "2000-07-19", "rating": 12 },
-        { "id": 26, "name": "Thierry Small", "positions": ["LB"], "dob": "2004-08-01", "rating": 11 },
-        { "id": 42, "name": "Odeluga Offiah", "positions": ["CB", "RB"], "dob": "2002-10-26", "rating": 11 },
+        { "id": 24, "name": "Odel Offiah", "positions": ["CB", "RB"], "dob": "2002-10-26", "rating": 11 },
+        { "id": 7, "name": "Alfie Devine", "positions": ["CAM", "CM"], "dob": "2004-08-01", "rating": 12 },  
         { "id": 8, "name": "Ali McCann", "positions": ["CM", "CDM"], "dob": "1999-12-04", "rating": 12 },
-        { "id": 11, "name": "Robbie Brady", "positions": ["LW", "LB"], "dob": "1992-01-14", "rating": 11 },
         { "id": 15, "name": "Jordan Thompson", "positions": ["CM", "CDM"], "dob": "1997-01-03", "rating": 12 },
+        { "id": 17, "name": "Stanley Mills", "positions": ["RW", "RM"], "dob": "2003-10-25", "rating": 11 },  
         { "id": 20, "name": "Liam Gibbs", "positions": ["CM"], "dob": "2002-12-16", "rating": 11 },  
-        { "id": 21, "name": "Alfie Devine", "positions": ["CAM", "CM"], "dob": "2004-08-01", "rating": 12 },
         { "id": 23, "name": "Andrew Moran", "positions": ["CAM", "RW"], "dob": "2003-10-15", "rating": 12 },
-        { "id": 34, "name": "Kitt Nelson", "positions": ["CAM", "CM"], "dob": "2005-01-12", "rating": 9 },
-        { "id": 35, "name": "Noah Mawene", "positions": ["CM"], "dob": "2005-02-01", "rating": 10 },
+        { "id": 27, "name": "Léo Leroy", "positions": ["CM"], "dob": "2000-02-14", "rating": 11 },   
         { "id": 44, "name": "Brad Potts", "positions": ["RW", "RB"], "dob": "1994-07-03", "rating": 12 },
+        { "id": 9, "name": "Jusef Erabi", "positions": ["ST"], "dob": "2003-06-08", "rating": 10 },  
         { "id": 10, "name": "Callum Lang", "positions": ["RW", "ST"], "dob": "1998-09-08", "rating": 12 },
-        { "id": 17, "name": "Lewis Dobbin", "positions": ["LW", "RW"], "dob": "2003-01-03", "rating": 12 },
-        { "id": 22, "name": "Miloš Luković", "positions": ["ST"], "dob": "2005-11-18", "rating": 12 },
-        { "id": 24, "name": "Michael Smith", "positions": ["ST"], "dob": "1991-10-17", "rating": 11 },
-        { "id": 28, "name": "Milutin Osmajić", "positions": ["ST"], "dob": "1999-07-25", "rating": 13 },
         { "id": 37, "name": "Delano Burgzorg", "positions": ["LW", "ST"], "dob": "1998-11-07", "rating": 12 },  
         { "id": 38, "name": "Johnny Kenny", "positions": ["ST"], "dob": "2003-06-06", "rating": 12 }  
       ]
@@ -1542,7 +1536,6 @@
         { "id": 75, "name": "Liam Kitching", "positions": ["CB"], "dob": "1999-09-25", "rating": 13 },  
         { "id": 38, "name": "Femi Seriki", "positions": ["RB"], "dob": "2002-04-28", "rating": 10 },
         { "id": 4, "name": "Ollie Arblaster", "positions": ["CM", "CDM"], "dob": "2004-05-05", "rating": 13 },
-        { "id": 11, "name": "Andre Brooks", "positions": ["LM", "RM"], "dob": "2003-08-20", "rating": 11 },
         { "id": 67, "name": "Hamza Choudhury", "positions": ["CDM", "RB"], "dob": "1997-10-01", "rating": 12 },  
         { "id": 18, "name": "Djibril Soumaré", "positions": ["CDM", "CM"], "dob": "2003-01-10", "rating": 11 },
         { "id": 22, "name": "Tom Davies", "positions": ["CM"], "dob": "1998-06-30", "rating": 11 },
@@ -1554,7 +1547,6 @@
         { "id": 48, "name": "Joe Rothwell", "positions": ["CM"], "dob": "1995-01-11", "rating": 12 },
         { "id": 95, "name": "Ben Brereton Díaz", "positions": ["LW"], "dob": "1999-04-18", "rating": 13 },  
         { "id": 7, "name": "Tom Cannon", "positions": ["ST"], "dob": "2002-12-28", "rating": 12 },
-        { "id": 9, "name": "Danny Ings", "positions": ["ST"], "dob": "1992-07-23", "rating": 12 },
         { "id": 23, "name": "Tyrese Campbell", "positions": ["ST"], "dob": "1999-12-28", "rating": 12 },
         { "id": 20, "name": "Ryan Oné", "positions": ["ST"], "dob": "2006-06-26", "rating": 11 },  
         { "id": 45, "name": "Patrick Bamford", "positions": ["ST"], "dob": "1993-09-05", "rating": 12 }
@@ -1575,7 +1567,7 @@
       "players": [
         { "id": 1, "name": "Alex McCarthy", "positions": ["GK"], "dob": "1989-12-03", "rating": 12 },
         { "id": 25, "name": "George Long", "positions": ["GK"], "dob": "1993-11-05", "rating": 11 },
-        { "id": 32, "name": "Aaron Ramsdale", "positions": ["GK"], "dob": "1998-05-14", "rating": 14 },  
+        { "id": 32, "name": "Aaron Ramsdale", "positions": ["GK"], "dob": "1998-05-14", "rating": 13 },  
         { "id": 41, "name": "Daniel Peretz", "positions": ["GK"], "dob": "2000-07-10", "rating": 13 },
         { "id": 2, "name": "Mads Roerslev", "positions": ["RB", "RWB"], "dob": "1999-06-24", "rating": 13 },
         { "id": 3, "name": "Ryan Manning", "positions": ["LB", "LWB"], "dob": "1996-06-14", "rating": 12 },
@@ -1600,7 +1592,7 @@
         { "id": 48, "name": "Cam Bragg", "positions": ["CM"], "dob": "2005-01-01", "rating": 9 },
         { "id": 53, "name": "Barnaby Williams", "positions": ["CM"], "dob": "2004-10-18", "rating": 9 },
         { "id": 9, "name": "Cyle Larin", "positions": ["ST"], "dob": "1995-04-17", "rating": 14 },
-        { "id": 11, "name": "Ross Stewart", "positions": ["ST"], "dob": "1996-07-11", "rating": 12 },
+        { "id": 11, "name": "Lewis Dobbin", "positions": ["LW", "RW"], "dob": "2003-01-03", "rating": 12 },  
         { "id": 19, "name": "Cameron Archer", "positions": ["ST"], "dob": "2001-12-09", "rating": 12 },
         { "id": 49, "name": "Nicholas Oyekunle", "positions": ["ST"], "dob": "2007-01-01", "rating": 8 }
       ]
@@ -1683,7 +1675,8 @@
         { "id": 20, "name": "Liam Cullen", "positions": ["ST", "CAM"], "dob": "1999-04-23", "rating": 12 },
         { "id": 27, "name": "Zeidane Inoussa", "positions": ["LW", "RW"], "dob": "2002-05-13", "rating": 12 },
         { "id": 33, "name": "Adam Idah", "positions": ["ST"], "dob": "2001-02-11", "rating": 13 },
-        { "id": 40, "name": "Jeremy Monga", "positions": ["LW"], "dob": "2008-01-01", "rating": 11 },  
+        { "id": 40, "name": "Jeremy Monga", "positions": ["LW"], "dob": "2008-01-01", "rating": 11 },
+        { "id": 31, "name": "Ross Stewart", "positions": ["ST"], "dob": "1996-07-11", "rating": 11 },  
         { "id": 35, "name": "Ronald", "positions": ["RW", "LW"], "dob": "2001-06-14", "rating": 12 }
       ]
     },
@@ -1760,7 +1753,7 @@
         { "id": 20, "name": "Rabby Nzingoula", "positions": ["CM", "CDM"], "dob": "2005-11-25", "rating": 11 },  
         { "id": 21, "name": "Isaac Price", "positions": ["CAM", "RW"], "dob": "2003-09-26", "rating": 13 },
         { "id": 29, "name": "Harry Whitwell", "positions": ["CM"], "dob": "2005-11-16", "rating": 11 }, 
-        { "id": 9, "name": "Barney Stewart", "positions": ["ST"], "dob": "2004-04-07", "rating": 11 },  
+        { "id": 9, "name": "Barney Stewart", "positions": ["ST"], "dob": "2004-04-07", "rating": 10 },  
         { "id": 10, "name": "Mikey Johnston", "positions": ["LW", "RW"], "dob": "1999-04-19", "rating": 13 },
         { "id": 11, "name": "Jimmy-Jay Morgan", "positions": ["CAM", "LW", "RW"], "dob": "2006-01-21", "rating": 12 },  
         { "id": 19, "name": "Aune Heggebø", "positions": ["ST"], "dob": "2001-07-29", "rating": 12 },
@@ -2235,7 +2228,6 @@
       "budget": 10000000,
       "players": [
         { "id": 1, "name": "Matthew Young", "positions": ["GK"], "dob": "2006-11-24", "rating": 11 },
-        { "id": 22, "name": "Lee Nicholls", "positions": ["GK"], "dob": "1992-10-05", "rating": 12 },
         { "id": 31, "name": "Jak Alnwick", "positions": ["GK"], "dob": "1993-06-17", "rating": 11 },
         { "id": 33, "name": "Nik Tzanev", "positions": ["GK"], "dob": "1996-12-23", "rating": 10 },
         { "id": 13, "name": "Jacob Chapman", "positions": ["GK"], "dob": "2000-10-22", "rating": 9 },
@@ -2278,7 +2270,7 @@
       "budget": 25000000,
       "players": [
         { "id": 1, "name": "Jakub Stolarczyk", "positions": ["GK"], "dob": "2000-12-31", "rating": 12 },
-        { "id": 13, "name": "Fran Vieites", "positions": ["GK"], "dob": "1999-05-07", "rating": 11 },
+        { "id": 13, "name": "David Cornell", "positions": ["GK"], "dob": "1991-03-28", "rating": 10 },  
         { "id": 31, "name": "Asmir Begović", "positions": ["GK"], "dob": "1987-06-20", "rating": 11 },
         { "id": 4, "name": "Ben Nelson", "positions": ["CB"], "dob": "2004-03-18", "rating": 11 },
         { "id": 5, "name": "Caleb Okoli", "positions": ["CB"], "dob": "2001-07-13", "rating": 13 },
@@ -2337,6 +2329,7 @@
         { "id": 22, "name": "Azeem Abdulai", "positions": ["CM", "RM"], "dob": "2002-12-09", "rating": 11 },
         { "id": 7, "name": "Ollie O'Neill", "positions": ["LW", "CAM"], "dob": "2003-01-08", "rating": 11 },
         { "id": 44, "name": "Theo Archibald", "positions": ["RW", "LW"], "dob": "1998-03-05", "rating": 10 },
+        { "id": 27, "name": "Tony Springett", "positions": ["RW", "LW"], "dob": "2002-09-22", "rating": 10 },  
         { "id": 17, "name": "Josh Koroma", "positions": ["LW", "ST"], "dob": "1998-11-08", "rating": 11 },
         { "id": 20, "name": "Sonny Perkins", "positions": ["RW", "ST"], "dob": "2004-02-10", "rating": 11 },
         { "id": 10, "name": "Aaron Connolly", "positions": ["ST"], "dob": "2000-01-28", "rating": 11 },
@@ -2416,10 +2409,10 @@
         { "id": 19, "name": "Victor Adeboyejo", "positions": ["ST"], "dob": "1998-01-12", "rating": 12 },
         { "id": 29, "name": "Tyler Roberts", "positions": ["ST", "CAM"], "dob": "1999-01-12", "rating": 11 },
         { "id": 11, "name": "Will Evans", "positions": ["ST", "LW"], "dob": "1997-07-01", "rating": 11 },
-        { "id": 14, "name": "Dom Dwyer", "positions": ["ST"], "dob": "1990-07-30", "rating": 10 },
         { "id": 18, "name": "Rhys Oates", "positions": ["ST", "RW"], "dob": "1994-12-04", "rating": 10 },
         { "id": 7, "name": "Lucas Akins", "positions": ["ST", "RW"], "dob": "1989-02-25", "rating": 10 },
         { "id": 9, "name": "Jordan Bowery", "positions": ["ST", "RB"], "dob": "1991-07-02", "rating": 10 },
+        { "id": 14, "name": "Michael Smith", "positions": ["ST"], "dob": "1991-10-17", "rating": 11 },  
         { "id": 44, "name": "Oliver Irow", "positions": ["RW", "LW"], "dob": "2006-05-10", "rating": 9 },
         { "id": 28, "name": "Joe Gardner", "positions": ["ST"], "dob": "2005-06-06", "rating": 9 },
         { "id": 17, "name": "Max Dickov", "positions": ["ST"], "dob": "2002-04-27", "rating": 9 }
@@ -2546,7 +2539,6 @@
         { "id": 10, "name": "Aidomo Emakhu", "positions": ["RW", "LW", "ST"], "dob": "2003-10-26", "rating": 11 },
         { "id": 11, "name": "Ole Romeny", "positions": ["ST", "RW"], "dob": "2000-06-20", "rating": 12 },
         { "id": 16, "name": "Nik Prelec", "positions": ["ST"], "dob": "2001-06-10", "rating": 11 },
-        { "id": 17, "name": "Stanley Mills", "positions": ["RW", "RM"], "dob": "2003-10-25", "rating": 11 },
         { "id": 23, "name": "Siriki Dembélé", "positions": ["LW", "RW"], "dob": "1996-09-07", "rating": 13 },
         { "id": 32, "name": "Jeon Jin-woo", "positions": ["LW", "ST"], "dob": "1999-09-09", "rating": 11 },
         { "id": 33, "name": "Jamie Donley", "positions": ["CAM", "ST"], "dob": "2005-01-03", "rating": 11 },
@@ -2885,6 +2877,7 @@
         { "id": 11, "name": "Nathan Lowe", "positions": ["ST"], "dob": "2005-09-01", "rating": 10 },
         { "id": 9, "name": "Bradley Fink", "positions": ["ST"], "dob": "2003-04-17", "rating": 10 },
         { "id": 21, "name": "Jamie Mullins", "positions": ["CAM", "CM"], "dob": "2004-09-29", "rating": 10 },
+        { "id": 28, "name": "Danny Ings", "positions": ["ST"], "dob": "1992-07-23", "rating": 11 },  
         { "id": 30, "name": "Joseph McCallum", "positions": ["CM"], "dob": "2007-10-10", "rating": 8 }
       ]
     }
@@ -6105,7 +6098,8 @@
         { "id": 11, "name": "Kenny Prince Redondo", "positions": ["LW", "LM"], "dob": "1994-08-29", "rating": 11 },
         { "id": 17, "name": "Norman Bassette", "positions": ["ST", "LW"], "dob": "2004-11-09", "rating": 10 },
         { "id": 19, "name": "Daniel Hanslik", "positions": ["ST", "RW"], "dob": "1996-10-06", "rating": 11 },
-        { "id": 20, "name": "Mërgim Berisha", "positions": ["ST"], "dob": "1998-05-11", "rating": 12 }
+        { "id": 20, "name": "Mërgim Berisha", "positions": ["ST"], "dob": "1998-05-11", "rating": 12 },
+        { "id": 45, "name": "Miloš Luković", "positions": ["ST"], "dob": "2005-11-18", "rating": 12 }  
       ]
     },
     {
@@ -9970,9 +9964,9 @@
           { "id": 8, "name": "Tommaso Baldanzi", "positions": ["CAM", "RW"], "dob": "2003-03-23", "rating": 15 },
           { "id": 10, "name": "Junior Messias", "positions": ["RW", "CAM"], "dob": "1991-05-13", "rating": 14 },
           { "id": 9, "name": "Vitinha", "positions": ["ST"], "dob": "2000-03-15", "rating": 15 },
+          { "id": 18, "name": "Milutin Osmajić", "positions": ["ST"], "dob": "1999-07-25", "rating": 13 },  
           { "id": 29, "name": "Lorenzo Colombo", "positions": ["ST"], "dob": "2002-03-08", "rating": 15 },
-          { "id": 21, "name": "Jeff Ekhator", "positions": ["ST"], "dob": "2006-11-11", "rating": 14 },
-          { "id": 18, "name": "Caleb Ekuban", "positions": ["ST", "RW"], "dob": "1994-03-23", "rating": 14 }
+          { "id": 21, "name": "Jeff Ekhator", "positions": ["ST"], "dob": "2006-11-11", "rating": 14 }
         ]
       },
       {
