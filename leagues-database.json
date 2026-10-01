@@ -1622,7 +1622,7 @@
         { "id": 9, "name": "Róbert Boženík", "positions": ["ST"], "dob": "1999-11-18", "rating": 11 },
         { "id": 11, "name": "Lamine Cissé", "positions": ["LW", "RW", "ST"], "dob": "2003-02-15", "rating": 11 },
         { "id": 14, "name": "Ato Ampah", "positions": ["LW", "RW"], "dob": "2006-04-22", "rating": 9 },
-        { "id": 15, "name": "George Hirst", "positions": ["ST"], "dob": "1999-02-15", "rating": 11 },  
+        { "id": 15, "name": "George Hirst", "positions": ["ST"], "dob": "1999-02-15", "rating": 12 },  
         { "id": 20, "name": "Sam Gallagher", "positions": ["ST", "LW", "RW"], "dob": "1995-09-15", "rating": 10 },
         { "id": 42, "name": "Million Manhoef", "positions": ["LW", "RW"], "dob": "2002-01-03", "rating": 12 }
       ]
