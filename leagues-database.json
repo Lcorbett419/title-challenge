@@ -1056,7 +1056,7 @@
           { "id": 10, "name": "Marcus Edwards", "positions": ["LW", "RW"], "dob": "1998-12-03", "rating": 11 },
           { "id": 11, "name": "Zeki Amdouni", "positions": ["CAM", "RW", "LW"], "dob": "2000-12-04", "rating": 13 },
           { "id": 12, "name": "Dastan Satpayev", "positions": ["RW", "LW"], "dob": "2008-08-12", "rating": 11 },
-          { "id": 17, "name": "Andréas Hountondji", "positions": ["ST"], "dob": "2002-07-11", "rating": 13 },  
+          { "id": 17, "name": "Andréas Hountondji", "positions": ["ST"], "dob": "2002-07-11", "rating": 12 },  
           { "id": 19, "name": "Largie Ramazani", "positions": ["LW", "RW"], "dob": "2001-02-27", "rating": 11 },    
           { "id": 27, "name": "Armando Broja", "positions": ["ST"], "dob": "2001-09-10", "rating": 11 },
           { "id": 30, "name": "Lluc Castell", "positions": ["RW", "LW"], "dob": "2006-09-19", "rating": 10 },   
