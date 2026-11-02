@@ -2234,7 +2234,7 @@
         { "id": 24, "name": "Cameron Ashia", "positions": ["CAM"], "dob": "2006-10-14", "rating": 9 },
         { "id": 28, "name": "Daniel Vost", "positions": ["CDM", "CM"], "dob": "2006-04-17", "rating": 9 },
         { "id": 9, "name": "Joe Taylor", "positions": ["ST"], "dob": "2002-11-18", "rating": 12 },
-        { "id": 11, "name": "Ashley Fletcher", "positions": ["ST"], "dob": "1995-10-02", "rating": 12 },  
+        { "id": 11, "name": "Ashley Fletcher", "positions": ["ST"], "dob": "1995-10-02", "rating": 11 },  
         { "id": 25, "name": "Bojan Radulović", "positions": ["ST"], "dob": "1999-12-15", "rating": 10 },
         { "id": 30, "name": "Derensili Sanches Fernandes", "positions": ["RW"], "dob": "2001-05-28", "rating": 13 },  
         { "id": 34, "name": "Samson Tovide", "positions": ["ST"], "dob": "2004-01-04", "rating": 11 }  
